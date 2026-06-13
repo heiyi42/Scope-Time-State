@@ -1,0 +1,3999 @@
+[
+  {
+    "variant": "graphiti_zep",
+    "model_provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "judge_provider": "openai",
+    "judge_model": "gpt-5.4-mini",
+    "avg_event_f1": 0.547,
+    "avg_event_precision": 0.669,
+    "avg_gold_event_recall": 0.503,
+    "avg_context_event_recall": null,
+    "avg_slot_support_accuracy": 0.561,
+    "avg_slot_support_f1": 0.487,
+    "avg_required_support_f1": 0.547,
+    "avg_slot_value_judge": 0.444,
+    "avg_answer_judge": 0.267,
+    "cases": [
+      {
+        "case_id": "aaai_status",
+        "query": "AAAI 项目最近怎么样？",
+        "event_f1": 0.667,
+        "event_precision": 1.0,
+        "gold_event_recall": 0.5,
+        "context_event_recall": null,
+        "slot_support_accuracy": 0.0,
+        "slot_support_f1": 0.0,
+        "required_support_f1": 0.667,
+        "slot_value_judge": 0.0,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "aaai_e3"
+        ],
+        "pred_state_slots": {
+          "current_decision": {
+            "value": "unknown",
+            "support_event": null,
+            "support_events": []
+          },
+          "risk": {
+            "value": "unknown",
+            "support_event": null,
+            "support_events": []
+          },
+          "next_step": {
+            "value": "unknown",
+            "support_event": null,
+            "support_events": []
+          }
+        },
+        "answer": "现有信息仅表明TSM已覆盖dialogue time vs occurrence time，未提供关于AAAI项目当前决策、风险或下一步的具体信息。",
+        "raw_output": {
+          "evidence_events": [
+            "aaai_e3"
+          ],
+          "state_slots": {
+            "current_decision": {
+              "value": "unknown",
+              "support_event": null,
+              "support_events": []
+            },
+            "risk": {
+              "value": "unknown",
+              "support_event": null,
+              "support_events": []
+            },
+            "next_step": {
+              "value": "unknown",
+              "support_event": null,
+              "support_events": []
+            }
+          },
+          "coverage_check": {
+            "current_decision": false,
+            "risk": false,
+            "next_step": false
+          },
+          "answer": "现有信息仅表明TSM已覆盖dialogue time vs occurrence time，未提供关于AAAI项目当前决策、风险或下一步的具体信息。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 40,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "5d3677a8-aff7-45b2-b116-4d1c5842c1c7",
+                "event_ids": [
+                  "aaai_e3"
+                ],
+                "fact": "TSM 已覆盖 dialogue time vs occurrence time",
+                "valid_at": "2026-06-05 10:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "5408ec33-15a8-4287-aa9a-39b898e15797",
+                "target_node_uuid": "fe61cbc2-3fea-4435-851e-3aba1cda1748"
+              },
+              {
+                "graphiti_fact_uuid": "03c0b901-ffe6-4c6a-8388-b64b71b5b67f",
+                "event_ids": [
+                  "aaai_e3"
+                ],
+                "fact": "TSM 已覆盖 dialogue time vs occurrence time",
+                "valid_at": "2026-06-05 10:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "5408ec33-15a8-4287-aa9a-39b898e15797",
+                "target_node_uuid": "dddf6d6b-714b-4cd5-9a99-641ffeda72a7"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "current_decision": {
+              "score": 0,
+              "reason": "gold 是“主线转向 latest valid state retrieval”，pred 为 unknown，未覆盖"
+            },
+            "risk": {
+              "score": 0,
+              "reason": "gold 明确风险点，pred 为 unknown，未覆盖"
+            },
+            "next_step": {
+              "score": 0,
+              "reason": "gold 是“构造 STAMB-State 小型 benchmark”，pred 为 unknown，未覆盖"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "回答只说现有信息不足且提到的内容与 gold 不一致，未覆盖三个 gold 状态"
+          },
+          "slot_overall_score": 0
+        }
+      },
+      {
+        "case_id": "aaai_risk",
+        "query": "AAAI 这个想法现在最大的相关工作风险是什么？",
+        "event_f1": 0.5,
+        "event_precision": 1.0,
+        "gold_event_recall": 0.333,
+        "context_event_recall": null,
+        "slot_support_accuracy": 0.0,
+        "slot_support_f1": 0.0,
+        "required_support_f1": 0.5,
+        "slot_value_judge": 0.0,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "aaai_e3"
+        ],
+        "pred_state_slots": {
+          "risk": {
+            "value": "未知",
+            "support_event": null,
+            "support_events": []
+          },
+          "invalidated_direction": {
+            "value": "未知",
+            "support_event": null,
+            "support_events": []
+          }
+        },
+        "answer": "根据当前Graphiti搜索返回的事实，没有找到与AAAI想法相关的风险或失效方向信息。",
+        "raw_output": {
+          "evidence_events": [
+            "aaai_e3"
+          ],
+          "state_slots": {
+            "risk": {
+              "value": "未知",
+              "support_event": null,
+              "support_events": []
+            },
+            "invalidated_direction": {
+              "value": "未知",
+              "support_event": null,
+              "support_events": []
+            }
+          },
+          "coverage_check": {
+            "risk": false,
+            "invalidated_direction": false
+          },
+          "answer": "根据当前Graphiti搜索返回的事实，没有找到与AAAI想法相关的风险或失效方向信息。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 39,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "5d3677a8-aff7-45b2-b116-4d1c5842c1c7",
+                "event_ids": [
+                  "aaai_e3"
+                ],
+                "fact": "TSM 已覆盖 dialogue time vs occurrence time",
+                "valid_at": "2026-06-05 10:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "5408ec33-15a8-4287-aa9a-39b898e15797",
+                "target_node_uuid": "fe61cbc2-3fea-4435-851e-3aba1cda1748"
+              },
+              {
+                "graphiti_fact_uuid": "03c0b901-ffe6-4c6a-8388-b64b71b5b67f",
+                "event_ids": [
+                  "aaai_e3"
+                ],
+                "fact": "TSM 已覆盖 dialogue time vs occurrence time",
+                "valid_at": "2026-06-05 10:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "5408ec33-15a8-4287-aa9a-39b898e15797",
+                "target_node_uuid": "dddf6d6b-714b-4cd5-9a99-641ffeda72a7"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "risk": {
+              "score": 0,
+              "reason": "gold 是具体风险点，预测为未知，未覆盖语义"
+            },
+            "invalidated_direction": {
+              "score": 0,
+              "reason": "gold 是明确被替代的方向，预测为未知，未覆盖语义"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "回答称没有找到风险或失效方向，与 gold 的明确状态相反且未覆盖具体内容"
+          },
+          "slot_overall_score": 0
+        }
+      },
+      {
+        "case_id": "aaai_next_step",
+        "query": "AAAI 方案下一步要做什么？",
+        "event_f1": 0.0,
+        "event_precision": 0.0,
+        "gold_event_recall": 0.0,
+        "context_event_recall": null,
+        "slot_support_accuracy": 0.0,
+        "slot_support_f1": 0.0,
+        "required_support_f1": 0.0,
+        "slot_value_judge": 0.0,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "aaai_e3"
+        ],
+        "pred_state_slots": {
+          "next_step": {
+            "value": "unknown",
+            "support_event": null,
+            "support_events": []
+          },
+          "current_decision": {
+            "value": "TSM 已覆盖 dialogue time vs occurrence time",
+            "support_event": "aaai_e3",
+            "support_events": [
+              "aaai_e3"
+            ]
+          }
+        },
+        "answer": "基于 Graphiti 事实，当前决策是 TSM 已覆盖 dialogue time vs occurrence time（事件 aaai_e3），但下一步行动未提及。",
+        "raw_output": {
+          "evidence_events": [
+            "aaai_e3"
+          ],
+          "state_slots": {
+            "next_step": {
+              "value": "unknown",
+              "support_event": null,
+              "support_events": []
+            },
+            "current_decision": {
+              "value": "TSM 已覆盖 dialogue time vs occurrence time",
+              "support_event": "aaai_e3",
+              "support_events": [
+                "aaai_e3"
+              ]
+            }
+          },
+          "coverage_check": {
+            "next_step": false,
+            "current_decision": true
+          },
+          "answer": "基于 Graphiti 事实，当前决策是 TSM 已覆盖 dialogue time vs occurrence time（事件 aaai_e3），但下一步行动未提及。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 39,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "5d3677a8-aff7-45b2-b116-4d1c5842c1c7",
+                "event_ids": [
+                  "aaai_e3"
+                ],
+                "fact": "TSM 已覆盖 dialogue time vs occurrence time",
+                "valid_at": "2026-06-05 10:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "5408ec33-15a8-4287-aa9a-39b898e15797",
+                "target_node_uuid": "fe61cbc2-3fea-4435-851e-3aba1cda1748"
+              },
+              {
+                "graphiti_fact_uuid": "03c0b901-ffe6-4c6a-8388-b64b71b5b67f",
+                "event_ids": [
+                  "aaai_e3"
+                ],
+                "fact": "TSM 已覆盖 dialogue time vs occurrence time",
+                "valid_at": "2026-06-05 10:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "5408ec33-15a8-4287-aa9a-39b898e15797",
+                "target_node_uuid": "dddf6d6b-714b-4cd5-9a99-641ffeda72a7"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "next_step": {
+              "score": 0,
+              "reason": "gold is specific next step, predicted as unknown"
+            },
+            "current_decision": {
+              "score": 0,
+              "reason": "predicted TSM coverage is not equivalent to gold decision to switch main line to latest valid state retrieval"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "answer misses the gold next step and gives an incorrect current decision, so it does not cover all gold state"
+          },
+          "slot_overall_score": 0
+        }
+      },
+      {
+        "case_id": "amp_status",
+        "query": "微波放大器项目最近怎么样？",
+        "event_f1": 0.0,
+        "event_precision": 0.0,
+        "gold_event_recall": 0.0,
+        "context_event_recall": null,
+        "slot_support_accuracy": 0.0,
+        "slot_support_f1": 0.0,
+        "required_support_f1": 0.0,
+        "slot_value_judge": 0.0,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "amp_e5"
+        ],
+        "pred_state_slots": {
+          "completed_item": {
+            "value": "对输入匹配问题的旧判断进行了复查",
+            "support_event": "amp_e5",
+            "support_events": [
+              "amp_e5"
+            ]
+          },
+          "current_issue": {
+            "value": "输入匹配问题",
+            "support_event": "amp_e5",
+            "support_events": [
+              "amp_e5"
+            ]
+          },
+          "next_step": {
+            "value": "暂无明确信息",
+            "support_event": null,
+            "support_events": []
+          }
+        },
+        "answer": "项目已完成对输入匹配问题旧判断的复查，当前关注点仍是输入匹配问题，下一步尚不明确。",
+        "raw_output": {
+          "evidence_events": [
+            "amp_e5"
+          ],
+          "state_slots": {
+            "completed_item": {
+              "value": "对输入匹配问题的旧判断进行了复查",
+              "support_event": "amp_e5",
+              "support_events": [
+                "amp_e5"
+              ]
+            },
+            "current_issue": {
+              "value": "输入匹配问题",
+              "support_event": "amp_e5",
+              "support_events": [
+                "amp_e5"
+              ]
+            },
+            "next_step": {
+              "value": "暂无明确信息",
+              "support_event": null,
+              "support_events": []
+            }
+          },
+          "coverage_check": {
+            "completed_item": true,
+            "current_issue": true,
+            "next_step": true
+          },
+          "answer": "项目已完成对输入匹配问题旧判断的复查，当前关注点仍是输入匹配问题，下一步尚不明确。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 40,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "31a6e7d3-4880-48f8-88b1-f61e64789cf4",
+                "event_ids": [
+                  "amp_e5"
+                ],
+                "fact": "amp_project's review mentioned a previous suspicion that input matching had a problem, and treated it as a review of an old judgment.",
+                "valid_at": "2026-06-07 17:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "ca97d877-097c-4e79-b46d-aca9b64d4b96",
+                "target_node_uuid": "056ad377-18fe-4537-994a-12f7c10a53f0"
+              },
+              {
+                "graphiti_fact_uuid": "7096f471-fd88-45b7-9df5-c52168f32f07",
+                "event_ids": [
+                  "amp_e2"
+                ],
+                "fact": "S11问题 出在 输入匹配。",
+                "valid_at": "2026-06-03 11:00:00+00:00",
+                "invalid_at": "2026-06-03 11:00:00+00:00",
+                "source_node_uuid": "26feb1ca-3670-4574-82eb-b2c50e409144",
+                "target_node_uuid": "4300768d-8290-4301-8ac7-ac7e66da6916"
+              },
+              {
+                "graphiti_fact_uuid": "90f7b2f6-69c6-434a-a22d-6c4a04b9ec9b",
+                "event_ids": [
+                  "amp_e3"
+                ],
+                "fact": "S11 问题主要出在级间匹配",
+                "valid_at": "2026-06-05 11:00:00+00:00",
+                "invalid_at": "2026-06-07 17:00:00+00:00",
+                "source_node_uuid": "81caff7b-49a6-4681-b0a2-1f4cb32afee8",
+                "target_node_uuid": "e98c6ebd-88f3-48da-88e7-1d0235e321e8"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "completed_item": {
+              "score": 0,
+              "reason": "gold 是“第一级输入匹配已经完成”，预测变成了“复查旧判断”，语义不等价。"
+            },
+            "current_issue": {
+              "score": 0,
+              "reason": "gold 是“S11问题主要出在级间匹配”，预测成了“输入匹配问题”，不一致。"
+            },
+            "next_step": {
+              "score": 0,
+              "reason": "gold 有明确下一步“6月9日重算级间匹配网络线长”，预测为暂无明确信息。"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "只覆盖了部分信息，且把关键状态说错/说成不明确，没有完整覆盖 gold 状态。"
+          },
+          "slot_overall_score": 0
+        }
+      },
+      {
+        "case_id": "amp_current_issue",
+        "query": "微波放大器现在 S11 问题到底在哪？",
+        "event_f1": 0.5,
+        "event_precision": 0.5,
+        "gold_event_recall": 0.5,
+        "context_event_recall": null,
+        "slot_support_accuracy": 0.5,
+        "slot_support_f1": 0.25,
+        "required_support_f1": 0.5,
+        "slot_value_judge": 0.0,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "amp_e2",
+          "amp_e5"
+        ],
+        "pred_state_slots": {
+          "current_issue": {
+            "value": "未明确（当前有效事实仅提到旧判断被review）",
+            "support_event": "amp_e5",
+            "support_events": [
+              "amp_e5"
+            ]
+          },
+          "invalidated_issue": {
+            "value": "输入匹配问题（已被视为旧判断）",
+            "support_event": "amp_e2",
+            "support_events": [
+              "amp_e2",
+              "amp_e5"
+            ]
+          }
+        },
+        "answer": "当前S11问题无明确结论，之前的输入匹配问题已被视为旧判断。",
+        "raw_output": {
+          "evidence_events": [
+            "amp_e2",
+            "amp_e5"
+          ],
+          "state_slots": {
+            "current_issue": {
+              "value": "未明确（当前有效事实仅提到旧判断被review）",
+              "support_event": "amp_e5",
+              "support_events": [
+                "amp_e5"
+              ]
+            },
+            "invalidated_issue": {
+              "value": "输入匹配问题（已被视为旧判断）",
+              "support_event": "amp_e2",
+              "support_events": [
+                "amp_e2",
+                "amp_e5"
+              ]
+            }
+          },
+          "coverage_check": {
+            "current_issue": false,
+            "invalidated_issue": true
+          },
+          "answer": "当前S11问题无明确结论，之前的输入匹配问题已被视为旧判断。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 39,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "7096f471-fd88-45b7-9df5-c52168f32f07",
+                "event_ids": [
+                  "amp_e2"
+                ],
+                "fact": "S11问题 出在 输入匹配。",
+                "valid_at": "2026-06-03 11:00:00+00:00",
+                "invalid_at": "2026-06-03 11:00:00+00:00",
+                "source_node_uuid": "26feb1ca-3670-4574-82eb-b2c50e409144",
+                "target_node_uuid": "4300768d-8290-4301-8ac7-ac7e66da6916"
+              },
+              {
+                "graphiti_fact_uuid": "90f7b2f6-69c6-434a-a22d-6c4a04b9ec9b",
+                "event_ids": [
+                  "amp_e3"
+                ],
+                "fact": "S11 问题主要出在级间匹配",
+                "valid_at": "2026-06-05 11:00:00+00:00",
+                "invalid_at": "2026-06-07 17:00:00+00:00",
+                "source_node_uuid": "81caff7b-49a6-4681-b0a2-1f4cb32afee8",
+                "target_node_uuid": "e98c6ebd-88f3-48da-88e7-1d0235e321e8"
+              },
+              {
+                "graphiti_fact_uuid": "31a6e7d3-4880-48f8-88b1-f61e64789cf4",
+                "event_ids": [
+                  "amp_e5"
+                ],
+                "fact": "amp_project's review mentioned a previous suspicion that input matching had a problem, and treated it as a review of an old judgment.",
+                "valid_at": "2026-06-07 17:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "ca97d877-097c-4e79-b46d-aca9b64d4b96",
+                "target_node_uuid": "056ad377-18fe-4537-994a-12f7c10a53f0"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "current_issue": {
+              "score": 0,
+              "reason": "gold为“级间匹配”导致的当前S11问题，预测却表示未明确，语义不等价且遗漏核心问题"
+            },
+            "invalidated_issue": {
+              "score": 0,
+              "reason": "gold为“输入匹配是旧判断，已被纠正”，预测仅说“输入匹配问题（已被视为旧判断）”，缺少已纠正/被纠正的状态，且表述不够等价"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "回答只说当前无明确结论并提到旧判断，未覆盖gold中的当前问题在级间匹配以及旧判断已被纠正"
+          },
+          "slot_overall_score": 0
+        }
+      },
+      {
+        "case_id": "amp_next_step",
+        "query": "微波放大器下一步安排是什么？",
+        "event_f1": 0.0,
+        "event_precision": 0.0,
+        "gold_event_recall": 0.0,
+        "context_event_recall": null,
+        "slot_support_accuracy": 0.0,
+        "slot_support_f1": 0.0,
+        "required_support_f1": 0.0,
+        "slot_value_judge": 0.0,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "amp_e2",
+          "amp_e3",
+          "amp_e5"
+        ],
+        "pred_state_slots": {
+          "next_step": {
+            "value": "unknown",
+            "support_event": null,
+            "support_events": []
+          },
+          "planned_for": {
+            "value": "unknown",
+            "support_event": null,
+            "support_events": []
+          }
+        },
+        "answer": "基于现有facts，未找到关于微波放大器下一步安排（next_step）和计划时间（planned_for）的信息。",
+        "raw_output": {
+          "evidence_events": [
+            "amp_e2",
+            "amp_e3",
+            "amp_e5"
+          ],
+          "state_slots": {
+            "next_step": {
+              "value": "unknown",
+              "support_event": null,
+              "support_events": []
+            },
+            "planned_for": {
+              "value": "unknown",
+              "support_event": null,
+              "support_events": []
+            }
+          },
+          "coverage_check": {
+            "next_step": false,
+            "planned_for": false
+          },
+          "answer": "基于现有facts，未找到关于微波放大器下一步安排（next_step）和计划时间（planned_for）的信息。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 40,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "31a6e7d3-4880-48f8-88b1-f61e64789cf4",
+                "event_ids": [
+                  "amp_e5"
+                ],
+                "fact": "amp_project's review mentioned a previous suspicion that input matching had a problem, and treated it as a review of an old judgment.",
+                "valid_at": "2026-06-07 17:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "ca97d877-097c-4e79-b46d-aca9b64d4b96",
+                "target_node_uuid": "056ad377-18fe-4537-994a-12f7c10a53f0"
+              },
+              {
+                "graphiti_fact_uuid": "7096f471-fd88-45b7-9df5-c52168f32f07",
+                "event_ids": [
+                  "amp_e2"
+                ],
+                "fact": "S11问题 出在 输入匹配。",
+                "valid_at": "2026-06-03 11:00:00+00:00",
+                "invalid_at": "2026-06-03 11:00:00+00:00",
+                "source_node_uuid": "26feb1ca-3670-4574-82eb-b2c50e409144",
+                "target_node_uuid": "4300768d-8290-4301-8ac7-ac7e66da6916"
+              },
+              {
+                "graphiti_fact_uuid": "90f7b2f6-69c6-434a-a22d-6c4a04b9ec9b",
+                "event_ids": [
+                  "amp_e3"
+                ],
+                "fact": "S11 问题主要出在级间匹配",
+                "valid_at": "2026-06-05 11:00:00+00:00",
+                "invalid_at": "2026-06-07 17:00:00+00:00",
+                "source_node_uuid": "81caff7b-49a6-4681-b0a2-1f4cb32afee8",
+                "target_node_uuid": "e98c6ebd-88f3-48da-88e7-1d0235e321e8"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "next_step": {
+              "score": 0,
+              "reason": "gold是明确的下一步任务“重算级间匹配网络线长”，预测为unknown，未覆盖。"
+            },
+            "planned_for": {
+              "score": 0,
+              "reason": "gold有明确计划时间2026-06-09T09:00:00，预测为unknown，未覆盖。"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "答复仅表示未找到信息，未覆盖gold中的具体下一步和计划时间。"
+          },
+          "slot_overall_score": 0
+        }
+      },
+      {
+        "case_id": "sql_status",
+        "query": "第六题 SQL 最近改到哪了？",
+        "event_f1": 0.667,
+        "event_precision": 0.5,
+        "gold_event_recall": 1.0,
+        "context_event_recall": null,
+        "slot_support_accuracy": 0.5,
+        "slot_support_f1": 0.5,
+        "required_support_f1": 0.667,
+        "slot_value_judge": 0.5,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "sql_e3",
+          "sql_e4"
+        ],
+        "pred_state_slots": {
+          "latest_fix": {
+            "value": "sql_e3 fixes sql_e2 and supersedes sql_e1",
+            "support_event": "sql_e3",
+            "support_events": [
+              "sql_e3"
+            ]
+          },
+          "remaining_issue": {
+            "value": "无",
+            "support_event": "sql_e4",
+            "support_events": [
+              "sql_e4"
+            ]
+          }
+        },
+        "answer": "第六题 SQL 最近修改为 sql_e3，它修复了 sql_e2 并替代了 sql_e1。之后 sql_e4 确认没有新的逻辑变化，因此当前没有剩余问题。",
+        "raw_output": {
+          "evidence_events": [
+            "sql_e3",
+            "sql_e4"
+          ],
+          "state_slots": {
+            "latest_fix": {
+              "value": "sql_e3 fixes sql_e2 and supersedes sql_e1",
+              "support_event": "sql_e3",
+              "support_events": [
+                "sql_e3"
+              ]
+            },
+            "remaining_issue": {
+              "value": "无",
+              "support_event": "sql_e4",
+              "support_events": [
+                "sql_e4"
+              ]
+            }
+          },
+          "coverage_check": {
+            "latest_fix": true,
+            "remaining_issue": true
+          },
+          "answer": "第六题 SQL 最近修改为 sql_e3，它修复了 sql_e2 并替代了 sql_e1。之后 sql_e4 确认没有新的逻辑变化，因此当前没有剩余问题。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 35,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "04e7ca6f-5b8c-48f3-9b9e-abe23fb885d3",
+                "event_ids": [
+                  "sql_e4"
+                ],
+                "fact": "sql_e4 states that no new logic changes occurred in sql_lab_q6.",
+                "valid_at": "2026-06-07 13:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "16c84a31-5488-4d86-8819-58226a92a9e0",
+                "target_node_uuid": "5329a055-dfd3-464d-86e5-d3023de305dd"
+              },
+              {
+                "graphiti_fact_uuid": "ec8ea223-7a65-4d89-bf31-89ba66864064",
+                "event_ids": [
+                  "sql_e3"
+                ],
+                "fact": "sql_e3 fixes sql_e2.",
+                "valid_at": "2026-06-04 13:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "92cbb1f4-7c7f-4f1d-8b0c-7623c11d2c5c",
+                "target_node_uuid": "25915005-4fed-4317-ab63-2abae9ff472a"
+              },
+              {
+                "graphiti_fact_uuid": "ec7079e4-38bf-4feb-b1ec-ef8403e24392",
+                "event_ids": [
+                  "sql_e3"
+                ],
+                "fact": "sql_e3 supersedes sql_e1.",
+                "valid_at": "2026-06-04 13:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "92cbb1f4-7c7f-4f1d-8b0c-7623c11d2c5c",
+                "target_node_uuid": "3ac2cb92-64c2-4ad9-827a-6aa567efd06a"
+              },
+              {
+                "graphiti_fact_uuid": "c903b558-56b3-4564-afd6-a45b40951b5a",
+                "event_ids": [
+                  "sql_e2",
+                  "sql_e3"
+                ],
+                "fact": "Department 与 Project 的连接条件有问题",
+                "valid_at": "2026-06-02 13:00:00+00:00",
+                "invalid_at": "2026-06-07 16:00:00+00:00",
+                "source_node_uuid": "d986803e-4b3a-4b63-a674-446d63447baa",
+                "target_node_uuid": "441c39fd-09ee-4e48-abab-0caf781f8a09"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "latest_fix": {
+              "score": 0,
+              "reason": "gold 是具体修正内容，预测只说版本关系和替代关系，未等价表达 Department/Project 连接逻辑已修正"
+            },
+            "remaining_issue": {
+              "score": 1,
+              "reason": "gold 表示没有未解决问题，预测为“无”，语义一致"
+            },
+            "answer_score": {
+              "score": 0,
+              "reason": "回答提到 sql_e3/sql_e4 版本信息，但没有准确覆盖 gold 的具体修正点，且无法确认与 gold 完全等价"
+            }
+          },
+          "slot_overall_score": 0.5
+        }
+      },
+      {
+        "case_id": "sql_issue_resolution",
+        "query": "第六题 SQL 的连接条件问题还在吗？",
+        "event_f1": 0.8,
+        "event_precision": 0.667,
+        "gold_event_recall": 1.0,
+        "context_event_recall": null,
+        "slot_support_accuracy": 1.0,
+        "slot_support_f1": 0.75,
+        "required_support_f1": 0.8,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "sql_e2",
+          "sql_e3",
+          "sql_e4"
+        ],
+        "pred_state_slots": {
+          "resolved_issue": {
+            "value": "已修复",
+            "support_event": "sql_e3",
+            "support_events": [
+              "sql_e3",
+              "sql_e4"
+            ]
+          },
+          "fix": {
+            "value": "sql_e3 修复了连接条件",
+            "support_event": "sql_e3",
+            "support_events": [
+              "sql_e3"
+            ]
+          }
+        },
+        "answer": "连接条件问题已被 sql_e3 修复，且后续没有新变化。",
+        "raw_output": {
+          "evidence_events": [
+            "sql_e2",
+            "sql_e3",
+            "sql_e4"
+          ],
+          "state_slots": {
+            "resolved_issue": {
+              "value": "已修复",
+              "support_event": "sql_e3",
+              "support_events": [
+                "sql_e3",
+                "sql_e4"
+              ]
+            },
+            "fix": {
+              "value": "sql_e3 修复了连接条件",
+              "support_event": "sql_e3",
+              "support_events": [
+                "sql_e3"
+              ]
+            }
+          },
+          "coverage_check": {
+            "resolved_issue": true,
+            "fix": true
+          },
+          "answer": "连接条件问题已被 sql_e3 修复，且后续没有新变化。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 34,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "c903b558-56b3-4564-afd6-a45b40951b5a",
+                "event_ids": [
+                  "sql_e2",
+                  "sql_e3"
+                ],
+                "fact": "Department 与 Project 的连接条件有问题",
+                "valid_at": "2026-06-02 13:00:00+00:00",
+                "invalid_at": "2026-06-07 16:00:00+00:00",
+                "source_node_uuid": "d986803e-4b3a-4b63-a674-446d63447baa",
+                "target_node_uuid": "441c39fd-09ee-4e48-abab-0caf781f8a09"
+              },
+              {
+                "graphiti_fact_uuid": "04e7ca6f-5b8c-48f3-9b9e-abe23fb885d3",
+                "event_ids": [
+                  "sql_e4"
+                ],
+                "fact": "sql_e4 states that no new logic changes occurred in sql_lab_q6.",
+                "valid_at": "2026-06-07 13:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "16c84a31-5488-4d86-8819-58226a92a9e0",
+                "target_node_uuid": "5329a055-dfd3-464d-86e5-d3023de305dd"
+              },
+              {
+                "graphiti_fact_uuid": "ec8ea223-7a65-4d89-bf31-89ba66864064",
+                "event_ids": [
+                  "sql_e3"
+                ],
+                "fact": "sql_e3 fixes sql_e2.",
+                "valid_at": "2026-06-04 13:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "92cbb1f4-7c7f-4f1d-8b0c-7623c11d2c5c",
+                "target_node_uuid": "25915005-4fed-4317-ab63-2abae9ff472a"
+              },
+              {
+                "graphiti_fact_uuid": "ec7079e4-38bf-4feb-b1ec-ef8403e24392",
+                "event_ids": [
+                  "sql_e3"
+                ],
+                "fact": "sql_e3 supersedes sql_e1.",
+                "valid_at": "2026-06-04 13:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "92cbb1f4-7c7f-4f1d-8b0c-7623c11d2c5c",
+                "target_node_uuid": "3ac2cb92-64c2-4ad9-827a-6aa567efd06a"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "resolved_issue": {
+              "score": 1,
+              "reason": "“已修复”与“Department 与 Project 连接条件问题已经修正”语义等价。"
+            },
+            "fix": {
+              "score": 1,
+              "reason": "“sql_e3 修复了连接条件”表达了修改连接逻辑，核心一致。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "回答明确说明连接条件问题已修复，覆盖了 gold 中的修正状态与修改连接逻辑含义。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "sql_latest_non_update",
+        "query": "第六题 SQL 最近一次运行有没有改变逻辑？",
+        "event_f1": 1.0,
+        "event_precision": 1.0,
+        "gold_event_recall": 1.0,
+        "context_event_recall": null,
+        "slot_support_accuracy": 1.0,
+        "slot_support_f1": 1.0,
+        "required_support_f1": 1.0,
+        "slot_value_judge": 0.0,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "sql_e4",
+          "sql_e3"
+        ],
+        "pred_state_slots": {
+          "latest_non_update": {
+            "value": "sql_e4",
+            "support_event": "sql_e4",
+            "support_events": [
+              "sql_e4"
+            ]
+          },
+          "latest_valid_fix": {
+            "value": "sql_e3",
+            "support_event": "sql_e3",
+            "support_events": [
+              "sql_e3"
+            ]
+          }
+        },
+        "answer": "最近一次没有改变逻辑的运行是sql_e4，最近一次有效的修复是sql_e3。",
+        "raw_output": {
+          "evidence_events": [
+            "sql_e4",
+            "sql_e3"
+          ],
+          "state_slots": {
+            "latest_non_update": {
+              "value": "sql_e4",
+              "support_event": "sql_e4",
+              "support_events": [
+                "sql_e4"
+              ]
+            },
+            "latest_valid_fix": {
+              "value": "sql_e3",
+              "support_event": "sql_e3",
+              "support_events": [
+                "sql_e3"
+              ]
+            }
+          },
+          "coverage_check": {
+            "latest_non_update": true,
+            "latest_valid_fix": true
+          },
+          "answer": "最近一次没有改变逻辑的运行是sql_e4，最近一次有效的修复是sql_e3。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 35,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "04e7ca6f-5b8c-48f3-9b9e-abe23fb885d3",
+                "event_ids": [
+                  "sql_e4"
+                ],
+                "fact": "sql_e4 states that no new logic changes occurred in sql_lab_q6.",
+                "valid_at": "2026-06-07 13:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "16c84a31-5488-4d86-8819-58226a92a9e0",
+                "target_node_uuid": "5329a055-dfd3-464d-86e5-d3023de305dd"
+              },
+              {
+                "graphiti_fact_uuid": "ec8ea223-7a65-4d89-bf31-89ba66864064",
+                "event_ids": [
+                  "sql_e3"
+                ],
+                "fact": "sql_e3 fixes sql_e2.",
+                "valid_at": "2026-06-04 13:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "92cbb1f4-7c7f-4f1d-8b0c-7623c11d2c5c",
+                "target_node_uuid": "25915005-4fed-4317-ab63-2abae9ff472a"
+              },
+              {
+                "graphiti_fact_uuid": "c903b558-56b3-4564-afd6-a45b40951b5a",
+                "event_ids": [
+                  "sql_e2",
+                  "sql_e3"
+                ],
+                "fact": "Department 与 Project 的连接条件有问题",
+                "valid_at": "2026-06-02 13:00:00+00:00",
+                "invalid_at": "2026-06-07 16:00:00+00:00",
+                "source_node_uuid": "d986803e-4b3a-4b63-a674-446d63447baa",
+                "target_node_uuid": "441c39fd-09ee-4e48-abab-0caf781f8a09"
+              },
+              {
+                "graphiti_fact_uuid": "ec7079e4-38bf-4feb-b1ec-ef8403e24392",
+                "event_ids": [
+                  "sql_e3"
+                ],
+                "fact": "sql_e3 supersedes sql_e1.",
+                "valid_at": "2026-06-04 13:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "92cbb1f4-7c7f-4f1d-8b0c-7623c11d2c5c",
+                "target_node_uuid": "3ac2cb92-64c2-4ad9-827a-6aa567efd06a"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "latest_non_update": {
+              "score": 0,
+              "reason": "predicted value is an ID (sql_e4), not semantically equivalent to '最近运行没有新逻辑变化'."
+            },
+            "latest_valid_fix": {
+              "score": 0,
+              "reason": "predicted value is an ID (sql_e3), not semantically equivalent to '最后有效修改是 Department 和 Project 连接逻辑修正'."
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "answer only names sql_e4 and sql_e3, but does not state the required actual state content about no logic change and the Department-Project join fix."
+          },
+          "slot_overall_score": 0
+        }
+      },
+      {
+        "case_id": "robot_status",
+        "query": "机器人导航项目最近怎么样？",
+        "event_f1": 0.4,
+        "event_precision": 0.5,
+        "gold_event_recall": 0.333,
+        "context_event_recall": null,
+        "slot_support_accuracy": 0.333,
+        "slot_support_f1": 0.333,
+        "required_support_f1": 0.4,
+        "slot_value_judge": 0.333,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "robot_e2",
+          "robot_e4"
+        ],
+        "pred_state_slots": {
+          "current_decision": {
+            "value": "lidar + depth camera fusion",
+            "support_event": "robot_e4",
+            "support_events": [
+              "robot_e4"
+            ]
+          },
+          "current_issue": {
+            "value": "unknown",
+            "support_event": null,
+            "support_events": []
+          },
+          "next_step": {
+            "value": "unknown",
+            "support_event": null,
+            "support_events": []
+          }
+        },
+        "answer": "机器人导航项目当前决策是采用lidar+深度相机融合方案，仿真导航成功率达到92%。目前没有记录关于当前问题和下一步计划的信息。",
+        "raw_output": {
+          "evidence_events": [
+            "robot_e2",
+            "robot_e4"
+          ],
+          "state_slots": {
+            "current_decision": {
+              "value": "lidar + depth camera fusion",
+              "support_event": "robot_e4",
+              "support_events": [
+                "robot_e4"
+              ]
+            },
+            "current_issue": {
+              "value": "unknown",
+              "support_event": null,
+              "support_events": []
+            },
+            "next_step": {
+              "value": "unknown",
+              "support_event": null,
+              "support_events": []
+            }
+          },
+          "coverage_check": {
+            "current_decision": true,
+            "current_issue": false,
+            "next_step": false
+          },
+          "answer": "机器人导航项目当前决策是采用lidar+深度相机融合方案，仿真导航成功率达到92%。目前没有记录关于当前问题和下一步计划的信息。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 40,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "a8900816-cd64-4232-9d33-ec5ed8063e03",
+                "event_ids": [
+                  "robot_e2"
+                ],
+                "fact": "robot_e2 使 robot_nav 的仿真导航成功率达到 92%。",
+                "valid_at": "2026-06-02 09:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "017fc7de-3a00-4f04-8936-08ed95b8e603",
+                "target_node_uuid": "22256610-c741-452d-bb21-d7b0f3fd5dc2"
+              },
+              {
+                "graphiti_fact_uuid": "3c8e3a45-e078-4457-9634-2a3da6f214dc",
+                "event_ids": [
+                  "robot_e1"
+                ],
+                "fact": "robot_e1's decision is relevant to robot_nav.",
+                "valid_at": "2026-06-01 09:00:00+00:00",
+                "invalid_at": "2026-06-05 09:00:00+00:00",
+                "source_node_uuid": "0a93e5b0-9384-432e-b910-f4246fc30248",
+                "target_node_uuid": "22256610-c741-452d-bb21-d7b0f3fd5dc2"
+              },
+              {
+                "graphiti_fact_uuid": "1dd681f5-d423-46eb-8de5-23345488fffb",
+                "event_ids": [
+                  "robot_e1"
+                ],
+                "fact": "robot_e1 decided to adopt the lidar-only 导航方案.",
+                "valid_at": "2026-06-01 09:00:00+00:00",
+                "invalid_at": "2026-06-05 09:00:00+00:00",
+                "source_node_uuid": "0a93e5b0-9384-432e-b910-f4246fc30248",
+                "target_node_uuid": "c6eed42a-af24-4409-abd2-835d937bce79"
+              },
+              {
+                "graphiti_fact_uuid": "03cd702d-413b-4e8a-bc04-3e606743e12c",
+                "event_ids": [
+                  "robot_e6"
+                ],
+                "fact": "robot_e6 ran a simulation log for robot_nav at night and did not reach any new conclusion.",
+                "valid_at": "2026-06-07 23:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "b630cc37-536c-4b32-9705-b382d24f3a1e",
+                "target_node_uuid": "22256610-c741-452d-bb21-d7b0f3fd5dc2"
+              },
+              {
+                "graphiti_fact_uuid": "28c1917b-f4b8-471b-8636-193f2be49c31",
+                "event_ids": [
+                  "robot_e4"
+                ],
+                "fact": "robot_nav decided to change from lidar-only to lidar + depth camera fusion.",
+                "valid_at": "2026-06-05 09:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "22256610-c741-452d-bb21-d7b0f3fd5dc2",
+                "target_node_uuid": "65bbe0d9-8742-4892-b59a-738ac4319f3f"
+              },
+              {
+                "graphiti_fact_uuid": "ed64347a-08c1-4fe4-b6da-394782dcaad0",
+                "event_ids": [
+                  "robot_e4"
+                ],
+                "fact": "robot_nav decided to change from lidar-only to lidar + depth camera fusion.",
+                "valid_at": "2026-06-05 09:00:00+00:00",
+                "invalid_at": "2026-06-05 09:00:00+00:00",
+                "source_node_uuid": "22256610-c741-452d-bb21-d7b0f3fd5dc2",
+                "target_node_uuid": "c6eed42a-af24-4409-abd2-835d937bce79"
+              },
+              {
+                "graphiti_fact_uuid": "ee9ee30b-5392-4337-90fc-ff7852018db5",
+                "event_ids": [
+                  "robot_e4"
+                ],
+                "fact": "robot_e1 was superseded by robot_e4.",
+                "valid_at": "2026-06-05 09:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "0a93e5b0-9384-432e-b910-f4246fc30248",
+                "target_node_uuid": "22256610-c741-452d-bb21-d7b0f3fd5dc2"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "current_decision": {
+              "score": 1,
+              "reason": "语义等价，都是从 lidar-only 转向 lidar + depth camera 融合。"
+            },
+            "current_issue": {
+              "score": 0,
+              "reason": "gold 是真机在玻璃走廊定位漂移明显，pred 为 unknown，信息缺失。"
+            },
+            "next_step": {
+              "score": 0,
+              "reason": "gold 是6月8日标定 depth camera 外参，pred 为 unknown，信息缺失。"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "只正确覆盖了决策，未覆盖当前问题和下一步计划，且加入了仿真成功率的未给定信息。"
+          },
+          "slot_overall_score": 0.3333333333333333
+        }
+      },
+      {
+        "case_id": "robot_decision",
+        "query": "机器人导航现在还是 lidar-only 吗？",
+        "event_f1": 1.0,
+        "event_precision": 1.0,
+        "gold_event_recall": 1.0,
+        "context_event_recall": null,
+        "slot_support_accuracy": 1.0,
+        "slot_support_f1": 0.833,
+        "required_support_f1": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "robot_e4",
+          "robot_e1"
+        ],
+        "pred_state_slots": {
+          "current_decision": {
+            "value": "lidar + depth camera fusion",
+            "support_event": "robot_e4",
+            "support_events": [
+              "robot_e4"
+            ]
+          },
+          "invalidated_decision": {
+            "value": "lidar-only",
+            "support_event": "robot_e1",
+            "support_events": [
+              "robot_e1"
+            ]
+          }
+        },
+        "answer": "机器人导航当前采用lidar + depth camera fusion方案，不再是lidar-only。之前的lidar-only决策已被废止。",
+        "raw_output": {
+          "evidence_events": [
+            "robot_e4",
+            "robot_e1"
+          ],
+          "state_slots": {
+            "current_decision": {
+              "value": "lidar + depth camera fusion",
+              "support_event": "robot_e4",
+              "support_events": [
+                "robot_e4"
+              ]
+            },
+            "invalidated_decision": {
+              "value": "lidar-only",
+              "support_event": "robot_e1",
+              "support_events": [
+                "robot_e1"
+              ]
+            }
+          },
+          "coverage_check": {
+            "current_decision": true,
+            "invalidated_decision": true
+          },
+          "answer": "机器人导航当前采用lidar + depth camera fusion方案，不再是lidar-only。之前的lidar-only决策已被废止。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 40,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "1dd681f5-d423-46eb-8de5-23345488fffb",
+                "event_ids": [
+                  "robot_e1"
+                ],
+                "fact": "robot_e1 decided to adopt the lidar-only 导航方案.",
+                "valid_at": "2026-06-01 09:00:00+00:00",
+                "invalid_at": "2026-06-05 09:00:00+00:00",
+                "source_node_uuid": "0a93e5b0-9384-432e-b910-f4246fc30248",
+                "target_node_uuid": "c6eed42a-af24-4409-abd2-835d937bce79"
+              },
+              {
+                "graphiti_fact_uuid": "ed64347a-08c1-4fe4-b6da-394782dcaad0",
+                "event_ids": [
+                  "robot_e4"
+                ],
+                "fact": "robot_nav decided to change from lidar-only to lidar + depth camera fusion.",
+                "valid_at": "2026-06-05 09:00:00+00:00",
+                "invalid_at": "2026-06-05 09:00:00+00:00",
+                "source_node_uuid": "22256610-c741-452d-bb21-d7b0f3fd5dc2",
+                "target_node_uuid": "c6eed42a-af24-4409-abd2-835d937bce79"
+              },
+              {
+                "graphiti_fact_uuid": "3c8e3a45-e078-4457-9634-2a3da6f214dc",
+                "event_ids": [
+                  "robot_e1"
+                ],
+                "fact": "robot_e1's decision is relevant to robot_nav.",
+                "valid_at": "2026-06-01 09:00:00+00:00",
+                "invalid_at": "2026-06-05 09:00:00+00:00",
+                "source_node_uuid": "0a93e5b0-9384-432e-b910-f4246fc30248",
+                "target_node_uuid": "22256610-c741-452d-bb21-d7b0f3fd5dc2"
+              },
+              {
+                "graphiti_fact_uuid": "28c1917b-f4b8-471b-8636-193f2be49c31",
+                "event_ids": [
+                  "robot_e4"
+                ],
+                "fact": "robot_nav decided to change from lidar-only to lidar + depth camera fusion.",
+                "valid_at": "2026-06-05 09:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "22256610-c741-452d-bb21-d7b0f3fd5dc2",
+                "target_node_uuid": "65bbe0d9-8742-4892-b59a-738ac4319f3f"
+              },
+              {
+                "graphiti_fact_uuid": "a8900816-cd64-4232-9d33-ec5ed8063e03",
+                "event_ids": [
+                  "robot_e2"
+                ],
+                "fact": "robot_e2 使 robot_nav 的仿真导航成功率达到 92%。",
+                "valid_at": "2026-06-02 09:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "017fc7de-3a00-4f04-8936-08ed95b8e603",
+                "target_node_uuid": "22256610-c741-452d-bb21-d7b0f3fd5dc2"
+              },
+              {
+                "graphiti_fact_uuid": "03cd702d-413b-4e8a-bc04-3e606743e12c",
+                "event_ids": [
+                  "robot_e6"
+                ],
+                "fact": "robot_e6 ran a simulation log for robot_nav at night and did not reach any new conclusion.",
+                "valid_at": "2026-06-07 23:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "b630cc37-536c-4b32-9705-b382d24f3a1e",
+                "target_node_uuid": "22256610-c741-452d-bb21-d7b0f3fd5dc2"
+              },
+              {
+                "graphiti_fact_uuid": "ee9ee30b-5392-4337-90fc-ff7852018db5",
+                "event_ids": [
+                  "robot_e4"
+                ],
+                "fact": "robot_e1 was superseded by robot_e4.",
+                "valid_at": "2026-06-05 09:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "0a93e5b0-9384-432e-b910-f4246fc30248",
+                "target_node_uuid": "22256610-c741-452d-bb21-d7b0f3fd5dc2"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "current_decision": {
+              "score": 1,
+              "reason": "“lidar + depth camera fusion”与gold的融合方案语义等价。"
+            },
+            "invalidated_decision": {
+              "score": 1,
+              "reason": "“lidar-only”准确表示旧方案被替代的被废止决策。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "完整覆盖了当前采用融合方案以及lidar-only已不再使用/已废止。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "robot_next_step",
+        "query": "机器人导航下一步要做什么？",
+        "event_f1": 0.0,
+        "event_precision": 0.0,
+        "gold_event_recall": 0.0,
+        "context_event_recall": null,
+        "slot_support_accuracy": 0.0,
+        "slot_support_f1": 0.0,
+        "required_support_f1": 0.0,
+        "slot_value_judge": 0.0,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "robot_e4"
+        ],
+        "pred_state_slots": {
+          "next_step": {
+            "value": "采用激光雷达+深度相机融合方案",
+            "support_event": "robot_e4",
+            "support_events": [
+              "robot_e4"
+            ]
+          },
+          "planned_for": {
+            "value": "未有明确计划",
+            "support_event": null,
+            "support_events": []
+          }
+        },
+        "answer": "机器人导航的下一步是采用激光雷达+深度相机融合方案，但目前没有明确的下一个计划安排。",
+        "raw_output": {
+          "evidence_events": [
+            "robot_e4"
+          ],
+          "state_slots": {
+            "next_step": {
+              "value": "采用激光雷达+深度相机融合方案",
+              "support_event": "robot_e4",
+              "support_events": [
+                "robot_e4"
+              ]
+            },
+            "planned_for": {
+              "value": "未有明确计划",
+              "support_event": null,
+              "support_events": []
+            }
+          },
+          "coverage_check": {
+            "next_step": true,
+            "planned_for": false
+          },
+          "answer": "机器人导航的下一步是采用激光雷达+深度相机融合方案，但目前没有明确的下一个计划安排。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 38,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "a8900816-cd64-4232-9d33-ec5ed8063e03",
+                "event_ids": [
+                  "robot_e2"
+                ],
+                "fact": "robot_e2 使 robot_nav 的仿真导航成功率达到 92%。",
+                "valid_at": "2026-06-02 09:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "017fc7de-3a00-4f04-8936-08ed95b8e603",
+                "target_node_uuid": "22256610-c741-452d-bb21-d7b0f3fd5dc2"
+              },
+              {
+                "graphiti_fact_uuid": "3c8e3a45-e078-4457-9634-2a3da6f214dc",
+                "event_ids": [
+                  "robot_e1"
+                ],
+                "fact": "robot_e1's decision is relevant to robot_nav.",
+                "valid_at": "2026-06-01 09:00:00+00:00",
+                "invalid_at": "2026-06-05 09:00:00+00:00",
+                "source_node_uuid": "0a93e5b0-9384-432e-b910-f4246fc30248",
+                "target_node_uuid": "22256610-c741-452d-bb21-d7b0f3fd5dc2"
+              },
+              {
+                "graphiti_fact_uuid": "1dd681f5-d423-46eb-8de5-23345488fffb",
+                "event_ids": [
+                  "robot_e1"
+                ],
+                "fact": "robot_e1 decided to adopt the lidar-only 导航方案.",
+                "valid_at": "2026-06-01 09:00:00+00:00",
+                "invalid_at": "2026-06-05 09:00:00+00:00",
+                "source_node_uuid": "0a93e5b0-9384-432e-b910-f4246fc30248",
+                "target_node_uuid": "c6eed42a-af24-4409-abd2-835d937bce79"
+              },
+              {
+                "graphiti_fact_uuid": "03cd702d-413b-4e8a-bc04-3e606743e12c",
+                "event_ids": [
+                  "robot_e6"
+                ],
+                "fact": "robot_e6 ran a simulation log for robot_nav at night and did not reach any new conclusion.",
+                "valid_at": "2026-06-07 23:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "b630cc37-536c-4b32-9705-b382d24f3a1e",
+                "target_node_uuid": "22256610-c741-452d-bb21-d7b0f3fd5dc2"
+              },
+              {
+                "graphiti_fact_uuid": "ed64347a-08c1-4fe4-b6da-394782dcaad0",
+                "event_ids": [
+                  "robot_e4"
+                ],
+                "fact": "robot_nav decided to change from lidar-only to lidar + depth camera fusion.",
+                "valid_at": "2026-06-05 09:00:00+00:00",
+                "invalid_at": "2026-06-05 09:00:00+00:00",
+                "source_node_uuid": "22256610-c741-452d-bb21-d7b0f3fd5dc2",
+                "target_node_uuid": "c6eed42a-af24-4409-abd2-835d937bce79"
+              },
+              {
+                "graphiti_fact_uuid": "28c1917b-f4b8-471b-8636-193f2be49c31",
+                "event_ids": [
+                  "robot_e4"
+                ],
+                "fact": "robot_nav decided to change from lidar-only to lidar + depth camera fusion.",
+                "valid_at": "2026-06-05 09:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "22256610-c741-452d-bb21-d7b0f3fd5dc2",
+                "target_node_uuid": "65bbe0d9-8742-4892-b59a-738ac4319f3f"
+              },
+              {
+                "graphiti_fact_uuid": "ee9ee30b-5392-4337-90fc-ff7852018db5",
+                "event_ids": [
+                  "robot_e4"
+                ],
+                "fact": "robot_e1 was superseded by robot_e4.",
+                "valid_at": "2026-06-05 09:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "0a93e5b0-9384-432e-b910-f4246fc30248",
+                "target_node_uuid": "22256610-c741-452d-bb21-d7b0f3fd5dc2"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "next_step": {
+              "score": 0,
+              "reason": "Gold是“标定depth camera外参”，预测为“采用激光雷达+深度相机融合方案”，语义不等价，属于不同任务步骤。"
+            },
+            "planned_for": {
+              "score": 0,
+              "reason": "Gold是明确时间2026-06-08T14:00:00，预测为“未有明确计划”，与gold相反。"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "回答只覆盖了错误的next_step，并且把有明确时间的planned_for说成没有明确计划，未正确覆盖所有gold状态。"
+          },
+          "slot_overall_score": 0
+        }
+      },
+      {
+        "case_id": "thesis_status",
+        "query": "论文第二章最近怎么样？",
+        "event_f1": 0.4,
+        "event_precision": 0.5,
+        "gold_event_recall": 0.333,
+        "context_event_recall": null,
+        "slot_support_accuracy": 0.667,
+        "slot_support_f1": 0.556,
+        "required_support_f1": 0.4,
+        "slot_value_judge": 0.333,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "thesis_e5",
+          "thesis_e6"
+        ],
+        "pred_state_slots": {
+          "completed_item": {
+            "value": "语法通读已完成",
+            "support_event": "thesis_e5",
+            "support_events": [
+              "thesis_e5"
+            ]
+          },
+          "remaining_work": {
+            "value": "内容结构还未改完",
+            "support_event": "thesis_e5",
+            "support_events": [
+              "thesis_e5"
+            ]
+          },
+          "deadline": {
+            "value": "2026-06-08T18:00:00Z",
+            "support_event": "thesis_e6",
+            "support_events": [
+              "thesis_e6"
+            ]
+          }
+        },
+        "answer": "第二章的语法通读已完成，但内容结构尚未改完。截止日期为2026年6月8日18:00。",
+        "raw_output": {
+          "evidence_events": [
+            "thesis_e5",
+            "thesis_e6"
+          ],
+          "state_slots": {
+            "completed_item": {
+              "value": "语法通读已完成",
+              "support_event": "thesis_e5",
+              "support_events": [
+                "thesis_e5"
+              ]
+            },
+            "remaining_work": {
+              "value": "内容结构还未改完",
+              "support_event": "thesis_e5",
+              "support_events": [
+                "thesis_e5"
+              ]
+            },
+            "deadline": {
+              "value": "2026-06-08T18:00:00Z",
+              "support_event": "thesis_e6",
+              "support_events": [
+                "thesis_e6"
+              ]
+            }
+          },
+          "coverage_check": {
+            "completed_item": true,
+            "remaining_work": true,
+            "deadline": false
+          },
+          "answer": "第二章的语法通读已完成，但内容结构尚未改完。截止日期为2026年6月8日18:00。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 37,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "559d0622-36d7-422d-aaa9-4ff09887dc02",
+                "event_ids": [
+                  "thesis_e2"
+                ],
+                "fact": "第二章 is associated with thesis_e2 for a deadline planned for 2026-06-08T18:00:00Z.",
+                "valid_at": "2026-06-02 15:00:00+00:00",
+                "invalid_at": "2026-06-07 15:00:00+00:00",
+                "source_node_uuid": "56b068b0-700b-4bc6-8312-5a0dbf5367b1",
+                "target_node_uuid": "07a7098d-03e3-441d-8727-d331bdd08db3"
+              },
+              {
+                "graphiti_fact_uuid": "ee45a548-ed87-4aa3-bf69-2295fe379722",
+                "event_ids": [
+                  "thesis_e2"
+                ],
+                "fact": "thesis_e2 is associated with thesis_ch2 for a deadline planned for 2026-06-08T18:00:00Z.",
+                "valid_at": "2026-06-02 15:00:00+00:00",
+                "invalid_at": "2026-06-07 15:00:00+00:00",
+                "source_node_uuid": "07a7098d-03e3-441d-8727-d331bdd08db3",
+                "target_node_uuid": "51e0b93e-743b-403e-a398-a2e36a31549b"
+              },
+              {
+                "graphiti_fact_uuid": "141b2eac-b380-495b-a7a9-78f50a87ce78",
+                "event_ids": [
+                  "thesis_e5"
+                ],
+                "fact": "第二章语法通读已完成，但内容结构还未改完",
+                "valid_at": "2026-06-06 15:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "6be943db-97ce-4fd7-b9ba-d150915d3722",
+                "target_node_uuid": "53b24a5d-0b4c-4c0d-b474-5db312bce306"
+              },
+              {
+                "graphiti_fact_uuid": "2120e21d-b8c5-4d39-855b-cc1fe6a5e6c4",
+                "event_ids": [
+                  "thesis_e6"
+                ],
+                "fact": "thesis_e6 提到 thesis_ch2 的 6月8日 旧截止时间，但没有改变 thesis_ch2 的当前计划。",
+                "valid_at": "2026-06-07 15:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "51e0b93e-743b-403e-a398-a2e36a31549b",
+                "target_node_uuid": "51e0b93e-743b-403e-a398-a2e36a31549b"
+              },
+              {
+                "graphiti_fact_uuid": "2af62a01-1a21-4ea4-89aa-9aaa76b4a8d4",
+                "event_ids": [
+                  "thesis_e6"
+                ],
+                "fact": "thesis_e6 提到 thesis_ch2 的 6月8日 旧截止时间，但没有改变 thesis_ch2 的当前计划。",
+                "valid_at": "2026-06-07 15:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "51e0b93e-743b-403e-a398-a2e36a31549b",
+                "target_node_uuid": "56b068b0-700b-4bc6-8312-5a0dbf5367b1"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "completed_item": {
+              "score": 1,
+              "reason": "语义等价，都是语法通读已完成。"
+            },
+            "remaining_work": {
+              "score": 0,
+              "reason": "gold 还要补动机和研究空白，pred 只提到内容结构未改完，缺少关键剩余工作。"
+            },
+            "deadline": {
+              "score": 0,
+              "reason": "gold 是第二章提交时间 6月10日，pred 给出的是 2026-06-08T18:00:00Z，不等价。"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "只覆盖了已完成事项和结构未改完，且截止日期错误，未完整正确覆盖 gold 状态。"
+          },
+          "slot_overall_score": 0.3333333333333333
+        }
+      },
+      {
+        "case_id": "thesis_deadline",
+        "query": "第二章到底 6月8日还是 6月10日交？",
+        "event_f1": 0.5,
+        "event_precision": 0.5,
+        "gold_event_recall": 0.5,
+        "context_event_recall": null,
+        "slot_support_accuracy": 0.5,
+        "slot_support_f1": 0.333,
+        "required_support_f1": 0.5,
+        "slot_value_judge": 0.5,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "thesis_e2",
+          "thesis_e6"
+        ],
+        "pred_state_slots": {
+          "deadline": {
+            "value": "unknown",
+            "support_event": null,
+            "support_events": []
+          },
+          "invalidated_deadline": {
+            "value": "2026-06-08T18:00:00Z",
+            "support_event": "thesis_e2",
+            "support_events": [
+              "thesis_e2"
+            ]
+          }
+        },
+        "answer": "根据搜索结果，第二章曾有6月8日的截止日期（事件thesis_e2），但该信息已失效。未找到6月10日的任何相关信息，当前无有效截止日期。",
+        "raw_output": {
+          "evidence_events": [
+            "thesis_e2",
+            "thesis_e6"
+          ],
+          "state_slots": {
+            "deadline": {
+              "value": "unknown",
+              "support_event": null,
+              "support_events": []
+            },
+            "invalidated_deadline": {
+              "value": "2026-06-08T18:00:00Z",
+              "support_event": "thesis_e2",
+              "support_events": [
+                "thesis_e2"
+              ]
+            }
+          },
+          "coverage_check": {
+            "deadline": false,
+            "invalidated_deadline": true
+          },
+          "answer": "根据搜索结果，第二章曾有6月8日的截止日期（事件thesis_e2），但该信息已失效。未找到6月10日的任何相关信息，当前无有效截止日期。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 35,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "2af62a01-1a21-4ea4-89aa-9aaa76b4a8d4",
+                "event_ids": [
+                  "thesis_e6"
+                ],
+                "fact": "thesis_e6 提到 thesis_ch2 的 6月8日 旧截止时间，但没有改变 thesis_ch2 的当前计划。",
+                "valid_at": "2026-06-07 15:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "51e0b93e-743b-403e-a398-a2e36a31549b",
+                "target_node_uuid": "56b068b0-700b-4bc6-8312-5a0dbf5367b1"
+              },
+              {
+                "graphiti_fact_uuid": "559d0622-36d7-422d-aaa9-4ff09887dc02",
+                "event_ids": [
+                  "thesis_e2"
+                ],
+                "fact": "第二章 is associated with thesis_e2 for a deadline planned for 2026-06-08T18:00:00Z.",
+                "valid_at": "2026-06-02 15:00:00+00:00",
+                "invalid_at": "2026-06-07 15:00:00+00:00",
+                "source_node_uuid": "56b068b0-700b-4bc6-8312-5a0dbf5367b1",
+                "target_node_uuid": "07a7098d-03e3-441d-8727-d331bdd08db3"
+              },
+              {
+                "graphiti_fact_uuid": "2120e21d-b8c5-4d39-855b-cc1fe6a5e6c4",
+                "event_ids": [
+                  "thesis_e6"
+                ],
+                "fact": "thesis_e6 提到 thesis_ch2 的 6月8日 旧截止时间，但没有改变 thesis_ch2 的当前计划。",
+                "valid_at": "2026-06-07 15:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "51e0b93e-743b-403e-a398-a2e36a31549b",
+                "target_node_uuid": "51e0b93e-743b-403e-a398-a2e36a31549b"
+              },
+              {
+                "graphiti_fact_uuid": "ee45a548-ed87-4aa3-bf69-2295fe379722",
+                "event_ids": [
+                  "thesis_e2"
+                ],
+                "fact": "thesis_e2 is associated with thesis_ch2 for a deadline planned for 2026-06-08T18:00:00Z.",
+                "valid_at": "2026-06-02 15:00:00+00:00",
+                "invalid_at": "2026-06-07 15:00:00+00:00",
+                "source_node_uuid": "07a7098d-03e3-441d-8727-d331bdd08db3",
+                "target_node_uuid": "51e0b93e-743b-403e-a398-a2e36a31549b"
+              },
+              {
+                "graphiti_fact_uuid": "141b2eac-b380-495b-a7a9-78f50a87ce78",
+                "event_ids": [
+                  "thesis_e5"
+                ],
+                "fact": "第二章语法通读已完成，但内容结构还未改完",
+                "valid_at": "2026-06-06 15:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "6be943db-97ce-4fd7-b9ba-d150915d3722",
+                "target_node_uuid": "53b24a5d-0b4c-4c0d-b474-5db312bce306"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "deadline": {
+              "score": 0,
+              "reason": "gold是当前截止时间为6月10日，pred为unknown，缺失明确状态。"
+            },
+            "invalidated_deadline": {
+              "score": 1,
+              "reason": "pred给出6月8日，且gold表示6月8日是旧截止时间已被替代，语义一致。"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "答对了6月8日已失效，但错误声称未找到6月10日且当前无有效截止日期，未覆盖gold中当前截止时间为6月10日。"
+          },
+          "slot_overall_score": 0.5
+        }
+      },
+      {
+        "case_id": "thesis_remaining_work",
+        "query": "第二章现在还差什么？",
+        "event_f1": 0.667,
+        "event_precision": 1.0,
+        "gold_event_recall": 0.5,
+        "context_event_recall": null,
+        "slot_support_accuracy": 1.0,
+        "slot_support_f1": 0.833,
+        "required_support_f1": 0.667,
+        "slot_value_judge": 0.5,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "thesis_e5"
+        ],
+        "pred_state_slots": {
+          "remaining_work": {
+            "value": "内容结构还未改完",
+            "support_event": "thesis_e5",
+            "support_events": [
+              "thesis_e5"
+            ]
+          },
+          "completed_item": {
+            "value": "语法通读已完成",
+            "support_event": "thesis_e5",
+            "support_events": [
+              "thesis_e5"
+            ]
+          }
+        },
+        "answer": "第二章现在还差内容结构未改完，语法通读已完成。",
+        "raw_output": {
+          "evidence_events": [
+            "thesis_e5"
+          ],
+          "state_slots": {
+            "remaining_work": {
+              "value": "内容结构还未改完",
+              "support_event": "thesis_e5",
+              "support_events": [
+                "thesis_e5"
+              ]
+            },
+            "completed_item": {
+              "value": "语法通读已完成",
+              "support_event": "thesis_e5",
+              "support_events": [
+                "thesis_e5"
+              ]
+            }
+          },
+          "coverage_check": {
+            "remaining_work": true,
+            "completed_item": true
+          },
+          "answer": "第二章现在还差内容结构未改完，语法通读已完成。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 37,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "559d0622-36d7-422d-aaa9-4ff09887dc02",
+                "event_ids": [
+                  "thesis_e2"
+                ],
+                "fact": "第二章 is associated with thesis_e2 for a deadline planned for 2026-06-08T18:00:00Z.",
+                "valid_at": "2026-06-02 15:00:00+00:00",
+                "invalid_at": "2026-06-07 15:00:00+00:00",
+                "source_node_uuid": "56b068b0-700b-4bc6-8312-5a0dbf5367b1",
+                "target_node_uuid": "07a7098d-03e3-441d-8727-d331bdd08db3"
+              },
+              {
+                "graphiti_fact_uuid": "141b2eac-b380-495b-a7a9-78f50a87ce78",
+                "event_ids": [
+                  "thesis_e5"
+                ],
+                "fact": "第二章语法通读已完成，但内容结构还未改完",
+                "valid_at": "2026-06-06 15:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "6be943db-97ce-4fd7-b9ba-d150915d3722",
+                "target_node_uuid": "53b24a5d-0b4c-4c0d-b474-5db312bce306"
+              },
+              {
+                "graphiti_fact_uuid": "2120e21d-b8c5-4d39-855b-cc1fe6a5e6c4",
+                "event_ids": [
+                  "thesis_e6"
+                ],
+                "fact": "thesis_e6 提到 thesis_ch2 的 6月8日 旧截止时间，但没有改变 thesis_ch2 的当前计划。",
+                "valid_at": "2026-06-07 15:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "51e0b93e-743b-403e-a398-a2e36a31549b",
+                "target_node_uuid": "51e0b93e-743b-403e-a398-a2e36a31549b"
+              },
+              {
+                "graphiti_fact_uuid": "2af62a01-1a21-4ea4-89aa-9aaa76b4a8d4",
+                "event_ids": [
+                  "thesis_e6"
+                ],
+                "fact": "thesis_e6 提到 thesis_ch2 的 6月8日 旧截止时间，但没有改变 thesis_ch2 的当前计划。",
+                "valid_at": "2026-06-07 15:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "51e0b93e-743b-403e-a398-a2e36a31549b",
+                "target_node_uuid": "56b068b0-700b-4bc6-8312-5a0dbf5367b1"
+              },
+              {
+                "graphiti_fact_uuid": "ee45a548-ed87-4aa3-bf69-2295fe379722",
+                "event_ids": [
+                  "thesis_e2"
+                ],
+                "fact": "thesis_e2 is associated with thesis_ch2 for a deadline planned for 2026-06-08T18:00:00Z.",
+                "valid_at": "2026-06-02 15:00:00+00:00",
+                "invalid_at": "2026-06-07 15:00:00+00:00",
+                "source_node_uuid": "07a7098d-03e3-441d-8727-d331bdd08db3",
+                "target_node_uuid": "51e0b93e-743b-403e-a398-a2e36a31549b"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "remaining_work": {
+              "score": 0,
+              "reason": "Gold 还包括“需要补动机和研究空白”，预测只保留了“内容结构还未改完”，信息缺失，未等价。"
+            },
+            "completed_item": {
+              "score": 1,
+              "reason": "“语法通读已完成”与 gold 的“语法通读已经完成”语义等价。"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "答案只覆盖了内容结构未改完和语法通读已完成，遗漏了“需要补动机和研究空白”，未完整覆盖 gold 状态。"
+          },
+          "slot_overall_score": 0.5
+        }
+      },
+      {
+        "case_id": "auth_status",
+        "query": "移动端登录最近怎么样？",
+        "event_f1": 0.4,
+        "event_precision": 1.0,
+        "gold_event_recall": 0.25,
+        "context_event_recall": null,
+        "slot_support_accuracy": 0.25,
+        "slot_support_f1": 0.25,
+        "required_support_f1": 0.4,
+        "slot_value_judge": 0.25,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "auth_e2"
+        ],
+        "pred_state_slots": {
+          "current_decision": {
+            "value": "采用email magic link",
+            "support_event": "auth_e2",
+            "support_events": [
+              "auth_e2"
+            ]
+          },
+          "resolved_issue": {
+            "value": "短信OTP方案被替换",
+            "support_event": "auth_e2",
+            "support_events": [
+              "auth_e2"
+            ]
+          },
+          "current_issue": {
+            "value": "",
+            "support_event": null,
+            "support_events": []
+          },
+          "next_step": {
+            "value": "",
+            "support_event": null,
+            "support_events": []
+          }
+        },
+        "answer": "移动端登录最近将短信OTP替换为了email magic link。当前决策是采用email magic link方案，已解决短信OTP的问题。当前无明确问题，下一步无明确计划。",
+        "raw_output": {
+          "evidence_events": [
+            "auth_e2"
+          ],
+          "state_slots": {
+            "current_decision": {
+              "value": "采用email magic link",
+              "support_event": "auth_e2",
+              "support_events": [
+                "auth_e2"
+              ]
+            },
+            "resolved_issue": {
+              "value": "短信OTP方案被替换",
+              "support_event": "auth_e2",
+              "support_events": [
+                "auth_e2"
+              ]
+            },
+            "current_issue": {
+              "value": null,
+              "support_event": null,
+              "support_events": []
+            },
+            "next_step": {
+              "value": null,
+              "support_event": null,
+              "support_events": []
+            }
+          },
+          "coverage_check": {
+            "current_decision": true,
+            "resolved_issue": true,
+            "current_issue": false,
+            "next_step": false
+          },
+          "answer": "移动端登录最近将短信OTP替换为了email magic link。当前决策是采用email magic link方案，已解决短信OTP的问题。当前无明确问题，下一步无明确计划。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 39,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "a4ff59cc-d5ca-4b70-a1d1-ca13c91420c3",
+                "event_ids": [
+                  "auth_e2"
+                ],
+                "fact": "email magic link replaced 短信 OTP for the login scheme",
+                "valid_at": "2026-06-03 12:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "325d59c8-121f-48bd-9771-4b626c79c34a",
+                "target_node_uuid": "4209fe50-1f65-4200-8059-74fc574de60e"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "current_decision": {
+              "score": 1,
+              "reason": "与gold同义，均表示采用 email magic link。"
+            },
+            "resolved_issue": {
+              "score": 0,
+              "reason": "gold是magic link重发限流已修复，pred误写成短信OTP方案被替换，语义不一致。"
+            },
+            "current_issue": {
+              "score": 0,
+              "reason": "gold有明确当前问题，pred为空。"
+            },
+            "next_step": {
+              "score": 0,
+              "reason": "gold有明确下一步，pred为空。"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "只覆盖了部分决策信息，且对已解决问题、当前问题和下一步都未正确覆盖。"
+          },
+          "slot_overall_score": 0.25
+        }
+      },
+      {
+        "case_id": "auth_login_method",
+        "query": "登录方案现在还是短信 OTP 吗？",
+        "event_f1": 0.667,
+        "event_precision": 1.0,
+        "gold_event_recall": 0.5,
+        "context_event_recall": null,
+        "slot_support_accuracy": 1.0,
+        "slot_support_f1": 0.833,
+        "required_support_f1": 0.667,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "auth_e2"
+        ],
+        "pred_state_slots": {
+          "current_decision": {
+            "value": "email magic link",
+            "support_event": "auth_e2",
+            "support_events": [
+              "auth_e2"
+            ]
+          },
+          "invalidated_decision": {
+            "value": "短信 OTP",
+            "support_event": "auth_e2",
+            "support_events": [
+              "auth_e2"
+            ]
+          }
+        },
+        "answer": "当前登录方案是 email magic link，不再使用短信 OTP。",
+        "raw_output": {
+          "evidence_events": [
+            "auth_e2"
+          ],
+          "state_slots": {
+            "current_decision": {
+              "value": "email magic link",
+              "support_event": "auth_e2",
+              "support_events": [
+                "auth_e2"
+              ]
+            },
+            "invalidated_decision": {
+              "value": "短信 OTP",
+              "support_event": "auth_e2",
+              "support_events": [
+                "auth_e2"
+              ]
+            }
+          },
+          "coverage_check": {
+            "current_decision": true,
+            "invalidated_decision": true
+          },
+          "answer": "当前登录方案是 email magic link，不再使用短信 OTP。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 38,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "a4ff59cc-d5ca-4b70-a1d1-ca13c91420c3",
+                "event_ids": [
+                  "auth_e2"
+                ],
+                "fact": "email magic link replaced 短信 OTP for the login scheme",
+                "valid_at": "2026-06-03 12:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "325d59c8-121f-48bd-9771-4b626c79c34a",
+                "target_node_uuid": "4209fe50-1f65-4200-8059-74fc574de60e"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "current_decision": {
+              "score": 1,
+              "reason": "“email magic link”与gold中的当前方案一致。"
+            },
+            "invalidated_decision": {
+              "score": 1,
+              "reason": "“短信 OTP”与gold中被替代的旧方案一致。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "自然语言回答覆盖了当前方案和短信OTP已不再使用两点，整体正确。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "auth_remaining_issue",
+        "query": "移动端登录还有什么没解决？",
+        "event_f1": 0.0,
+        "event_precision": 0.0,
+        "gold_event_recall": 0.0,
+        "context_event_recall": null,
+        "slot_support_accuracy": 0.0,
+        "slot_support_f1": 0.0,
+        "required_support_f1": 0.0,
+        "slot_value_judge": 0.0,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "auth_e2"
+        ],
+        "pred_state_slots": {
+          "resolved_issue": {
+            "value": "email magic link replaced 短信 OTP for the login scheme",
+            "support_event": "auth_e2",
+            "support_events": [
+              "auth_e2"
+            ]
+          },
+          "current_issue": {
+            "value": "无",
+            "support_event": null,
+            "support_events": []
+          }
+        },
+        "answer": "目前没有未解决的问题。已经用email magic link替代了短信OTP。",
+        "raw_output": {
+          "evidence_events": [
+            "auth_e2"
+          ],
+          "state_slots": {
+            "resolved_issue": {
+              "value": "email magic link replaced 短信 OTP for the login scheme",
+              "support_event": "auth_e2",
+              "support_events": [
+                "auth_e2"
+              ]
+            },
+            "current_issue": {
+              "value": "无",
+              "support_event": null,
+              "support_events": []
+            }
+          },
+          "coverage_check": {
+            "resolved_issue": true,
+            "current_issue": true
+          },
+          "answer": "目前没有未解决的问题。已经用email magic link替代了短信OTP。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 38,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "a4ff59cc-d5ca-4b70-a1d1-ca13c91420c3",
+                "event_ids": [
+                  "auth_e2"
+                ],
+                "fact": "email magic link replaced 短信 OTP for the login scheme",
+                "valid_at": "2026-06-03 12:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "325d59c8-121f-48bd-9771-4b626c79c34a",
+                "target_node_uuid": "4209fe50-1f65-4200-8059-74fc574de60e"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "resolved_issue": {
+              "score": 0,
+              "reason": "gold 是“重发接口限流已经修复”，预测成了“email magic link 替代短信OTP”，语义不一致且引入新内容"
+            },
+            "current_issue": {
+              "score": 0,
+              "reason": "gold 有明确未解决问题“iOS 端重发按钮偶尔不刷新倒计时”，预测为“无”"
+            },
+            "answer_score": {
+              "score": 0,
+              "reason": "答案声称没有未解决问题且提到 email magic link，未覆盖 gold 中的已修复项和当前未解决项"
+            },
+            "slot_overall_score": 0
+          }
+        }
+      },
+      {
+        "case_id": "grant_status",
+        "query": "基金申请最近怎么样？",
+        "event_f1": 0.667,
+        "event_precision": 0.667,
+        "gold_event_recall": 0.667,
+        "context_event_recall": null,
+        "slot_support_accuracy": 0.333,
+        "slot_support_f1": 0.333,
+        "required_support_f1": 0.667,
+        "slot_value_judge": 0.333,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "grant_e5",
+          "grant_e6",
+          "grant_e4"
+        ],
+        "pred_state_slots": {
+          "budget": {
+            "value": "预算说明仍待补充到申请书草稿中，旧预算表(80k)已作废",
+            "support_event": "grant_e5",
+            "support_events": [
+              "grant_e5",
+              "grant_e6"
+            ]
+          },
+          "team": {
+            "value": "合作方C已取代合作方B的实验条件支持职责",
+            "support_event": "grant_e4",
+            "support_events": [
+              "grant_e4"
+            ]
+          },
+          "remaining_work": {
+            "value": "无相关信息",
+            "support_event": null,
+            "support_events": []
+          }
+        },
+        "answer": "基金申请当前状态：预算方面，预算说明仍待补充到申请书草稿中，旧预算表(80k)已作废；团队方面，合作方C已取代合作方B的实验条件支持职责；剩余工作方面，暂无相关信息。",
+        "raw_output": {
+          "evidence_events": [
+            "grant_e5",
+            "grant_e6",
+            "grant_e4"
+          ],
+          "state_slots": {
+            "budget": {
+              "value": "预算说明仍待补充到申请书草稿中，旧预算表(80k)已作废",
+              "support_event": "grant_e5",
+              "support_events": [
+                "grant_e5",
+                "grant_e6"
+              ]
+            },
+            "team": {
+              "value": "合作方C已取代合作方B的实验条件支持职责",
+              "support_event": "grant_e4",
+              "support_events": [
+                "grant_e4"
+              ]
+            },
+            "remaining_work": {
+              "value": "无相关信息",
+              "support_event": null,
+              "support_events": []
+            }
+          },
+          "coverage_check": {
+            "budget": true,
+            "team": true,
+            "remaining_work": false
+          },
+          "answer": "基金申请当前状态：预算方面，预算说明仍待补充到申请书草稿中，旧预算表(80k)已作废；团队方面，合作方C已取代合作方B的实验条件支持职责；剩余工作方面，暂无相关信息。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 35,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "2304fb09-03f1-4900-858a-265aab98de68",
+                "event_ids": [
+                  "grant_e5"
+                ],
+                "fact": "预算说明 仍待补充到申请书草稿中",
+                "valid_at": "2026-06-06 16:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "fb736289-8042-4564-9074-e7c39c10c859",
+                "target_node_uuid": "1da9326a-7b64-41ff-8dc7-4841beebe1d3"
+              },
+              {
+                "graphiti_fact_uuid": "6b07abd2-7e52-42b6-a981-92a1944d7b6b",
+                "event_ids": [
+                  "grant_e6"
+                ],
+                "fact": "80k 旧预算表 is referenced in 附件, and 附件 has been marked 作废.",
+                "valid_at": "2026-06-07 16:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "463d308b-5c69-425b-b114-1a3b558a3bf8",
+                "target_node_uuid": "791b4386-a70c-4990-9831-1af9d910c004"
+              },
+              {
+                "graphiti_fact_uuid": "e1b47c69-7f58-41df-b359-80cfc558d421",
+                "event_ids": [
+                  "grant_e4"
+                ],
+                "fact": "合作方 C 取代了合作方 B 的实验条件支持职责",
+                "valid_at": "2026-06-05 16:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "9885e234-dcab-4d3f-9143-68373df8da28",
+                "target_node_uuid": "c5bc12eb-dbd4-4125-a153-df3dbe748e7e"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "budget": {
+              "score": 0,
+              "reason": "gold 是当前预算95k；预测说的是待补预算说明和旧80k作废，未给出当前预算，且信息不等价"
+            },
+            "team": {
+              "score": 1,
+              "reason": "与 gold 的“合作方C加入并替代合作方B的实验条件支持”语义一致"
+            },
+            "remaining_work": {
+              "score": 0,
+              "reason": "gold 明确还有“申请书草稿已上传，仍需补预算说明”；预测回答无相关信息，缺失且相反"
+            },
+            "overall": 0
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "只正确覆盖了团队状态，预算和剩余工作未正确覆盖 gold，且 answer 要求覆盖全部 gold 状态"
+          },
+          "slot_overall_score": 0.3333333333333333
+        }
+      },
+      {
+        "case_id": "grant_budget",
+        "query": "基金申请预算现在是多少？",
+        "event_f1": 0.0,
+        "event_precision": 0.0,
+        "gold_event_recall": 0.0,
+        "context_event_recall": null,
+        "slot_support_accuracy": 0.0,
+        "slot_support_f1": 0.0,
+        "required_support_f1": 0.0,
+        "slot_value_judge": 0.0,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "grant_e5",
+          "grant_e6"
+        ],
+        "pred_state_slots": {
+          "budget": {
+            "value": "待补充",
+            "support_event": "grant_e5",
+            "support_events": [
+              "grant_e5"
+            ]
+          },
+          "invalidated_budget": {
+            "value": "80k",
+            "support_event": "grant_e6",
+            "support_events": [
+              "grant_e6"
+            ]
+          }
+        },
+        "answer": "当前预算说明仍待补充到申请书草稿中，没有明确数字；旧预算表80k已作废。",
+        "raw_output": {
+          "evidence_events": [
+            "grant_e5",
+            "grant_e6"
+          ],
+          "state_slots": {
+            "budget": {
+              "value": "待补充",
+              "support_event": "grant_e5",
+              "support_events": [
+                "grant_e5"
+              ]
+            },
+            "invalidated_budget": {
+              "value": "80k",
+              "support_event": "grant_e6",
+              "support_events": [
+                "grant_e6"
+              ]
+            }
+          },
+          "coverage_check": {
+            "budget": true,
+            "invalidated_budget": true
+          },
+          "answer": "当前预算说明仍待补充到申请书草稿中，没有明确数字；旧预算表80k已作废。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 31,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "2304fb09-03f1-4900-858a-265aab98de68",
+                "event_ids": [
+                  "grant_e5"
+                ],
+                "fact": "预算说明 仍待补充到申请书草稿中",
+                "valid_at": "2026-06-06 16:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "fb736289-8042-4564-9074-e7c39c10c859",
+                "target_node_uuid": "1da9326a-7b64-41ff-8dc7-4841beebe1d3"
+              },
+              {
+                "graphiti_fact_uuid": "6b07abd2-7e52-42b6-a981-92a1944d7b6b",
+                "event_ids": [
+                  "grant_e6"
+                ],
+                "fact": "80k 旧预算表 is referenced in 附件, and 附件 has been marked 作废.",
+                "valid_at": "2026-06-07 16:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "463d308b-5c69-425b-b114-1a3b558a3bf8",
+                "target_node_uuid": "791b4386-a70c-4990-9831-1af9d910c004"
+              },
+              {
+                "graphiti_fact_uuid": "e1b47c69-7f58-41df-b359-80cfc558d421",
+                "event_ids": [
+                  "grant_e4"
+                ],
+                "fact": "合作方 C 取代了合作方 B 的实验条件支持职责",
+                "valid_at": "2026-06-05 16:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "9885e234-dcab-4d3f-9143-68373df8da28",
+                "target_node_uuid": "c5bc12eb-dbd4-4125-a153-df3dbe748e7e"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "budget": {
+              "score": 0,
+              "reason": "gold 是明确的当前预算 95k，预测成“待补充”表示未知/缺失，语义不一致。"
+            },
+            "invalidated_budget": {
+              "score": 0,
+              "reason": "gold 表示 80k 是旧预算且已作废，预测只给出“80k”未体现作废语义。"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "虽然提到旧预算80k已作废，但没有正确给出当前预算95k，且将预算说成待补充，未完整覆盖 gold 状态。"
+          },
+          "slot_overall_score": 0
+        }
+      },
+      {
+        "case_id": "grant_team",
+        "query": "基金申请合作方现在是谁？",
+        "event_f1": 0.667,
+        "event_precision": 1.0,
+        "gold_event_recall": 0.5,
+        "context_event_recall": null,
+        "slot_support_accuracy": 1.0,
+        "slot_support_f1": 0.833,
+        "required_support_f1": 0.667,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "grant_e4"
+        ],
+        "pred_state_slots": {
+          "team": {
+            "value": "合作方C",
+            "support_event": "grant_e4",
+            "support_events": [
+              "grant_e4"
+            ]
+          },
+          "invalidated_team": {
+            "value": "合作方B",
+            "support_event": "grant_e4",
+            "support_events": [
+              "grant_e4"
+            ]
+          }
+        },
+        "answer": "当前基金申请的合作方是合作方C，之前被取代的合作方是合作方B。",
+        "raw_output": {
+          "evidence_events": [
+            "grant_e4"
+          ],
+          "state_slots": {
+            "team": {
+              "value": "合作方C",
+              "support_event": "grant_e4",
+              "support_events": [
+                "grant_e4"
+              ]
+            },
+            "invalidated_team": {
+              "value": "合作方B",
+              "support_event": "grant_e4",
+              "support_events": [
+                "grant_e4"
+              ]
+            }
+          },
+          "coverage_check": {
+            "team": true,
+            "invalidated_team": true
+          },
+          "answer": "当前基金申请的合作方是合作方C，之前被取代的合作方是合作方B。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 37,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "e1b47c69-7f58-41df-b359-80cfc558d421",
+                "event_ids": [
+                  "grant_e4"
+                ],
+                "fact": "合作方 C 取代了合作方 B 的实验条件支持职责",
+                "valid_at": "2026-06-05 16:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "9885e234-dcab-4d3f-9143-68373df8da28",
+                "target_node_uuid": "c5bc12eb-dbd4-4125-a153-df3dbe748e7e"
+              },
+              {
+                "graphiti_fact_uuid": "2304fb09-03f1-4900-858a-265aab98de68",
+                "event_ids": [
+                  "grant_e5"
+                ],
+                "fact": "预算说明 仍待补充到申请书草稿中",
+                "valid_at": "2026-06-06 16:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "fb736289-8042-4564-9074-e7c39c10c859",
+                "target_node_uuid": "1da9326a-7b64-41ff-8dc7-4841beebe1d3"
+              },
+              {
+                "graphiti_fact_uuid": "6b07abd2-7e52-42b6-a981-92a1944d7b6b",
+                "event_ids": [
+                  "grant_e6"
+                ],
+                "fact": "80k 旧预算表 is referenced in 附件, and 附件 has been marked 作废.",
+                "valid_at": "2026-06-07 16:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "463d308b-5c69-425b-b114-1a3b558a3bf8",
+                "target_node_uuid": "791b4386-a70c-4990-9831-1af9d910c004"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "team": {
+              "score": 1,
+              "reason": "“合作方C”与gold中当前加入并提供支持的合作方C语义一致。"
+            },
+            "invalidated_team": {
+              "score": 1,
+              "reason": "“合作方B”与gold中已退出并被替代的合作方B语义一致。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "自然语言回答覆盖了当前合作方C和被取代的合作方B，整体正确。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "label_status",
+        "query": "标注规范最近怎么样？",
+        "event_f1": 0.75,
+        "event_precision": 0.75,
+        "gold_event_recall": 0.75,
+        "context_event_recall": null,
+        "slot_support_accuracy": 0.75,
+        "slot_support_f1": 0.75,
+        "required_support_f1": 0.75,
+        "slot_value_judge": 0.75,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "label_e2",
+          "label_e3",
+          "label_e4",
+          "label_e6"
+        ],
+        "pred_state_slots": {
+          "current_guideline": {
+            "value": "标注规范 v2，将 uncertain 与 partial 合并为 ambiguous",
+            "support_event": "label_e2",
+            "support_events": [
+              "label_e2"
+            ]
+          },
+          "current_issue": {
+            "value": "Batch A 标注不一致率达 12%",
+            "support_event": "label_e3",
+            "support_events": [
+              "label_e3"
+            ]
+          },
+          "next_step": {
+            "value": "计划于 2026-06-08 10:00 根据 v2 重新培训标注员",
+            "support_event": "label_e4",
+            "support_events": [
+              "label_e4"
+            ]
+          },
+          "completed_item": {
+            "value": "发布标注规范 v2 并取代 v1",
+            "support_event": "label_e2",
+            "support_events": [
+              "label_e2",
+              "label_e6"
+            ]
+          }
+        },
+        "answer": "标注规范现在使用 v2 版本（将 uncertain 与 partial 合并为 ambiguous），但当前面临 Batch A 标注不一致率 12% 的问题。下一步计划于 2026-06-08 10:00 根据 v2 重新培训标注员。已完成的里程碑是发布 v2 并废弃 v1。",
+        "raw_output": {
+          "evidence_events": [
+            "label_e2",
+            "label_e3",
+            "label_e4",
+            "label_e6"
+          ],
+          "state_slots": {
+            "current_guideline": {
+              "value": "标注规范 v2，将 uncertain 与 partial 合并为 ambiguous",
+              "support_events": [
+                "label_e2"
+              ],
+              "support_event": "label_e2"
+            },
+            "current_issue": {
+              "value": "Batch A 标注不一致率达 12%",
+              "support_events": [
+                "label_e3"
+              ],
+              "support_event": "label_e3"
+            },
+            "next_step": {
+              "value": "计划于 2026-06-08 10:00 根据 v2 重新培训标注员",
+              "support_events": [
+                "label_e4"
+              ],
+              "support_event": "label_e4"
+            },
+            "completed_item": {
+              "value": "发布标注规范 v2 并取代 v1",
+              "support_events": [
+                "label_e2",
+                "label_e6"
+              ],
+              "support_event": "label_e2"
+            }
+          },
+          "coverage_check": {
+            "current_guideline": true,
+            "current_issue": true,
+            "next_step": true,
+            "completed_item": true
+          },
+          "answer": "标注规范现在使用 v2 版本（将 uncertain 与 partial 合并为 ambiguous），但当前面临 Batch A 标注不一致率 12% 的问题。下一步计划于 2026-06-08 10:00 根据 v2 重新培训标注员。已完成的里程碑是发布 v2 并废弃 v1。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 35,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "0135959f-ab05-432c-b436-9d1dbd75eeec",
+                "event_ids": [
+                  "label_e2"
+                ],
+                "fact": "标注规范 v2 取代了 label_e1",
+                "valid_at": "2026-06-03 17:00:00+00:00",
+                "invalid_at": "2026-06-05 16:00:00+00:00",
+                "source_node_uuid": "bc67e5bf-c85e-45e0-9310-2396e1632862",
+                "target_node_uuid": "dfa7d010-2ba7-45a2-9f5d-30f345f8ca14"
+              },
+              {
+                "graphiti_fact_uuid": "be1d8961-7428-4950-a6af-32221088c42f",
+                "event_ids": [
+                  "label_e4"
+                ],
+                "fact": "label_e4 is a plan under labeling_guideline to retrain annotators with v2 on 2026-06-08T10:00:00Z",
+                "valid_at": "2026-06-05 17:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "6418c97b-6006-499b-97b6-4af4a7286c8f",
+                "target_node_uuid": "a97af61b-cbd8-4731-ad63-56b2e77cf124"
+              },
+              {
+                "graphiti_fact_uuid": "089c1669-598e-4e08-b02d-cce861751d4f",
+                "event_ids": [
+                  "label_e2"
+                ],
+                "fact": "标注规范 v2 将 uncertain 与 partial 合并为 ambiguous",
+                "valid_at": "2026-06-03 17:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "bc67e5bf-c85e-45e0-9310-2396e1632862",
+                "target_node_uuid": "f19779a9-8ada-4d75-9a00-4940a2fd5bb7"
+              },
+              {
+                "graphiti_fact_uuid": "560a9574-a637-4e48-a121-6ae4d93bacad",
+                "event_ids": [
+                  "label_e6"
+                ],
+                "fact": "Slack 里有人转发了 v1 规范截图",
+                "valid_at": "2026-06-07 17:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "a02be6af-11a5-4f50-856e-895f41401bca",
+                "target_node_uuid": "f3457a94-2d18-4788-bba4-0562a52524d7"
+              },
+              {
+                "graphiti_fact_uuid": "76464213-3099-4a63-8f62-ff44182ae38a",
+                "event_ids": [
+                  "label_e6"
+                ],
+                "fact": "v1 规范截图已被管理员说明作废",
+                "valid_at": "2026-06-07 17:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "f3457a94-2d18-4788-bba4-0562a52524d7",
+                "target_node_uuid": "a02be6af-11a5-4f50-856e-895f41401bca"
+              },
+              {
+                "graphiti_fact_uuid": "cf1e9e51-e2ec-4f36-93f5-0aa827d06d66",
+                "event_ids": [
+                  "label_e3"
+                ],
+                "fact": "QC discovered that batch A has a 12% labeling disagreement rate.",
+                "valid_at": "2026-06-04 17:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "a4be38b4-e9e7-4994-af2c-7e2ffb3d0ac1",
+                "target_node_uuid": "8103dabb-b34d-4196-a163-1b6754dec210"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "current_guideline": {
+              "score": 1,
+              "reason": "语义一致，均表示 v2 将 uncertain 与 partial 合并为 ambiguous。"
+            },
+            "current_issue": {
+              "score": 1,
+              "reason": "语义一致，分歧率/不一致率 12% 等价。"
+            },
+            "next_step": {
+              "score": 1,
+              "reason": "核心一致，都是6月8日用v2重新培训标注员；多出的具体时间不影响等价。"
+            },
+            "completed_item": {
+              "score": 0,
+              "reason": "gold 是 batch A 已完成一轮标注但还没复核，预测成了发布规范 v2 并取代 v1，语义不一致。"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "答对了 current_guideline、current_issue、next_step，但 completed_item 错误且未正确覆盖 gold 的已完成事项。"
+          },
+          "slot_overall_score": 0.75
+        }
+      },
+      {
+        "case_id": "label_guideline",
+        "query": "标注规范现在 uncertain 和 partial 怎么处理？",
+        "event_f1": 0.5,
+        "event_precision": 0.5,
+        "gold_event_recall": 0.5,
+        "context_event_recall": null,
+        "slot_support_accuracy": 1.0,
+        "slot_support_f1": 0.75,
+        "required_support_f1": 0.5,
+        "slot_value_judge": 0.5,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "label_e2",
+          "label_e6"
+        ],
+        "pred_state_slots": {
+          "current_guideline": {
+            "value": "标注规范 v2 将 uncertain 与 partial 合并为 ambiguous",
+            "support_event": "label_e2",
+            "support_events": [
+              "label_e2"
+            ]
+          },
+          "invalidated_guideline": {
+            "value": "v1 规范已被 v2 取代，且 v1 规范截图已被管理员说明作废",
+            "support_event": "label_e2",
+            "support_events": [
+              "label_e2",
+              "label_e6"
+            ]
+          }
+        },
+        "answer": "当前标注规范 v2 已将 uncertain 和 partial 合并为 ambiguous；之前的 v1 规范已被 v2 取代，且 v1 规范截图已由管理员说明作废。",
+        "raw_output": {
+          "evidence_events": [
+            "label_e2",
+            "label_e6"
+          ],
+          "state_slots": {
+            "current_guideline": {
+              "value": "标注规范 v2 将 uncertain 与 partial 合并为 ambiguous",
+              "support_event": "label_e2",
+              "support_events": [
+                "label_e2"
+              ]
+            },
+            "invalidated_guideline": {
+              "value": "v1 规范已被 v2 取代，且 v1 规范截图已被管理员说明作废",
+              "support_event": "label_e2",
+              "support_events": [
+                "label_e2",
+                "label_e6"
+              ]
+            }
+          },
+          "coverage_check": {
+            "current_guideline": true,
+            "invalidated_guideline": true
+          },
+          "answer": "当前标注规范 v2 已将 uncertain 和 partial 合并为 ambiguous；之前的 v1 规范已被 v2 取代，且 v1 规范截图已由管理员说明作废。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 35,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "089c1669-598e-4e08-b02d-cce861751d4f",
+                "event_ids": [
+                  "label_e2"
+                ],
+                "fact": "标注规范 v2 将 uncertain 与 partial 合并为 ambiguous",
+                "valid_at": "2026-06-03 17:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "bc67e5bf-c85e-45e0-9310-2396e1632862",
+                "target_node_uuid": "f19779a9-8ada-4d75-9a00-4940a2fd5bb7"
+              },
+              {
+                "graphiti_fact_uuid": "0135959f-ab05-432c-b436-9d1dbd75eeec",
+                "event_ids": [
+                  "label_e2"
+                ],
+                "fact": "标注规范 v2 取代了 label_e1",
+                "valid_at": "2026-06-03 17:00:00+00:00",
+                "invalid_at": "2026-06-05 16:00:00+00:00",
+                "source_node_uuid": "bc67e5bf-c85e-45e0-9310-2396e1632862",
+                "target_node_uuid": "dfa7d010-2ba7-45a2-9f5d-30f345f8ca14"
+              },
+              {
+                "graphiti_fact_uuid": "be1d8961-7428-4950-a6af-32221088c42f",
+                "event_ids": [
+                  "label_e4"
+                ],
+                "fact": "label_e4 is a plan under labeling_guideline to retrain annotators with v2 on 2026-06-08T10:00:00Z",
+                "valid_at": "2026-06-05 17:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "6418c97b-6006-499b-97b6-4af4a7286c8f",
+                "target_node_uuid": "a97af61b-cbd8-4731-ad63-56b2e77cf124"
+              },
+              {
+                "graphiti_fact_uuid": "76464213-3099-4a63-8f62-ff44182ae38a",
+                "event_ids": [
+                  "label_e6"
+                ],
+                "fact": "v1 规范截图已被管理员说明作废",
+                "valid_at": "2026-06-07 17:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "f3457a94-2d18-4788-bba4-0562a52524d7",
+                "target_node_uuid": "a02be6af-11a5-4f50-856e-895f41401bca"
+              },
+              {
+                "graphiti_fact_uuid": "560a9574-a637-4e48-a121-6ae4d93bacad",
+                "event_ids": [
+                  "label_e6"
+                ],
+                "fact": "Slack 里有人转发了 v1 规范截图",
+                "valid_at": "2026-06-07 17:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "a02be6af-11a5-4f50-856e-895f41401bca",
+                "target_node_uuid": "f3457a94-2d18-4788-bba4-0562a52524d7"
+              },
+              {
+                "graphiti_fact_uuid": "cf1e9e51-e2ec-4f36-93f5-0aa827d06d66",
+                "event_ids": [
+                  "label_e3"
+                ],
+                "fact": "QC discovered that batch A has a 12% labeling disagreement rate.",
+                "valid_at": "2026-06-04 17:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "a4be38b4-e9e7-4994-af2c-7e2ffb3d0ac1",
+                "target_node_uuid": "8103dabb-b34d-4196-a163-1b6754dec210"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "current_guideline": {
+              "score": 1,
+              "reason": "表达与gold一致，均为v2将uncertain和partial合并为ambiguous。"
+            },
+            "invalidated_guideline": {
+              "score": 0,
+              "reason": "gold强调v1中二者分开处理的规则已作废，预测改成了v1被v2取代且截图作废，含义不等价且引入了无关信息。"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "只完整覆盖了current_guideline；invalidated_guideline没有准确表达gold中的作废内容。"
+          },
+          "slot_overall_score": 0.5
+        }
+      },
+      {
+        "case_id": "label_qc",
+        "query": "标注任务现在主要质量问题是什么？",
+        "event_f1": 1.0,
+        "event_precision": 1.0,
+        "gold_event_recall": 1.0,
+        "context_event_recall": null,
+        "slot_support_accuracy": 1.0,
+        "slot_support_f1": 1.0,
+        "required_support_f1": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "label_e3",
+          "label_e4"
+        ],
+        "pred_state_slots": {
+          "current_issue": {
+            "value": "batch A 12% labeling disagreement rate",
+            "support_event": "label_e3",
+            "support_events": [
+              "label_e3"
+            ]
+          },
+          "next_step": {
+            "value": "retrain annotators with v2 on 2026-06-08",
+            "support_event": "label_e4",
+            "support_events": [
+              "label_e4"
+            ]
+          }
+        },
+        "answer": "当前主要质量问题是batch A标注不一致率达12%，下一步计划在2026年6月8日重新培训标注员使用v2规范。",
+        "raw_output": {
+          "evidence_events": [
+            "label_e3",
+            "label_e4"
+          ],
+          "state_slots": {
+            "current_issue": {
+              "value": "batch A 12% labeling disagreement rate",
+              "support_event": "label_e3",
+              "support_events": [
+                "label_e3"
+              ]
+            },
+            "next_step": {
+              "value": "retrain annotators with v2 on 2026-06-08",
+              "support_event": "label_e4",
+              "support_events": [
+                "label_e4"
+              ]
+            }
+          },
+          "coverage_check": {
+            "current_issue": true,
+            "next_step": true
+          },
+          "answer": "当前主要质量问题是batch A标注不一致率达12%，下一步计划在2026年6月8日重新培训标注员使用v2规范。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 35,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "be1d8961-7428-4950-a6af-32221088c42f",
+                "event_ids": [
+                  "label_e4"
+                ],
+                "fact": "label_e4 is a plan under labeling_guideline to retrain annotators with v2 on 2026-06-08T10:00:00Z",
+                "valid_at": "2026-06-05 17:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "6418c97b-6006-499b-97b6-4af4a7286c8f",
+                "target_node_uuid": "a97af61b-cbd8-4731-ad63-56b2e77cf124"
+              },
+              {
+                "graphiti_fact_uuid": "0135959f-ab05-432c-b436-9d1dbd75eeec",
+                "event_ids": [
+                  "label_e2"
+                ],
+                "fact": "标注规范 v2 取代了 label_e1",
+                "valid_at": "2026-06-03 17:00:00+00:00",
+                "invalid_at": "2026-06-05 16:00:00+00:00",
+                "source_node_uuid": "bc67e5bf-c85e-45e0-9310-2396e1632862",
+                "target_node_uuid": "dfa7d010-2ba7-45a2-9f5d-30f345f8ca14"
+              },
+              {
+                "graphiti_fact_uuid": "089c1669-598e-4e08-b02d-cce861751d4f",
+                "event_ids": [
+                  "label_e2"
+                ],
+                "fact": "标注规范 v2 将 uncertain 与 partial 合并为 ambiguous",
+                "valid_at": "2026-06-03 17:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "bc67e5bf-c85e-45e0-9310-2396e1632862",
+                "target_node_uuid": "f19779a9-8ada-4d75-9a00-4940a2fd5bb7"
+              },
+              {
+                "graphiti_fact_uuid": "cf1e9e51-e2ec-4f36-93f5-0aa827d06d66",
+                "event_ids": [
+                  "label_e3"
+                ],
+                "fact": "QC discovered that batch A has a 12% labeling disagreement rate.",
+                "valid_at": "2026-06-04 17:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "a4be38b4-e9e7-4994-af2c-7e2ffb3d0ac1",
+                "target_node_uuid": "8103dabb-b34d-4196-a163-1b6754dec210"
+              },
+              {
+                "graphiti_fact_uuid": "560a9574-a637-4e48-a121-6ae4d93bacad",
+                "event_ids": [
+                  "label_e6"
+                ],
+                "fact": "Slack 里有人转发了 v1 规范截图",
+                "valid_at": "2026-06-07 17:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "a02be6af-11a5-4f50-856e-895f41401bca",
+                "target_node_uuid": "f3457a94-2d18-4788-bba4-0562a52524d7"
+              },
+              {
+                "graphiti_fact_uuid": "76464213-3099-4a63-8f62-ff44182ae38a",
+                "event_ids": [
+                  "label_e6"
+                ],
+                "fact": "v1 规范截图已被管理员说明作废",
+                "valid_at": "2026-06-07 17:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "f3457a94-2d18-4788-bba4-0562a52524d7",
+                "target_node_uuid": "a02be6af-11a5-4f50-856e-895f41401bca"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "current_issue": {
+              "score": 1,
+              "reason": "“batch A 12% labeling disagreement rate”与“batch A 标注分歧率 12%”语义等价。"
+            },
+            "next_step": {
+              "score": 1,
+              "reason": "“retrain annotators with v2”与“用 v2 规范重新培训标注员”语义等价，时间附加信息不影响等价性。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "自然语言答案覆盖了当前问题和下一步两项 gold 状态，且表述正确。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "rec_status",
+        "query": "推荐系统消融最近怎么样？",
+        "event_f1": 0.857,
+        "event_precision": 1.0,
+        "gold_event_recall": 0.75,
+        "context_event_recall": null,
+        "slot_support_accuracy": 1.0,
+        "slot_support_f1": 0.889,
+        "required_support_f1": 0.857,
+        "slot_value_judge": 0.333,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "rec_e2",
+          "rec_e3",
+          "rec_e4"
+        ],
+        "pred_state_slots": {
+          "corrected_result": {
+            "value": "NCF比LightGCN低1%",
+            "support_event": "rec_e3",
+            "support_events": [
+              "rec_e3"
+            ]
+          },
+          "current_risk": {
+            "value": "数据泄漏风险已消除",
+            "support_event": "rec_e2",
+            "support_events": [
+              "rec_e2"
+            ]
+          },
+          "next_step": {
+            "value": "添加SASRec作为下一轮比较",
+            "support_event": "rec_e4",
+            "support_events": [
+              "rec_e4"
+            ]
+          }
+        },
+        "answer": "推荐系统消融实验最近的进展：数据泄漏问题已修复（rec_e2），修复后NCF比LightGCN低1%（rec_e3）。下一步计划添加SASRec进行比较（rec_e4）。当前无其他明确风险。",
+        "raw_output": {
+          "evidence_events": [
+            "rec_e2",
+            "rec_e3",
+            "rec_e4"
+          ],
+          "state_slots": {
+            "corrected_result": {
+              "value": "NCF比LightGCN低1%",
+              "support_event": "rec_e3",
+              "support_events": [
+                "rec_e3"
+              ]
+            },
+            "current_risk": {
+              "value": "数据泄漏风险已消除",
+              "support_event": "rec_e2",
+              "support_events": [
+                "rec_e2"
+              ]
+            },
+            "next_step": {
+              "value": "添加SASRec作为下一轮比较",
+              "support_event": "rec_e4",
+              "support_events": [
+                "rec_e4"
+              ]
+            }
+          },
+          "coverage_check": {
+            "corrected_result": true,
+            "current_risk": true,
+            "next_step": true
+          },
+          "answer": "推荐系统消融实验最近的进展：数据泄漏问题已修复（rec_e2），修复后NCF比LightGCN低1%（rec_e3）。下一步计划添加SASRec进行比较（rec_e4）。当前无其他明确风险。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 40,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "65b9f805-a6fc-4c1f-bd38-4712b9f3653f",
+                "event_ids": [
+                  "rec_e4"
+                ],
+                "fact": "recsys_ablation decided to add SASRec as a comparison in the next round.",
+                "valid_at": "2026-06-05 18:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "d1e03b66-de0e-4bfd-98ad-ed1483859cef",
+                "target_node_uuid": "42654d1e-5913-46c6-b4f5-84341cc2faa9"
+              },
+              {
+                "graphiti_fact_uuid": "a7d03e69-b5ad-4175-9b59-abd24067d50f",
+                "event_ids": [
+                  "rec_e6"
+                ],
+                "fact": "rec_e6 is an execution log for recsys_ablation.",
+                "valid_at": "2026-06-07 18:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "b630cc37-536c-4b32-9705-b382d24f3a1e",
+                "target_node_uuid": "d1e03b66-de0e-4bfd-98ad-ed1483859cef"
+              },
+              {
+                "graphiti_fact_uuid": "399ee0fd-c8c8-47b8-810f-88da43b34337",
+                "event_ids": [
+                  "rec_e4"
+                ],
+                "fact": "rec_e4 records the decision for recsys_ablation to add SASRec as a comparison in the next round.",
+                "valid_at": "2026-06-05 18:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "f6033985-4358-4491-be72-48643b0b4324",
+                "target_node_uuid": "d1e03b66-de0e-4bfd-98ad-ed1483859cef"
+              },
+              {
+                "graphiti_fact_uuid": "1acdd529-7aa8-4f5d-a126-334cabf24582",
+                "event_ids": [
+                  "rec_e1"
+                ],
+                "fact": "NCF baseline performed 2% higher than LightGCN in the initial experiment.",
+                "valid_at": "2026-06-01 18:00:00+00:00",
+                "invalid_at": "2026-06-04 18:00:00+00:00",
+                "source_node_uuid": "a798dbaf-0243-4bce-96b7-2a3253a81e60",
+                "target_node_uuid": "ce068a04-5956-4688-a135-828729bc4a61"
+              },
+              {
+                "graphiti_fact_uuid": "4631b128-f9c7-4c45-b6de-d7f4d4ffc3b2",
+                "event_ids": [
+                  "rec_e2"
+                ],
+                "fact": "NCF 的初次实验存在数据泄漏，涉及 rec_e1 的实验记录。",
+                "valid_at": "2026-06-03 18:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "e0590cf0-23cd-430d-a42a-8e9c3d25f91e",
+                "target_node_uuid": "046cb00c-6210-40e2-bd37-0702b1b3c80c"
+              },
+              {
+                "graphiti_fact_uuid": "8e436f75-a9e9-4eec-bb04-5583edc742d9",
+                "event_ids": [
+                  "rec_e3"
+                ],
+                "fact": "NCF is 1% lower than LightGCN in the experiment after leakage was fixed.",
+                "valid_at": "2026-06-04 18:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "e0590cf0-23cd-430d-a42a-8e9c3d25f91e",
+                "target_node_uuid": "ce068a04-5956-4688-a135-828729bc4a61"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "corrected_result": {
+              "score": 1,
+              "reason": "都表示修正后NCF比LightGCN低1%，语义一致。"
+            },
+            "current_risk": {
+              "score": 0,
+              "reason": "gold是初次结果存在数据泄漏，预测却说风险已消除，语义相反。"
+            },
+            "next_step": {
+              "score": 0,
+              "reason": "gold还要求补cold-start split测试，预测只提到加入SASRec，信息缺失。"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "只覆盖了修正结果和部分下一步，且把当前风险说成已修复，未完整覆盖gold状态。"
+          },
+          "slot_overall_score": 0.3333333333333333
+        }
+      },
+      {
+        "case_id": "rec_result",
+        "query": "NCF 现在到底比 LightGCN 好还是差？",
+        "event_f1": 0.8,
+        "event_precision": 1.0,
+        "gold_event_recall": 0.667,
+        "context_event_recall": null,
+        "slot_support_accuracy": 1.0,
+        "slot_support_f1": 0.75,
+        "required_support_f1": 0.8,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "rec_e1",
+          "rec_e3"
+        ],
+        "pred_state_slots": {
+          "corrected_result": {
+            "value": "NCF比LightGCN低1%",
+            "support_event": "rec_e3",
+            "support_events": [
+              "rec_e3"
+            ]
+          },
+          "invalidated_result": {
+            "value": "NCF比LightGCN高2%",
+            "support_event": "rec_e1",
+            "support_events": [
+              "rec_e1"
+            ]
+          }
+        },
+        "answer": "当前有效结果是NCF比LightGCN低1%（事件rec_e3），之前的结论NCF比LightGCN高2%（事件rec_e1）因数据泄漏已被作废。",
+        "raw_output": {
+          "evidence_events": [
+            "rec_e1",
+            "rec_e3"
+          ],
+          "state_slots": {
+            "corrected_result": {
+              "value": "NCF比LightGCN低1%",
+              "support_event": "rec_e3",
+              "support_events": [
+                "rec_e3"
+              ]
+            },
+            "invalidated_result": {
+              "value": "NCF比LightGCN高2%",
+              "support_event": "rec_e1",
+              "support_events": [
+                "rec_e1"
+              ]
+            }
+          },
+          "coverage_check": {
+            "corrected_result": true,
+            "invalidated_result": true
+          },
+          "answer": "当前有效结果是NCF比LightGCN低1%（事件rec_e3），之前的结论NCF比LightGCN高2%（事件rec_e1）因数据泄漏已被作废。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 38,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "1acdd529-7aa8-4f5d-a126-334cabf24582",
+                "event_ids": [
+                  "rec_e1"
+                ],
+                "fact": "NCF baseline performed 2% higher than LightGCN in the initial experiment.",
+                "valid_at": "2026-06-01 18:00:00+00:00",
+                "invalid_at": "2026-06-04 18:00:00+00:00",
+                "source_node_uuid": "a798dbaf-0243-4bce-96b7-2a3253a81e60",
+                "target_node_uuid": "ce068a04-5956-4688-a135-828729bc4a61"
+              },
+              {
+                "graphiti_fact_uuid": "8e436f75-a9e9-4eec-bb04-5583edc742d9",
+                "event_ids": [
+                  "rec_e3"
+                ],
+                "fact": "NCF is 1% lower than LightGCN in the experiment after leakage was fixed.",
+                "valid_at": "2026-06-04 18:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "e0590cf0-23cd-430d-a42a-8e9c3d25f91e",
+                "target_node_uuid": "ce068a04-5956-4688-a135-828729bc4a61"
+              },
+              {
+                "graphiti_fact_uuid": "4631b128-f9c7-4c45-b6de-d7f4d4ffc3b2",
+                "event_ids": [
+                  "rec_e2"
+                ],
+                "fact": "NCF 的初次实验存在数据泄漏，涉及 rec_e1 的实验记录。",
+                "valid_at": "2026-06-03 18:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "e0590cf0-23cd-430d-a42a-8e9c3d25f91e",
+                "target_node_uuid": "046cb00c-6210-40e2-bd37-0702b1b3c80c"
+              },
+              {
+                "graphiti_fact_uuid": "a7d03e69-b5ad-4175-9b59-abd24067d50f",
+                "event_ids": [
+                  "rec_e6"
+                ],
+                "fact": "rec_e6 is an execution log for recsys_ablation.",
+                "valid_at": "2026-06-07 18:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "b630cc37-536c-4b32-9705-b382d24f3a1e",
+                "target_node_uuid": "d1e03b66-de0e-4bfd-98ad-ed1483859cef"
+              },
+              {
+                "graphiti_fact_uuid": "65b9f805-a6fc-4c1f-bd38-4712b9f3653f",
+                "event_ids": [
+                  "rec_e4"
+                ],
+                "fact": "recsys_ablation decided to add SASRec as a comparison in the next round.",
+                "valid_at": "2026-06-05 18:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "d1e03b66-de0e-4bfd-98ad-ed1483859cef",
+                "target_node_uuid": "42654d1e-5913-46c6-b4f5-84341cc2faa9"
+              },
+              {
+                "graphiti_fact_uuid": "399ee0fd-c8c8-47b8-810f-88da43b34337",
+                "event_ids": [
+                  "rec_e4"
+                ],
+                "fact": "rec_e4 records the decision for recsys_ablation to add SASRec as a comparison in the next round.",
+                "valid_at": "2026-06-05 18:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "f6033985-4358-4491-be72-48643b0b4324",
+                "target_node_uuid": "d1e03b66-de0e-4bfd-98ad-ed1483859cef"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "corrected_result": {
+              "score": 1,
+              "reason": "“NCF比LightGCN低1%”与gold语义一致。"
+            },
+            "invalidated_result": {
+              "score": 1,
+              "reason": "“NCF比LightGCN高2%”与gold中被作废的旧结果一致。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "最终回答同时覆盖了修正后的当前结果和被数据泄漏作废的旧结果，整体正确。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "rec_next_step",
+        "query": "推荐系统消融下一步实验是什么？",
+        "event_f1": 0.667,
+        "event_precision": 1.0,
+        "gold_event_recall": 0.5,
+        "context_event_recall": null,
+        "slot_support_accuracy": 0.5,
+        "slot_support_f1": 0.5,
+        "required_support_f1": 0.667,
+        "slot_value_judge": 0.5,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "rec_e4"
+        ],
+        "pred_state_slots": {
+          "next_baseline": {
+            "value": "SASRec",
+            "support_event": "rec_e4",
+            "support_events": [
+              "rec_e4"
+            ]
+          },
+          "next_split": {
+            "value": "unknown",
+            "support_event": null,
+            "support_events": []
+          }
+        },
+        "answer": "下一步实验的baseline是SASRec，但未提及数据拆分方式。",
+        "raw_output": {
+          "evidence_events": [
+            "rec_e4"
+          ],
+          "state_slots": {
+            "next_baseline": {
+              "value": "SASRec",
+              "support_event": "rec_e4",
+              "support_events": [
+                "rec_e4"
+              ]
+            },
+            "next_split": {
+              "value": "unknown",
+              "support_event": null,
+              "support_events": []
+            }
+          },
+          "coverage_check": {
+            "next_baseline": true,
+            "next_split": false
+          },
+          "answer": "下一步实验的baseline是SASRec，但未提及数据拆分方式。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 39,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "65b9f805-a6fc-4c1f-bd38-4712b9f3653f",
+                "event_ids": [
+                  "rec_e4"
+                ],
+                "fact": "recsys_ablation decided to add SASRec as a comparison in the next round.",
+                "valid_at": "2026-06-05 18:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "d1e03b66-de0e-4bfd-98ad-ed1483859cef",
+                "target_node_uuid": "42654d1e-5913-46c6-b4f5-84341cc2faa9"
+              },
+              {
+                "graphiti_fact_uuid": "4631b128-f9c7-4c45-b6de-d7f4d4ffc3b2",
+                "event_ids": [
+                  "rec_e2"
+                ],
+                "fact": "NCF 的初次实验存在数据泄漏，涉及 rec_e1 的实验记录。",
+                "valid_at": "2026-06-03 18:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "e0590cf0-23cd-430d-a42a-8e9c3d25f91e",
+                "target_node_uuid": "046cb00c-6210-40e2-bd37-0702b1b3c80c"
+              },
+              {
+                "graphiti_fact_uuid": "a7d03e69-b5ad-4175-9b59-abd24067d50f",
+                "event_ids": [
+                  "rec_e6"
+                ],
+                "fact": "rec_e6 is an execution log for recsys_ablation.",
+                "valid_at": "2026-06-07 18:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "b630cc37-536c-4b32-9705-b382d24f3a1e",
+                "target_node_uuid": "d1e03b66-de0e-4bfd-98ad-ed1483859cef"
+              },
+              {
+                "graphiti_fact_uuid": "399ee0fd-c8c8-47b8-810f-88da43b34337",
+                "event_ids": [
+                  "rec_e4"
+                ],
+                "fact": "rec_e4 records the decision for recsys_ablation to add SASRec as a comparison in the next round.",
+                "valid_at": "2026-06-05 18:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "f6033985-4358-4491-be72-48643b0b4324",
+                "target_node_uuid": "d1e03b66-de0e-4bfd-98ad-ed1483859cef"
+              },
+              {
+                "graphiti_fact_uuid": "1acdd529-7aa8-4f5d-a126-334cabf24582",
+                "event_ids": [
+                  "rec_e1"
+                ],
+                "fact": "NCF baseline performed 2% higher than LightGCN in the initial experiment.",
+                "valid_at": "2026-06-01 18:00:00+00:00",
+                "invalid_at": "2026-06-04 18:00:00+00:00",
+                "source_node_uuid": "a798dbaf-0243-4bce-96b7-2a3253a81e60",
+                "target_node_uuid": "ce068a04-5956-4688-a135-828729bc4a61"
+              },
+              {
+                "graphiti_fact_uuid": "8e436f75-a9e9-4eec-bb04-5583edc742d9",
+                "event_ids": [
+                  "rec_e3"
+                ],
+                "fact": "NCF is 1% lower than LightGCN in the experiment after leakage was fixed.",
+                "valid_at": "2026-06-04 18:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "e0590cf0-23cd-430d-a42a-8e9c3d25f91e",
+                "target_node_uuid": "ce068a04-5956-4688-a135-828729bc4a61"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "next_baseline": {
+              "score": 1,
+              "reason": "SASRec 与“加入 SASRec 对比”语义等价。"
+            },
+            "next_split": {
+              "score": 0,
+              "reason": "pred 为 unknown，未覆盖 gold 的“补 cold-start split 测试”。"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "只提到 baseline 为 SASRec，未覆盖 cold-start split 测试这一 gold 状态。"
+          },
+          "slot_overall_score": 0.5
+        }
+      },
+      {
+        "case_id": "incident_status",
+        "query": "线上事故最近怎么样？",
+        "event_f1": 1.0,
+        "event_precision": 1.0,
+        "gold_event_recall": 1.0,
+        "context_event_recall": null,
+        "slot_support_accuracy": 1.0,
+        "slot_support_f1": 1.0,
+        "required_support_f1": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "inc_e2",
+          "inc_e4",
+          "inc_e5"
+        ],
+        "pred_state_slots": {
+          "mitigation": {
+            "value": "回滚5xx并恢复服务于2026-06-05T14:40:00Z",
+            "support_event": "inc_e2",
+            "support_events": [
+              "inc_e2"
+            ]
+          },
+          "root_cause": {
+            "value": "缓存击穿导致下游过载",
+            "support_event": "inc_e4",
+            "support_events": [
+              "inc_e4"
+            ]
+          },
+          "next_step": {
+            "value": "计划增加热点key限流和缓存预热",
+            "support_event": "inc_e5",
+            "support_events": [
+              "inc_e5"
+            ]
+          }
+        },
+        "answer": "最近线上事故中，inc_e2通过回滚5xx恢复了服务；inc_e4确认根因为缓存击穿导致下游过载；下一步计划增加热点key限流和缓存预热。",
+        "raw_output": {
+          "evidence_events": [
+            "inc_e2",
+            "inc_e4",
+            "inc_e5"
+          ],
+          "state_slots": {
+            "mitigation": {
+              "value": "回滚5xx并恢复服务于2026-06-05T14:40:00Z",
+              "support_event": "inc_e2",
+              "support_events": [
+                "inc_e2"
+              ]
+            },
+            "root_cause": {
+              "value": "缓存击穿导致下游过载",
+              "support_event": "inc_e4",
+              "support_events": [
+                "inc_e4"
+              ]
+            },
+            "next_step": {
+              "value": "计划增加热点key限流和缓存预热",
+              "support_event": "inc_e5",
+              "support_events": [
+                "inc_e5"
+              ]
+            }
+          },
+          "coverage_check": {
+            "mitigation": true,
+            "root_cause": true,
+            "next_step": true
+          },
+          "answer": "最近线上事故中，inc_e2通过回滚5xx恢复了服务；inc_e4确认根因为缓存击穿导致下游过载；下一步计划增加热点key限流和缓存预热。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 35,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "810fa9ec-4d46-4c73-a187-619f83bc7898",
+                "event_ids": [
+                  "inc_e2"
+                ],
+                "fact": "stamb_state has the incident inc_e2, which was a mitigation that rolled back 5xx and restored service on 2026-06-05T14:40:00Z.",
+                "valid_at": "2026-06-05 14:40:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "d561fecc-d498-4e02-b9f7-3390566da9ea",
+                "target_node_uuid": "36170a66-13e8-474a-97a8-febc2c1a85c9"
+              },
+              {
+                "graphiti_fact_uuid": "910b2f3c-83d1-4a15-a732-c7687a44c803",
+                "event_ids": [
+                  "inc_e5"
+                ],
+                "fact": "热点 key 限流 和 缓存预热 都被计划增加于部署故障处理中",
+                "valid_at": "2026-06-06 16:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "e5f10af4-ea44-4294-9f10-02c40cf85262",
+                "target_node_uuid": "85f11989-d846-4b34-b400-fcf179955b58"
+              },
+              {
+                "graphiti_fact_uuid": "20d2ee56-91f5-4898-b595-a6fe7ab05056",
+                "event_ids": [
+                  "inc_e4"
+                ],
+                "fact": "inc_e4 corrected inc_e3 by confirming the root cause was cache breakdown causing downstream overload, not database connection pool exhaustion.",
+                "valid_at": "2026-06-06 10:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "a4cac1aa-a8e6-4488-b3d9-406ab422e1a5",
+                "target_node_uuid": "9f6414cf-f7d8-4370-90c1-0dbe1781620c"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "mitigation": {
+              "score": 1,
+              "reason": "回滚缓解5xx并恢复服务，语义等价"
+            },
+            "root_cause": {
+              "score": 1,
+              "reason": "缓存击穿导致下游被打爆/过载，核心含义一致"
+            },
+            "next_step": {
+              "score": 1,
+              "reason": "增加热点key限流和缓存预热，语义一致"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "完整覆盖了缓解措施、根因和下一步，且表述与gold一致"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "incident_root_cause",
+        "query": "线上事故根因到底是数据库连接池还是缓存问题？",
+        "event_f1": 0.667,
+        "event_precision": 1.0,
+        "gold_event_recall": 0.5,
+        "context_event_recall": null,
+        "slot_support_accuracy": 1.0,
+        "slot_support_f1": 0.833,
+        "required_support_f1": 0.667,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "inc_e4"
+        ],
+        "pred_state_slots": {
+          "root_cause": {
+            "value": "缓存击穿导致下游过载",
+            "support_event": "inc_e4",
+            "support_events": [
+              "inc_e4"
+            ]
+          },
+          "invalidated_root_cause": {
+            "value": "数据库连接池耗尽",
+            "support_event": "inc_e4",
+            "support_events": [
+              "inc_e4"
+            ]
+          }
+        },
+        "answer": "线上事故根因是缓存击穿导致下游过载，之前误认为是数据库连接池耗尽。",
+        "raw_output": {
+          "evidence_events": [
+            "inc_e4"
+          ],
+          "state_slots": {
+            "root_cause": {
+              "value": "缓存击穿导致下游过载",
+              "support_event": "inc_e4",
+              "support_events": [
+                "inc_e4"
+              ]
+            },
+            "invalidated_root_cause": {
+              "value": "数据库连接池耗尽",
+              "support_event": "inc_e4",
+              "support_events": [
+                "inc_e4"
+              ]
+            }
+          },
+          "coverage_check": {
+            "root_cause": true,
+            "invalidated_root_cause": true
+          },
+          "answer": "线上事故根因是缓存击穿导致下游过载，之前误认为是数据库连接池耗尽。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 34,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "20d2ee56-91f5-4898-b595-a6fe7ab05056",
+                "event_ids": [
+                  "inc_e4"
+                ],
+                "fact": "inc_e4 corrected inc_e3 by confirming the root cause was cache breakdown causing downstream overload, not database connection pool exhaustion.",
+                "valid_at": "2026-06-06 10:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "a4cac1aa-a8e6-4488-b3d9-406ab422e1a5",
+                "target_node_uuid": "9f6414cf-f7d8-4370-90c1-0dbe1781620c"
+              },
+              {
+                "graphiti_fact_uuid": "910b2f3c-83d1-4a15-a732-c7687a44c803",
+                "event_ids": [
+                  "inc_e5"
+                ],
+                "fact": "热点 key 限流 和 缓存预热 都被计划增加于部署故障处理中",
+                "valid_at": "2026-06-06 16:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "e5f10af4-ea44-4294-9f10-02c40cf85262",
+                "target_node_uuid": "85f11989-d846-4b34-b400-fcf179955b58"
+              },
+              {
+                "graphiti_fact_uuid": "810fa9ec-4d46-4c73-a187-619f83bc7898",
+                "event_ids": [
+                  "inc_e2"
+                ],
+                "fact": "stamb_state has the incident inc_e2, which was a mitigation that rolled back 5xx and restored service on 2026-06-05T14:40:00Z.",
+                "valid_at": "2026-06-05 14:40:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "d561fecc-d498-4e02-b9f7-3390566da9ea",
+                "target_node_uuid": "36170a66-13e8-474a-97a8-febc2c1a85c9"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "root_cause": {
+              "score": 1,
+              "reason": "“缓存击穿导致下游过载”与gold“缓存击穿导致下游被打爆”语义等价。"
+            },
+            "invalidated_root_cause": {
+              "score": 1,
+              "reason": "“数据库连接池耗尽”与gold中的初步旧判断一致。"
+            },
+            "slot_overall_score": 1
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "answer同时覆盖了当前根因和已被纠正的旧判断，整体正确。"
+          }
+        }
+      },
+      {
+        "case_id": "incident_next_step",
+        "query": "线上事故后续要补什么防护？",
+        "event_f1": 0.667,
+        "event_precision": 1.0,
+        "gold_event_recall": 0.5,
+        "context_event_recall": null,
+        "slot_support_accuracy": 0.5,
+        "slot_support_f1": 0.5,
+        "required_support_f1": 0.667,
+        "slot_value_judge": 0.5,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "inc_e5"
+        ],
+        "pred_state_slots": {
+          "next_step": {
+            "value": "实施计划中的热点 key 限流和缓存预热防护措施",
+            "support_event": "inc_e5",
+            "support_events": [
+              "inc_e5"
+            ]
+          },
+          "mitigation": {
+            "value": "热点 key 限流 和 缓存预热",
+            "support_event": "inc_e5",
+            "support_events": [
+              "inc_e5"
+            ]
+          }
+        },
+        "answer": "线上事故后续需要补充热点 key 限流和缓存预热作为防护措施，具体实施计划已在部署故障处理中安排。",
+        "raw_output": {
+          "evidence_events": [
+            "inc_e5"
+          ],
+          "state_slots": {
+            "next_step": {
+              "value": "实施计划中的热点 key 限流和缓存预热防护措施",
+              "support_event": "inc_e5",
+              "support_events": [
+                "inc_e5"
+              ]
+            },
+            "mitigation": {
+              "value": "热点 key 限流 和 缓存预热",
+              "support_event": "inc_e5",
+              "support_events": [
+                "inc_e5"
+              ]
+            }
+          },
+          "coverage_check": {
+            "next_step": true,
+            "mitigation": true
+          },
+          "answer": "线上事故后续需要补充热点 key 限流和缓存预热作为防护措施，具体实施计划已在部署故障处理中安排。",
+          "pipeline_trace": {
+            "graphiti_run_id": "stamb-20260609033459",
+            "graphiti_raw_search_count": 35,
+            "graphiti_search_results": [
+              {
+                "graphiti_fact_uuid": "810fa9ec-4d46-4c73-a187-619f83bc7898",
+                "event_ids": [
+                  "inc_e2"
+                ],
+                "fact": "stamb_state has the incident inc_e2, which was a mitigation that rolled back 5xx and restored service on 2026-06-05T14:40:00Z.",
+                "valid_at": "2026-06-05 14:40:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "d561fecc-d498-4e02-b9f7-3390566da9ea",
+                "target_node_uuid": "36170a66-13e8-474a-97a8-febc2c1a85c9"
+              },
+              {
+                "graphiti_fact_uuid": "910b2f3c-83d1-4a15-a732-c7687a44c803",
+                "event_ids": [
+                  "inc_e5"
+                ],
+                "fact": "热点 key 限流 和 缓存预热 都被计划增加于部署故障处理中",
+                "valid_at": "2026-06-06 16:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "e5f10af4-ea44-4294-9f10-02c40cf85262",
+                "target_node_uuid": "85f11989-d846-4b34-b400-fcf179955b58"
+              },
+              {
+                "graphiti_fact_uuid": "20d2ee56-91f5-4898-b595-a6fe7ab05056",
+                "event_ids": [
+                  "inc_e4"
+                ],
+                "fact": "inc_e4 corrected inc_e3 by confirming the root cause was cache breakdown causing downstream overload, not database connection pool exhaustion.",
+                "valid_at": "2026-06-06 10:00:00+00:00",
+                "invalid_at": null,
+                "source_node_uuid": "a4cac1aa-a8e6-4488-b3d9-406ab422e1a5",
+                "target_node_uuid": "9f6414cf-f7d8-4370-90c1-0dbe1781620c"
+              }
+            ]
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "next_step": {
+              "score": 1,
+              "reason": "“实施计划中的热点 key 限流和缓存预热防护措施”与 gold 的增加热点 key 限流和缓存预热同义。"
+            },
+            "mitigation": {
+              "score": 0,
+              "reason": "gold 是“服务已经通过回滚恢复”，预测却写成了“热点 key 限流 和 缓存预热”，语义不等价。"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "回答只覆盖了后续防护措施，未包含“服务已经通过回滚恢复”这一 gold 状态。"
+          },
+          "slot_overall_score": 0.5
+        }
+      }
+    ]
+  }
+]

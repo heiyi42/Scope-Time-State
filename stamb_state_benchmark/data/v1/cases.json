@@ -1,0 +1,1383 @@
+[
+  {
+    "case_id": "aaai_status",
+    "query": "AAAI 项目最近怎么样？",
+    "scope_id": "aaai_memory",
+    "operation": "state_summary",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "branch_pivot",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "aaai_e3",
+      "aaai_e4"
+    ],
+    "hard_negative_events": [
+      "aaai_e5",
+      "aaai_e2"
+    ],
+    "gold_state_slots": {
+      "current_decision": "主线转向 latest valid state retrieval",
+      "risk": "TSM 已覆盖多时间角色，不能只主打 mentioned_at vs occurred_at",
+      "next_step": "构造 STAMB-State 小型 benchmark"
+    },
+    "gold_slot_support": {
+      "current_decision": [
+        "aaai_e4"
+      ],
+      "risk": [
+        "aaai_e3",
+        "aaai_e4"
+      ],
+      "next_step": [
+        "aaai_e4"
+      ]
+    },
+    "output_slots": [
+      "current_decision",
+      "risk",
+      "next_step"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "aaai_risk",
+    "query": "AAAI 这个想法现在最大的相关工作风险是什么？",
+    "scope_id": "aaai_memory",
+    "operation": "state_lookup",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "branch_pivot",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "aaai_e2",
+      "aaai_e3",
+      "aaai_e4"
+    ],
+    "hard_negative_events": [
+      "aaai_e5",
+      "aaai_e1"
+    ],
+    "gold_state_slots": {
+      "risk": "TSM 已覆盖多时间角色，不能只主打 mentioned_at vs occurred_at",
+      "invalidated_direction": "多时间字段 + KG-RAG 已被 latest valid state retrieval 主线替代"
+    },
+    "gold_slot_support": {
+      "risk": [
+        "aaai_e3",
+        "aaai_e4"
+      ],
+      "invalidated_direction": [
+        "aaai_e2",
+        "aaai_e4"
+      ]
+    },
+    "output_slots": [
+      "risk",
+      "invalidated_direction"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "aaai_next_step",
+    "query": "AAAI 方案下一步要做什么？",
+    "scope_id": "aaai_memory",
+    "operation": "next_action",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "branch_pivot",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "aaai_e4"
+    ],
+    "hard_negative_events": [
+      "aaai_e2",
+      "aaai_e5",
+      "aaai_e1"
+    ],
+    "gold_state_slots": {
+      "next_step": "构造 STAMB-State 小型 benchmark",
+      "current_decision": "主线转向 latest valid state retrieval"
+    },
+    "gold_slot_support": {
+      "next_step": [
+        "aaai_e4"
+      ],
+      "current_decision": [
+        "aaai_e4"
+      ]
+    },
+    "output_slots": [
+      "next_step",
+      "current_decision"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "amp_status",
+    "query": "微波放大器项目最近怎么样？",
+    "scope_id": "amp_project",
+    "operation": "state_summary",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "correction_aware",
+      "cross_time_constraint",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "amp_e1",
+      "amp_e3",
+      "amp_e4"
+    ],
+    "hard_negative_events": [
+      "amp_e5",
+      "amp_e2"
+    ],
+    "gold_state_slots": {
+      "completed_item": "第一级输入匹配已经完成",
+      "current_issue": "S11 问题主要出在级间匹配",
+      "next_step": "6月9日重算级间匹配网络线长"
+    },
+    "gold_slot_support": {
+      "completed_item": [
+        "amp_e1"
+      ],
+      "current_issue": [
+        "amp_e3"
+      ],
+      "next_step": [
+        "amp_e4"
+      ]
+    },
+    "output_slots": [
+      "completed_item",
+      "current_issue",
+      "next_step"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "amp_current_issue",
+    "query": "微波放大器现在 S11 问题到底在哪？",
+    "scope_id": "amp_project",
+    "operation": "state_lookup",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "correction_aware",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "amp_e2",
+      "amp_e3"
+    ],
+    "hard_negative_events": [
+      "amp_e5"
+    ],
+    "gold_state_slots": {
+      "current_issue": "S11 问题主要出在级间匹配",
+      "invalidated_issue": "输入匹配是旧判断，已经被纠正"
+    },
+    "gold_slot_support": {
+      "current_issue": [
+        "amp_e3"
+      ],
+      "invalidated_issue": [
+        "amp_e2",
+        "amp_e3"
+      ]
+    },
+    "output_slots": [
+      "current_issue",
+      "invalidated_issue"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "amp_next_step",
+    "query": "微波放大器下一步安排是什么？",
+    "scope_id": "amp_project",
+    "operation": "next_action",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "cross_time_constraint",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "amp_e4"
+    ],
+    "hard_negative_events": [
+      "amp_e5",
+      "amp_e2",
+      "amp_e1"
+    ],
+    "gold_state_slots": {
+      "next_step": "重算级间匹配网络线长",
+      "planned_for": "2026-06-09T09:00:00"
+    },
+    "gold_slot_support": {
+      "next_step": [
+        "amp_e4"
+      ],
+      "planned_for": [
+        "amp_e4"
+      ]
+    },
+    "output_slots": [
+      "next_step",
+      "planned_for"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "sql_status",
+    "query": "第六题 SQL 最近改到哪了？",
+    "scope_id": "sql_lab_q6",
+    "operation": "state_summary",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "correction_aware",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "sql_e3"
+    ],
+    "hard_negative_events": [
+      "sql_e1",
+      "sql_e2",
+      "sql_e4"
+    ],
+    "gold_state_slots": {
+      "latest_fix": "Department 和 Project 的连接逻辑已修正",
+      "remaining_issue": "没有未解决的连接逻辑问题"
+    },
+    "gold_slot_support": {
+      "latest_fix": [
+        "sql_e3"
+      ],
+      "remaining_issue": [
+        "sql_e3"
+      ]
+    },
+    "output_slots": [
+      "latest_fix",
+      "remaining_issue"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "sql_issue_resolution",
+    "query": "第六题 SQL 的连接条件问题还在吗？",
+    "scope_id": "sql_lab_q6",
+    "operation": "state_lookup",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "correction_aware",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "sql_e2",
+      "sql_e3"
+    ],
+    "hard_negative_events": [
+      "sql_e1",
+      "sql_e4",
+      "sql_e5"
+    ],
+    "gold_state_slots": {
+      "resolved_issue": "Department 与 Project 连接条件问题已经修正",
+      "fix": "修改 Department 和 Project 的连接逻辑"
+    },
+    "gold_slot_support": {
+      "resolved_issue": [
+        "sql_e2",
+        "sql_e3"
+      ],
+      "fix": [
+        "sql_e3"
+      ]
+    },
+    "output_slots": [
+      "resolved_issue",
+      "fix"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "sql_latest_non_update",
+    "query": "第六题 SQL 最近一次运行有没有改变逻辑？",
+    "scope_id": "sql_lab_q6",
+    "operation": "state_lookup",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "correction_aware",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "sql_e3",
+      "sql_e4"
+    ],
+    "hard_negative_events": [
+      "sql_e2",
+      "sql_e5",
+      "sql_e1"
+    ],
+    "gold_state_slots": {
+      "latest_non_update": "最近运行没有新逻辑变化",
+      "latest_valid_fix": "最后有效修改是 Department 和 Project 连接逻辑修正"
+    },
+    "gold_slot_support": {
+      "latest_non_update": [
+        "sql_e4"
+      ],
+      "latest_valid_fix": [
+        "sql_e3"
+      ]
+    },
+    "output_slots": [
+      "latest_non_update",
+      "latest_valid_fix"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "robot_status",
+    "query": "机器人导航项目最近怎么样？",
+    "scope_id": "robot_nav",
+    "operation": "state_summary",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "branch_pivot",
+      "cross_time_constraint",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest"
+    ],
+    "gold_events": [
+      "robot_e3",
+      "robot_e4",
+      "robot_e5"
+    ],
+    "hard_negative_events": [
+      "robot_e1",
+      "robot_e6",
+      "robot_e2"
+    ],
+    "gold_state_slots": {
+      "current_decision": "从 lidar-only 转向 lidar + depth camera 融合",
+      "current_issue": "真机在玻璃走廊定位漂移明显",
+      "next_step": "6月8日标定 depth camera 外参"
+    },
+    "gold_slot_support": {
+      "current_decision": [
+        "robot_e4"
+      ],
+      "current_issue": [
+        "robot_e3"
+      ],
+      "next_step": [
+        "robot_e5"
+      ]
+    },
+    "output_slots": [
+      "current_decision",
+      "current_issue",
+      "next_step"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "robot_decision",
+    "query": "机器人导航现在还是 lidar-only 吗？",
+    "scope_id": "robot_nav",
+    "operation": "state_lookup",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "branch_pivot",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest"
+    ],
+    "gold_events": [
+      "robot_e1",
+      "robot_e4"
+    ],
+    "hard_negative_events": [
+      "robot_e6",
+      "robot_e2",
+      "robot_e3"
+    ],
+    "gold_state_slots": {
+      "current_decision": "现在采用 lidar + depth camera 融合",
+      "invalidated_decision": "lidar-only 是旧方案，已经被替代"
+    },
+    "gold_slot_support": {
+      "current_decision": [
+        "robot_e4"
+      ],
+      "invalidated_decision": [
+        "robot_e1",
+        "robot_e4"
+      ]
+    },
+    "output_slots": [
+      "current_decision",
+      "invalidated_decision"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "robot_next_step",
+    "query": "机器人导航下一步要做什么？",
+    "scope_id": "robot_nav",
+    "operation": "next_action",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "cross_time_constraint",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest"
+    ],
+    "gold_events": [
+      "robot_e5"
+    ],
+    "hard_negative_events": [
+      "robot_e1",
+      "robot_e6",
+      "robot_e2"
+    ],
+    "gold_state_slots": {
+      "next_step": "标定 depth camera 外参",
+      "planned_for": "2026-06-08T14:00:00"
+    },
+    "gold_slot_support": {
+      "next_step": [
+        "robot_e5"
+      ],
+      "planned_for": [
+        "robot_e5"
+      ]
+    },
+    "output_slots": [
+      "next_step",
+      "planned_for"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "thesis_status",
+    "query": "论文第二章最近怎么样？",
+    "scope_id": "thesis_ch2",
+    "operation": "state_summary",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "cross_time_constraint",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "thesis_e3",
+      "thesis_e4",
+      "thesis_e5"
+    ],
+    "hard_negative_events": [
+      "thesis_e2",
+      "thesis_e6",
+      "thesis_e1"
+    ],
+    "gold_state_slots": {
+      "completed_item": "已经完成语法通读",
+      "remaining_work": "还要补动机和研究空白，内容结构还未改完",
+      "deadline": "第二章提交时间是 6月10日"
+    },
+    "gold_slot_support": {
+      "completed_item": [
+        "thesis_e5"
+      ],
+      "remaining_work": [
+        "thesis_e3",
+        "thesis_e5"
+      ],
+      "deadline": [
+        "thesis_e4"
+      ]
+    },
+    "output_slots": [
+      "completed_item",
+      "remaining_work",
+      "deadline"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "thesis_deadline",
+    "query": "第二章到底 6月8日还是 6月10日交？",
+    "scope_id": "thesis_ch2",
+    "operation": "state_lookup",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "cross_time_constraint",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "thesis_e2",
+      "thesis_e4"
+    ],
+    "hard_negative_events": [
+      "thesis_e6",
+      "thesis_e5",
+      "thesis_e1"
+    ],
+    "gold_state_slots": {
+      "deadline": "当前截止时间是 6月10日",
+      "invalidated_deadline": "6月8日是旧截止时间，已经被替代"
+    },
+    "gold_slot_support": {
+      "deadline": [
+        "thesis_e4"
+      ],
+      "invalidated_deadline": [
+        "thesis_e2",
+        "thesis_e4"
+      ]
+    },
+    "output_slots": [
+      "deadline",
+      "invalidated_deadline"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "thesis_remaining_work",
+    "query": "第二章现在还差什么？",
+    "scope_id": "thesis_ch2",
+    "operation": "state_lookup",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "thesis_e3",
+      "thesis_e5"
+    ],
+    "hard_negative_events": [
+      "thesis_e2",
+      "thesis_e6",
+      "thesis_e4"
+    ],
+    "gold_state_slots": {
+      "remaining_work": "需要补动机和研究空白，内容结构还未改完",
+      "completed_item": "语法通读已经完成"
+    },
+    "gold_slot_support": {
+      "remaining_work": [
+        "thesis_e3",
+        "thesis_e5"
+      ],
+      "completed_item": [
+        "thesis_e5"
+      ]
+    },
+    "output_slots": [
+      "remaining_work",
+      "completed_item"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "auth_status",
+    "query": "移动端登录最近怎么样？",
+    "scope_id": "mobile_auth",
+    "operation": "state_summary",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "branch_pivot",
+      "correction_aware",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "auth_e2",
+      "auth_e4",
+      "auth_e5",
+      "auth_e6"
+    ],
+    "hard_negative_events": [
+      "auth_e1",
+      "auth_e7",
+      "auth_e3"
+    ],
+    "gold_state_slots": {
+      "current_decision": "登录方案采用 email magic link",
+      "resolved_issue": "magic link 重发限流已经上线修复",
+      "current_issue": "iOS 端重发按钮偶尔不刷新倒计时",
+      "next_step": "补 magic link 登录审计日志"
+    },
+    "gold_slot_support": {
+      "current_decision": [
+        "auth_e2"
+      ],
+      "resolved_issue": [
+        "auth_e4"
+      ],
+      "current_issue": [
+        "auth_e5"
+      ],
+      "next_step": [
+        "auth_e6"
+      ]
+    },
+    "output_slots": [
+      "current_decision",
+      "resolved_issue",
+      "current_issue",
+      "next_step"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "auth_login_method",
+    "query": "登录方案现在还是短信 OTP 吗？",
+    "scope_id": "mobile_auth",
+    "operation": "state_lookup",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "branch_pivot",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "auth_e1",
+      "auth_e2"
+    ],
+    "hard_negative_events": [
+      "auth_e7",
+      "auth_e3",
+      "auth_e6"
+    ],
+    "gold_state_slots": {
+      "current_decision": "当前方案是 email magic link",
+      "invalidated_decision": "短信 OTP 是旧方案，已经被替代"
+    },
+    "gold_slot_support": {
+      "current_decision": [
+        "auth_e2"
+      ],
+      "invalidated_decision": [
+        "auth_e1",
+        "auth_e2"
+      ]
+    },
+    "output_slots": [
+      "current_decision",
+      "invalidated_decision"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "auth_remaining_issue",
+    "query": "移动端登录还有什么没解决？",
+    "scope_id": "mobile_auth",
+    "operation": "state_lookup",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "correction_aware",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "auth_e3",
+      "auth_e4",
+      "auth_e5"
+    ],
+    "hard_negative_events": [
+      "auth_e7",
+      "auth_e1",
+      "auth_e2"
+    ],
+    "gold_state_slots": {
+      "resolved_issue": "重发接口限流已经修复",
+      "current_issue": "iOS 端重发按钮偶尔不刷新倒计时"
+    },
+    "gold_slot_support": {
+      "resolved_issue": [
+        "auth_e3",
+        "auth_e4"
+      ],
+      "current_issue": [
+        "auth_e5"
+      ]
+    },
+    "output_slots": [
+      "resolved_issue",
+      "current_issue"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "grant_status",
+    "query": "基金申请最近怎么样？",
+    "scope_id": "grant_app",
+    "operation": "state_summary",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "branch_pivot",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "grant_e2",
+      "grant_e4",
+      "grant_e5"
+    ],
+    "hard_negative_events": [
+      "grant_e3",
+      "grant_e6",
+      "grant_e1"
+    ],
+    "gold_state_slots": {
+      "budget": "当前预算是 95k",
+      "team": "合作方 C 加入并替代合作方 B 的实验条件支持",
+      "remaining_work": "申请书草稿已上传，仍需补预算说明"
+    },
+    "gold_slot_support": {
+      "budget": [
+        "grant_e2"
+      ],
+      "team": [
+        "grant_e4"
+      ],
+      "remaining_work": [
+        "grant_e5"
+      ]
+    },
+    "output_slots": [
+      "budget",
+      "team",
+      "remaining_work"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "grant_budget",
+    "query": "基金申请预算现在是多少？",
+    "scope_id": "grant_app",
+    "operation": "state_lookup",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "grant_e1",
+      "grant_e2"
+    ],
+    "hard_negative_events": [
+      "grant_e6",
+      "grant_e3",
+      "grant_e5"
+    ],
+    "gold_state_slots": {
+      "budget": "当前预算是 95k",
+      "invalidated_budget": "80k 是旧预算，已经作废"
+    },
+    "gold_slot_support": {
+      "budget": [
+        "grant_e2"
+      ],
+      "invalidated_budget": [
+        "grant_e1",
+        "grant_e2"
+      ]
+    },
+    "output_slots": [
+      "budget",
+      "invalidated_budget"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "grant_team",
+    "query": "基金申请合作方现在是谁？",
+    "scope_id": "grant_app",
+    "operation": "state_lookup",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "branch_pivot",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "grant_e3",
+      "grant_e4"
+    ],
+    "hard_negative_events": [
+      "grant_e6",
+      "grant_e1",
+      "grant_e5"
+    ],
+    "gold_state_slots": {
+      "team": "合作方 C 当前加入并提供实验条件支持",
+      "invalidated_team": "合作方 B 已退出并被 C 替代"
+    },
+    "gold_slot_support": {
+      "team": [
+        "grant_e4"
+      ],
+      "invalidated_team": [
+        "grant_e3",
+        "grant_e4"
+      ]
+    },
+    "output_slots": [
+      "team",
+      "invalidated_team"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "label_status",
+    "query": "标注规范最近怎么样？",
+    "scope_id": "labeling_guideline",
+    "operation": "state_summary",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "cross_time_constraint",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "label_e2",
+      "label_e3",
+      "label_e4",
+      "label_e5"
+    ],
+    "hard_negative_events": [
+      "label_e1",
+      "label_e6"
+    ],
+    "gold_state_slots": {
+      "current_guideline": "v2 将 uncertain 与 partial 合并为 ambiguous",
+      "current_issue": "batch A 标注分歧率 12%",
+      "next_step": "6月8日用 v2 规范重新培训标注员",
+      "completed_item": "batch A 已完成一轮标注但还没复核"
+    },
+    "gold_slot_support": {
+      "current_guideline": [
+        "label_e2"
+      ],
+      "current_issue": [
+        "label_e3"
+      ],
+      "next_step": [
+        "label_e4"
+      ],
+      "completed_item": [
+        "label_e5"
+      ]
+    },
+    "output_slots": [
+      "current_guideline",
+      "current_issue",
+      "next_step",
+      "completed_item"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "label_guideline",
+    "query": "标注规范现在 uncertain 和 partial 怎么处理？",
+    "scope_id": "labeling_guideline",
+    "operation": "state_lookup",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "label_e1",
+      "label_e2"
+    ],
+    "hard_negative_events": [
+      "label_e6",
+      "label_e4",
+      "label_e3"
+    ],
+    "gold_state_slots": {
+      "current_guideline": "当前 v2 规范将 uncertain 与 partial 合并为 ambiguous",
+      "invalidated_guideline": "v1 中二者分开处理的规则已作废"
+    },
+    "gold_slot_support": {
+      "current_guideline": [
+        "label_e2"
+      ],
+      "invalidated_guideline": [
+        "label_e1",
+        "label_e2"
+      ]
+    },
+    "output_slots": [
+      "current_guideline",
+      "invalidated_guideline"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "label_qc",
+    "query": "标注任务现在主要质量问题是什么？",
+    "scope_id": "labeling_guideline",
+    "operation": "state_lookup",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "cross_time_constraint",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "label_e3",
+      "label_e4"
+    ],
+    "hard_negative_events": [
+      "label_e1",
+      "label_e6",
+      "label_e2"
+    ],
+    "gold_state_slots": {
+      "current_issue": "batch A 标注分歧率 12%",
+      "next_step": "用 v2 规范重新培训标注员"
+    },
+    "gold_slot_support": {
+      "current_issue": [
+        "label_e3"
+      ],
+      "next_step": [
+        "label_e4"
+      ]
+    },
+    "output_slots": [
+      "current_issue",
+      "next_step"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "rec_status",
+    "query": "推荐系统消融最近怎么样？",
+    "scope_id": "recsys_ablation",
+    "operation": "state_summary",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "correction_aware",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest"
+    ],
+    "gold_events": [
+      "rec_e2",
+      "rec_e3",
+      "rec_e4",
+      "rec_e5"
+    ],
+    "hard_negative_events": [
+      "rec_e6",
+      "rec_e1"
+    ],
+    "gold_state_slots": {
+      "corrected_result": "修正泄漏后 NCF 比 LightGCN 低 1%",
+      "current_risk": "初次 NCF 高 2% 的结果存在数据泄漏",
+      "next_step": "加入 SASRec 对比并补 cold-start split 测试"
+    },
+    "gold_slot_support": {
+      "corrected_result": [
+        "rec_e3"
+      ],
+      "current_risk": [
+        "rec_e2"
+      ],
+      "next_step": [
+        "rec_e4",
+        "rec_e5"
+      ]
+    },
+    "output_slots": [
+      "corrected_result",
+      "current_risk",
+      "next_step"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "rec_result",
+    "query": "NCF 现在到底比 LightGCN 好还是差？",
+    "scope_id": "recsys_ablation",
+    "operation": "state_lookup",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "correction_aware",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest"
+    ],
+    "gold_events": [
+      "rec_e1",
+      "rec_e2",
+      "rec_e3"
+    ],
+    "hard_negative_events": [
+      "rec_e6",
+      "rec_e4"
+    ],
+    "gold_state_slots": {
+      "corrected_result": "修正泄漏后 NCF 比 LightGCN 低 1%",
+      "invalidated_result": "NCF 高 2% 是数据泄漏导致的旧结果"
+    },
+    "gold_slot_support": {
+      "corrected_result": [
+        "rec_e3"
+      ],
+      "invalidated_result": [
+        "rec_e1",
+        "rec_e2",
+        "rec_e3"
+      ]
+    },
+    "output_slots": [
+      "corrected_result",
+      "invalidated_result"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "rec_next_step",
+    "query": "推荐系统消融下一步实验是什么？",
+    "scope_id": "recsys_ablation",
+    "operation": "next_action",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest"
+    ],
+    "gold_events": [
+      "rec_e4",
+      "rec_e5"
+    ],
+    "hard_negative_events": [
+      "rec_e1",
+      "rec_e6",
+      "rec_e2"
+    ],
+    "gold_state_slots": {
+      "next_baseline": "加入 SASRec 对比",
+      "next_split": "补 cold-start split 测试"
+    },
+    "gold_slot_support": {
+      "next_baseline": [
+        "rec_e4"
+      ],
+      "next_split": [
+        "rec_e5"
+      ]
+    },
+    "output_slots": [
+      "next_baseline",
+      "next_split"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "incident_status",
+    "query": "线上事故最近怎么样？",
+    "scope_id": "deployment_incident",
+    "operation": "state_summary",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "correction_aware",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "inc_e2",
+      "inc_e4",
+      "inc_e5"
+    ],
+    "hard_negative_events": [
+      "inc_e6",
+      "inc_e3",
+      "inc_e1"
+    ],
+    "gold_state_slots": {
+      "mitigation": "已通过回滚缓解 5xx，服务恢复",
+      "root_cause": "根因是缓存击穿导致下游被打爆",
+      "next_step": "增加热点 key 限流和缓存预热"
+    },
+    "gold_slot_support": {
+      "mitigation": [
+        "inc_e2"
+      ],
+      "root_cause": [
+        "inc_e4"
+      ],
+      "next_step": [
+        "inc_e5"
+      ]
+    },
+    "output_slots": [
+      "mitigation",
+      "root_cause",
+      "next_step"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "incident_root_cause",
+    "query": "线上事故根因到底是数据库连接池还是缓存问题？",
+    "scope_id": "deployment_incident",
+    "operation": "state_lookup",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "correction_aware",
+      "facet_specific_validity",
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "inc_e3",
+      "inc_e4"
+    ],
+    "hard_negative_events": [
+      "inc_e6",
+      "inc_e1",
+      "inc_e5"
+    ],
+    "gold_state_slots": {
+      "root_cause": "根因是缓存击穿导致下游被打爆",
+      "invalidated_root_cause": "数据库连接池耗尽是初步旧判断，已经被纠正"
+    },
+    "gold_slot_support": {
+      "root_cause": [
+        "inc_e4"
+      ],
+      "invalidated_root_cause": [
+        "inc_e3",
+        "inc_e4"
+      ]
+    },
+    "output_slots": [
+      "root_cause",
+      "invalidated_root_cause"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  },
+  {
+    "case_id": "incident_next_step",
+    "query": "线上事故后续要补什么防护？",
+    "scope_id": "deployment_incident",
+    "operation": "next_action",
+    "time_roles": [
+      "updated_at"
+    ],
+    "difficulty_tags": [
+      "latest_event_vs_state",
+      "multi_facet_summary",
+      "non_update_latest",
+      "stale_mention_distractor"
+    ],
+    "gold_events": [
+      "inc_e2",
+      "inc_e5"
+    ],
+    "hard_negative_events": [
+      "inc_e6",
+      "inc_e3",
+      "inc_e1"
+    ],
+    "gold_state_slots": {
+      "next_step": "增加热点 key 限流和缓存预热",
+      "mitigation": "服务已经通过回滚恢复"
+    },
+    "gold_slot_support": {
+      "next_step": [
+        "inc_e5"
+      ],
+      "mitigation": [
+        "inc_e2"
+      ]
+    },
+    "output_slots": [
+      "next_step",
+      "mitigation"
+    ],
+    "answerability": "answerable",
+    "gold_fields_usage": "evaluation_only"
+  }
+]

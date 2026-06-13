@@ -1,0 +1,1115 @@
+{
+  "3746fe2ace7424051f263723dee8cf46ccd4aeaee43e852ad732b817b5645166": {
+    "slot_scores": {
+      "current_decision": {
+        "score": 0,
+        "reason": "gold 是“主线转向 latest valid state retrieval”，pred 为 unknown，未覆盖"
+      },
+      "risk": {
+        "score": 0,
+        "reason": "gold 明确风险点，pred 为 unknown，未覆盖"
+      },
+      "next_step": {
+        "score": 0,
+        "reason": "gold 是“构造 STAMB-State 小型 benchmark”，pred 为 unknown，未覆盖"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "回答只说现有信息不足且提到的内容与 gold 不一致，未覆盖三个 gold 状态"
+    },
+    "slot_overall_score": 0
+  },
+  "9b6ed8f7a40d4be2993880e54dc554fd552606561bf5ea6fc8f7d2aa27c4798c": {
+    "slot_scores": {
+      "risk": {
+        "score": 0,
+        "reason": "gold 是具体风险点，预测为未知，未覆盖语义"
+      },
+      "invalidated_direction": {
+        "score": 0,
+        "reason": "gold 是明确被替代的方向，预测为未知，未覆盖语义"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "回答称没有找到风险或失效方向，与 gold 的明确状态相反且未覆盖具体内容"
+    },
+    "slot_overall_score": 0
+  },
+  "35ba9ee770924bcfb0c6eca4273edcb7eced035b97f181b01386e408ac5efbd6": {
+    "slot_scores": {
+      "next_step": {
+        "score": 0,
+        "reason": "gold is specific next step, predicted as unknown"
+      },
+      "current_decision": {
+        "score": 0,
+        "reason": "predicted TSM coverage is not equivalent to gold decision to switch main line to latest valid state retrieval"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "answer misses the gold next step and gives an incorrect current decision, so it does not cover all gold state"
+    },
+    "slot_overall_score": 0
+  },
+  "04abc05522a946012e5017ab66ead39c141a47067ade1789076e6997a83e8607": {
+    "slot_scores": {
+      "completed_item": {
+        "score": 0,
+        "reason": "gold 是“第一级输入匹配已经完成”，预测变成了“复查旧判断”，语义不等价。"
+      },
+      "current_issue": {
+        "score": 0,
+        "reason": "gold 是“S11问题主要出在级间匹配”，预测成了“输入匹配问题”，不一致。"
+      },
+      "next_step": {
+        "score": 0,
+        "reason": "gold 有明确下一步“6月9日重算级间匹配网络线长”，预测为暂无明确信息。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "只覆盖了部分信息，且把关键状态说错/说成不明确，没有完整覆盖 gold 状态。"
+    },
+    "slot_overall_score": 0
+  },
+  "0d364eaa7513ee0a12ffc2b3b1254988146150858e5122c21c04b68dab374a0b": {
+    "slot_scores": {
+      "current_issue": {
+        "score": 0,
+        "reason": "gold为“级间匹配”导致的当前S11问题，预测却表示未明确，语义不等价且遗漏核心问题"
+      },
+      "invalidated_issue": {
+        "score": 0,
+        "reason": "gold为“输入匹配是旧判断，已被纠正”，预测仅说“输入匹配问题（已被视为旧判断）”，缺少已纠正/被纠正的状态，且表述不够等价"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "回答只说当前无明确结论并提到旧判断，未覆盖gold中的当前问题在级间匹配以及旧判断已被纠正"
+    },
+    "slot_overall_score": 0
+  },
+  "d85edd51dae1e31504e9d83afeb61d3150df37f007e59e702b537f99ca847a7d": {
+    "slot_scores": {
+      "next_step": {
+        "score": 0,
+        "reason": "gold是明确的下一步任务“重算级间匹配网络线长”，预测为unknown，未覆盖。"
+      },
+      "planned_for": {
+        "score": 0,
+        "reason": "gold有明确计划时间2026-06-09T09:00:00，预测为unknown，未覆盖。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "答复仅表示未找到信息，未覆盖gold中的具体下一步和计划时间。"
+    },
+    "slot_overall_score": 0
+  },
+  "aacab540a8e7eb771dfa0801415712c51fded0930af75d67952e6d06e82d670e": {
+    "slot_scores": {
+      "latest_fix": {
+        "score": 0,
+        "reason": "gold 是具体修正内容，预测只说版本关系和替代关系，未等价表达 Department/Project 连接逻辑已修正"
+      },
+      "remaining_issue": {
+        "score": 1,
+        "reason": "gold 表示没有未解决问题，预测为“无”，语义一致"
+      },
+      "answer_score": {
+        "score": 0,
+        "reason": "回答提到 sql_e3/sql_e4 版本信息，但没有准确覆盖 gold 的具体修正点，且无法确认与 gold 完全等价"
+      }
+    },
+    "slot_overall_score": 0.5
+  },
+  "8b90f524e4e61fdd57b8608e35a5cb825e3659d646dec912aeb2cbc8ce89474e": {
+    "slot_scores": {
+      "resolved_issue": {
+        "score": 1,
+        "reason": "“已修复”与“Department 与 Project 连接条件问题已经修正”语义等价。"
+      },
+      "fix": {
+        "score": 1,
+        "reason": "“sql_e3 修复了连接条件”表达了修改连接逻辑，核心一致。"
+      }
+    },
+    "answer_score": {
+      "score": 1,
+      "reason": "回答明确说明连接条件问题已修复，覆盖了 gold 中的修正状态与修改连接逻辑含义。"
+    },
+    "slot_overall_score": 1
+  },
+  "849b801114c29f3177750f93fe823351c0c2efd83a50e3068fe8af5d16ea7299": {
+    "slot_scores": {
+      "latest_non_update": {
+        "score": 0,
+        "reason": "predicted value is an ID (sql_e4), not semantically equivalent to '最近运行没有新逻辑变化'."
+      },
+      "latest_valid_fix": {
+        "score": 0,
+        "reason": "predicted value is an ID (sql_e3), not semantically equivalent to '最后有效修改是 Department 和 Project 连接逻辑修正'."
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "answer only names sql_e4 and sql_e3, but does not state the required actual state content about no logic change and the Department-Project join fix."
+    },
+    "slot_overall_score": 0
+  },
+  "234a110376b421b3f83cb98f1f7e046115237411836034dc263110d5c0a2bcbc": {
+    "slot_scores": {
+      "current_decision": {
+        "score": 1,
+        "reason": "语义等价，都是从 lidar-only 转向 lidar + depth camera 融合。"
+      },
+      "current_issue": {
+        "score": 0,
+        "reason": "gold 是真机在玻璃走廊定位漂移明显，pred 为 unknown，信息缺失。"
+      },
+      "next_step": {
+        "score": 0,
+        "reason": "gold 是6月8日标定 depth camera 外参，pred 为 unknown，信息缺失。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "只正确覆盖了决策，未覆盖当前问题和下一步计划，且加入了仿真成功率的未给定信息。"
+    },
+    "slot_overall_score": 0.3333333333333333
+  },
+  "a4ed7d630845e23c5f119302c342063a884d3e0eaf8ab59cadb10a49ba805d84": {
+    "slot_scores": {
+      "current_decision": {
+        "score": 1,
+        "reason": "“lidar + depth camera fusion”与gold的融合方案语义等价。"
+      },
+      "invalidated_decision": {
+        "score": 1,
+        "reason": "“lidar-only”准确表示旧方案被替代的被废止决策。"
+      }
+    },
+    "answer_score": {
+      "score": 1,
+      "reason": "完整覆盖了当前采用融合方案以及lidar-only已不再使用/已废止。"
+    },
+    "slot_overall_score": 1
+  },
+  "9b7cbcff87a78ab012619b7db29047a1807e9d28c81680513cca907cef511d00": {
+    "slot_scores": {
+      "next_step": {
+        "score": 0,
+        "reason": "Gold是“标定depth camera外参”，预测为“采用激光雷达+深度相机融合方案”，语义不等价，属于不同任务步骤。"
+      },
+      "planned_for": {
+        "score": 0,
+        "reason": "Gold是明确时间2026-06-08T14:00:00，预测为“未有明确计划”，与gold相反。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "回答只覆盖了错误的next_step，并且把有明确时间的planned_for说成没有明确计划，未正确覆盖所有gold状态。"
+    },
+    "slot_overall_score": 0
+  },
+  "17f2914a859dec05d1f63cbe4226fb24b7a8fe89bc98d676414fdfb846497225": {
+    "slot_scores": {
+      "completed_item": {
+        "score": 1,
+        "reason": "语义等价，都是语法通读已完成。"
+      },
+      "remaining_work": {
+        "score": 0,
+        "reason": "gold 还要补动机和研究空白，pred 只提到内容结构未改完，缺少关键剩余工作。"
+      },
+      "deadline": {
+        "score": 0,
+        "reason": "gold 是第二章提交时间 6月10日，pred 给出的是 2026-06-08T18:00:00Z，不等价。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "只覆盖了已完成事项和结构未改完，且截止日期错误，未完整正确覆盖 gold 状态。"
+    },
+    "slot_overall_score": 0.3333333333333333
+  },
+  "5038b2951264960798536e7e9d637dc760064803dc69b9a0231c3246d0ec6b28": {
+    "slot_scores": {
+      "deadline": {
+        "score": 0,
+        "reason": "gold是当前截止时间为6月10日，pred为unknown，缺失明确状态。"
+      },
+      "invalidated_deadline": {
+        "score": 1,
+        "reason": "pred给出6月8日，且gold表示6月8日是旧截止时间已被替代，语义一致。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "答对了6月8日已失效，但错误声称未找到6月10日且当前无有效截止日期，未覆盖gold中当前截止时间为6月10日。"
+    },
+    "slot_overall_score": 0.5
+  },
+  "86afa6fbd712c735618b8bfc11ce677c2970696be73524f45d79161b851c3c7b": {
+    "slot_scores": {
+      "remaining_work": {
+        "score": 0,
+        "reason": "Gold 还包括“需要补动机和研究空白”，预测只保留了“内容结构还未改完”，信息缺失，未等价。"
+      },
+      "completed_item": {
+        "score": 1,
+        "reason": "“语法通读已完成”与 gold 的“语法通读已经完成”语义等价。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "答案只覆盖了内容结构未改完和语法通读已完成，遗漏了“需要补动机和研究空白”，未完整覆盖 gold 状态。"
+    },
+    "slot_overall_score": 0.5
+  },
+  "231c4309ddf8c9da9a13129b089d3e4e852e529d94b0e1e512ce7975ceba4f14": {
+    "slot_scores": {
+      "current_decision": {
+        "score": 1,
+        "reason": "与gold同义，均表示采用 email magic link。"
+      },
+      "resolved_issue": {
+        "score": 0,
+        "reason": "gold是magic link重发限流已修复，pred误写成短信OTP方案被替换，语义不一致。"
+      },
+      "current_issue": {
+        "score": 0,
+        "reason": "gold有明确当前问题，pred为空。"
+      },
+      "next_step": {
+        "score": 0,
+        "reason": "gold有明确下一步，pred为空。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "只覆盖了部分决策信息，且对已解决问题、当前问题和下一步都未正确覆盖。"
+    },
+    "slot_overall_score": 0.25
+  },
+  "ade7bd00ca39fb023a42fec1e4e28199a7aa9b7bf35b3b8fa5990484732bc365": {
+    "slot_scores": {
+      "current_decision": {
+        "score": 1,
+        "reason": "“email magic link”与gold中的当前方案一致。"
+      },
+      "invalidated_decision": {
+        "score": 1,
+        "reason": "“短信 OTP”与gold中被替代的旧方案一致。"
+      }
+    },
+    "answer_score": {
+      "score": 1,
+      "reason": "自然语言回答覆盖了当前方案和短信OTP已不再使用两点，整体正确。"
+    },
+    "slot_overall_score": 1
+  },
+  "d599faee11838e1ad6b8613a3ff0a9df47e65d0e68e54b70affbad624c5a515c": {
+    "slot_scores": {
+      "resolved_issue": {
+        "score": 0,
+        "reason": "gold 是“重发接口限流已经修复”，预测成了“email magic link 替代短信OTP”，语义不一致且引入新内容"
+      },
+      "current_issue": {
+        "score": 0,
+        "reason": "gold 有明确未解决问题“iOS 端重发按钮偶尔不刷新倒计时”，预测为“无”"
+      },
+      "answer_score": {
+        "score": 0,
+        "reason": "答案声称没有未解决问题且提到 email magic link，未覆盖 gold 中的已修复项和当前未解决项"
+      },
+      "slot_overall_score": 0
+    }
+  },
+  "a2630af9582189c72c4046b5fb39cb928a1fdccdc90c1b6f6de2c19db585293c": {
+    "slot_scores": {
+      "budget": {
+        "score": 0,
+        "reason": "gold 是当前预算95k；预测说的是待补预算说明和旧80k作废，未给出当前预算，且信息不等价"
+      },
+      "team": {
+        "score": 1,
+        "reason": "与 gold 的“合作方C加入并替代合作方B的实验条件支持”语义一致"
+      },
+      "remaining_work": {
+        "score": 0,
+        "reason": "gold 明确还有“申请书草稿已上传，仍需补预算说明”；预测回答无相关信息，缺失且相反"
+      },
+      "overall": 0
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "只正确覆盖了团队状态，预算和剩余工作未正确覆盖 gold，且 answer 要求覆盖全部 gold 状态"
+    },
+    "slot_overall_score": 0.3333333333333333
+  },
+  "a873fed05ba0c213d0ba99cf62d1ccff0dcfb49810801c9b0b99abcfb0c7c42f": {
+    "slot_scores": {
+      "budget": {
+        "score": 0,
+        "reason": "gold 是明确的当前预算 95k，预测成“待补充”表示未知/缺失，语义不一致。"
+      },
+      "invalidated_budget": {
+        "score": 0,
+        "reason": "gold 表示 80k 是旧预算且已作废，预测只给出“80k”未体现作废语义。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "虽然提到旧预算80k已作废，但没有正确给出当前预算95k，且将预算说成待补充，未完整覆盖 gold 状态。"
+    },
+    "slot_overall_score": 0
+  },
+  "797a4c08d877c5544018ca43a023cb165d8e44d2461a9a9a871f44d192e87e8e": {
+    "slot_scores": {
+      "team": {
+        "score": 1,
+        "reason": "“合作方C”与gold中当前加入并提供支持的合作方C语义一致。"
+      },
+      "invalidated_team": {
+        "score": 1,
+        "reason": "“合作方B”与gold中已退出并被替代的合作方B语义一致。"
+      }
+    },
+    "answer_score": {
+      "score": 1,
+      "reason": "自然语言回答覆盖了当前合作方C和被取代的合作方B，整体正确。"
+    },
+    "slot_overall_score": 1
+  },
+  "4ba00c0cb3244e57059831b8b8c5af2958c212c7313da8a171bdcda9ff7828c3": {
+    "slot_scores": {
+      "current_guideline": {
+        "score": 1,
+        "reason": "语义一致，均表示 v2 将 uncertain 与 partial 合并为 ambiguous。"
+      },
+      "current_issue": {
+        "score": 1,
+        "reason": "语义一致，分歧率/不一致率 12% 等价。"
+      },
+      "next_step": {
+        "score": 1,
+        "reason": "核心一致，都是6月8日用v2重新培训标注员；多出的具体时间不影响等价。"
+      },
+      "completed_item": {
+        "score": 0,
+        "reason": "gold 是 batch A 已完成一轮标注但还没复核，预测成了发布规范 v2 并取代 v1，语义不一致。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "答对了 current_guideline、current_issue、next_step，但 completed_item 错误且未正确覆盖 gold 的已完成事项。"
+    },
+    "slot_overall_score": 0.75
+  },
+  "e72f68e1d80c6749bf2b1b673481a78b99c44f6da19d756ba1835a477e2f656d": {
+    "slot_scores": {
+      "current_guideline": {
+        "score": 1,
+        "reason": "表达与gold一致，均为v2将uncertain和partial合并为ambiguous。"
+      },
+      "invalidated_guideline": {
+        "score": 0,
+        "reason": "gold强调v1中二者分开处理的规则已作废，预测改成了v1被v2取代且截图作废，含义不等价且引入了无关信息。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "只完整覆盖了current_guideline；invalidated_guideline没有准确表达gold中的作废内容。"
+    },
+    "slot_overall_score": 0.5
+  },
+  "6576bb47689ec805fa39c9beb68182ba4b2345960aba5286e05108a208027b0d": {
+    "slot_scores": {
+      "current_issue": {
+        "score": 1,
+        "reason": "“batch A 12% labeling disagreement rate”与“batch A 标注分歧率 12%”语义等价。"
+      },
+      "next_step": {
+        "score": 1,
+        "reason": "“retrain annotators with v2”与“用 v2 规范重新培训标注员”语义等价，时间附加信息不影响等价性。"
+      }
+    },
+    "answer_score": {
+      "score": 1,
+      "reason": "自然语言答案覆盖了当前问题和下一步两项 gold 状态，且表述正确。"
+    },
+    "slot_overall_score": 1
+  },
+  "2c9ae80a0c691ae515799d8362f1a5ac36c2593222bcf97f1adf2a47803e64da": {
+    "slot_scores": {
+      "corrected_result": {
+        "score": 1,
+        "reason": "都表示修正后NCF比LightGCN低1%，语义一致。"
+      },
+      "current_risk": {
+        "score": 0,
+        "reason": "gold是初次结果存在数据泄漏，预测却说风险已消除，语义相反。"
+      },
+      "next_step": {
+        "score": 0,
+        "reason": "gold还要求补cold-start split测试，预测只提到加入SASRec，信息缺失。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "只覆盖了修正结果和部分下一步，且把当前风险说成已修复，未完整覆盖gold状态。"
+    },
+    "slot_overall_score": 0.3333333333333333
+  },
+  "109160f1796ab4907e2825012eb15a7685b1db6ff68e0ed9deea16ec429b7bdd": {
+    "slot_scores": {
+      "corrected_result": {
+        "score": 1,
+        "reason": "“NCF比LightGCN低1%”与gold语义一致。"
+      },
+      "invalidated_result": {
+        "score": 1,
+        "reason": "“NCF比LightGCN高2%”与gold中被作废的旧结果一致。"
+      }
+    },
+    "answer_score": {
+      "score": 1,
+      "reason": "最终回答同时覆盖了修正后的当前结果和被数据泄漏作废的旧结果，整体正确。"
+    },
+    "slot_overall_score": 1
+  },
+  "8157547c6ea7df047fcc44d339675ed30fbae51dc5a2c73f2f7f0aef6287776b": {
+    "slot_scores": {
+      "next_baseline": {
+        "score": 1,
+        "reason": "SASRec 与“加入 SASRec 对比”语义等价。"
+      },
+      "next_split": {
+        "score": 0,
+        "reason": "pred 为 unknown，未覆盖 gold 的“补 cold-start split 测试”。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "只提到 baseline 为 SASRec，未覆盖 cold-start split 测试这一 gold 状态。"
+    },
+    "slot_overall_score": 0.5
+  },
+  "e5afb1e8894755c7293c1cef31a127ba069820057c3412ad317b9064b0ce5e97": {
+    "slot_scores": {
+      "mitigation": {
+        "score": 1,
+        "reason": "回滚缓解5xx并恢复服务，语义等价"
+      },
+      "root_cause": {
+        "score": 1,
+        "reason": "缓存击穿导致下游被打爆/过载，核心含义一致"
+      },
+      "next_step": {
+        "score": 1,
+        "reason": "增加热点key限流和缓存预热，语义一致"
+      }
+    },
+    "answer_score": {
+      "score": 1,
+      "reason": "完整覆盖了缓解措施、根因和下一步，且表述与gold一致"
+    },
+    "slot_overall_score": 1
+  },
+  "4295782cb1eb6c2f89229d45675e791f45a9105a984ff7443683da53c160109b": {
+    "slot_scores": {
+      "root_cause": {
+        "score": 1,
+        "reason": "“缓存击穿导致下游过载”与gold“缓存击穿导致下游被打爆”语义等价。"
+      },
+      "invalidated_root_cause": {
+        "score": 1,
+        "reason": "“数据库连接池耗尽”与gold中的初步旧判断一致。"
+      },
+      "slot_overall_score": 1
+    },
+    "answer_score": {
+      "score": 1,
+      "reason": "answer同时覆盖了当前根因和已被纠正的旧判断，整体正确。"
+    }
+  },
+  "e5dc08eca19756491668b0001eeb915d0c1308b390896a63aa920060a0f1676d": {
+    "slot_scores": {
+      "next_step": {
+        "score": 1,
+        "reason": "“实施计划中的热点 key 限流和缓存预热防护措施”与 gold 的增加热点 key 限流和缓存预热同义。"
+      },
+      "mitigation": {
+        "score": 0,
+        "reason": "gold 是“服务已经通过回滚恢复”，预测却写成了“热点 key 限流 和 缓存预热”，语义不等价。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "回答只覆盖了后续防护措施，未包含“服务已经通过回滚恢复”这一 gold 状态。"
+    },
+    "slot_overall_score": 0.5
+  },
+  "e5ab246383afe05696c950814cfdb76e9917d10406ab633cba57ee917ed8f82a": {
+    "slot_scores": {
+      "current_decision": {
+        "score": 0,
+        "reason": "gold是“主线转向 latest valid state retrieval”，预测只说“不再只主打 mentioned_at vs occurred_at”，语义不等价且过于局部。"
+      },
+      "risk": {
+        "score": 0,
+        "reason": "gold明确为“TSM 已覆盖多时间角色，不能只主打 mentioned_at vs occurred_at”，预测为空。"
+      },
+      "next_step": {
+        "score": 0,
+        "reason": "gold明确为“构造 STAMB-State 小型 benchmark”，预测为空。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "只部分提到决策相关内容，未覆盖 risk 和 next_step，且决策表述也未准确匹配 gold。"
+    },
+    "slot_overall_score": 0
+  },
+  "ef6ccad0e305b81cd59ffe316de663866ce5659a2bc93d126a37d6b97b6ec13d": {
+    "slot_scores": {
+      "risk": {
+        "score": 0,
+        "reason": "Gold says TSM covers multiple temporal roles and the risk is oversimplifying to only mentioned_at vs occurred_at; prediction focuses on dialogue time vs occurrence time and misses the broader multi-time-role point."
+      },
+      "invalidated_direction": {
+        "score": 0,
+        "reason": "Gold says the broader direction is replaced by latest valid state retrieval for multi-time fields + KG-RAG; prediction only gives mentioned_at vs occurred_at, which is incomplete."
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "The answer only mentions the outdated mentioned_at vs occurred_at direction and omits the broader multi-time-role risk and the replacement by latest valid state retrieval."
+    },
+    "slot_overall_score": 0
+  },
+  "d9bb7733fa7fc420f4c15f5fe9d819526921f71eed6dd1f505878b1397a3362d": {
+    "slot_scores": {
+      "next_step": {
+        "score": 0,
+        "reason": "Gold has明确下一步“构造 STAMB-State 小型 benchmark”，预测为空，缺失。"
+      },
+      "current_decision": {
+        "score": 0,
+        "reason": "Gold 是主线转向 latest valid state retrieval；预测内容只是在说明TSM覆盖范围，不等价于该决策。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "只提到TSM覆盖范围，未覆盖 gold 的下一步构造 benchmark 和主线转向 latest valid state retrieval，且明确说下一步未提及。"
+    },
+    "slot_overall_score": 0
+  },
+  "9955e55ddef8ad674235cf7e993db61ba198f3c9789432ceff9cacc4b8a949e5": {
+    "slot_scores": {
+      "completed_item": {
+        "score": 0,
+        "reason": "gold 有明确已完成事项，预测为空，属缺失"
+      },
+      "current_issue": {
+        "score": 1,
+        "reason": "与 gold 的“级间匹配导致 S11 问题”语义一致"
+      },
+      "next_step": {
+        "score": 0,
+        "reason": "gold 有明确下一步计划，预测为空，属缺失"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "只覆盖了当前问题，遗漏了已完成事项和下一步计划"
+    },
+    "slot_overall_score": 0.3333333333333333
+  },
+  "2d38db6fdca562e25f3aee4ac156c95c68e7fc9653553d2a9365bfb4ae2e1fab": {
+    "slot_scores": {
+      "current_issue": {
+        "score": 1,
+        "reason": "“级间匹配”与gold的“S11问题主要出在级间匹配”语义一致。"
+      },
+      "invalidated_issue": {
+        "score": 1,
+        "reason": "“输入匹配”与gold中被纠正的旧判断“输入匹配”一致。"
+      }
+    },
+    "answer_score": {
+      "score": 1,
+      "reason": "完整覆盖了当前问题在级间匹配、以及输入匹配已被纠正这两个gold状态。"
+    },
+    "slot_overall_score": 1
+  },
+  "200ed84d7404357f1cb331bec05d3d36894f7176a4931cb662eaedea477dea72": {
+    "slot_scores": {
+      "next_step": {
+        "score": 0,
+        "reason": "gold有明确下一步“重算级间匹配网络线长”，预测为空，属缺失。"
+      },
+      "planned_for": {
+        "score": 0,
+        "reason": "gold有明确时间“2026-06-09T09:00:00”，预测为空，属缺失。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "回答称没有信息，但gold存在明确下一步和计划时间，未覆盖全部状态且与事实相反。"
+    },
+    "slot_overall_score": 0
+  },
+  "07e62899c5e927f3ceba228c1f2fc1d110eed0dfb0abceb57bc3a2772772b975": {
+    "slot_scores": {
+      "latest_fix": {
+        "score": 1,
+        "reason": "表达了 Department 和 Project 的连接逻辑已修正，语义等价。"
+      },
+      "remaining_issue": {
+        "score": 0,
+        "reason": "gold 表示没有未解决问题，但预测为空，属于缺失。"
+      }
+    },
+    "answer_score": {
+      "score": 1,
+      "reason": "回答包含了最新修改位置和已修正的连接逻辑，并说明目前没有剩余问题，覆盖了 gold 状态。"
+    },
+    "slot_overall_score": 0.5
+  },
+  "bf8bc4ecedc4e384dff2e45329dd360398033c4e74948ae8b64d291ff55d1e75": {
+    "slot_scores": {
+      "resolved_issue": {
+        "score": 0,
+        "reason": "gold是具体修正内容，预测仅给出true，未表达语义等价。"
+      },
+      "fix": {
+        "score": 1,
+        "reason": "与gold同义，均表示修改Department和Project的连接逻辑。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "虽提到已修复，但没有准确覆盖gold中“Department 与 Project 连接条件问题已经修正”的完整状态语义，且包含额外不必要推断。"
+    },
+    "slot_overall_score": 0.5
+  },
+  "ee29c4922129742cced3c5c029ea267cc1bdd135734bd79afd7528840fcf5291": {
+    "slot_scores": {
+      "latest_non_update": {
+        "score": 0,
+        "reason": "“sql_e4”是代号，不等价于“最近运行没有新逻辑变化”这一状态含义。"
+      },
+      "latest_valid_fix": {
+        "score": 0,
+        "reason": "“sql_e3”是代号，不等价于“最后有效修改是 Department 和 Project 连接逻辑修正”。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "回答用版本代号代替了具体状态含义，未完整覆盖 gold 中的两条语义状态。"
+    },
+    "slot_overall_score": 0
+  },
+  "e17878a21e1135e342d21425fa0a5a997d4566087e108627c617e071c6668aaf": {
+    "slot_scores": {
+      "current_decision": {
+        "score": 1,
+        "reason": "与gold核心含义一致，均为转向 lidar + depth camera 融合。"
+      },
+      "current_issue": {
+        "score": 0,
+        "reason": "gold是玻璃走廊定位漂移明显，预测为未提及，属于缺失。"
+      },
+      "next_step": {
+        "score": 0,
+        "reason": "gold是6月8日标定 depth camera 外参，预测为未提及，属于缺失。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "只覆盖了决策，未正确覆盖当前问题和下一步，且用未提及替代了明确状态。"
+    },
+    "slot_overall_score": 0.3333333333333333
+  },
+  "bd0425a379b0e810e52d3bcdac7af698bfb309972302041609068be803d3b298": {
+    "slot_scores": {
+      "current_decision": {
+        "score": 1,
+        "reason": "“lidar + depth camera fusion”与gold的“现在采用 lidar + depth camera 融合”语义一致。"
+      },
+      "invalidated_decision": {
+        "score": 1,
+        "reason": "虽然较简略，但“lidar-only”对应gold中被替代的旧方案，语义一致。"
+      }
+    },
+    "answer_score": {
+      "score": 1,
+      "reason": "明确说明当前不是lidar-only，已转为lidar+depth camera融合，并指出旧的lidar-only决定已被取代，覆盖了gold状态。"
+    },
+    "slot_overall_score": 1
+  },
+  "89863a57d6a2a1b5f6bf2c967d59680106829b28b687b0ee2230fd23be789dc9": {
+    "slot_scores": {
+      "next_step": {
+        "score": 0,
+        "reason": "gold是“标定 depth camera 外参”，预测成了更泛化的方案切换，核心任务不等价。"
+      },
+      "planned_for": {
+        "score": 0,
+        "reason": "gold有明确时间点2026-06-08T14:00:00，预测为“无”，信息冲突。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "只覆盖了next_step且还不等价，没有覆盖gold中的具体计划时间。"
+    },
+    "slot_overall_score": 0
+  },
+  "12d589cbcf7e8a527813d640f2ec1f5ebd00389bbb19627b692d5655b6eab96e": {
+    "slot_scores": {
+      "completed_item": {
+        "score": 1,
+        "reason": "“语法通读已完成”与 gold 的“已经完成语法通读”语义一致。"
+      },
+      "remaining_work": {
+        "score": 0,
+        "reason": "预测只提到内容结构未改完，遗漏了“还要补动机和研究空白”。"
+      },
+      "deadline": {
+        "score": 0,
+        "reason": "gold 有明确截止时间 6月10日，预测为“无”不一致。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "只覆盖了部分状态，且将截止时间说成没有有效截止时间，未完整覆盖 gold。"
+    },
+    "slot_overall_score": 0.3333333333333333
+  },
+  "f98b1559156fc0947257c00b8b66c29d987152e40b1417520de0a4b6db9d6d7c": {
+    "slot_scores": {
+      "deadline": {
+        "score": 0,
+        "reason": "gold是当前截止时间为6月10日，预测为空，缺失关键信息"
+      },
+      "invalidated_deadline": {
+        "score": 0,
+        "reason": "gold表示6月8日是旧截止时间已被替代，预测只给出日期且未体现“旧/已被替代”含义"
+      },
+      "overall_score_placeholder": {
+        "score": 0,
+        "reason": "placeholder"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "回答说当前没有有效截止日期且否认6月10日，未覆盖gold中的当前截止时间6月10日"
+    },
+    "slot_overall_score": 0
+  },
+  "d1bbb4ec3f7b88885884ab535180803f143c49011448800b35cd08f8a5cd2194": {
+    "slot_scores": {
+      "remaining_work": {
+        "score": 0,
+        "reason": "Gold 还包括“需要补动机和研究空白”，预测只保留了“内容结构还未改完”，信息不完整。"
+      },
+      "completed_item": {
+        "score": 1,
+        "reason": "“语法通读已完成”与 gold 语义等价。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "只覆盖了语法通读完成和内容结构未改完，遗漏了需要补动机和研究空白。"
+    },
+    "slot_overall_score": 0.5
+  },
+  "6a40160693179f301b403eef077276b00a9ae05207e166158f2b95d728f8f99b": {
+    "slot_scores": {
+      "current_decision": {
+        "score": 1,
+        "reason": "与 gold 同义，均表示采用 email magic link 作为登录方案。"
+      },
+      "resolved_issue": {
+        "score": 0,
+        "reason": "gold 为已上线修复的限流问题，预测为空，缺失。"
+      },
+      "current_issue": {
+        "score": 0,
+        "reason": "gold 为 iOS 端重发按钮偶尔不刷新倒计时，预测为空，缺失。"
+      },
+      "next_step": {
+        "score": 0,
+        "reason": "gold 为补 magic link 登录审计日志，预测为空，缺失。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "只覆盖了 current_decision，未覆盖其余三个明确状态。"
+    },
+    "slot_overall_score": 0.25
+  },
+  "a6ab81c7d94965f936b276a16957cb35fb7fb314b6ea45f0a105ae328f28d2cb": {
+    "slot_scores": {
+      "current_decision": {
+        "score": 1,
+        "reason": "“email magic link”与gold中当前方案一致。"
+      },
+      "invalidated_decision": {
+        "score": 1,
+        "reason": "“短信 OTP”与gold中已被替代的旧方案一致。"
+      }
+    },
+    "answer_score": {
+      "score": 1,
+      "reason": "答案同时说明当前方案和被替代的旧方案，完整覆盖gold状态。"
+    },
+    "slot_overall_score": 1
+  },
+  "6b464df8ee28f7c1e2e5df41825e634c53daf3e5f84ae538caabe3dc02f9dc32": {
+    "slot_scores": {
+      "resolved_issue": {
+        "score": 0,
+        "reason": "Gold是“重发接口限流已经修复”，预测成了“email magic link替代短信OTP”，语义不一致。"
+      },
+      "current_issue": {
+        "score": 0,
+        "reason": "Gold有明确当前问题“iOS端重发按钮偶尔不刷新倒计时”，预测为空，属于缺失。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "回答未覆盖gold的两个状态，且把当前未解决问题说成没有。"
+    },
+    "slot_overall_score": 0
+  },
+  "f513f2170b5c7d125a357a5c8f00bf6c38bbf0f63dad1961c623586344900b09": {
+    "slot_scores": {
+      "budget": {
+        "score": 0,
+        "reason": "gold是当前预算95k，预测只说待补预算说明且旧表作废，未包含预算数值，语义不等价"
+      },
+      "team": {
+        "score": 1,
+        "reason": "合作方C替代合作方B负责实验条件支持，语义一致"
+      },
+      "remaining_work": {
+        "score": 0,
+        "reason": "gold包含申请书草稿已上传且仍需补预算说明，预测只保留了补预算说明，遗漏已上传这一状态"
+      },
+      "answer_score": {
+        "score": 0,
+        "reason": "答案未覆盖budget的95k和remaining_work中的申请书草稿已上传，未完整覆盖所有gold状态"
+      },
+      "slot_overall_score": 0.3333333333333333
+    }
+  },
+  "87ee5b55de200b650918dc953a46c8531dba14d83b85f2a2ec52800dafa86602": {
+    "slot_scores": {
+      "budget": {
+        "score": 0,
+        "reason": "gold 是当前预算 95k，预测为待补充，语义不等价且漏掉明确数值。"
+      },
+      "invalidated_budget": {
+        "score": 1,
+        "reason": "gold 表达 80k 是旧预算且已作废，预测为 80k，结合 answer 明确说明已作废，语义基本一致。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "回答没有给出当前预算 95k，只说尚无确定数字，未覆盖全部 gold 状态。"
+    },
+    "slot_overall_score": 0.5
+  },
+  "66d7fa811453f68b44580f684a6f38d450d14e61e4db897e6bda1754ef15705c": {
+    "slot_scores": {
+      "team": {
+        "score": 1,
+        "reason": "“合作方C”与gold中当前合作方C一致，语义等价。"
+      },
+      "invalidated_team": {
+        "score": 1,
+        "reason": "“合作方B”对应gold中已退出并被替代的合作方B，核心指代一致。"
+      }
+    },
+    "answer_score": {
+      "score": 1,
+      "reason": "答案覆盖了当前合作方C和被替代的合作方B这两个核心状态。"
+    },
+    "slot_overall_score": 1
+  },
+  "44695235aab22a8614ed4f3e61fedbaf586bc7b31671f677fa1fa9aa5e1a4773": {
+    "slot_scores": {
+      "current_guideline": {
+        "score": 1,
+        "reason": "与gold同义，均表示v2把uncertain和partial合并为ambiguous。"
+      },
+      "current_issue": {
+        "score": 1,
+        "reason": "核心信息一致，batch A 标注分歧率12%保留不变。"
+      },
+      "next_step": {
+        "score": 1,
+        "reason": "含义一致，都是6月8日用v2规范重新培训标注员。"
+      },
+      "completed_item": {
+        "score": 0,
+        "reason": "gold为batch A已完成一轮标注但还没复核，预测为空，缺失关键信息。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "虽然覆盖了前三个状态，但没有正确给出completed_item，反而说暂无已完成项，未完整覆盖gold。"
+    },
+    "slot_overall_score": 0.75
+  },
+  "c681db5b784b3c10192324158a196c3d8d62c10fb2a72358a8d6c53975d701d8": {
+    "slot_scores": {
+      "current_guideline": {
+        "score": 1,
+        "reason": "都表达了 v2 中 uncertain 和 partial 合并为 ambiguous。"
+      },
+      "invalidated_guideline": {
+        "score": 1,
+        "reason": "都表示 v1 中二者分开处理的旧规则已作废。"
+      }
+    },
+    "answer_score": {
+      "score": 1,
+      "reason": "自然语言回答覆盖了两项 gold 状态，且含义一致。"
+    },
+    "slot_overall_score": 1
+  },
+  "3894edb9dd628427ee7d1b14212b98c6a18b208367a8bd460a61333f9cbcef75": {
+    "slot_scores": {
+      "current_issue": {
+        "score": 1,
+        "reason": "语义等价，均表示 batch A 标注分歧率为12%."
+      },
+      "next_step": {
+        "score": 1,
+        "reason": "语义等价，均表示用 v2 规范重新培训标注员."
+      }
+    },
+    "answer_score": {
+      "score": 1,
+      "reason": "完整覆盖了 current_issue 和 next_step，且表述一致。"
+    },
+    "slot_overall_score": 1
+  },
+  "febd8fd0eead0f07a0558ad608172de2f8fe008e4a8f7fe28332a00e5ed16a27": {
+    "slot_scores": {
+      "corrected_result": {
+        "score": 1,
+        "reason": "与gold仅差“修正泄漏后”这一上下文前提，核心比较结论一致。"
+      },
+      "current_risk": {
+        "score": 0,
+        "reason": "gold表示初次结果存在数据泄漏，预测却说问题已修复，语义相反。"
+      },
+      "next_step": {
+        "score": 0,
+        "reason": "gold还要求补cold-start split测试，预测缺失该关键下一步。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "只覆盖了部分状态，且把current_risk说成已修复，与gold不一致。"
+    },
+    "slot_overall_score": 0.3333333333333333
+  },
+  "3b1e72041ce2b99cb8e8d163dc0b1b782d42a77f8fed40b51ae02840124c3173": {
+    "slot_scores": {
+      "corrected_result": {
+        "score": 1,
+        "reason": "与gold同义，均表示修正后NCF比LightGCN低1%。"
+      },
+      "invalidated_result": {
+        "score": 0,
+        "reason": "pred说NCF高2%是当前比较结果；gold表示这是因数据泄漏产生的旧结果，并非有效现状。"
+      }
+    },
+    "answer_score": {
+      "score": 1,
+      "reason": "完整覆盖了修正后低1%以及旧的高2%结果被纠正这一点。"
+    },
+    "slot_overall_score": 0.5
+  },
+  "8e6e9d5415230a6dc280ca0c76ce9ab8bc13d72730e1329edbc95d3db9537838": {
+    "slot_scores": {
+      "next_baseline": {
+        "score": 1,
+        "reason": "“SASRec”与“加入 SASRec 对比”语义一致。"
+      },
+      "next_split": {
+        "score": 0,
+        "reason": "空值，缺失了“补 cold-start split 测试”。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "只覆盖了 next_baseline，未覆盖 gold 中的 next_split。"
+    },
+    "slot_overall_score": 0.5
+  },
+  "ddb3ab54abf435ea9fadf5c8c0485aebc4b19b8fc2ec024dd8b470ee58bc1001": {
+    "slot_scores": {
+      "mitigation": {
+        "score": 1,
+        "reason": "语义一致，均表示通过回滚缓解5xx并已恢复服务。"
+      },
+      "root_cause": {
+        "score": 0,
+        "reason": "加入了“不是数据库连接池耗尽”的否定补充，gold 中没有该信息，属于过度推断。"
+      },
+      "next_step": {
+        "score": 1,
+        "reason": "与gold一致，都是增加热点key限流和缓存预热。"
+      }
+    },
+    "answer_score": {
+      "score": 0,
+      "reason": "整体覆盖了大部分信息，但根因表述加入了额外否定推断，且最终答案需完整准确覆盖所有gold状态。"
+    },
+    "slot_overall_score": 0.6666666666666666
+  },
+  "47697e750f0371f03919c8f7249a1d04641226a79d503a94e789e46771fcf76f": {
+    "slot_scores": {
+      "root_cause": {
+        "score": 1,
+        "reason": "与gold完全一致，语义等价。"
+      },
+      "invalidated_root_cause": {
+        "score": 1,
+        "reason": "虽少了“初步旧判断，已经被纠正”的过程性描述，但核心含义是数据库连接池耗尽这一被否定的旧判断，语义等价。"
+      }
+    },
+    "answer_score": {
+      "score": 1,
+      "reason": "明确给出根因是缓存击穿，并否定数据库连接池耗尽，覆盖了gold中的两项状态。"
+    },
+    "slot_overall_score": 1
+  },
+  "b55c1deb3925ff51834a1ad7c7a2bbdff5d0a1432e1134447090f6ce6ee7ff6a": {
+    "slot_scores": {
+      "next_step": {
+        "score": 1,
+        "reason": "与gold完全一致。"
+      },
+      "mitigation": {
+        "score": 1,
+        "reason": "与gold语义等价，均表示通过回滚已恢复/缓解。"
+      }
+    },
+    "answer_score": {
+      "score": 1,
+      "reason": "自然语言回答覆盖了全部gold状态，且表述正确。"
+    },
+    "slot_overall_score": 1
+  }
+}

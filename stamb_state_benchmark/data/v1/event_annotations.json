@@ -1,0 +1,494 @@
+[
+  {
+    "event_id": "aaai_e1",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "aaai_e2",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "aaai_e3",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "aaai_e4",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "aaai_e2"
+    ],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "aaai_e5",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "amp_e1",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "amp_e2",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "amp_e3",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "amp_e2"
+    ],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "amp_e4",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "amp_e5",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "sql_e1",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "sql_e2",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "sql_e3",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "sql_e2"
+    ],
+    "supersedes": [
+      "sql_e1"
+    ],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "sql_e4",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "sql_e5",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "robot_e1",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "robot_e2",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "robot_e3",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "robot_e4",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "robot_e1"
+    ],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "robot_e5",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "robot_e6",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "thesis_e1",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "thesis_e2",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "thesis_e3",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "thesis_e4",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "thesis_e2"
+    ],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "thesis_e5",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "thesis_e6",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "auth_e1",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "auth_e2",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "auth_e1"
+    ],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "auth_e3",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "auth_e4",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "auth_e3"
+    ],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "auth_e5",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "auth_e6",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "auth_e7",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "grant_e1",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "grant_e2",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "grant_e1"
+    ],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "grant_e3",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "grant_e4",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "grant_e3"
+    ],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "grant_e5",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "grant_e6",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "label_e1",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "label_e2",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "label_e1"
+    ],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "label_e3",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "label_e4",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "label_e5",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "label_e6",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "rec_e1",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "rec_e2",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "rec_e1"
+    ],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "rec_e3",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "rec_e1"
+    ],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "rec_e4",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "rec_e5",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "rec_e6",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "inc_e1",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "inc_e2",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "inc_e3",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "inc_e4",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "inc_e3"
+    ],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "inc_e5",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "inc_e6",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  }
+]

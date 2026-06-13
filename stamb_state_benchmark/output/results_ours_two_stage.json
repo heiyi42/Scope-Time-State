@@ -1,0 +1,3011 @@
+[
+  {
+    "variant": "scope_time_state_pipeline",
+    "model_provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "judge_provider": "openai",
+    "judge_model": "gpt-5.4-mini",
+    "avg_event_f1": 0.885,
+    "avg_slot_support_accuracy": 0.972,
+    "avg_slot_value_judge": 0.936,
+    "avg_answer_judge": 0.833,
+    "cases": [
+      {
+        "case_id": "aaai_status",
+        "query": "AAAI 项目最近怎么样？",
+        "event_f1": 1.0,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "aaai_e4",
+          "aaai_e3"
+        ],
+        "pred_state_slots": {
+          "current_decision": {
+            "value": "转向latest valid state retrieval",
+            "support_event": "aaai_e4"
+          },
+          "risk": {
+            "value": "TSM已覆盖dialogue time vs occurrence time，原思路不成立",
+            "support_event": "aaai_e3"
+          },
+          "next_step": {
+            "value": "构造STAMB-State小型benchmark",
+            "support_event": "aaai_e4"
+          }
+        },
+        "answer": "当前决定是转向latest valid state retrieval。风险是TSM已覆盖dialogue time vs occurrence time，原思路不成立。下一步是构造STAMB-State小型benchmark。",
+        "raw_output": {
+          "evidence_events": [
+            "aaai_e4",
+            "aaai_e3"
+          ],
+          "state_slots": {
+            "current_decision": {
+              "value": "转向latest valid state retrieval",
+              "support_event": "aaai_e4"
+            },
+            "risk": {
+              "value": "TSM已覆盖dialogue time vs occurrence time，原思路不成立",
+              "support_event": "aaai_e3"
+            },
+            "next_step": {
+              "value": "构造STAMB-State小型benchmark",
+              "support_event": "aaai_e4"
+            }
+          },
+          "coverage_check": {
+            "current_decision": true,
+            "risk": true,
+            "next_step": true
+          },
+          "answer": "当前决定是转向latest valid state retrieval。风险是TSM已覆盖dialogue time vs occurrence time，原思路不成立。下一步是构造STAMB-State小型benchmark。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "aaai_e4",
+                "aaai_e3"
+              ],
+              "state_slots": {
+                "current_decision": {
+                  "value": "转向latest valid state retrieval",
+                  "support_event": "aaai_e4"
+                },
+                "risk": {
+                  "value": "TSM已覆盖dialogue time vs occurrence time，原思路不成立",
+                  "support_event": "aaai_e3"
+                },
+                "next_step": {
+                  "value": "构造STAMB-State小型benchmark",
+                  "support_event": "aaai_e4"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "current_decision": true,
+                "risk": true,
+                "next_step": true
+              },
+              "answer": "当前决定是转向latest valid state retrieval。风险是TSM已覆盖dialogue time vs occurrence time，原思路不成立。下一步是构造STAMB-State小型benchmark。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "current_decision": true,
+                "risk": true,
+                "next_step": true
+              },
+              "answer": "当前决定是转向latest valid state retrieval。风险是TSM已覆盖dialogue time vs occurrence time，原思路不成立。下一步是构造STAMB-State小型benchmark。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "current_decision": {
+              "score": 1,
+              "reason": "语义一致，均表示主线转向 latest valid state retrieval。"
+            },
+            "risk": {
+              "score": 1,
+              "reason": "核心含义一致，均表示 TSM 已覆盖相关时间区分，原思路不成立。"
+            },
+            "next_step": {
+              "score": 1,
+              "reason": "语义一致，均表示要构造 STAMB-State 小型 benchmark。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "三个 gold 状态都被完整覆盖，且表达与 gold 语义一致。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "aaai_risk",
+        "query": "AAAI 这个想法现在最大的相关工作风险是什么？",
+        "event_f1": 0.8,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "aaai_e3",
+          "aaai_e4"
+        ],
+        "pred_state_slots": {
+          "risk": {
+            "value": "TSM已经覆盖了'mentioned_at vs occurred_at'的区分，因此不能只主打这一点",
+            "support_event": "aaai_e3"
+          },
+          "invalidated_direction": {
+            "value": "原有的'多时间字段 + KG-RAG'方向已被判断为不够强，已被替代为转向latest valid state retrieval",
+            "support_event": "aaai_e4"
+          }
+        },
+        "answer": "最大的相关工作风险是TSM已经覆盖了mentioned_at vs occurred_at的区分，因此不能只主打这一点。此外，原有的多时间字段+KG-RAG方向已被判断为不够强，已被替代为转向latest valid state retrieval。",
+        "raw_output": {
+          "evidence_events": [
+            "aaai_e3",
+            "aaai_e4"
+          ],
+          "state_slots": {
+            "risk": {
+              "value": "TSM已经覆盖了'mentioned_at vs occurred_at'的区分，因此不能只主打这一点",
+              "support_event": "aaai_e3"
+            },
+            "invalidated_direction": {
+              "value": "原有的'多时间字段 + KG-RAG'方向已被判断为不够强，已被替代为转向latest valid state retrieval",
+              "support_event": "aaai_e4"
+            }
+          },
+          "coverage_check": {
+            "risk": true,
+            "invalidated_direction": true
+          },
+          "answer": "最大的相关工作风险是TSM已经覆盖了mentioned_at vs occurred_at的区分，因此不能只主打这一点。此外，原有的多时间字段+KG-RAG方向已被判断为不够强，已被替代为转向latest valid state retrieval。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "aaai_e3",
+                "aaai_e4"
+              ],
+              "state_slots": {
+                "risk": {
+                  "value": "TSM已经覆盖了'mentioned_at vs occurred_at'的区分，因此不能只主打这一点",
+                  "support_event": "aaai_e3"
+                },
+                "invalidated_direction": {
+                  "value": "原有的'多时间字段 + KG-RAG'方向已被判断为不够强，已被替代为转向latest valid state retrieval",
+                  "support_event": "aaai_e4"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "risk": true,
+                "invalidated_direction": true
+              },
+              "answer": "最大的相关工作风险是TSM已经覆盖了mentioned_at vs occurred_at的区分，因此不能只主打这一点。此外，原有的多时间字段+KG-RAG方向已被判断为不够强，已被替代为转向latest valid state retrieval。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "risk": true,
+                "invalidated_direction": true
+              },
+              "answer": "最大的相关工作风险是TSM已经覆盖了mentioned_at vs occurred_at的区分，因此不能只主打这一点。此外，原有的多时间字段+KG-RAG方向已被判断为不够强，已被替代为转向latest valid state retrieval。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "risk": {
+              "score": 1,
+              "reason": "与gold一致，表达了TSM已覆盖 mentioned_at vs occurred_at，因此不能只靠这一点。"
+            },
+            "invalidated_direction": {
+              "score": 1,
+              "reason": "与gold语义等价，指出多时间字段+KG-RAG 已被 latest valid state retrieval 替代。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "自然语言回答覆盖了两个gold状态，且没有明显偏差。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "aaai_next_step",
+        "query": "AAAI 方案下一步要做什么？",
+        "event_f1": 1.0,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "aaai_e4"
+        ],
+        "pred_state_slots": {
+          "next_step": {
+            "value": "构造STAMB-State小型benchmark",
+            "support_event": "aaai_e4"
+          },
+          "current_decision": {
+            "value": "转向latest valid state retrieval",
+            "support_event": "aaai_e4"
+          }
+        },
+        "answer": "下一步是构造STAMB-State小型benchmark，当前决策是转向latest valid state retrieval。",
+        "raw_output": {
+          "evidence_events": [
+            "aaai_e4"
+          ],
+          "state_slots": {
+            "next_step": {
+              "value": "构造STAMB-State小型benchmark",
+              "support_event": "aaai_e4"
+            },
+            "current_decision": {
+              "value": "转向latest valid state retrieval",
+              "support_event": "aaai_e4"
+            }
+          },
+          "coverage_check": {
+            "next_step": true,
+            "current_decision": true
+          },
+          "answer": "下一步是构造STAMB-State小型benchmark，当前决策是转向latest valid state retrieval。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "aaai_e4"
+              ],
+              "state_slots": {
+                "next_step": {
+                  "value": "构造STAMB-State小型benchmark",
+                  "support_event": "aaai_e4"
+                },
+                "current_decision": {
+                  "value": "转向latest valid state retrieval",
+                  "support_event": "aaai_e4"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "next_step": true,
+                "current_decision": true
+              },
+              "answer": "下一步是构造STAMB-State小型benchmark，当前决策是转向latest valid state retrieval。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "next_step": true,
+                "current_decision": true
+              },
+              "answer": "下一步是构造STAMB-State小型benchmark，当前决策是转向latest valid state retrieval。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "next_step": {
+              "score": 1,
+              "reason": "与gold语义一致，都是构造STAMB-State小型benchmark。"
+            },
+            "current_decision": {
+              "score": 1,
+              "reason": "与gold语义一致，都是主线转向latest valid state retrieval。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "自然语言回答完整覆盖了两个gold状态，且表述一致。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "amp_status",
+        "query": "微波放大器项目最近怎么样？",
+        "event_f1": 1.0,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "amp_e1",
+          "amp_e3",
+          "amp_e4"
+        ],
+        "pred_state_slots": {
+          "completed_item": {
+            "value": "完成第一级输入匹配。",
+            "support_event": "amp_e1"
+          },
+          "current_issue": {
+            "value": "S11问题主要出在级间匹配。",
+            "support_event": "amp_e3"
+          },
+          "next_step": {
+            "value": "计划6月9日重算级间匹配网络线长。",
+            "support_event": "amp_e4"
+          }
+        },
+        "answer": "已完成：第一级输入匹配。当前问题：S11问题主要出在级间匹配。下一步：计划6月9日重算级间匹配网络线长。",
+        "raw_output": {
+          "evidence_events": [
+            "amp_e1",
+            "amp_e3",
+            "amp_e4"
+          ],
+          "state_slots": {
+            "completed_item": {
+              "value": "完成第一级输入匹配。",
+              "support_event": "amp_e1"
+            },
+            "current_issue": {
+              "value": "S11问题主要出在级间匹配。",
+              "support_event": "amp_e3"
+            },
+            "next_step": {
+              "value": "计划6月9日重算级间匹配网络线长。",
+              "support_event": "amp_e4"
+            }
+          },
+          "coverage_check": {
+            "completed_item": true,
+            "current_issue": true,
+            "next_step": true
+          },
+          "answer": "已完成：第一级输入匹配。当前问题：S11问题主要出在级间匹配。下一步：计划6月9日重算级间匹配网络线长。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "amp_e1",
+                "amp_e3",
+                "amp_e4"
+              ],
+              "state_slots": {
+                "completed_item": {
+                  "value": "完成第一级输入匹配。",
+                  "support_event": "amp_e1"
+                },
+                "current_issue": {
+                  "value": "S11问题主要出在级间匹配。",
+                  "support_event": "amp_e3"
+                },
+                "next_step": {
+                  "value": "计划6月9日重算级间匹配网络线长。",
+                  "support_event": "amp_e4"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "completed_item": true,
+                "current_issue": true,
+                "next_step": true
+              },
+              "answer": "已完成：第一级输入匹配。当前问题：S11问题主要出在级间匹配。下一步：计划6月9日重算级间匹配网络线长。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "completed_item": true,
+                "current_issue": true,
+                "next_step": true
+              },
+              "answer": "已完成：第一级输入匹配。当前问题：S11问题主要出在级间匹配。下一步：计划6月9日重算级间匹配网络线长。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "completed_item": {
+              "score": 1,
+              "reason": "“完成第一级输入匹配”与gold同义。"
+            },
+            "current_issue": {
+              "score": 1,
+              "reason": "“S11问题主要出在级间匹配”与gold一致。"
+            },
+            "next_step": {
+              "score": 1,
+              "reason": "“计划6月9日重算级间匹配网络线长”与gold一致。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "自然语言回答完整覆盖了所有gold状态，且表达与gold一致。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "amp_current_issue",
+        "query": "微波放大器现在 S11 问题到底在哪？",
+        "event_f1": 0.667,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "amp_e3"
+        ],
+        "pred_state_slots": {
+          "current_issue": {
+            "value": "S11 问题主要出在级间匹配。",
+            "support_event": "amp_e3"
+          },
+          "invalidated_issue": {
+            "value": "旧判断 S11 问题出在输入匹配已被纠正，失效。",
+            "support_event": "amp_e3"
+          }
+        },
+        "answer": "S11 问题主要出在级间匹配。旧判断 S11 问题出在输入匹配已被纠正，失效。",
+        "raw_output": {
+          "evidence_events": [
+            "amp_e3"
+          ],
+          "state_slots": {
+            "current_issue": {
+              "value": "S11 问题主要出在级间匹配。",
+              "support_event": "amp_e3"
+            },
+            "invalidated_issue": {
+              "value": "旧判断 S11 问题出在输入匹配已被纠正，失效。",
+              "support_event": "amp_e3"
+            }
+          },
+          "coverage_check": {
+            "current_issue": true,
+            "invalidated_issue": true
+          },
+          "answer": "S11 问题主要出在级间匹配。旧判断 S11 问题出在输入匹配已被纠正，失效。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "amp_e3"
+              ],
+              "state_slots": {
+                "current_issue": {
+                  "value": "S11 问题主要出在级间匹配。",
+                  "support_event": "amp_e3"
+                },
+                "invalidated_issue": {
+                  "value": "旧判断 S11 问题出在输入匹配已被纠正，失效。",
+                  "support_event": "amp_e3"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "current_issue": true,
+                "invalidated_issue": true
+              },
+              "answer": "S11 问题主要出在级间匹配。旧判断 S11 问题出在输入匹配已被纠正，失效。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "current_issue": true,
+                "invalidated_issue": true
+              },
+              "answer": "S11 问题主要出在级间匹配。旧判断 S11 问题出在输入匹配已被纠正，失效。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "current_issue": {
+              "score": 1,
+              "reason": "与gold一致，均表示S11问题主要在级间匹配。"
+            },
+            "invalidated_issue": {
+              "score": 1,
+              "reason": "与gold一致，均表示输入匹配是旧判断且已被纠正。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "完整覆盖了两个gold状态，且表述语义一致。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "amp_next_step",
+        "query": "微波放大器下一步安排是什么？",
+        "event_f1": 1.0,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "amp_e4"
+        ],
+        "pred_state_slots": {
+          "next_step": {
+            "value": "重算级间匹配网络线长",
+            "support_event": "amp_e4"
+          },
+          "planned_for": {
+            "value": "2026-06-09T09:00:00",
+            "support_event": "amp_e4"
+          }
+        },
+        "answer": "下一步是重算级间匹配网络线长，计划在2026-06-09T09:00:00进行。",
+        "raw_output": {
+          "evidence_events": [
+            "amp_e4"
+          ],
+          "state_slots": {
+            "next_step": {
+              "value": "重算级间匹配网络线长",
+              "support_event": "amp_e4"
+            },
+            "planned_for": {
+              "value": "2026-06-09T09:00:00",
+              "support_event": "amp_e4"
+            }
+          },
+          "coverage_check": {
+            "next_step": true,
+            "planned_for": true
+          },
+          "answer": "下一步是重算级间匹配网络线长，计划在2026-06-09T09:00:00进行。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "amp_e4"
+              ],
+              "state_slots": {
+                "next_step": {
+                  "value": "重算级间匹配网络线长",
+                  "support_event": "amp_e4"
+                },
+                "planned_for": {
+                  "value": "2026-06-09T09:00:00",
+                  "support_event": "amp_e4"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "next_step": true,
+                "planned_for": true
+              },
+              "answer": "下一步是重算级间匹配网络线长，计划在2026-06-09T09:00:00进行。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "next_step": true,
+                "planned_for": true
+              },
+              "answer": "下一步是重算级间匹配网络线长，计划在2026-06-09T09:00:00进行。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "next_step": {
+              "score": 1,
+              "reason": "与gold完全一致。"
+            },
+            "planned_for": {
+              "score": 1,
+              "reason": "与gold时间完全一致。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "完整覆盖了两个gold状态，且表述一致。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "sql_status",
+        "query": "第六题 SQL 最近改到哪了？",
+        "event_f1": 1.0,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "sql_e3"
+        ],
+        "pred_state_slots": {
+          "latest_fix": {
+            "value": "修改 Department 和 Project 的连接逻辑，第六题 SQL 的连接逻辑已修正。",
+            "support_event": "sql_e3"
+          },
+          "remaining_issue": {
+            "value": "已完成修正，无剩余问题。",
+            "support_event": "sql_e3"
+          }
+        },
+        "answer": "最新修正：修改 Department 和 Project 的连接逻辑，第六题 SQL 的连接逻辑已修正。剩余问题：已完成修正，无剩余问题。",
+        "raw_output": {
+          "evidence_events": [
+            "sql_e3"
+          ],
+          "state_slots": {
+            "latest_fix": {
+              "value": "修改 Department 和 Project 的连接逻辑，第六题 SQL 的连接逻辑已修正。",
+              "support_event": "sql_e3"
+            },
+            "remaining_issue": {
+              "value": "已完成修正，无剩余问题。",
+              "support_event": "sql_e3"
+            }
+          },
+          "coverage_check": {
+            "latest_fix": true,
+            "remaining_issue": true
+          },
+          "answer": "最新修正：修改 Department 和 Project 的连接逻辑，第六题 SQL 的连接逻辑已修正。剩余问题：已完成修正，无剩余问题。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "sql_e3"
+              ],
+              "state_slots": {
+                "latest_fix": {
+                  "value": "修改 Department 和 Project 的连接逻辑，第六题 SQL 的连接逻辑已修正。",
+                  "support_event": "sql_e3"
+                },
+                "remaining_issue": {
+                  "value": "已完成修正，无剩余问题。",
+                  "support_event": "sql_e3"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "latest_fix": true,
+                "remaining_issue": true
+              },
+              "answer": "最新修正：修改 Department 和 Project 的连接逻辑，第六题 SQL 的连接逻辑已修正。剩余问题：已完成修正，无剩余问题。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "latest_fix": true,
+                "remaining_issue": true
+              },
+              "answer": "最新修正：修改 Department 和 Project 的连接逻辑，第六题 SQL 的连接逻辑已修正。剩余问题：已完成修正，无剩余问题。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "latest_fix": {
+              "score": 1,
+              "reason": "核心含义一致，都是指 Department 和 Project 的连接逻辑已修正。"
+            },
+            "remaining_issue": {
+              "score": 1,
+              "reason": "与 gold 一致，表示没有未解决的连接逻辑问题。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "自然语言回答完整覆盖了最新修正和剩余问题，且语义与 gold 一致。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "sql_issue_resolution",
+        "query": "第六题 SQL 的连接条件问题还在吗？",
+        "event_f1": 0.667,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "sql_e3"
+        ],
+        "pred_state_slots": {
+          "resolved_issue": {
+            "value": "第六题 SQL 的连接条件问题已解决。",
+            "support_event": "sql_e3"
+          },
+          "fix": {
+            "value": "已修改 Department 和 Project 的连接逻辑。",
+            "support_event": "sql_e3"
+          }
+        },
+        "answer": "第六题 SQL 的连接条件问题已解决。已修改 Department 和 Project 的连接逻辑。",
+        "raw_output": {
+          "evidence_events": [
+            "sql_e3"
+          ],
+          "state_slots": {
+            "resolved_issue": {
+              "value": "第六题 SQL 的连接条件问题已解决。",
+              "support_event": "sql_e3"
+            },
+            "fix": {
+              "value": "已修改 Department 和 Project 的连接逻辑。",
+              "support_event": "sql_e3"
+            }
+          },
+          "coverage_check": {
+            "resolved_issue": true,
+            "fix": true
+          },
+          "answer": "第六题 SQL 的连接条件问题已解决。已修改 Department 和 Project 的连接逻辑。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "sql_e3"
+              ],
+              "state_slots": {
+                "resolved_issue": {
+                  "value": "第六题 SQL 的连接条件问题已解决。",
+                  "support_event": "sql_e3"
+                },
+                "fix": {
+                  "value": "已修改 Department 和 Project 的连接逻辑。",
+                  "support_event": "sql_e3"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "resolved_issue": true,
+                "fix": true
+              },
+              "answer": "第六题 SQL 的连接条件问题已解决。已修改 Department 和 Project 的连接逻辑。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "resolved_issue": true,
+                "fix": true
+              },
+              "answer": "第六题 SQL 的连接条件问题已解决。已修改 Department 和 Project 的连接逻辑。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "resolved_issue": {
+              "score": 1,
+              "reason": "都表达连接条件问题已修正/已解决，语义等价。"
+            },
+            "fix": {
+              "score": 1,
+              "reason": "都表示已修改 Department 和 Project 的连接逻辑，语义一致。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "最终回答覆盖了两个 gold 状态，且表述一致。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "sql_latest_non_update",
+        "query": "第六题 SQL 最近一次运行有没有改变逻辑？",
+        "event_f1": 0.5,
+        "slot_support_accuracy": 0.5,
+        "slot_value_judge": 0.5,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "sql_e1",
+          "sql_e3"
+        ],
+        "pred_state_slots": {
+          "latest_non_update": {
+            "value": "完成第六题 SQL 初稿",
+            "support_event": "sql_e1"
+          },
+          "latest_valid_fix": {
+            "value": "修改 Department 和 Project 的连接逻辑，第六题 SQL 的连接逻辑已修正",
+            "support_event": "sql_e3"
+          }
+        },
+        "answer": "是的，最近一次运行改变了逻辑。latest_non_update 为“完成第六题 SQL 初稿”，latest_valid_fix 为“修改 Department 和 Project 的连接逻辑，第六题 SQL 的连接逻辑已修正”。",
+        "raw_output": {
+          "evidence_events": [
+            "sql_e1",
+            "sql_e3"
+          ],
+          "state_slots": {
+            "latest_non_update": {
+              "value": "完成第六题 SQL 初稿",
+              "support_event": "sql_e1"
+            },
+            "latest_valid_fix": {
+              "value": "修改 Department 和 Project 的连接逻辑，第六题 SQL 的连接逻辑已修正",
+              "support_event": "sql_e3"
+            }
+          },
+          "coverage_check": {
+            "latest_non_update": true,
+            "latest_valid_fix": true
+          },
+          "answer": "是的，最近一次运行改变了逻辑。latest_non_update 为“完成第六题 SQL 初稿”，latest_valid_fix 为“修改 Department 和 Project 的连接逻辑，第六题 SQL 的连接逻辑已修正”。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "sql_e1",
+                "sql_e3"
+              ],
+              "state_slots": {
+                "latest_non_update": {
+                  "value": "完成第六题 SQL 初稿",
+                  "support_event": "sql_e1"
+                },
+                "latest_valid_fix": {
+                  "value": "修改 Department 和 Project 的连接逻辑，第六题 SQL 的连接逻辑已修正",
+                  "support_event": "sql_e3"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "latest_non_update": true,
+                "latest_valid_fix": true
+              },
+              "answer": "是的，最近一次运行改变了逻辑。latest_non_update 为“完成第六题 SQL 初稿”，latest_valid_fix 为“修改 Department 和 Project 的连接逻辑，第六题 SQL 的连接逻辑已修正”。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "latest_non_update": true,
+                "latest_valid_fix": true
+              },
+              "answer": "第六题 SQL 最近一次运行改变了逻辑：latest_non_update 为“完成第六题 SQL 初稿”，latest_valid_fix 为“修改 Department 和 Project 的连接逻辑，第六题 SQL 的连接逻辑已修正”。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "latest_non_update": {
+              "score": 0,
+              "reason": "Gold表示最近运行没有新逻辑变化；预测说“完成第六题SQL初稿”，语义不等价，且暗示有新内容。"
+            },
+            "latest_valid_fix": {
+              "score": 1,
+              "reason": "预测明确表示修正了Department和Project的连接逻辑，与gold的最后有效修改一致。"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "仅部分覆盖gold；latest_non_update被说成“完成初稿”，与“最近运行没有新逻辑变化”不一致。"
+          },
+          "slot_overall_score": 0.5
+        }
+      },
+      {
+        "case_id": "robot_status",
+        "query": "机器人导航项目最近怎么样？",
+        "event_f1": 1.0,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "robot_e4",
+          "robot_e3",
+          "robot_e5"
+        ],
+        "pred_state_slots": {
+          "current_decision": {
+            "value": "采用 lidar + depth camera 融合方案",
+            "support_event": "robot_e4"
+          },
+          "current_issue": {
+            "value": "真机在玻璃走廊场景定位漂移明显",
+            "support_event": "robot_e3"
+          },
+          "next_step": {
+            "value": "6月8日标定 depth camera 外参",
+            "support_event": "robot_e5"
+          }
+        },
+        "answer": "当前决策是采用 lidar + depth camera 融合方案；当前问题是真机在玻璃走廊场景定位漂移明显；下一步计划是6月8日标定 depth camera 外参。",
+        "raw_output": {
+          "evidence_events": [
+            "robot_e4",
+            "robot_e3",
+            "robot_e5"
+          ],
+          "state_slots": {
+            "current_decision": {
+              "value": "采用 lidar + depth camera 融合方案",
+              "support_event": "robot_e4"
+            },
+            "current_issue": {
+              "value": "真机在玻璃走廊场景定位漂移明显",
+              "support_event": "robot_e3"
+            },
+            "next_step": {
+              "value": "6月8日标定 depth camera 外参",
+              "support_event": "robot_e5"
+            }
+          },
+          "coverage_check": {
+            "current_decision": true,
+            "current_issue": true,
+            "next_step": true
+          },
+          "answer": "当前决策是采用 lidar + depth camera 融合方案；当前问题是真机在玻璃走廊场景定位漂移明显；下一步计划是6月8日标定 depth camera 外参。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "robot_e4",
+                "robot_e3",
+                "robot_e5"
+              ],
+              "state_slots": {
+                "current_decision": {
+                  "value": "采用 lidar + depth camera 融合方案",
+                  "support_event": "robot_e4"
+                },
+                "current_issue": {
+                  "value": "真机在玻璃走廊场景定位漂移明显",
+                  "support_event": "robot_e3"
+                },
+                "next_step": {
+                  "value": "6月8日标定 depth camera 外参",
+                  "support_event": "robot_e5"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "current_decision": true,
+                "current_issue": true,
+                "next_step": true
+              },
+              "answer": "当前决策是采用 lidar + depth camera 融合方案；当前问题是真机在玻璃走廊场景定位漂移明显；下一步计划是6月8日标定 depth camera 外参。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "current_decision": true,
+                "current_issue": true,
+                "next_step": true
+              },
+              "answer": "当前决策是采用 lidar + depth camera 融合方案；当前问题是真机在玻璃走廊场景定位漂移明显；下一步计划是6月8日标定 depth camera 外参。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "current_decision": {
+              "score": 1,
+              "reason": "“采用 lidar + depth camera 融合方案”与 gold 的决策含义一致。"
+            },
+            "current_issue": {
+              "score": 1,
+              "reason": "“真机在玻璃走廊场景定位漂移明显”与 gold 含义一致，只是措辞略有补充。"
+            },
+            "next_step": {
+              "score": 1,
+              "reason": "日期和动作一致，语义等价。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "最终回答覆盖了全部 gold 状态，且三项内容均正确。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "robot_decision",
+        "query": "机器人导航现在还是 lidar-only 吗？",
+        "event_f1": 1.0,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "robot_e4",
+          "robot_e1"
+        ],
+        "pred_state_slots": {
+          "current_decision": {
+            "value": "转向 lidar + depth camera 融合",
+            "support_event": "robot_e4"
+          },
+          "invalidated_decision": {
+            "value": "旧方案 lidar-only 已被 lidar+depth 融合替代",
+            "support_event": "robot_e1"
+          }
+        },
+        "answer": "当前决策已转向 lidar + depth camera 融合，旧方案 lidar-only 已被替代。",
+        "raw_output": {
+          "evidence_events": [
+            "robot_e4",
+            "robot_e1"
+          ],
+          "state_slots": {
+            "current_decision": {
+              "value": "转向 lidar + depth camera 融合",
+              "support_event": "robot_e4"
+            },
+            "invalidated_decision": {
+              "value": "旧方案 lidar-only 已被 lidar+depth 融合替代",
+              "support_event": "robot_e1"
+            }
+          },
+          "coverage_check": {
+            "current_decision": true,
+            "invalidated_decision": true
+          },
+          "answer": "当前决策已转向 lidar + depth camera 融合，旧方案 lidar-only 已被替代。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "robot_e4",
+                "robot_e1"
+              ],
+              "state_slots": {
+                "current_decision": {
+                  "value": "转向 lidar + depth camera 融合",
+                  "support_event": "robot_e4"
+                },
+                "invalidated_decision": {
+                  "value": "旧方案 lidar-only 已被 lidar+depth 融合替代",
+                  "support_event": "robot_e1"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "current_decision": true,
+                "invalidated_decision": true
+              },
+              "answer": "当前决策已转向 lidar + depth camera 融合，旧方案 lidar-only 已被替代。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "current_decision": true,
+                "invalidated_decision": true
+              },
+              "answer": "当前决策已转向 lidar + depth camera 融合，旧方案 lidar-only 已被替代。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "current_decision": {
+              "score": 1,
+              "reason": "“转向 lidar + depth camera 融合”与 gold 的“现在采用 lidar + depth camera 融合”语义一致。"
+            },
+            "invalidated_decision": {
+              "score": 1,
+              "reason": "“旧方案 lidar-only 已被 lidar+depth 融合替代”与 gold 的“lidar-only 是旧方案，已经被替代”语义一致。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "自然语言回答完整覆盖了当前决策和旧方案已被替代两点，且与 gold 一致。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "robot_next_step",
+        "query": "机器人导航下一步要做什么？",
+        "event_f1": 1.0,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "robot_e5"
+        ],
+        "pred_state_slots": {
+          "next_step": {
+            "value": "标定 depth camera 外参",
+            "support_event": "robot_e5"
+          },
+          "planned_for": {
+            "value": "2026-06-08T14:00:00",
+            "support_event": "robot_e5"
+          }
+        },
+        "answer": "下一步是标定 depth camera 外参，计划于2026-06-08T14:00:00进行。",
+        "raw_output": {
+          "evidence_events": [
+            "robot_e5"
+          ],
+          "state_slots": {
+            "next_step": {
+              "value": "标定 depth camera 外参",
+              "support_event": "robot_e5"
+            },
+            "planned_for": {
+              "value": "2026-06-08T14:00:00",
+              "support_event": "robot_e5"
+            }
+          },
+          "coverage_check": {
+            "next_step": true,
+            "planned_for": true
+          },
+          "answer": "下一步是标定 depth camera 外参，计划于2026-06-08T14:00:00进行。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "robot_e5"
+              ],
+              "state_slots": {
+                "next_step": {
+                  "value": "标定 depth camera 外参",
+                  "support_event": "robot_e5"
+                },
+                "planned_for": {
+                  "value": "2026-06-08T14:00:00",
+                  "support_event": "robot_e5"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "next_step": true,
+                "planned_for": true
+              },
+              "answer": "下一步是标定 depth camera 外参，计划于2026-06-08T14:00:00进行。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "next_step": true,
+                "planned_for": true
+              },
+              "answer": "下一步是标定 depth camera 外参，计划于2026-06-08T14:00:00进行。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "next_step": {
+              "score": 1,
+              "reason": "与gold完全一致。"
+            },
+            "planned_for": {
+              "score": 1,
+              "reason": "时间与gold完全一致。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "完整覆盖了两个gold状态，且表述一致。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "thesis_status",
+        "query": "论文第二章最近怎么样？",
+        "event_f1": 0.8,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 0.667,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "thesis_e5",
+          "thesis_e4"
+        ],
+        "pred_state_slots": {
+          "completed_item": {
+            "value": "已完成语法通读",
+            "support_event": "thesis_e5"
+          },
+          "remaining_work": {
+            "value": "已完成语法通读，但内容结构还未改完",
+            "support_event": "thesis_e5"
+          },
+          "deadline": {
+            "value": "6月10日",
+            "support_event": "thesis_e4"
+          }
+        },
+        "answer": "已完成语法通读，但内容结构还未改完，截止日期为6月10日。",
+        "raw_output": {
+          "evidence_events": [
+            "thesis_e5",
+            "thesis_e4"
+          ],
+          "state_slots": {
+            "completed_item": {
+              "value": "已完成语法通读",
+              "support_event": "thesis_e5"
+            },
+            "remaining_work": {
+              "value": "已完成语法通读，但内容结构还未改完",
+              "support_event": "thesis_e5"
+            },
+            "deadline": {
+              "value": "6月10日",
+              "support_event": "thesis_e4"
+            }
+          },
+          "coverage_check": {
+            "completed_item": true,
+            "remaining_work": true,
+            "deadline": true
+          },
+          "answer": "已完成语法通读，但内容结构还未改完，截止日期为6月10日。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "thesis_e5",
+                "thesis_e4"
+              ],
+              "state_slots": {
+                "completed_item": {
+                  "value": "已完成语法通读",
+                  "support_event": "thesis_e5"
+                },
+                "remaining_work": {
+                  "value": "已完成语法通读，但内容结构还未改完",
+                  "support_event": "thesis_e5"
+                },
+                "deadline": {
+                  "value": "6月10日",
+                  "support_event": "thesis_e4"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "completed_item": true,
+                "remaining_work": true,
+                "deadline": true
+              },
+              "answer": "已完成语法通读，但内容结构还未改完，截止日期为6月10日。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "completed_item": true,
+                "remaining_work": true,
+                "deadline": true
+              },
+              "answer": "已完成语法通读，但内容结构还未改完，截止日期为6月10日。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "completed_item": {
+              "score": 1,
+              "reason": "“已完成语法通读”与gold语义一致。"
+            },
+            "remaining_work": {
+              "score": 0,
+              "reason": "遗漏了“还要补动机和研究空白”，且“已完成语法通读”不属于remaining_work的核心。"
+            },
+            "deadline": {
+              "score": 1,
+              "reason": "“6月10日”与“第二章提交时间是6月10日”语义等价。"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "只覆盖了部分gold状态，遗漏remaining_work中的关键待办内容。"
+          },
+          "slot_overall_score": 0.6666666666666666
+        }
+      },
+      {
+        "case_id": "thesis_deadline",
+        "query": "第二章到底 6月8日还是 6月10日交？",
+        "event_f1": 1.0,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "thesis_e4",
+          "thesis_e2"
+        ],
+        "pred_state_slots": {
+          "deadline": {
+            "value": "6月10日",
+            "support_event": "thesis_e4"
+          },
+          "invalidated_deadline": {
+            "value": "原6月8日截止已失效，改为6月10日",
+            "support_event": "thesis_e2"
+          }
+        },
+        "answer": "第二章的截止日期为6月10日。原定6月8日的截止日期已被作废，更新为6月10日。",
+        "raw_output": {
+          "evidence_events": [
+            "thesis_e4",
+            "thesis_e2"
+          ],
+          "state_slots": {
+            "deadline": {
+              "value": "6月10日",
+              "support_event": "thesis_e4"
+            },
+            "invalidated_deadline": {
+              "value": "原6月8日截止已失效，改为6月10日",
+              "support_event": "thesis_e2"
+            }
+          },
+          "coverage_check": {
+            "deadline": true,
+            "invalidated_deadline": true
+          },
+          "answer": "第二章的截止日期为6月10日。原定6月8日的截止日期已被作废，更新为6月10日。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "thesis_e4",
+                "thesis_e2"
+              ],
+              "state_slots": {
+                "deadline": {
+                  "value": "6月10日",
+                  "support_event": "thesis_e4"
+                },
+                "invalidated_deadline": {
+                  "value": "原6月8日截止已失效，改为6月10日",
+                  "support_event": "thesis_e2"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "deadline": true,
+                "invalidated_deadline": true
+              },
+              "answer": "第二章的截止日期为6月10日。原定6月8日的截止日期已被作废，更新为6月10日。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "deadline": true,
+                "invalidated_deadline": true
+              },
+              "answer": "第二章的截止日期为6月10日。原定6月8日的截止日期已被作废，更新为6月10日。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "deadline": {
+              "score": 1,
+              "reason": "predicted deadline matches current截止时间6月10日."
+            },
+            "invalidated_deadline": {
+              "score": 1,
+              "reason": "predicted meaning matches that 6月8日 was old/invalid and replaced."
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "answer covers current deadline and notes 6月8日 is outdated."
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "thesis_remaining_work",
+        "query": "第二章现在还差什么？",
+        "event_f1": 1.0,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "thesis_e5",
+          "thesis_e3"
+        ],
+        "pred_state_slots": {
+          "remaining_work": {
+            "value": "已完成语法通读；剩余工作：内容结构还需修改，以及导师反馈要求补动机和研究空白。",
+            "support_event": "thesis_e5"
+          },
+          "completed_item": {
+            "value": "完成第二章语法通读。",
+            "support_event": "thesis_e5"
+          }
+        },
+        "answer": "已完成语法通读；剩余工作：内容结构还需修改，以及导师反馈要求补动机和研究空白。",
+        "raw_output": {
+          "evidence_events": [
+            "thesis_e5",
+            "thesis_e3"
+          ],
+          "state_slots": {
+            "remaining_work": {
+              "value": "已完成语法通读；剩余工作：内容结构还需修改，以及导师反馈要求补动机和研究空白。",
+              "support_event": "thesis_e5"
+            },
+            "completed_item": {
+              "value": "完成第二章语法通读。",
+              "support_event": "thesis_e5"
+            }
+          },
+          "coverage_check": {
+            "remaining_work": true,
+            "completed_item": true
+          },
+          "answer": "已完成语法通读；剩余工作：内容结构还需修改，以及导师反馈要求补动机和研究空白。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "thesis_e5",
+                "thesis_e3"
+              ],
+              "state_slots": {
+                "remaining_work": {
+                  "value": "已完成语法通读；剩余工作：内容结构还需修改，以及导师反馈要求补动机和研究空白。",
+                  "support_event": "thesis_e5"
+                },
+                "completed_item": {
+                  "value": "完成第二章语法通读。",
+                  "support_event": "thesis_e5"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "remaining_work": true,
+                "completed_item": true
+              },
+              "answer": "已完成语法通读；剩余工作：内容结构还需修改，以及导师反馈要求补动机和研究空白。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "remaining_work": true,
+                "completed_item": true
+              },
+              "answer": "已完成语法通读；剩余工作：内容结构还需修改，以及导师反馈要求补动机和研究空白。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "remaining_work": {
+              "score": 1,
+              "reason": "提到内容结构还需修改，并补动机和研究空白，与gold一致。"
+            },
+            "completed_item": {
+              "score": 1,
+              "reason": "语义等价，均表示第二章语法通读已完成。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "最终回答覆盖了gold中的已完成事项和剩余工作，整体正确。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "auth_status",
+        "query": "移动端登录最近怎么样？",
+        "event_f1": 1.0,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "auth_e2",
+          "auth_e4",
+          "auth_e5",
+          "auth_e6"
+        ],
+        "pred_state_slots": {
+          "current_decision": {
+            "value": "采用 email magic link 登录",
+            "support_event": "auth_e2"
+          },
+          "resolved_issue": {
+            "value": "magic link 重发限流问题已修复",
+            "support_event": "auth_e4"
+          },
+          "current_issue": {
+            "value": "iOS 端重发按钮偶尔不刷新倒计时",
+            "support_event": "auth_e5"
+          },
+          "next_step": {
+            "value": "补 magic link 登录审计日志",
+            "support_event": "auth_e6"
+          }
+        },
+        "answer": "当前采用 email magic link 登录；已解决 magic link 重发限流问题；当前问题：iOS 端重发按钮偶尔不刷新倒计时；下一步计划：补 magic link 登录审计日志。",
+        "raw_output": {
+          "evidence_events": [
+            "auth_e2",
+            "auth_e4",
+            "auth_e5",
+            "auth_e6"
+          ],
+          "state_slots": {
+            "current_decision": {
+              "value": "采用 email magic link 登录",
+              "support_event": "auth_e2"
+            },
+            "resolved_issue": {
+              "value": "magic link 重发限流问题已修复",
+              "support_event": "auth_e4"
+            },
+            "current_issue": {
+              "value": "iOS 端重发按钮偶尔不刷新倒计时",
+              "support_event": "auth_e5"
+            },
+            "next_step": {
+              "value": "补 magic link 登录审计日志",
+              "support_event": "auth_e6"
+            }
+          },
+          "coverage_check": {
+            "current_decision": true,
+            "resolved_issue": true,
+            "current_issue": true,
+            "next_step": true
+          },
+          "answer": "当前采用 email magic link 登录；已解决 magic link 重发限流问题；当前问题：iOS 端重发按钮偶尔不刷新倒计时；下一步计划：补 magic link 登录审计日志。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "auth_e2",
+                "auth_e4",
+                "auth_e5",
+                "auth_e6"
+              ],
+              "state_slots": {
+                "current_decision": {
+                  "value": "采用 email magic link 登录",
+                  "support_event": "auth_e2"
+                },
+                "resolved_issue": {
+                  "value": "magic link 重发限流问题已修复",
+                  "support_event": "auth_e4"
+                },
+                "current_issue": {
+                  "value": "iOS 端重发按钮偶尔不刷新倒计时",
+                  "support_event": "auth_e5"
+                },
+                "next_step": {
+                  "value": "补 magic link 登录审计日志",
+                  "support_event": "auth_e6"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "current_decision": true,
+                "resolved_issue": true,
+                "current_issue": true,
+                "next_step": true
+              },
+              "answer": "当前采用 email magic link 登录；已解决 magic link 重发限流问题；当前问题：iOS 端重发按钮偶尔不刷新倒计时；下一步计划：补 magic link 登录审计日志。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "current_decision": true,
+                "resolved_issue": true,
+                "current_issue": true,
+                "next_step": true
+              },
+              "answer": "当前采用 email magic link 登录；已解决 magic link 重发限流问题；当前问题：iOS 端重发按钮偶尔不刷新倒计时；下一步计划：补 magic link 登录审计日志。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "current_decision": {
+              "score": 1,
+              "reason": "“采用 email magic link 登录”与 gold 含义一致。"
+            },
+            "resolved_issue": {
+              "score": 1,
+              "reason": "“magic link 重发限流问题已修复”与 gold 的已上线修复一致。"
+            },
+            "current_issue": {
+              "score": 1,
+              "reason": "与 gold 完全一致。"
+            },
+            "next_step": {
+              "score": 1,
+              "reason": "与 gold 完全一致。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "最终回答覆盖了所有 gold 状态，且表述一致。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "auth_login_method",
+        "query": "登录方案现在还是短信 OTP 吗？",
+        "event_f1": 0.667,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "auth_e2"
+        ],
+        "pred_state_slots": {
+          "current_decision": {
+            "value": "登录方案为 email magic link",
+            "support_event": "auth_e2"
+          },
+          "invalidated_decision": {
+            "value": "旧的短信 OTP 登录方案已被 email magic link 替代，不再使用",
+            "support_event": "auth_e2"
+          }
+        },
+        "answer": "当前登录方案为 email magic link，旧的短信 OTP 登录方案已被替代，不再使用。",
+        "raw_output": {
+          "evidence_events": [
+            "auth_e2"
+          ],
+          "state_slots": {
+            "current_decision": {
+              "value": "登录方案为 email magic link",
+              "support_event": "auth_e2"
+            },
+            "invalidated_decision": {
+              "value": "旧的短信 OTP 登录方案已被 email magic link 替代，不再使用",
+              "support_event": "auth_e2"
+            }
+          },
+          "coverage_check": {
+            "current_decision": true,
+            "invalidated_decision": true
+          },
+          "answer": "当前登录方案为 email magic link，旧的短信 OTP 登录方案已被替代，不再使用。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "auth_e2"
+              ],
+              "state_slots": {
+                "current_decision": {
+                  "value": "登录方案为 email magic link",
+                  "support_event": "auth_e2"
+                },
+                "invalidated_decision": {
+                  "value": "旧的短信 OTP 登录方案已被 email magic link 替代，不再使用",
+                  "support_event": "auth_e2"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "current_decision": true,
+                "invalidated_decision": true
+              },
+              "answer": "当前登录方案为 email magic link，旧的短信 OTP 登录方案已被替代，不再使用。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "current_decision": true,
+                "invalidated_decision": true
+              },
+              "answer": "当前登录方案为 email magic link，旧的短信 OTP 登录方案已被替代，不再使用。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "current_decision": {
+              "score": 1,
+              "reason": "“登录方案为 email magic link”与 gold 的“当前方案是 email magic link”语义等价。"
+            },
+            "invalidated_decision": {
+              "score": 1,
+              "reason": "说明短信 OTP 是旧方案且已被 email magic link 替代，不再使用，与 gold 一致。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "自然语言回答完整覆盖了当前方案和旧短信 OTP 已被替代这两个 gold 状态。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "auth_remaining_issue",
+        "query": "移动端登录还有什么没解决？",
+        "event_f1": 0.8,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "auth_e4",
+          "auth_e5"
+        ],
+        "pred_state_slots": {
+          "resolved_issue": {
+            "value": "magic link 重发限流问题已修复",
+            "support_event": "auth_e4"
+          },
+          "current_issue": {
+            "value": "iOS端重发按钮偶尔不刷新倒计时",
+            "support_event": "auth_e5"
+          }
+        },
+        "answer": "已解决的问题：magic link 重发限流问题已修复。当前剩余问题：iOS端重发按钮偶尔不刷新倒计时。",
+        "raw_output": {
+          "evidence_events": [
+            "auth_e4",
+            "auth_e5"
+          ],
+          "state_slots": {
+            "resolved_issue": {
+              "value": "magic link 重发限流问题已修复",
+              "support_event": "auth_e4"
+            },
+            "current_issue": {
+              "value": "iOS端重发按钮偶尔不刷新倒计时",
+              "support_event": "auth_e5"
+            }
+          },
+          "coverage_check": {
+            "resolved_issue": true,
+            "current_issue": true
+          },
+          "answer": "已解决的问题：magic link 重发限流问题已修复。当前剩余问题：iOS端重发按钮偶尔不刷新倒计时。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "auth_e4",
+                "auth_e5"
+              ],
+              "state_slots": {
+                "resolved_issue": {
+                  "value": "magic link 重发限流问题已修复",
+                  "support_event": "auth_e4"
+                },
+                "current_issue": {
+                  "value": "iOS端重发按钮偶尔不刷新倒计时",
+                  "support_event": "auth_e5"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "resolved_issue": true,
+                "current_issue": true
+              },
+              "answer": "已解决的问题：magic link 重发限流问题已修复。当前剩余问题：iOS端重发按钮偶尔不刷新倒计时。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "resolved_issue": true,
+                "current_issue": true
+              },
+              "answer": "已解决的问题：magic link 重发限流问题已修复。当前剩余问题：iOS端重发按钮偶尔不刷新倒计时。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "resolved_issue": {
+              "score": 1,
+              "reason": "“magic link 重发限流问题已修复”与“重发接口限流已经修复”语义一致，核心为重发限流修复完成。"
+            },
+            "current_issue": {
+              "score": 1,
+              "reason": "“iOS端重发按钮偶尔不刷新倒计时”与 gold 仅缺少空格，语义一致。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "自然语言答案覆盖了已解决问题和当前剩余问题，且与 gold 状态一致。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "grant_status",
+        "query": "基金申请最近怎么样？",
+        "event_f1": 1.0,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "grant_e2",
+          "grant_e4",
+          "grant_e5"
+        ],
+        "pred_state_slots": {
+          "budget": {
+            "value": "95k（已按设备费重算）",
+            "support_event": "grant_e2"
+          },
+          "team": {
+            "value": "合作方C已加入，替代合作方B",
+            "support_event": "grant_e4"
+          },
+          "remaining_work": {
+            "value": "已上传申请书草稿；待补预算说明",
+            "support_event": "grant_e5"
+          }
+        },
+        "answer": "目前经费预算为95k（已按设备费重算）；团队方面，合作方C已加入，替代合作方B；剩余工作：已上传申请书草稿，待补预算说明。",
+        "raw_output": {
+          "evidence_events": [
+            "grant_e2",
+            "grant_e4",
+            "grant_e5"
+          ],
+          "state_slots": {
+            "budget": {
+              "value": "95k（已按设备费重算）",
+              "support_event": "grant_e2"
+            },
+            "team": {
+              "value": "合作方C已加入，替代合作方B",
+              "support_event": "grant_e4"
+            },
+            "remaining_work": {
+              "value": "已上传申请书草稿；待补预算说明",
+              "support_event": "grant_e5"
+            }
+          },
+          "coverage_check": {
+            "budget": true,
+            "team": true,
+            "remaining_work": true
+          },
+          "answer": "目前经费预算为95k（已按设备费重算）；团队方面，合作方C已加入，替代合作方B；剩余工作：已上传申请书草稿，待补预算说明。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "grant_e2",
+                "grant_e4",
+                "grant_e5"
+              ],
+              "state_slots": {
+                "budget": {
+                  "value": "95k（已按设备费重算）",
+                  "support_event": "grant_e2"
+                },
+                "team": {
+                  "value": "合作方C已加入，替代合作方B",
+                  "support_event": "grant_e4"
+                },
+                "remaining_work": {
+                  "value": "已上传申请书草稿；待补预算说明",
+                  "support_event": "grant_e5"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "budget": true,
+                "team": true,
+                "remaining_work": true
+              },
+              "answer": "目前经费预算为95k（已按设备费重算）；团队方面，合作方C已加入，替代合作方B；剩余工作：已上传申请书草稿，待补预算说明。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "budget": true,
+                "team": true,
+                "remaining_work": true
+              },
+              "answer": "目前经费预算为95k（已按设备费重算）；团队方面，合作方C已加入，替代合作方B；剩余工作：已上传申请书草稿，待补预算说明。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "budget": {
+              "score": 1,
+              "reason": "都表示当前预算为95k，括号内补充不改变核心含义。"
+            },
+            "team": {
+              "score": 1,
+              "reason": "都表示合作方C加入并替代合作方B。"
+            },
+            "remaining_work": {
+              "score": 1,
+              "reason": "都表示申请书草稿已上传，仍需补预算说明。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "完整覆盖了预算、团队变化和剩余工作三项 gold 状态，且表述一致。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "grant_budget",
+        "query": "基金申请预算现在是多少？",
+        "event_f1": 0.667,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 0.5,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "grant_e2"
+        ],
+        "pred_state_slots": {
+          "budget": {
+            "value": "95k",
+            "support_event": "grant_e2"
+          },
+          "invalidated_budget": {
+            "value": "旧预算80k已被改为95k",
+            "support_event": "grant_e2"
+          }
+        },
+        "answer": "当前基金申请预算为95k。旧预算80k已被改为95k。",
+        "raw_output": {
+          "evidence_events": [
+            "grant_e2"
+          ],
+          "state_slots": {
+            "budget": {
+              "value": "95k",
+              "support_event": "grant_e2"
+            },
+            "invalidated_budget": {
+              "value": "旧预算80k已被改为95k",
+              "support_event": "grant_e2"
+            }
+          },
+          "coverage_check": {
+            "budget": true,
+            "invalidated_budget": true
+          },
+          "answer": "当前基金申请预算为95k。旧预算80k已被改为95k。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "grant_e2"
+              ],
+              "state_slots": {
+                "budget": {
+                  "value": "95k",
+                  "support_event": "grant_e2"
+                },
+                "invalidated_budget": {
+                  "value": "旧预算80k已被改为95k",
+                  "support_event": "grant_e2"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "budget": true,
+                "invalidated_budget": true
+              },
+              "answer": "当前基金申请预算为95k。旧预算80k已被改为95k。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "budget": true,
+                "invalidated_budget": true
+              },
+              "answer": "当前基金申请预算为95k。旧预算80k已被改为95k。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "budget": {
+              "score": 1,
+              "reason": "“95k”与gold中的当前预算95k语义一致。"
+            },
+            "invalidated_budget": {
+              "score": 0,
+              "reason": "gold表示80k是旧预算且已作废；预测说80k已被改为95k，未明确表达“旧预算已作废”这一状态，语义不等价。"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "虽然答对了当前预算95k，但对旧预算状态的表达不等价，未完整覆盖gold状态。"
+          },
+          "slot_overall_score": 0.5
+        }
+      },
+      {
+        "case_id": "grant_team",
+        "query": "基金申请合作方现在是谁？",
+        "event_f1": 0.667,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "grant_e4"
+        ],
+        "pred_state_slots": {
+          "team": {
+            "value": "合作方C",
+            "support_event": "grant_e4"
+          },
+          "invalidated_team": {
+            "value": "合作方B已退出并被合作方C替代",
+            "support_event": "grant_e4"
+          }
+        },
+        "answer": "当前合作方为合作方C，合作方B已退出并被合作方C替代。",
+        "raw_output": {
+          "evidence_events": [
+            "grant_e4"
+          ],
+          "state_slots": {
+            "team": {
+              "value": "合作方C",
+              "support_event": "grant_e4"
+            },
+            "invalidated_team": {
+              "value": "合作方B已退出并被合作方C替代",
+              "support_event": "grant_e4"
+            }
+          },
+          "coverage_check": {
+            "team": true,
+            "invalidated_team": true
+          },
+          "answer": "当前合作方为合作方C，合作方B已退出并被合作方C替代。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "grant_e4"
+              ],
+              "state_slots": {
+                "team": {
+                  "value": "合作方C",
+                  "support_event": "grant_e4"
+                },
+                "invalidated_team": {
+                  "value": "合作方B已退出并被合作方C替代",
+                  "support_event": "grant_e4"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "team": true,
+                "invalidated_team": true
+              },
+              "answer": "当前合作方为合作方C，合作方B已退出并被合作方C替代。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "team": true,
+                "invalidated_team": true
+              },
+              "answer": "当前合作方为合作方C，合作方B已退出并被合作方C替代。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "team": {
+              "score": 1,
+              "reason": "与gold均指合作方C当前作为合作方，语义等价。"
+            },
+            "invalidated_team": {
+              "score": 1,
+              "reason": "表达了合作方B已退出并由合作方C替代，与gold一致。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "完整覆盖了当前合作方C以及B已退出、C替代的全部gold状态。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "label_status",
+        "query": "标注规范最近怎么样？",
+        "event_f1": 1.0,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 0.75,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "label_e2",
+          "label_e3",
+          "label_e4",
+          "label_e5"
+        ],
+        "pred_state_slots": {
+          "current_guideline": {
+            "value": "标注规范 v2 将 uncertain 与 partial 合并为 ambiguous",
+            "support_event": "label_e2"
+          },
+          "current_issue": {
+            "value": "QC 发现 batch A 标注分歧率 12%",
+            "support_event": "label_e3"
+          },
+          "next_step": {
+            "value": "计划 6月8日用 v2 规范重新培训标注员",
+            "support_event": "label_e4"
+          },
+          "completed_item": {
+            "value": "batch A 已完成一轮标注",
+            "support_event": "label_e5"
+          }
+        },
+        "answer": "当前标注规范为 v2，将 uncertain 与 partial 合并为 ambiguous。当前问题：QC 发现 batch A 标注分歧率 12%。已完成事项：batch A 已完成一轮标注。下一步计划：6月8日用 v2 规范重新培训标注员。",
+        "raw_output": {
+          "evidence_events": [
+            "label_e2",
+            "label_e3",
+            "label_e4",
+            "label_e5"
+          ],
+          "state_slots": {
+            "current_guideline": {
+              "value": "标注规范 v2 将 uncertain 与 partial 合并为 ambiguous",
+              "support_event": "label_e2"
+            },
+            "current_issue": {
+              "value": "QC 发现 batch A 标注分歧率 12%",
+              "support_event": "label_e3"
+            },
+            "next_step": {
+              "value": "计划 6月8日用 v2 规范重新培训标注员",
+              "support_event": "label_e4"
+            },
+            "completed_item": {
+              "value": "batch A 已完成一轮标注",
+              "support_event": "label_e5"
+            }
+          },
+          "coverage_check": {
+            "current_guideline": true,
+            "current_issue": true,
+            "next_step": true,
+            "completed_item": true
+          },
+          "answer": "当前标注规范为 v2，将 uncertain 与 partial 合并为 ambiguous。当前问题：QC 发现 batch A 标注分歧率 12%。已完成事项：batch A 已完成一轮标注。下一步计划：6月8日用 v2 规范重新培训标注员。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "label_e2",
+                "label_e3",
+                "label_e4",
+                "label_e5"
+              ],
+              "state_slots": {
+                "current_guideline": {
+                  "value": "标注规范 v2 将 uncertain 与 partial 合并为 ambiguous",
+                  "support_event": "label_e2"
+                },
+                "current_issue": {
+                  "value": "QC 发现 batch A 标注分歧率 12%",
+                  "support_event": "label_e3"
+                },
+                "next_step": {
+                  "value": "计划 6月8日用 v2 规范重新培训标注员",
+                  "support_event": "label_e4"
+                },
+                "completed_item": {
+                  "value": "batch A 已完成一轮标注",
+                  "support_event": "label_e5"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "current_guideline": true,
+                "current_issue": true,
+                "next_step": true,
+                "completed_item": true
+              },
+              "answer": "当前标注规范为 v2，将 uncertain 与 partial 合并为 ambiguous。当前问题：QC 发现 batch A 标注分歧率 12%。已完成事项：batch A 已完成一轮标注。下一步计划：6月8日用 v2 规范重新培训标注员。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "current_guideline": true,
+                "current_issue": true,
+                "next_step": true,
+                "completed_item": true
+              },
+              "answer": "当前标注规范为 v2，将 uncertain 与 partial 合并为 ambiguous。当前问题：QC 发现 batch A 标注分歧率 12%。已完成事项：batch A 已完成一轮标注。下一步计划：6月8日用 v2 规范重新培训标注员。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "current_guideline": {
+              "score": 1,
+              "reason": "核心含义一致，仅补充了“标注规范”表述。"
+            },
+            "current_issue": {
+              "score": 1,
+              "reason": "与 gold 一致，保留了 batch A 分歧率 12% 的当前问题。"
+            },
+            "next_step": {
+              "score": 1,
+              "reason": "语义一致，只是加了“计划”。"
+            },
+            "completed_item": {
+              "score": 0,
+              "reason": "gold 明确说“还没复核”，预测遗漏了这部分关键信息。"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "整体覆盖不完整，漏掉了 completed_item 中“还没复核”的状态，因此不算正确回答。"
+          },
+          "slot_overall_score": 0.75
+        }
+      },
+      {
+        "case_id": "label_guideline",
+        "query": "标注规范现在 uncertain 和 partial 怎么处理？",
+        "event_f1": 1.0,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "label_e2",
+          "label_e1"
+        ],
+        "pred_state_slots": {
+          "current_guideline": {
+            "value": "标注规范 v2 将 uncertain 与 partial 合并为 ambiguous",
+            "support_event": "label_e2"
+          },
+          "invalidated_guideline": {
+            "value": "标注规范 v1 将 uncertain 与 partial 分开，但该规范已被 v2 替代并失效",
+            "support_event": "label_e1"
+          }
+        },
+        "answer": "当前有效的标注规范是：标注规范 v2 将 uncertain 与 partial 合并为 ambiguous。已被替代并作废的旧规范是：标注规范 v1 将 uncertain 与 partial 分开，但该规范已被 v2 替代并失效。",
+        "raw_output": {
+          "evidence_events": [
+            "label_e2",
+            "label_e1"
+          ],
+          "state_slots": {
+            "current_guideline": {
+              "value": "标注规范 v2 将 uncertain 与 partial 合并为 ambiguous",
+              "support_event": "label_e2"
+            },
+            "invalidated_guideline": {
+              "value": "标注规范 v1 将 uncertain 与 partial 分开，但该规范已被 v2 替代并失效",
+              "support_event": "label_e1"
+            }
+          },
+          "coverage_check": {
+            "current_guideline": true,
+            "invalidated_guideline": true
+          },
+          "answer": "当前有效的标注规范是：标注规范 v2 将 uncertain 与 partial 合并为 ambiguous。已被替代并作废的旧规范是：标注规范 v1 将 uncertain 与 partial 分开，但该规范已被 v2 替代并失效。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "label_e2",
+                "label_e1"
+              ],
+              "state_slots": {
+                "current_guideline": {
+                  "value": "标注规范 v2 将 uncertain 与 partial 合并为 ambiguous",
+                  "support_event": "label_e2"
+                },
+                "invalidated_guideline": {
+                  "value": "标注规范 v1 将 uncertain 与 partial 分开，但该规范已被 v2 替代并失效",
+                  "support_event": "label_e1"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "current_guideline": true,
+                "invalidated_guideline": true
+              },
+              "answer": "当前有效的标注规范是：标注规范 v2 将 uncertain 与 partial 合并为 ambiguous。已被替代并作废的旧规范是：标注规范 v1 将 uncertain 与 partial 分开，但该规范已被 v2 替代并失效。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "current_guideline": true,
+                "invalidated_guideline": true
+              },
+              "answer": "当前有效的标注规范是：标注规范 v2 将 uncertain 与 partial 合并为 ambiguous。已被替代并作废的旧规范是：标注规范 v1 将 uncertain 与 partial 分开，但该规范已被 v2 替代并失效。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "current_guideline": {
+              "score": 1,
+              "reason": "核心含义一致，均表示 v2 将 uncertain 与 partial 合并为 ambiguous。"
+            },
+            "invalidated_guideline": {
+              "score": 1,
+              "reason": "都表示 v1 中二者分开处理的旧规则已失效/作废。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "最终回答覆盖了两个 gold 状态，且表述与 gold 语义一致。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "label_qc",
+        "query": "标注任务现在主要质量问题是什么？",
+        "event_f1": 1.0,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "label_e3",
+          "label_e4"
+        ],
+        "pred_state_slots": {
+          "current_issue": {
+            "value": "batch A 标注分歧率 12%",
+            "support_event": "label_e3"
+          },
+          "next_step": {
+            "value": "计划 6月8日用 v2 规范重新培训标注员",
+            "support_event": "label_e4"
+          }
+        },
+        "answer": "当前主要质量问题是batch A标注分歧率12%。下一步计划是6月8日用v2规范重新培训标注员。",
+        "raw_output": {
+          "evidence_events": [
+            "label_e3",
+            "label_e4"
+          ],
+          "state_slots": {
+            "current_issue": {
+              "value": "batch A 标注分歧率 12%",
+              "support_event": "label_e3"
+            },
+            "next_step": {
+              "value": "计划 6月8日用 v2 规范重新培训标注员",
+              "support_event": "label_e4"
+            }
+          },
+          "coverage_check": {
+            "current_issue": true,
+            "next_step": true
+          },
+          "answer": "当前主要质量问题是batch A标注分歧率12%。下一步计划是6月8日用v2规范重新培训标注员。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "label_e3",
+                "label_e4"
+              ],
+              "state_slots": {
+                "current_issue": {
+                  "value": "batch A 标注分歧率 12%",
+                  "support_event": "label_e3"
+                },
+                "next_step": {
+                  "value": "计划 6月8日用 v2 规范重新培训标注员",
+                  "support_event": "label_e4"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "current_issue": true,
+                "next_step": true
+              },
+              "answer": "当前主要质量问题是batch A标注分歧率12%。下一步计划是6月8日用v2规范重新培训标注员。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "current_issue": true,
+                "next_step": true
+              },
+              "answer": "当前主要质量问题是batch A标注分歧率12%。下一步计划是6月8日用v2规范重新培训标注员。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "current_issue": {
+              "score": 1,
+              "reason": "与gold完全一致，均为batch A标注分歧率12%"
+            },
+            "next_step": {
+              "score": 1,
+              "reason": "保留了核心含义：用v2规范重新培训标注员，时间6月8日是补充信息，不影响语义等价"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "自然语言回答覆盖了两个gold状态，且内容与gold一致"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "rec_status",
+        "query": "推荐系统消融最近怎么样？",
+        "event_f1": 0.857,
+        "slot_support_accuracy": 0.667,
+        "slot_value_judge": 0.667,
+        "answer_judge": 0.0,
+        "pred_events": [
+          "rec_e3",
+          "rec_e4",
+          "rec_e5"
+        ],
+        "pred_state_slots": {
+          "corrected_result": {
+            "value": "NCF 比 LightGCN 低 1%",
+            "support_event": "rec_e3"
+          },
+          "current_risk": {
+            "value": "冷启动 split 测试尚未进行，可能影响评估泛化性",
+            "support_event": "rec_e5"
+          },
+          "next_step": {
+            "value": "加入 SASRec 对比；补 cold-start split 测试",
+            "support_event": "rec_e4"
+          }
+        },
+        "answer": "目前纠正后的结果是 NCF 比 LightGCN 低 1%；当前风险是冷启动 split 测试尚未进行，可能影响评估泛化性；下一步计划加入 SASRec 对比并补 cold-start split 测试。",
+        "raw_output": {
+          "evidence_events": [
+            "rec_e3",
+            "rec_e4",
+            "rec_e5"
+          ],
+          "state_slots": {
+            "corrected_result": {
+              "value": "NCF 比 LightGCN 低 1%",
+              "support_event": "rec_e3"
+            },
+            "current_risk": {
+              "value": "冷启动 split 测试尚未进行，可能影响评估泛化性",
+              "support_event": "rec_e5"
+            },
+            "next_step": {
+              "value": "加入 SASRec 对比；补 cold-start split 测试",
+              "support_event": "rec_e4"
+            }
+          },
+          "coverage_check": {
+            "corrected_result": true,
+            "current_risk": true,
+            "next_step": true
+          },
+          "answer": "目前纠正后的结果是 NCF 比 LightGCN 低 1%；当前风险是冷启动 split 测试尚未进行，可能影响评估泛化性；下一步计划加入 SASRec 对比并补 cold-start split 测试。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "rec_e3",
+                "rec_e4",
+                "rec_e5"
+              ],
+              "state_slots": {
+                "corrected_result": {
+                  "value": "NCF 比 LightGCN 低 1%",
+                  "support_event": "rec_e3"
+                },
+                "current_risk": {
+                  "value": "冷启动 split 测试尚未进行，可能影响评估泛化性",
+                  "support_event": "rec_e5"
+                },
+                "next_step": {
+                  "value": "加入 SASRec 对比；补 cold-start split 测试",
+                  "support_event": "rec_e4"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "corrected_result": true,
+                "current_risk": true,
+                "next_step": true
+              },
+              "answer": "目前纠正后的结果是 NCF 比 LightGCN 低 1%；当前风险是冷启动 split 测试尚未进行，可能影响评估泛化性；下一步计划加入 SASRec 对比并补 cold-start split 测试。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "corrected_result": true,
+                "current_risk": true,
+                "next_step": true
+              },
+              "answer": "目前纠正后的结果是 NCF 比 LightGCN 低 1%；当前风险是冷启动 split 测试尚未进行，可能影响评估泛化性；下一步计划加入 SASRec 对比并补 cold-start split 测试。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "corrected_result": {
+              "score": 1,
+              "reason": "与gold同义，均表示修正后NCF比LightGCN低1%。"
+            },
+            "current_risk": {
+              "score": 0,
+              "reason": "gold是“初次NCF高2%的结果存在数据泄漏”，预测改成了“冷启动split未进行”，语义不一致且漏掉数据泄漏。"
+            },
+            "next_step": {
+              "score": 1,
+              "reason": "与gold基本一致，均为加入SASRec对比并补cold-start split测试。"
+            }
+          },
+          "answer_score": {
+            "score": 0,
+            "reason": "只正确覆盖了corrected_result和next_step，current_risk与gold不一致，未完整覆盖全部gold状态。"
+          },
+          "slot_overall_score": 0.6666666666666666
+        }
+      },
+      {
+        "case_id": "rec_result",
+        "query": "NCF 现在到底比 LightGCN 好还是差？",
+        "event_f1": 0.8,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "rec_e2",
+          "rec_e3"
+        ],
+        "pred_state_slots": {
+          "corrected_result": {
+            "value": "修正数据泄漏后，NCF 比 LightGCN 低 1%",
+            "support_event": "rec_e3"
+          },
+          "invalidated_result": {
+            "value": "初次实验错误显示 NCF 比 LightGCN 高 2%（因数据泄漏已失效，已被修正结果替代）",
+            "support_event": "rec_e2"
+          }
+        },
+        "answer": "修正数据泄漏后，NCF 比 LightGCN 低 1%。初次实验错误显示 NCF 比 LightGCN 高 2%（因数据泄漏已失效，已被修正结果替代）。",
+        "raw_output": {
+          "evidence_events": [
+            "rec_e2",
+            "rec_e3"
+          ],
+          "state_slots": {
+            "corrected_result": {
+              "value": "修正数据泄漏后，NCF 比 LightGCN 低 1%",
+              "support_event": "rec_e3"
+            },
+            "invalidated_result": {
+              "value": "初次实验错误显示 NCF 比 LightGCN 高 2%（因数据泄漏已失效，已被修正结果替代）",
+              "support_event": "rec_e2"
+            }
+          },
+          "coverage_check": {
+            "corrected_result": true,
+            "invalidated_result": true
+          },
+          "answer": "修正数据泄漏后，NCF 比 LightGCN 低 1%。初次实验错误显示 NCF 比 LightGCN 高 2%（因数据泄漏已失效，已被修正结果替代）。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "rec_e2",
+                "rec_e3"
+              ],
+              "state_slots": {
+                "corrected_result": {
+                  "value": "修正数据泄漏后，NCF 比 LightGCN 低 1%",
+                  "support_event": "rec_e3"
+                },
+                "invalidated_result": {
+                  "value": "初次实验错误显示 NCF 比 LightGCN 高 2%（因数据泄漏已失效，已被修正结果替代）",
+                  "support_event": "rec_e2"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "corrected_result": true,
+                "invalidated_result": true
+              },
+              "answer": "修正数据泄漏后，NCF 比 LightGCN 低 1%。初次实验错误显示 NCF 比 LightGCN 高 2%（因数据泄漏已失效，已被修正结果替代）。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "corrected_result": true,
+                "invalidated_result": true
+              },
+              "answer": "修正数据泄漏后，NCF 比 LightGCN 低 1%。初次实验错误显示 NCF 比 LightGCN 高 2%（因数据泄漏已失效，已被修正结果替代）。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "corrected_result": {
+              "score": 1,
+              "reason": "语义等价，均表示修正泄漏后 NCF 比 LightGCN 低 1%。"
+            },
+            "invalidated_result": {
+              "score": 1,
+              "reason": "语义等价，均表示 NCF 高 2% 的旧结果是由数据泄漏导致并已失效。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "最终回答覆盖了两个 gold 状态，且含义一致。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "rec_next_step",
+        "query": "推荐系统消融下一步实验是什么？",
+        "event_f1": 1.0,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "rec_e4",
+          "rec_e5"
+        ],
+        "pred_state_slots": {
+          "next_baseline": {
+            "value": "SASRec",
+            "support_event": "rec_e4"
+          },
+          "next_split": {
+            "value": "cold-start split",
+            "support_event": "rec_e5"
+          }
+        },
+        "answer": "下一步实验的基线对比是SASRec，并且在cold-start split上进行消融测试。",
+        "raw_output": {
+          "evidence_events": [
+            "rec_e4",
+            "rec_e5"
+          ],
+          "state_slots": {
+            "next_baseline": {
+              "value": "SASRec",
+              "support_event": "rec_e4"
+            },
+            "next_split": {
+              "value": "cold-start split",
+              "support_event": "rec_e5"
+            }
+          },
+          "coverage_check": {
+            "next_baseline": true,
+            "next_split": true
+          },
+          "answer": "下一步实验的基线对比是SASRec，并且在cold-start split上进行消融测试。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "rec_e4",
+                "rec_e5"
+              ],
+              "state_slots": {
+                "next_baseline": {
+                  "value": "SASRec",
+                  "support_event": "rec_e4"
+                },
+                "next_split": {
+                  "value": "cold-start split",
+                  "support_event": "rec_e5"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "next_baseline": true,
+                "next_split": true
+              },
+              "answer": "下一步实验的基线对比是SASRec，并且在cold-start split上进行消融测试。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "next_baseline": true,
+                "next_split": true
+              },
+              "answer": "下一步实验的基线对比是SASRec，并且在cold-start split上进行消融测试。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "next_baseline": {
+              "score": 1,
+              "reason": "“SASRec”与“加入 SASRec 对比”语义一致。"
+            },
+            "next_split": {
+              "score": 1,
+              "reason": "“cold-start split”与“补 cold-start split 测试”语义一致。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "完整覆盖了基线对比和 cold-start split 测试两个 gold 状态。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "incident_status",
+        "query": "线上事故最近怎么样？",
+        "event_f1": 1.0,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "inc_e2",
+          "inc_e4",
+          "inc_e5"
+        ],
+        "pred_state_slots": {
+          "mitigation": {
+            "value": "已通过回滚缓解5xx，服务恢复。",
+            "support_event": "inc_e2"
+          },
+          "root_cause": {
+            "value": "缓存击穿导致下游被打爆。",
+            "support_event": "inc_e4"
+          },
+          "next_step": {
+            "value": "增加热点key限流和缓存预热。",
+            "support_event": "inc_e5"
+          }
+        },
+        "answer": "已通过回滚缓解5xx，服务恢复。根因为缓存击穿导致下游被打爆。下一步将增加热点key限流和缓存预热。",
+        "raw_output": {
+          "evidence_events": [
+            "inc_e2",
+            "inc_e4",
+            "inc_e5"
+          ],
+          "state_slots": {
+            "mitigation": {
+              "value": "已通过回滚缓解5xx，服务恢复。",
+              "support_event": "inc_e2"
+            },
+            "root_cause": {
+              "value": "缓存击穿导致下游被打爆。",
+              "support_event": "inc_e4"
+            },
+            "next_step": {
+              "value": "增加热点key限流和缓存预热。",
+              "support_event": "inc_e5"
+            }
+          },
+          "coverage_check": {
+            "mitigation": true,
+            "root_cause": true,
+            "next_step": true
+          },
+          "answer": "已通过回滚缓解5xx，服务恢复。根因为缓存击穿导致下游被打爆。下一步将增加热点key限流和缓存预热。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "inc_e2",
+                "inc_e4",
+                "inc_e5"
+              ],
+              "state_slots": {
+                "mitigation": {
+                  "value": "已通过回滚缓解5xx，服务恢复。",
+                  "support_event": "inc_e2"
+                },
+                "root_cause": {
+                  "value": "缓存击穿导致下游被打爆。",
+                  "support_event": "inc_e4"
+                },
+                "next_step": {
+                  "value": "增加热点key限流和缓存预热。",
+                  "support_event": "inc_e5"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "mitigation": true,
+                "root_cause": true,
+                "next_step": true
+              },
+              "answer": "已通过回滚缓解5xx，服务恢复。根因为缓存击穿导致下游被打爆。下一步将增加热点key限流和缓存预热。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "mitigation": true,
+                "root_cause": true,
+                "next_step": true
+              },
+              "answer": "已通过回滚缓解5xx，服务恢复。根因为缓存击穿导致下游被打爆。下一步将增加热点key限流和缓存预热。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "mitigation": {
+              "score": 1,
+              "reason": "语义一致，仅标点和空格差异。"
+            },
+            "root_cause": {
+              "score": 1,
+              "reason": "语义一致，仅标点差异。"
+            },
+            "next_step": {
+              "score": 1,
+              "reason": "语义一致，仅标点和空格差异。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "完整覆盖了缓解、根因和下一步，且表述一致。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "incident_root_cause",
+        "query": "线上事故根因到底是数据库连接池还是缓存问题？",
+        "event_f1": 0.667,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "inc_e4"
+        ],
+        "pred_state_slots": {
+          "root_cause": {
+            "value": "缓存击穿",
+            "support_event": "inc_e4"
+          },
+          "invalidated_root_cause": {
+            "value": "初步判断的数据库连接池耗尽已失效，实际根因为缓存击穿",
+            "support_event": "inc_e4"
+          }
+        },
+        "answer": "根因为缓存击穿，此前初步判断的数据库连接池耗尽已失效。",
+        "raw_output": {
+          "evidence_events": [
+            "inc_e4"
+          ],
+          "state_slots": {
+            "root_cause": {
+              "value": "缓存击穿",
+              "support_event": "inc_e4"
+            },
+            "invalidated_root_cause": {
+              "value": "初步判断的数据库连接池耗尽已失效，实际根因为缓存击穿",
+              "support_event": "inc_e4"
+            }
+          },
+          "coverage_check": {
+            "root_cause": true,
+            "invalidated_root_cause": true
+          },
+          "answer": "根因为缓存击穿，此前初步判断的数据库连接池耗尽已失效。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "inc_e4"
+              ],
+              "state_slots": {
+                "root_cause": {
+                  "value": "缓存击穿",
+                  "support_event": "inc_e4"
+                },
+                "invalidated_root_cause": {
+                  "value": "初步判断的数据库连接池耗尽已失效，实际根因为缓存击穿",
+                  "support_event": "inc_e4"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "root_cause": true,
+                "invalidated_root_cause": true
+              },
+              "answer": "根因为缓存击穿，此前初步判断的数据库连接池耗尽已失效。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "root_cause": true,
+                "invalidated_root_cause": true
+              },
+              "answer": "根因为缓存击穿，此前初步判断的数据库连接池耗尽已失效。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "root_cause": {
+              "score": 1,
+              "reason": "“缓存击穿”与gold中的根因“缓存击穿导致下游被打爆”语义一致，核心因果可视为正确。"
+            },
+            "invalidated_root_cause": {
+              "score": 1,
+              "reason": "明确指出数据库连接池耗尽是初步旧判断且已失效，和gold一致。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "自然语言回答覆盖了根因和被纠正的旧判断，完整符合gold状态。"
+          },
+          "slot_overall_score": 1
+        }
+      },
+      {
+        "case_id": "incident_next_step",
+        "query": "线上事故后续要补什么防护？",
+        "event_f1": 1.0,
+        "slot_support_accuracy": 1.0,
+        "slot_value_judge": 1.0,
+        "answer_judge": 1.0,
+        "pred_events": [
+          "inc_e2",
+          "inc_e5"
+        ],
+        "pred_state_slots": {
+          "next_step": {
+            "value": "计划增加热点 key 限流和缓存预热。",
+            "support_event": "inc_e5"
+          },
+          "mitigation": {
+            "value": "已通过回滚缓解 5xx，服务恢复。",
+            "support_event": "inc_e2"
+          }
+        },
+        "answer": "下一步：计划增加热点 key 限流和缓存预热。已缓解：已通过回滚缓解 5xx，服务恢复。",
+        "raw_output": {
+          "evidence_events": [
+            "inc_e2",
+            "inc_e5"
+          ],
+          "state_slots": {
+            "next_step": {
+              "value": "计划增加热点 key 限流和缓存预热。",
+              "support_event": "inc_e5"
+            },
+            "mitigation": {
+              "value": "已通过回滚缓解 5xx，服务恢复。",
+              "support_event": "inc_e2"
+            }
+          },
+          "coverage_check": {
+            "next_step": true,
+            "mitigation": true
+          },
+          "answer": "下一步：计划增加热点 key 限流和缓存预热。已缓解：已通过回滚缓解 5xx，服务恢复。",
+          "pipeline_trace": {
+            "retriever_output": {
+              "evidence_events": [
+                "inc_e2",
+                "inc_e5"
+              ],
+              "state_slots": {
+                "next_step": {
+                  "value": "计划增加热点 key 限流和缓存预热。",
+                  "support_event": "inc_e5"
+                },
+                "mitigation": {
+                  "value": "已通过回滚缓解 5xx，服务恢复。",
+                  "support_event": "inc_e2"
+                }
+              }
+            },
+            "answer_stage_output": {
+              "coverage_check": {
+                "next_step": true,
+                "mitigation": true
+              },
+              "answer": "下一步：计划增加热点 key 限流和缓存预热。已缓解：已通过回滚缓解 5xx，服务恢复。"
+            },
+            "composer_output": {
+              "coverage_check": {
+                "next_step": true,
+                "mitigation": true
+              },
+              "answer": "下一步：计划增加热点 key 限流和缓存预热。已缓解：已通过回滚缓解 5xx，服务恢复。"
+            }
+          }
+        },
+        "judge_output": {
+          "slot_scores": {
+            "next_step": {
+              "score": 1,
+              "reason": "“计划增加热点 key 限流和缓存预热”与 gold 语义一致。"
+            },
+            "mitigation": {
+              "score": 1,
+              "reason": "“已通过回滚缓解 5xx，服务恢复”与 gold 的“服务已经通过回滚恢复”语义一致。"
+            }
+          },
+          "answer_score": {
+            "score": 1,
+            "reason": "最终回答覆盖了所有 gold 状态，且表述与 gold 语义一致。"
+          },
+          "slot_overall_score": 1
+        }
+      }
+    ]
+  }
+]
