@@ -1,0 +1,20 @@
+.DS_Store
+.env
+.env.*
+__pycache__/
+*.py[cod]
+
+# Generated benchmark artifacts are local by default. Commit only curated,
+# reproducibility-relevant snapshots listed below.
+stamb_state_benchmark/output/*
+!stamb_state_benchmark/output/
+!stamb_state_benchmark/output/results_v1_oracle_facet.json
+!stamb_state_benchmark/output/results_v1_end_to_end.json
+!stamb_state_benchmark/output/results_v1_1_public_e2e_staged_full_20260617.json
+!stamb_state_benchmark/output/validation_report.json
+!stamb_state_benchmark/output/validation_report_v1_1.json
+!stamb_state_benchmark/output/validation_report_v1_2.json
+!stamb_state_benchmark/output/validation_report_v1_3.json
+!stamb_state_benchmark/output/quality_report_v1_3.json
+!stamb_state_benchmark/output/semantic_duplicate_report_v1_3.json
+!stamb_state_benchmark/output/openai_embedding_duplicate_report_v1_3.json

@@ -1,0 +1,24 @@
+{
+  "train": [
+    "aaai_memory",
+    "amp_project",
+    "sql_lab_q6",
+    "robot_nav",
+    "thesis_ch2",
+    "mobile_auth",
+    "search_index_rollout",
+    "billing_migration",
+    "eval_harness"
+  ],
+  "dev": [
+    "grant_app",
+    "labeling_guideline",
+    "cache_refactor"
+  ],
+  "test": [
+    "recsys_ablation",
+    "deployment_incident",
+    "ui_accessibility",
+    "api_rate_limit"
+  ]
+}

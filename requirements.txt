@@ -1,0 +1,12 @@
+# Core LLM client used by STAMB-State and external benchmark runners.
+openai
+
+# TSM baseline dependencies.
+numpy
+scikit-learn
+spacy
+dateparser
+
+# Graphiti/Zep baselines and semantic duplicate audits.
+graphiti-core
+sentence-transformers

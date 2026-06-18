@@ -1,6 +1,6 @@
 # STAMB-State v1 Scaffold
 
-This directory is generated from the v0 pilot data without overwriting the legacy files.
+This directory is generated from the v0 pilot data plus curated v1 enrichment cases without overwriting the legacy files.
 
 ## Files
 
