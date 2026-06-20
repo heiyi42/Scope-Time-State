@@ -1,179 +1,152 @@
 # STAMB-State Results
 
+This file records the current result status. It separates dated checkpoints, current diagnostic results, and unfinished paper-facing result work.
+
 ## Current Status
 
-- Data: STAMB-State v1, 58 raw events, 42 cases; STAMB-State v1.1, 106 raw events, 72 cases.
-- Oracle-Facet runner: `Experiment/run/run_llm_benchmark.py`.
-- Oracle-Facet evaluator: `Experiment/analyze_metrics.py`.
-- Public End-to-End runner/evaluator: `Experiment/run/run_public_benchmark.py`.
-- Target model: DeepSeek `deepseek-v4-flash`.
-- Judge model: OpenAI `gpt-5.4-mini`.
-- Canonical Oracle-Facet result file: `stamb_state_benchmark/output/results_v1_oracle_facet.json`.
-- Canonical public End-to-End result file: `stamb_state_benchmark/output/results_v1_end_to_end.json`.
-- Current v1.1 public End-to-End staged result file before neutralizing the baseline prompt:
-  `stamb_state_benchmark/output/results_v1_1_public_e2e_staged_full_20260617.json`.
-- After the 2026-06-17 neutral baseline prompt change, rerun the full v1.1 public End-to-End
-  table with the current `ans_j` + `ans_10` judge schema before reporting final baseline comparisons.
-- The v1 canonical result snapshots predate the paper-structured `tsm`,
-  `validity_aware_consolidation`, and `graphiti_paper_reproduction` work.
+- Main data/protocol version: STAMB-State v1.3, with 24 scopes, 480 public events, and 240 evaluator cases.
+- Human annotation is not complete. The current annotation packet and gold reference are not a completed annotator agreement/adjudication artifact.
+- Public End-to-End is the paper-facing setting because it hides `scope_id`, `time_role`, `output_slots`, gold states, gold support, hard negatives, and answerability.
+- Oracle-Facet is a diagnostic track. It gives `scope_id`, `time_role`, and `output_slots` to isolate latest-valid-state construction; it must not be used as the final public main table.
+- Canonical v1.3 scored tables are still missing. Current v1/v1.1 results are useful checkpoints, not final paper claims.
 
-`stamb_state_benchmark/` is intentionally limited to `data/` and `output/`.
-Experiment code and baseline adapters live under `Experiment/`; benchmark build and validation scripts live under top-level `scripts/`.
+## Current STAMB Checkpoint
 
-## Main Table
+The most complete current baseline suite is the v1.1 Public End-to-End half checkpoint from 2026-06-18. It is not a v1.3 canonical table, but it reflects the newer baseline set better than the older v1/v1.1 three-method tables.
 
-Public End-to-End staged full v1.1 run, 2026-06-17, before neutralizing the baseline prompt:
+Settings:
 
-This table predates the current graded `ans_10` field, so it only reports strict `ans_j`.
+- data version: `v1_1`
+- track: public End-to-End
+- cases: 36
+- target model: `deepseek-v4-flash`
+- judge: `deepseek-v4-flash`
+- files: `stamb_state_benchmark/output/results_v1_1_public_half_*.json`
 
-| Variant | n | ev_sup | ev_p | ev_r | facet_r | facet_p | ans_j | unsup | hard_neg | over_ev | unk_cur |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| `full_context_llm` | 72 | 0.761 | 0.780 | 0.845 | 0.949 | 0.804 | 0.806 | 0.196 | 0.099 | 0.223 | 1.000 |
-| `hybrid_rag` | 72 | 0.685 | 0.723 | 0.712 | 0.750 | 0.700 | 0.611 | 0.300 | 0.134 | 0.226 | 0.900 |
-| `ours_scope_time_state` | 72 | 0.744 | 0.689 | 0.933 | 0.968 | 0.740 | 0.764 | 0.260 | 0.159 | 0.311 | 1.000 |
+| Method | n | ev_sup | facet_r | facet_p | ans_j | ans_10 | hard_neg | over_ev | unk_cur |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `full_context_llm` | 36 | 0.789 | 0.833 | 0.851 | 0.722 | 8.833 | 0.131 | 0.225 | 0.000 |
+| `hybrid_rag` | 36 | 0.545 | 0.509 | 0.667 | 0.306 | 5.361 | 0.225 | 0.331 | 0.500 |
+| `tsm_global_public` | 36 | 0.691 | 0.778 | 0.739 | 0.528 | 7.400 | 0.171 | 0.253 | 0.000 |
+| `tsm_scope_routed_public` | 36 | 0.764 | 0.810 | 0.765 | 0.556 | 7.583 | 0.161 | 0.256 | 0.000 |
+| `validity_global_public` | 36 | 0.581 | 0.618 | 0.803 | 0.389 | 6.472 | 0.167 | 0.214 | 1.000 |
+| `validity_scope_routed_public` | 36 | 0.768 | 0.815 | 0.722 | 0.528 | 7.818 | 0.118 | 0.188 | 0.500 |
+| `graphiti_global_public` | 36 | 0.545 | 0.491 | 0.600 | 0.306 | 5.306 | 0.165 | 0.306 | 1.000 |
+| `graphiti_scope_routed_public` | 36 | 0.757 | 0.900 | 0.742 | 0.583 | 8.500 | 0.175 | 0.256 | 1.000 |
+| `ours_scope_time_state` | 36 | 0.626 | 0.824 | 0.687 | 0.694 | 8.114 | 0.227 | 0.345 | 0.500 |
+| `ours_scope_time_state` repair checkpoint | 36 | 0.765 | 0.914 | 0.763 | 0.750 | 9.111 | 0.196 | 0.297 | 1.000 |
 
-Oracle-Facet full v1 run:
+Interpretation:
+
+- The repaired Ours state-packet checkpoint is strongest on `ans_j`, `ans_10`, and `facet_r`.
+- It still has high `hard_neg` and `over_ev`, so precision and support minimization remain the main method problems.
+- Full-context is still a strong control in this small public setting.
+- Validity scope-routed has the best hard-negative and over-evidence rates, so STALE/CUPMem-style baselines need serious comparison.
+- Scope routing helps TSM, Graphiti, and Validity-aware baselines, not only Ours.
+
+## Dated Canonical Snapshots
+
+These are tracked snapshots and remain useful as reproducible checkpoints, but they predate the current v1.3 data, public state-packet path, and several paper-structured baselines.
+
+### v1 Oracle-Facet
+
+File: `stamb_state_benchmark/output/results_v1_oracle_facet.json`
 
 | Variant | n | sup_f1 | slot_j | ans_j | hard_neg |
-|---|---:|---:|---:|---:|---:|
+| --- | ---: | ---: | ---: | ---: | ---: |
 | `full_context_llm` | 42 | 0.936 | 0.869 | 0.833 | 0.036 |
 | `hybrid_rag` | 42 | 0.717 | 0.738 | 0.571 | 0.156 |
 | `ours_scope_time_state` | 42 | 0.959 | 0.879 | 0.786 | 0.037 |
 
-Public End-to-End full v1 run:
+Use this only for diagnostic claims about state construction under known `scope_id / time_role / output_slots`.
 
-| Variant | n | ev_sup | facet_r | facet_p | ans_j | unsup | hard_neg |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| `full_context_llm` | 42 | 0.769 | 0.940 | 0.863 | 0.786 | 0.137 | 0.125 |
-| `hybrid_rag` | 42 | 0.690 | 0.675 | 0.781 | 0.500 | 0.219 | 0.193 |
-| `ours_scope_time_state` | 42 | 0.768 | 0.964 | 0.783 | 0.857 | 0.217 | 0.181 |
+### v1 Public End-to-End
 
-## Interpretation
+File: `stamb_state_benchmark/output/results_v1_end_to_end.json`
 
-The public End-to-End v1.1 run is the right setting for claims about the usable pipeline under
-hidden `scope_id`, hidden `output_slots`, and hidden gold support. In this setting,
-`ours_scope_time_state` is not yet a clean win over every baseline:
+| Variant | n | ev_sup | facet_r | facet_p | ans_j | hard_neg |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `full_context_llm` | 42 | 0.769 | 0.940 | 0.863 | 0.786 | 0.125 |
+| `hybrid_rag` | 42 | 0.690 | 0.675 | 0.781 | 0.500 | 0.193 |
+| `ours_scope_time_state` | 42 | 0.768 | 0.964 | 0.783 | 0.857 | 0.181 |
 
-- It has the best state recall signals: `ev_r=0.933` and `facet_r=0.968`.
-- It beats `hybrid_rag` on `ev_sup`, `ev_r`, `facet_r`, `facet_p`, `ans_j`, `unsup`,
-  and `unknown_current`.
-- It does not beat `full_context_llm` on `ans_j`, `facet_p`, `hard_neg`, or `over_ev`.
+### v1.1 Public End-to-End Staged Full
 
-The main current weakness is over-broad state retrieval under public free-facet output. Ours
-recovers more gold state facets but also emits more unsupported or stale facets, which hurts
-precision and final answer grading. The next method work should reduce extra facets and
-hard-negative evidence while preserving the high recall and `unknown_current` behavior.
+File: `stamb_state_benchmark/output/results_v1_1_public_e2e_staged_full_20260617.json`
 
-In the older Oracle-Facet v1 run, `ours_scope_time_state` is strongest on evidence support and
-state-slot semantics:
+This table predates the neutral baseline prompt change and current graded `ans_10` schema.
 
-- Highest `sup_f1`: 0.959.
-- Highest `slot_j`: 0.879.
-- Low hard-negative rate: 0.037.
+| Variant | n | ev_sup | ev_p | ev_r | facet_r | facet_p | ans_j | unsup | hard_neg | over_ev | unk_cur |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `full_context_llm` | 72 | 0.761 | 0.780 | 0.845 | 0.949 | 0.804 | 0.806 | 0.196 | 0.099 | 0.223 | 1.000 |
+| `hybrid_rag` | 72 | 0.685 | 0.723 | 0.712 | 0.750 | 0.700 | 0.611 | 0.300 | 0.134 | 0.226 | 0.900 |
+| `ours_scope_time_state` | 72 | 0.744 | 0.689 | 0.933 | 0.968 | 0.740 | 0.764 | 0.260 | 0.159 | 0.311 | 1.000 |
 
-`full_context_llm` still has the best final answer score (`ans_j=0.833`). The current gap is mostly an answer-composition issue rather than a retrieval issue: `ours_scope_time_state` often identifies the right supporting state, but the final natural-language answer can still omit or compress required facets.
+## External Benchmark Diagnostics
 
-The recent prompt fix specifically addressed plan-not-done and unknown-current cases. After that fix:
+External benchmarks are generalization evidence, not replacements for the STAMB-State main table.
 
-- `plan_not_done`: `slot_j=1.000`, `ans_j=1.000`.
-- `unknown_current`: `slot_j=1.000`, `ans_j=1.000`.
+### LongMemEval-S
 
-The older public End-to-End v1 run remains useful as a dated checkpoint, but the v1.1 staged
-public run above should be used for current public-pipeline claims.
+Runner: `Experiment/Other_BenchMark/LongMemEval-S/run_longmemeval_s.py`
 
-## Reproduction
+| File | Variant | n | official acc | candidate recall | evidence recall | evidence precision |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| `results_longmemeval_s_adapter_compare_3.json` | `scope_time_state_public` | 18 | 0.333 | 0.861 | 0.477 | 0.923 |
+| `results_longmemeval_s_adapter_compare_3.json` | `scope_time_state_task_adapter` | 18 | 0.889 | 0.986 | 0.875 | 0.944 |
+| `results_longmemeval_s_task_adapter_10_per_type_v2.json` | `scope_time_state_task_adapter` | 60 | 0.850 | 0.996 | 0.826 | 0.964 |
 
-Smoke validation:
+Weak spots: `single-session-preference`, `multi-session`, and answer composition under larger multi-session histories.
 
-```bash
-conda run -n py311 env PYTHONDONTWRITEBYTECODE=1 \
-  python Experiment/run/run_llm_benchmark.py --dry-run
-```
+### LoCoMo-QA
 
-Run the canonical Oracle-Facet main table:
+Runner: `Experiment/Other_BenchMark/LoCoMo-QA/run_locomo_qa.py`
 
-```bash
-conda run -n py311 env PYTHONDONTWRITEBYTECODE=1 \
-  python Experiment/run/run_llm_benchmark.py \
-  --provider deepseek \
-  --judge \
-  --judge-provider openai
-```
+File: `stamb_state_benchmark/output/results_locomo_qa_10_per_type_gpt4omini_memory_router_raw.json`
 
-Recompute metrics and breakdowns:
+| Type | n | answer F1 | exact match | candidate dialog recall | evidence F1 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| adversarial | 10 | 0.700 | n/a | 1.000 | 0.540 |
+| multi-hop | 10 | 0.612 | 0.200 | 0.961 | 0.485 |
+| open-domain | 10 | 0.341 | 0.100 | 0.800 | 0.309 |
+| single-hop | 10 | 0.867 | 0.600 | 0.867 | 0.613 |
+| temporal | 10 | 0.739 | 0.500 | 1.000 | 0.600 |
+| overall | 50 | 0.652 | 0.350 | 0.926 | 0.509 |
 
-```bash
-conda run -n py311 env PYTHONDONTWRITEBYTECODE=1 \
-  python Experiment/analyze_metrics.py \
-  stamb_state_benchmark/output/results_v1_oracle_facet.json \
-  --show-breakdown
-```
+Weak spots: open-domain answer typing/canonicalization and multi-hop composition. Candidate recall is already high enough that more retrieval alone is unlikely to solve the problem.
 
-Run a public End-to-End smoke test:
+### STALE
 
-```bash
-conda run -n py311 env PYTHONDONTWRITEBYTECODE=1 \
-  python Experiment/run/run_public_benchmark.py \
-  --provider deepseek \
-  --judge \
-  --judge-provider openai \
-  --limit-cases 5 \
-  --variants full_context_llm ours_scope_time_state \
-  --output stamb_state_benchmark/output/results_v1_end_to_end_smoke.json \
-  --cache stamb_state_benchmark/output/llm_cache.v1_end_to_end_smoke.json
-```
+Runner: `Experiment/Other_BenchMark/STALE/run_stale.py`
 
-Run the canonical public End-to-End table:
+| File | n scenarios | conflict split | overall | dim1 | dim2 | dim3 |
+| --- | ---: | --- | ---: | ---: | ---: | ---: |
+| `results_stale_scope_time_state_10_balanced_deepseek_judged.json` | 10 | T1=5, T2=5 | 0.633 | 0.500 | 0.700 | 0.700 |
+| `results_stale_scope_time_state_10_balanced_deepseek_prompt_v2_judged.json` | 10 | T1=5, T2=5 | 0.767 | 0.800 | 0.600 | 0.900 |
+| `results_stale_scope_time_state_10_balanced_deepseek_prompt_v3_chrono_judged.json` | 10 | T1=5, T2=5 | 0.467 | 0.400 | 0.200 | 0.800 |
+| `results_stale_scope_time_state_10_deepseek_judged.json` | 10 | T1=10 | 0.667 | 0.700 | 0.700 | 0.600 |
 
-```bash
-conda run -n py311 env PYTHONDONTWRITEBYTECODE=1 \
-  python Experiment/run/run_public_benchmark.py \
-  --provider deepseek \
-  --judge \
-  --judge-provider openai
-```
+Weak spot: T2 propagation and false-premise resistance. Chronology-only prompting regressed and should remain a negative ablation.
 
-Run the current v1.1 public End-to-End staged table:
+## Baseline Provenance Table To Add
 
-```bash
-conda run -n py311 env PYTHONDONTWRITEBYTECODE=1 \
-  python Experiment/run/run_public_benchmark.py \
-  --data-version v1_1 \
-  --provider deepseek \
-  --judge \
-  --judge-provider openai \
-  --variants full_context_llm hybrid_rag ours_scope_time_state \
-  --output stamb_state_benchmark/output/results_v1_1_public_e2e_staged_full_20260617.json \
-  --cache stamb_state_benchmark/output/llm_cache.v1_1_public_e2e_staged_full_20260617.json
-```
+This table is not complete yet and should be added before paper writing:
 
-## Commit Policy
+| Baseline | Source type | Runner | Track | Scope-routed | Paper-structured | Real-system adapter | Diagnostic/main |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Full-context LLM | control | `Experiment/run/run_public_benchmark.py` | public | no | no | no | main control |
+| Hybrid RAG | generic baseline | `Experiment/run/run_public_benchmark.py` | public | no | no | no | main baseline |
+| TSM | paper reproduction | `Experiment/run/run_public_benchmark.py` | public | global / scope-routed variants | yes | no | main baseline |
+| STALE/CUPMem | paper reproduction | `Experiment/run/run_public_benchmark.py` | public | global / scope-routed variants | yes | no | main baseline |
+| Graphiti/Zep | external system | `Experiment/Main_Baseline/graphiti_zep/run_graphiti_baseline.py` | public | global / scope-routed variants | no | yes | main baseline |
+| Graphiti paper reproduction | paper audit | `Experiment/Main_Baseline/graphiti_paper_reproduction/run_graphiti_paper_audit.py` | oracle/audit | scope group ids | yes | yes | diagnostic |
+| Ours | proposed method | `Experiment/run/run_public_benchmark.py` | public | yes | n/a | no | main / ablation |
 
-Recommended to commit:
+## Next Result Work
 
-- `Experiment/` code and docs.
-- `scripts/` benchmark build/validation scripts.
-- `Design/BenchMark/` task and benchmark docs.
-- `stamb_state_benchmark/data/`.
-- `stamb_state_benchmark/output/results_v1_oracle_facet.json` as the canonical current experiment snapshot.
-- `stamb_state_benchmark/output/results_v1_end_to_end.json` as the canonical public End-to-End snapshot.
-- `stamb_state_benchmark/output/results_v1_1_public_e2e_staged_full_20260617.json` as the
-  current v1.1 public End-to-End staged snapshot.
-- `stamb_state_benchmark/output/validation_report*.json` only as lightweight data-validation
-  snapshots.
-
-Recommended not to commit:
-
-- API cache files under `stamb_state_benchmark/output/`.
-- Smoke, audit, pairwise-analysis, and temporary rerun outputs under `stamb_state_benchmark/output/`.
-- `.DS_Store` and Python bytecode caches.
-
-## Next Work
-
-1. Improve `ours_scope_time_state` public precision: reduce unsupported extra facets, stale mention evidence, over-evidence, and hard-negative evidence without losing high `facet_r`.
-2. Improve Oracle-Facet answer composition so final answers preserve all required facets.
-3. Rerun the expanded Oracle-Facet main table with `tsm`, `validity_aware_consolidation`, and the
-   Graphiti/Zep runners.
-4. Run `graphiti_paper_reproduction` audit-only first, then the full judged run after Neo4j and BGE
-   model downloads are confirmed.
-5. Decide later whether `Memory-T1` is feasible enough to reproduce.
+1. Complete human annotation and agreement/adjudication reports.
+2. Run v1.3 Public End-to-End canonical scored table, starting with `balanced_half`.
+3. Add and run a small-sample MemConflict diagnostic.
+4. Produce the full baseline provenance table.
+5. Reduce Ours public `hard_neg` and `over_ev` without losing `unknown_current`.
+6. Expand LongMemEval-S, LoCoMo-QA, and STALE diagnostics only after each small-sample failure mode is understood.

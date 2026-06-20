@@ -1,0 +1,256 @@
+{
+  "v1_dir": "stamb_state_benchmark/data/v1_3",
+  "events": 480,
+  "cases": 240,
+  "scopes": 24,
+  "max_normalized_event_repeat": 1,
+  "max_normalized_query_repeat": 1,
+  "max_normalized_slot_value_repeat": 2,
+  "event_repeats": {},
+  "query_repeats": {},
+  "slot_value_repeats": {},
+  "generic_marker_counts": {
+    "旁路日志采样": 0,
+    "轻量复查": 0,
+    "旧完成状态": 0,
+    "主线阻塞": 0,
+    "acceptance": 0,
+    "approval": 0
+  },
+  "scope_table": [
+    {
+      "scope_id": "aaai_memory",
+      "events": 12,
+      "generated_events": 7,
+      "events_over_repeat_threshold": 0,
+      "cases": 9,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "amp_project",
+      "events": 12,
+      "generated_events": 7,
+      "events_over_repeat_threshold": 0,
+      "cases": 11,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "api_rate_limit",
+      "events": 32,
+      "generated_events": 24,
+      "events_over_repeat_threshold": 0,
+      "cases": 11,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "billing_migration",
+      "events": 32,
+      "generated_events": 24,
+      "events_over_repeat_threshold": 0,
+      "cases": 11,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "cache_refactor",
+      "events": 18,
+      "generated_events": 10,
+      "events_over_repeat_threshold": 0,
+      "cases": 11,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "data_retention_policy",
+      "events": 18,
+      "generated_events": 18,
+      "events_over_repeat_threshold": 0,
+      "cases": 9,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "deployment_incident",
+      "events": 18,
+      "generated_events": 12,
+      "events_over_repeat_threshold": 0,
+      "cases": 11,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "eval_harness",
+      "events": 32,
+      "generated_events": 24,
+      "events_over_repeat_threshold": 0,
+      "cases": 11,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "grant_app",
+      "events": 18,
+      "generated_events": 12,
+      "events_over_repeat_threshold": 0,
+      "cases": 10,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "labeling_guideline",
+      "events": 18,
+      "generated_events": 12,
+      "events_over_repeat_threshold": 0,
+      "cases": 11,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "mobile_auth",
+      "events": 18,
+      "generated_events": 11,
+      "events_over_repeat_threshold": 0,
+      "cases": 10,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "model_serving_latency",
+      "events": 32,
+      "generated_events": 32,
+      "events_over_repeat_threshold": 0,
+      "cases": 9,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "onboarding_flow",
+      "events": 18,
+      "generated_events": 18,
+      "events_over_repeat_threshold": 0,
+      "cases": 9,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "privacy_audit",
+      "events": 18,
+      "generated_events": 18,
+      "events_over_repeat_threshold": 0,
+      "cases": 9,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "recsys_ablation",
+      "events": 18,
+      "generated_events": 12,
+      "events_over_repeat_threshold": 0,
+      "cases": 10,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "release_notes",
+      "events": 12,
+      "generated_events": 12,
+      "events_over_repeat_threshold": 0,
+      "cases": 9,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "robot_nav",
+      "events": 18,
+      "generated_events": 12,
+      "events_over_repeat_threshold": 0,
+      "cases": 11,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "search_index_rollout",
+      "events": 32,
+      "generated_events": 24,
+      "events_over_repeat_threshold": 0,
+      "cases": 11,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "sensor_firmware",
+      "events": 18,
+      "generated_events": 18,
+      "events_over_repeat_threshold": 0,
+      "cases": 9,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "sql_lab_q6",
+      "events": 12,
+      "generated_events": 7,
+      "events_over_repeat_threshold": 0,
+      "cases": 9,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "support_escalation",
+      "events": 12,
+      "generated_events": 12,
+      "events_over_repeat_threshold": 0,
+      "cases": 9,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "thesis_ch2",
+      "events": 12,
+      "generated_events": 6,
+      "events_over_repeat_threshold": 0,
+      "cases": 10,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "ui_accessibility",
+      "events": 18,
+      "generated_events": 10,
+      "events_over_repeat_threshold": 0,
+      "cases": 11,
+      "queries_over_repeat_threshold": 0
+    },
+    {
+      "scope_id": "warehouse_backfill",
+      "events": 32,
+      "generated_events": 32,
+      "events_over_repeat_threshold": 0,
+      "cases": 9,
+      "queries_over_repeat_threshold": 0
+    }
+  ],
+  "warnings": [],
+  "passed": true,
+  "semantic_near_duplicates": {
+    "method": "char_ngram_cosine_lexical_proxy",
+    "interpretation": "This is a deterministic lexical near-duplicate screen for template-like wording, not a standalone semantic equivalence proof.",
+    "thresholds": {
+      "event": 0.9,
+      "query": 0.85,
+      "slot_value": 0.88,
+      "ngram_size": 3
+    },
+    "max_pairs_per_kind": 50,
+    "counts": {
+      "event_pairs": 0,
+      "query_pairs": 0,
+      "slot_value_pairs": 0
+    },
+    "event_pairs": [],
+    "query_pairs": [],
+    "slot_value_pairs": [],
+    "warnings": []
+  },
+  "openai_embedding_near_duplicates": {
+    "method": "openai_embedding_cosine_semantic_screen",
+    "interpretation": "OpenAI embeddings provide a semantic near-duplicate screen for manual review; flagged pairs are not automatically removed without task-level inspection.",
+    "model": "text-embedding-3-large",
+    "thresholds": {
+      "event": 0.92,
+      "query": 0.9,
+      "slot_value": 0.9
+    },
+    "max_pairs_per_kind": 50,
+    "counts": {
+      "event_pairs": 0,
+      "query_pairs": 0,
+      "slot_value_pairs": 0
+    },
+    "event_pairs": [],
+    "query_pairs": [],
+    "slot_value_pairs": [],
+    "warnings": []
+  }
+}

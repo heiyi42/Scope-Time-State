@@ -1,0 +1,4024 @@
+[
+  {
+    "event_id": "aaai_e1",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "aaai_e2",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "aaai_e3",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "aaai_e4",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "aaai_e2"
+    ],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "aaai_e5",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "amp_e1",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "amp_e2",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "amp_e3",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "amp_e2"
+    ],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "amp_e4",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "amp_e5",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "sql_e1",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "sql_e2",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "sql_e3",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "sql_e2"
+    ],
+    "supersedes": [
+      "sql_e1"
+    ],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "sql_e4",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "sql_e5",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "robot_e1",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "robot_e2",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "robot_e3",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "robot_e4",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "robot_e1"
+    ],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "robot_e5",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "robot_e6",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "thesis_e1",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "thesis_e2",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "thesis_e3",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "thesis_e4",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "thesis_e2"
+    ],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "thesis_e5",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "thesis_e6",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "auth_e1",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "auth_e2",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "auth_e1"
+    ],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "auth_e3",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "auth_e4",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "auth_e3"
+    ],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "auth_e5",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "auth_e6",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "auth_e7",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "grant_e1",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "grant_e2",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "grant_e1"
+    ],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "grant_e3",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "grant_e4",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "grant_e3"
+    ],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "grant_e5",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "grant_e6",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "label_e1",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "label_e2",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "label_e1"
+    ],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "label_e3",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "label_e4",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "label_e5",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "label_e6",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "rec_e1",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "rec_e2",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "rec_e1"
+    ],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "rec_e3",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "rec_e1"
+    ],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "rec_e4",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "rec_e5",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "rec_e6",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "inc_e1",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "inc_e2",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "inc_e3",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "inc_e4",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "inc_e3"
+    ],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "inc_e5",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "inc_e6",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated from v0 event-level annotations."
+  },
+  {
+    "event_id": "idx_e1",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "idx_e2",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "idx_e3",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "idx_e4",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "idx_e5",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "idx_e4"
+    ],
+    "supersedes": [
+      "idx_e1",
+      "idx_e3"
+    ],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "idx_e6",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "idx_e2"
+    ],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "idx_e7",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "idx_e8",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "bill_e1",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "bill_e2",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "bill_e3",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "bill_e4",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [
+      "bill_e1"
+    ],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "bill_e5",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "bill_e6",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "bill_e7",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "bill_e6"
+    ],
+    "supersedes": [
+      "bill_e4"
+    ],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "bill_e8",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "eval_e1",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "eval_e2",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "eval_e3",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "eval_e1"
+    ],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "eval_e4",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "eval_e5",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "eval_e4"
+    ],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "eval_e6",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "eval_e7",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "eval_e8",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "cache_e1",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "cache_e2",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "cache_e1"
+    ],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "cache_e3",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "cache_e4",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "cache_e3"
+    ],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "cache_e5",
+    "updates_state": false,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "cache_e6",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "cache_e5"
+    ],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "cache_e7",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "cache_e8",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "ui_e1",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "ui_e2",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "ui_e3",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "ui_e4",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "ui_e2",
+      "ui_e3"
+    ],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "ui_e5",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "ui_e6",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "ui_e7",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "ui_e1"
+    ],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "ui_e8",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "api_e1",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "api_e2",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "api_e3",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "api_e2"
+    ],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "api_e4",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "api_e5",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "api_e4"
+    ],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "api_e6",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "api_e7",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [
+      "api_e6"
+    ],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "api_e8",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Curated v1.1 expansion annotation."
+  },
+  {
+    "event_id": "v13_aaai_memory_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_aaai_memory_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_aaai_memory_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_aaai_memory_06"
+    ],
+    "supersedes": [
+      "v13_aaai_memory_01",
+      "v13_aaai_memory_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_aaai_memory_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_aaai_memory_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_aaai_memory_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_aaai_memory_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_amp_project_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_amp_project_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_amp_project_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_amp_project_06"
+    ],
+    "supersedes": [
+      "v13_amp_project_01",
+      "v13_amp_project_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_amp_project_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_amp_project_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_amp_project_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_amp_project_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sql_lab_q6_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sql_lab_q6_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sql_lab_q6_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_sql_lab_q6_06"
+    ],
+    "supersedes": [
+      "v13_sql_lab_q6_01",
+      "v13_sql_lab_q6_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sql_lab_q6_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sql_lab_q6_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sql_lab_q6_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sql_lab_q6_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_thesis_ch2_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_thesis_ch2_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_thesis_ch2_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_thesis_ch2_06"
+    ],
+    "supersedes": [
+      "v13_thesis_ch2_01",
+      "v13_thesis_ch2_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_thesis_ch2_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_thesis_ch2_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_thesis_ch2_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_release_notes_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_release_notes_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_release_notes_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_release_notes_06"
+    ],
+    "supersedes": [
+      "v13_release_notes_01",
+      "v13_release_notes_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_release_notes_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_release_notes_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_release_notes_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_release_notes_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_release_notes_08",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_release_notes_09",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_release_notes_10",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_release_notes_11",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_release_notes_12",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_support_escalation_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_support_escalation_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_support_escalation_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_support_escalation_06"
+    ],
+    "supersedes": [
+      "v13_support_escalation_01",
+      "v13_support_escalation_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_support_escalation_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_support_escalation_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_support_escalation_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_support_escalation_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_support_escalation_08",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_support_escalation_09",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_support_escalation_10",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_support_escalation_11",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_support_escalation_12",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_grant_app_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_grant_app_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_grant_app_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_grant_app_06"
+    ],
+    "supersedes": [
+      "v13_grant_app_01",
+      "v13_grant_app_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_grant_app_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_grant_app_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_grant_app_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_grant_app_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_grant_app_08",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_grant_app_09",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_grant_app_10",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_grant_app_11",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_grant_app_12",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_labeling_guideline_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_labeling_guideline_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_labeling_guideline_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_labeling_guideline_06"
+    ],
+    "supersedes": [
+      "v13_labeling_guideline_01",
+      "v13_labeling_guideline_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_labeling_guideline_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_labeling_guideline_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_labeling_guideline_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_labeling_guideline_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_labeling_guideline_08",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_labeling_guideline_09",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_labeling_guideline_10",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_labeling_guideline_11",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_labeling_guideline_12",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_cache_refactor_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_cache_refactor_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_cache_refactor_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_cache_refactor_06"
+    ],
+    "supersedes": [
+      "v13_cache_refactor_01",
+      "v13_cache_refactor_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_cache_refactor_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_cache_refactor_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_cache_refactor_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_cache_refactor_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_cache_refactor_08",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_cache_refactor_09",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_cache_refactor_10",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_mobile_auth_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_mobile_auth_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_mobile_auth_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_mobile_auth_06"
+    ],
+    "supersedes": [
+      "v13_mobile_auth_01",
+      "v13_mobile_auth_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_mobile_auth_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_mobile_auth_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_mobile_auth_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_mobile_auth_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_mobile_auth_08",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_mobile_auth_09",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_mobile_auth_10",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_mobile_auth_11",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_robot_nav_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_robot_nav_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_robot_nav_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_robot_nav_06"
+    ],
+    "supersedes": [
+      "v13_robot_nav_01",
+      "v13_robot_nav_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_robot_nav_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_robot_nav_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_robot_nav_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_robot_nav_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_robot_nav_08",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_robot_nav_09",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_robot_nav_10",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_robot_nav_11",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_robot_nav_12",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_recsys_ablation_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_recsys_ablation_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_recsys_ablation_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_recsys_ablation_06"
+    ],
+    "supersedes": [
+      "v13_recsys_ablation_01",
+      "v13_recsys_ablation_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_recsys_ablation_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_recsys_ablation_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_recsys_ablation_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_recsys_ablation_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_recsys_ablation_08",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_recsys_ablation_09",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_recsys_ablation_10",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_recsys_ablation_11",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_recsys_ablation_12",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_deployment_incident_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_deployment_incident_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_deployment_incident_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_deployment_incident_06"
+    ],
+    "supersedes": [
+      "v13_deployment_incident_01",
+      "v13_deployment_incident_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_deployment_incident_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_deployment_incident_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_deployment_incident_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_deployment_incident_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_deployment_incident_08",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_deployment_incident_09",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_deployment_incident_10",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_deployment_incident_11",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_deployment_incident_12",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_ui_accessibility_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_ui_accessibility_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_ui_accessibility_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_ui_accessibility_06"
+    ],
+    "supersedes": [
+      "v13_ui_accessibility_01",
+      "v13_ui_accessibility_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_ui_accessibility_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_ui_accessibility_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_ui_accessibility_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_ui_accessibility_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_ui_accessibility_08",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_ui_accessibility_09",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_ui_accessibility_10",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_privacy_audit_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_privacy_audit_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_privacy_audit_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_privacy_audit_06"
+    ],
+    "supersedes": [
+      "v13_privacy_audit_01",
+      "v13_privacy_audit_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_privacy_audit_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_privacy_audit_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_privacy_audit_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_privacy_audit_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_privacy_audit_08",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_privacy_audit_09",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_privacy_audit_10",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_privacy_audit_11",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_privacy_audit_12",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_privacy_audit_13",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_privacy_audit_14",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_privacy_audit_15",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_privacy_audit_16",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_privacy_audit_17",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_privacy_audit_18",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_data_retention_policy_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_data_retention_policy_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_data_retention_policy_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_data_retention_policy_06"
+    ],
+    "supersedes": [
+      "v13_data_retention_policy_01",
+      "v13_data_retention_policy_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_data_retention_policy_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_data_retention_policy_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_data_retention_policy_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_data_retention_policy_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_data_retention_policy_08",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_data_retention_policy_09",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_data_retention_policy_10",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_data_retention_policy_11",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_data_retention_policy_12",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_data_retention_policy_13",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_data_retention_policy_14",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_data_retention_policy_15",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_data_retention_policy_16",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_data_retention_policy_17",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_data_retention_policy_18",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_onboarding_flow_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_onboarding_flow_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_onboarding_flow_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_onboarding_flow_06"
+    ],
+    "supersedes": [
+      "v13_onboarding_flow_01",
+      "v13_onboarding_flow_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_onboarding_flow_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_onboarding_flow_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_onboarding_flow_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_onboarding_flow_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_onboarding_flow_08",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_onboarding_flow_09",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_onboarding_flow_10",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_onboarding_flow_11",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_onboarding_flow_12",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_onboarding_flow_13",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_onboarding_flow_14",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_onboarding_flow_15",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_onboarding_flow_16",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_onboarding_flow_17",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_onboarding_flow_18",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sensor_firmware_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sensor_firmware_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sensor_firmware_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_sensor_firmware_06"
+    ],
+    "supersedes": [
+      "v13_sensor_firmware_01",
+      "v13_sensor_firmware_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sensor_firmware_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sensor_firmware_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sensor_firmware_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sensor_firmware_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sensor_firmware_08",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sensor_firmware_09",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sensor_firmware_10",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sensor_firmware_11",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sensor_firmware_12",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sensor_firmware_13",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sensor_firmware_14",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sensor_firmware_15",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sensor_firmware_16",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sensor_firmware_17",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_sensor_firmware_18",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_search_index_rollout_06"
+    ],
+    "supersedes": [
+      "v13_search_index_rollout_01",
+      "v13_search_index_rollout_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_08",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_09",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_10",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_11",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_12",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_13",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_14",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_15",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_16",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_17",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_18",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_19",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_20",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_21",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_22",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_23",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_search_index_rollout_24",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_billing_migration_06"
+    ],
+    "supersedes": [
+      "v13_billing_migration_01",
+      "v13_billing_migration_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_08",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_09",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_10",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_11",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_12",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_13",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_14",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_15",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_16",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_17",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_18",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_19",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_20",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_21",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_22",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_23",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_billing_migration_24",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_eval_harness_06"
+    ],
+    "supersedes": [
+      "v13_eval_harness_01",
+      "v13_eval_harness_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_08",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_09",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_10",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_11",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_12",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_13",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_14",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_15",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_16",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_17",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_18",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_19",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_20",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_21",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_22",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_23",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_eval_harness_24",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_api_rate_limit_06"
+    ],
+    "supersedes": [
+      "v13_api_rate_limit_01",
+      "v13_api_rate_limit_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_08",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_09",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_10",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_11",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_12",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_13",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_14",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_15",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_16",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_17",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_18",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_19",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_20",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_21",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_22",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_23",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_api_rate_limit_24",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_model_serving_latency_06"
+    ],
+    "supersedes": [
+      "v13_model_serving_latency_01",
+      "v13_model_serving_latency_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_08",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_09",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_10",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_11",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_12",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_13",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_14",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_15",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_16",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_17",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_18",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_19",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_20",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_21",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_22",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_23",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_24",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_25",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_26",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_27",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_28",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_29",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_30",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_31",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_model_serving_latency_32",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_01",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_02",
+    "updates_state": true,
+    "event_status": "superseded",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_03",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [
+      "v13_warehouse_backfill_06"
+    ],
+    "supersedes": [
+      "v13_warehouse_backfill_01",
+      "v13_warehouse_backfill_02"
+    ],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_04",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_05",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_06",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_07",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_08",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_09",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_10",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_11",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_12",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_13",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_14",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_15",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_16",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_17",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_18",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_19",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_20",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_21",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_22",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_23",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_24",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_25",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_26",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_27",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_28",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_29",
+    "updates_state": false,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_30",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_31",
+    "updates_state": false,
+    "event_status": "historical_only",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  },
+  {
+    "event_id": "v13_warehouse_backfill_32",
+    "updates_state": true,
+    "event_status": "active",
+    "corrects": [],
+    "supersedes": [],
+    "notes": "Generated by v1.3 scope-specific benchmark expansion."
+  }
+]

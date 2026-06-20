@@ -1,0 +1,242 @@
+[
+  {
+    "scope_id": "aaai_memory",
+    "scope_type": "research_writing",
+    "task_family": [
+      "state_tracking",
+      "related_work",
+      "next_step_planning"
+    ],
+    "domain": "academic_project"
+  },
+  {
+    "scope_id": "amp_project",
+    "scope_type": "ml_product",
+    "task_family": [
+      "experiment_tracking",
+      "issue_resolution",
+      "next_step_planning"
+    ],
+    "domain": "machine_learning"
+  },
+  {
+    "scope_id": "api_rate_limit",
+    "scope_type": "api_platform",
+    "task_family": [
+      "policy_status",
+      "token_status",
+      "risk_tracking"
+    ],
+    "domain": "api_platform"
+  },
+  {
+    "scope_id": "billing_migration",
+    "scope_type": "business_infra",
+    "task_family": [
+      "migration_status",
+      "provider_decision",
+      "compliance_review"
+    ],
+    "domain": "billing"
+  },
+  {
+    "scope_id": "cache_refactor",
+    "scope_type": "infra_refactor",
+    "task_family": [
+      "bug_status",
+      "cleanup_status",
+      "rollout_readiness"
+    ],
+    "domain": "infrastructure"
+  },
+  {
+    "scope_id": "data_retention_policy",
+    "scope_type": "governance_policy",
+    "task_family": [
+      "policy_status",
+      "exception_tracking",
+      "approval_status"
+    ],
+    "domain": "governance"
+  },
+  {
+    "scope_id": "deployment_incident",
+    "scope_type": "incident_response",
+    "task_family": [
+      "incident_status",
+      "root_cause",
+      "mitigation_tracking"
+    ],
+    "domain": "operations"
+  },
+  {
+    "scope_id": "eval_harness",
+    "scope_type": "benchmark_eval",
+    "task_family": [
+      "metric_semantics",
+      "judge_coverage",
+      "diagnostic_planning"
+    ],
+    "domain": "evaluation"
+  },
+  {
+    "scope_id": "grant_app",
+    "scope_type": "admin_funding",
+    "task_family": [
+      "submission_status",
+      "budget_tracking",
+      "team_tracking"
+    ],
+    "domain": "administration"
+  },
+  {
+    "scope_id": "labeling_guideline",
+    "scope_type": "data_ops",
+    "task_family": [
+      "guideline_status",
+      "quality_control",
+      "completion_unknown"
+    ],
+    "domain": "data_annotation"
+  },
+  {
+    "scope_id": "mobile_auth",
+    "scope_type": "security_product",
+    "task_family": [
+      "decision_tracking",
+      "issue_resolution",
+      "audit_status"
+    ],
+    "domain": "product_security"
+  },
+  {
+    "scope_id": "model_serving_latency",
+    "scope_type": "ml_infra",
+    "task_family": [
+      "latency_risk",
+      "rollout_status",
+      "mitigation_tracking"
+    ],
+    "domain": "machine_learning_infra"
+  },
+  {
+    "scope_id": "onboarding_flow",
+    "scope_type": "product_growth",
+    "task_family": [
+      "funnel_issue",
+      "experiment_tracking",
+      "next_step_planning"
+    ],
+    "domain": "product"
+  },
+  {
+    "scope_id": "privacy_audit",
+    "scope_type": "privacy_compliance",
+    "task_family": [
+      "audit_status",
+      "policy_exception",
+      "remediation_planning"
+    ],
+    "domain": "privacy"
+  },
+  {
+    "scope_id": "recsys_ablation",
+    "scope_type": "ml_product",
+    "task_family": [
+      "experiment_tracking",
+      "metric_interpretation",
+      "plan_completion"
+    ],
+    "domain": "recommendation_system"
+  },
+  {
+    "scope_id": "release_notes",
+    "scope_type": "docs_release",
+    "task_family": [
+      "release_status",
+      "doc_accuracy",
+      "publication_planning"
+    ],
+    "domain": "documentation"
+  },
+  {
+    "scope_id": "robot_nav",
+    "scope_type": "robotics_system",
+    "task_family": [
+      "calibration_status",
+      "plan_completion",
+      "risk_tracking"
+    ],
+    "domain": "robotics"
+  },
+  {
+    "scope_id": "search_index_rollout",
+    "scope_type": "search_infra",
+    "task_family": [
+      "rollout_status",
+      "latency_risk",
+      "plan_completion"
+    ],
+    "domain": "search_platform"
+  },
+  {
+    "scope_id": "sensor_firmware",
+    "scope_type": "embedded_system",
+    "task_family": [
+      "firmware_status",
+      "calibration_status",
+      "risk_tracking"
+    ],
+    "domain": "embedded"
+  },
+  {
+    "scope_id": "sql_lab_q6",
+    "scope_type": "coursework_debugging",
+    "task_family": [
+      "debug_status",
+      "fix_validation",
+      "state_tracking"
+    ],
+    "domain": "education"
+  },
+  {
+    "scope_id": "support_escalation",
+    "scope_type": "customer_support",
+    "task_family": [
+      "escalation_status",
+      "root_cause",
+      "response_planning"
+    ],
+    "domain": "support"
+  },
+  {
+    "scope_id": "thesis_ch2",
+    "scope_type": "research_writing",
+    "task_family": [
+      "draft_status",
+      "deadline_tracking",
+      "revision_planning"
+    ],
+    "domain": "academic_project"
+  },
+  {
+    "scope_id": "ui_accessibility",
+    "scope_type": "frontend_accessibility",
+    "task_family": [
+      "audit_status",
+      "issue_resolution",
+      "acceptance_unknown"
+    ],
+    "domain": "frontend"
+  },
+  {
+    "scope_id": "warehouse_backfill",
+    "scope_type": "data_pipeline",
+    "task_family": [
+      "backfill_status",
+      "data_quality",
+      "completion_unknown"
+    ],
+    "domain": "data_platform"
+  }
+]

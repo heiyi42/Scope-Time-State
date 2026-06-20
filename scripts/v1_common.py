@@ -14,6 +14,8 @@ LEGACY_DATA_DIR = BENCHMARK_DIR / "data"
 DEFAULT_V0_DIR = BENCHMARK_DIR / "data" / "v0"
 DEFAULT_V1_DIR = BENCHMARK_DIR / "data" / "v1"
 DEFAULT_V1_1_DIR = BENCHMARK_DIR / "data" / "v1_1"
+DEFAULT_V1_2_DIR = BENCHMARK_DIR / "data" / "v1_2"
+DEFAULT_V1_3_DIR = BENCHMARK_DIR / "data" / "v1_3"
 DEFAULT_OUTPUT_DIR = BENCHMARK_DIR / "output"
 
 RAW_EVENT_FIELDS = (
@@ -46,12 +48,15 @@ PUBLIC_CASE_FORBIDDEN_FIELDS = {
     "scope_id",
     "time_roles",
     "difficulty_tags",
+    "difficulty_level",
     "gold_events",
     "gold_state_slots",
     "gold_slot_support",
     "hard_negative_events",
+    "hard_negative_types",
     "answerability",
     "output_slots",
+    "operation_subtype",
     "gold_fields_usage",
 }
 

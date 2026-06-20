@@ -15,6 +15,7 @@ from Experiment.run.common.io import (
 )
 from Experiment.run.common.paths import BENCHMARK_DIR
 from Experiment.run.common.llm_client import LLMClient, LLMRequestError, provider_config
+from Experiment.run.common.subsets import load_subset_ids, select_cases_by_id
 from pipeline.oracle import run_variant
 from Experiment.registry import canonical_variant_name, main_baseline_names
 
@@ -74,7 +75,7 @@ def print_summary(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run an LLM-backed STAMB-State benchmark.")
     parser.add_argument("--provider", choices=("openai", "deepseek"), default="openai")
-    parser.add_argument("--data-version", choices=("v0", "v1", "v1_1"), default="v1")
+    parser.add_argument("--data-version", choices=("v0", "v1", "v1_1", "v1_2", "v1_3"), default="v1")
     parser.add_argument(
         "--track",
         choices=("oracle_facet", "end_to_end"),
@@ -87,6 +88,8 @@ def parse_args() -> argparse.Namespace:
         default=list(main_baseline_names()),
     )
     parser.add_argument("--limit-cases", type=int, default=0)
+    parser.add_argument("--case-subset", default="", help="Named case-id subset from data/<version>/subsets.json.")
+    parser.add_argument("--case-subset-file", default=None, help="JSON list, or JSON object used with --case-subset.")
     parser.add_argument("--no-cache", action="store_true")
     parser.add_argument("--judge", action="store_true", help="Use an LLM judge for semantic slot-value grading.")
     parser.add_argument("--judge-provider", choices=("openai", "deepseek"), default="openai")
@@ -121,7 +124,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def resolve_data_paths(args: argparse.Namespace) -> Dict[str, Path]:
-    if args.data_version in {"v1", "v1_1"}:
+    if args.data_version in {"v1", "v1_1", "v1_2", "v1_3"}:
         data_dir = BENCHMARK_DIR / "data" / args.data_version
         events = Path(args.events) if args.events else data_dir / "events_raw.json"
         cases = Path(args.cases) if args.cases else data_dir / "cases.json"
@@ -170,11 +173,21 @@ def main() -> int:
     events = load_events(paths["events"])
     oracle_events = (
         load_events_with_annotations(paths["events"], paths["event_annotations"])
-        if args.data_version in {"v1", "v1_1"}
+        if args.data_version in {"v1", "v1_1", "v1_2", "v1_3"}
         else events
     )
     cases = load_cases(paths["cases"])
     validate_benchmark(events, cases)
+    if args.data_version in {"v1", "v1_1", "v1_2", "v1_3"}:
+        subset_ids = load_subset_ids(
+            data_dir=BENCHMARK_DIR / "data" / args.data_version,
+            subset_name=args.case_subset,
+            subset_path=Path(args.case_subset_file) if args.case_subset_file else None,
+        )
+        if subset_ids:
+            cases = select_cases_by_id(cases, subset_ids)
+    else:
+        subset_ids = []
     if args.limit_cases:
         cases = cases[: args.limit_cases]
     if args.dry_run:
@@ -185,6 +198,8 @@ def main() -> int:
         )
         print(f"events_path={paths['events']}")
         print(f"cases_path={paths['cases']}")
+        if subset_ids:
+            print(f"case_subset={args.case_subset or args.case_subset_file} selected_cases={len(subset_ids)}")
         return 0
 
     try:

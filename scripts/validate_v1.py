@@ -18,6 +18,19 @@ from v1_common import (
     write_json,
 )
 
+DIFFICULTY_LEVEL_VALUES = {"easy", "medium", "hard"}
+HARD_NEGATIVE_TYPE_VALUES = {
+    "stale_mention",
+    "non_update_latest",
+    "corrected_old_state",
+    "cross_scope_collision",
+    "plan_not_done",
+    "partial_evidence",
+    "procedural_noise",
+    "insufficient_evidence_distractor",
+    "other_in_scope_distractor",
+}
+
 
 def duplicate_values(values: Sequence[str]) -> List[str]:
     return sorted([value for value, count in Counter(values).items() if count > 1])
@@ -88,6 +101,7 @@ def validate_cases(
         errors.append(f"duplicate case_id={duplicate}")
 
     scopes = {str(event.get("scope_id")) for event in events_by_id.values()}
+    require_hard_negative_types = any("hard_negative_types" in case for case in cases)
     for case in cases:
         case_id = str(case.get("case_id", "<missing>"))
         scope_id = str(case.get("scope_id", ""))
@@ -102,8 +116,14 @@ def validate_cases(
                     errors.append(f"{case_id}: invalid time_role={role}")
         if not isinstance(case.get("difficulty_tags"), list) or not case.get("difficulty_tags"):
             errors.append(f"{case_id}: difficulty_tags must be a non-empty list")
+        if "difficulty_level" in case and case.get("difficulty_level") not in DIFFICULTY_LEVEL_VALUES:
+            errors.append(f"{case_id}: invalid difficulty_level={case.get('difficulty_level')}")
         if case.get("answerability") not in ANSWERABILITY_VALUES:
             errors.append(f"{case_id}: invalid answerability={case.get('answerability')}")
+        if "operation_subtype" in case and (
+            not isinstance(case.get("operation_subtype"), str) or not case.get("operation_subtype")
+        ):
+            errors.append(f"{case_id}: operation_subtype must be a non-empty string")
 
         gold_events = normalize_id_list(case.get("gold_events"))
         hard_negatives = normalize_id_list(case.get("hard_negative_events"))
@@ -112,6 +132,24 @@ def validate_cases(
         overlap = sorted(set(gold_events) & set(hard_negatives))
         if overlap:
             errors.append(f"{case_id}: hard_negative_events overlap gold_events: {overlap}")
+        hard_negative_types = case.get("hard_negative_types", {})
+        if require_hard_negative_types:
+            if not isinstance(hard_negative_types, dict):
+                errors.append(f"{case_id}: hard_negative_types must be an object")
+            else:
+                missing_type_keys = sorted(set(hard_negatives) - {str(key) for key in hard_negative_types})
+                extra_type_keys = sorted({str(key) for key in hard_negative_types} - set(hard_negatives))
+                if missing_type_keys:
+                    errors.append(f"{case_id}: hard_negative_types missing ids: {missing_type_keys}")
+                if extra_type_keys:
+                    errors.append(f"{case_id}: hard_negative_types has non-hard-negative ids: {extra_type_keys}")
+                for event_id, labels in hard_negative_types.items():
+                    if not isinstance(labels, list) or not labels:
+                        errors.append(f"{case_id}: hard_negative_types[{event_id}] must be a non-empty list")
+                        continue
+                    invalid_labels = sorted(str(label) for label in labels if str(label) not in HARD_NEGATIVE_TYPE_VALUES)
+                    if invalid_labels:
+                        errors.append(f"{case_id}: hard_negative_types[{event_id}] has invalid labels: {invalid_labels}")
 
         gold_slot_support = case.get("gold_slot_support", {})
         if not isinstance(gold_slot_support, dict):
@@ -183,6 +221,49 @@ def validate_splits(
             errors.append(f"{split}: lacks state_summary/state_lookup cases")
 
 
+def validate_scope_taxonomy(
+    taxonomy: Sequence[Mapping[str, Any]],
+    event_scopes: Set[str],
+    errors: List[str],
+) -> None:
+    scope_ids = [str(row.get("scope_id")) for row in taxonomy]
+    for duplicate in duplicate_values(scope_ids):
+        errors.append(f"duplicate scope_taxonomy for scope_id={duplicate}")
+    taxonomy_scopes = set(scope_ids)
+    missing = sorted(event_scopes - taxonomy_scopes)
+    extra = sorted(taxonomy_scopes - event_scopes)
+    if missing:
+        errors.append(f"scope_taxonomy missing scopes: {missing}")
+    if extra:
+        errors.append(f"scope_taxonomy has unknown scopes: {extra}")
+    for row in taxonomy:
+        scope_id = str(row.get("scope_id", "<missing>"))
+        if not isinstance(row.get("scope_type"), str) or not row.get("scope_type"):
+            errors.append(f"{scope_id}: scope_type must be a non-empty string")
+        if not isinstance(row.get("domain"), str) or not row.get("domain"):
+            errors.append(f"{scope_id}: domain must be a non-empty string")
+        task_family = row.get("task_family")
+        if not isinstance(task_family, list) or not task_family or not all(isinstance(item, str) and item for item in task_family):
+            errors.append(f"{scope_id}: task_family must be a non-empty list of strings")
+
+
+def validate_subsets(
+    subsets: Mapping[str, Sequence[str]],
+    case_ids: Set[str],
+    errors: List[str],
+) -> None:
+    for subset_name, subset_case_ids in subsets.items():
+        if not isinstance(subset_case_ids, list) or not subset_case_ids:
+            errors.append(f"subsets[{subset_name}] must be a non-empty list")
+            continue
+        duplicates = duplicate_values([str(case_id) for case_id in subset_case_ids])
+        if duplicates:
+            errors.append(f"subsets[{subset_name}] has duplicate case ids: {duplicates}")
+        missing = sorted(str(case_id) for case_id in subset_case_ids if str(case_id) not in case_ids)
+        if missing:
+            errors.append(f"subsets[{subset_name}] references missing case ids: {missing}")
+
+
 def validate(v1_dir: Path) -> Dict[str, Any]:
     events = read_json(v1_dir / "events_raw.json")
     event_annotations = read_json(v1_dir / "event_annotations.json")
@@ -200,7 +281,14 @@ def validate(v1_dir: Path) -> Dict[str, Any]:
     validate_event_annotations(event_annotations, events_by_id, errors)
     validate_claim_annotations(claim_annotations, events_by_id, errors)
     validate_cases(cases, events_by_id, errors)
-    validate_splits(splits, cases, {str(event.get("scope_id")) for event in events}, errors)
+    event_scopes = {str(event.get("scope_id")) for event in events}
+    validate_splits(splits, cases, event_scopes, errors)
+    taxonomy_path = v1_dir / "scope_taxonomy.json"
+    if taxonomy_path.exists():
+        validate_scope_taxonomy(read_json(taxonomy_path), event_scopes, errors)
+    subsets_path = v1_dir / "subsets.json"
+    if subsets_path.exists():
+        validate_subsets(read_json(subsets_path), {str(case.get("case_id")) for case in cases}, errors)
 
     return {
         "v1_dir": str(v1_dir),

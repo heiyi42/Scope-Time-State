@@ -1,0 +1,16 @@
+{
+  "max_normalized_event_repeat": 1,
+  "max_normalized_query_repeat": 1,
+  "max_normalized_slot_value_repeat": 2,
+  "event_repeats_over_8": {},
+  "query_repeats_over_8": {},
+  "slot_value_repeats_over_8": {},
+  "generic_marker_counts": {
+    "旁路日志采样": 0,
+    "轻量复查": 0,
+    "旧完成状态": 0,
+    "主线阻塞": 0,
+    "approval": 0,
+    "acceptance": 0
+  }
+}

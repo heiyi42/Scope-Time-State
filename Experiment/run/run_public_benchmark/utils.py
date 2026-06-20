@@ -50,6 +50,8 @@ def normalize_public_output(raw: Dict[str, object]) -> Tuple[List[str], List[Dic
                     "index": index,
                     "name": str(item.get("name", f"facet_{index + 1}")),
                     "value": str(item.get("value", "")),
+                    "status": str(item.get("status", "active")),
+                    "support_claims": normalize_id_list(item.get("support_claims")),
                     "support_events": support_events,
                 }
             )

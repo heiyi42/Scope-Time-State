@@ -1,0 +1,119 @@
+{
+  "events": 288,
+  "cases": 124,
+  "scopes": 16,
+  "scope_event_counts": {
+    "aaai_memory": 12,
+    "amp_project": 12,
+    "api_rate_limit": 24,
+    "billing_migration": 24,
+    "cache_refactor": 18,
+    "deployment_incident": 18,
+    "eval_harness": 24,
+    "grant_app": 18,
+    "labeling_guideline": 18,
+    "mobile_auth": 18,
+    "recsys_ablation": 18,
+    "robot_nav": 18,
+    "search_index_rollout": 24,
+    "sql_lab_q6": 12,
+    "thesis_ch2": 12,
+    "ui_accessibility": 18
+  },
+  "scope_event_bins": {
+    "short_<=12": 4,
+    "medium_13_18": 8,
+    "long_19+": 4
+  },
+  "case_scope_event_bins": {
+    "short_<=12": 26,
+    "medium_13_18": 64,
+    "long_19+": 34
+  },
+  "difficulty_level": {
+    "easy": 30,
+    "hard": 34,
+    "medium": 60
+  },
+  "answerability": {
+    "answerable": 104,
+    "insufficient_evidence": 10,
+    "unknown_current": 10
+  },
+  "operation": {
+    "next_action": 24,
+    "state_lookup": 73,
+    "state_summary": 27
+  },
+  "gold_event_count": {
+    "0": 6,
+    "1": 73,
+    "2": 26,
+    "3": 13,
+    "4": 4,
+    "5": 1,
+    "6": 1
+  },
+  "hard_negative_count": {
+    "0": 52,
+    "1": 2,
+    "3": 36,
+    "5": 34
+  },
+  "hard_negative_total": 280,
+  "gold_event_total": 191,
+  "split_cases": {
+    "dev": 25,
+    "test": 33,
+    "train": 66
+  },
+  "scope_type": {
+    "admin_funding": 1,
+    "api_platform": 1,
+    "benchmark_eval": 1,
+    "business_infra": 1,
+    "coursework_debugging": 1,
+    "data_ops": 1,
+    "frontend_accessibility": 1,
+    "incident_response": 1,
+    "infra_refactor": 1,
+    "ml_product": 2,
+    "research_writing": 2,
+    "robotics_system": 1,
+    "search_infra": 1,
+    "security_product": 1
+  },
+  "case_scope_type": {
+    "admin_funding": 8,
+    "api_platform": 9,
+    "benchmark_eval": 9,
+    "business_infra": 8,
+    "coursework_debugging": 6,
+    "data_ops": 9,
+    "frontend_accessibility": 8,
+    "incident_response": 9,
+    "infra_refactor": 8,
+    "ml_product": 14,
+    "research_writing": 13,
+    "robotics_system": 7,
+    "search_infra": 8,
+    "security_product": 8
+  },
+  "difficulty_by_split": {
+    "dev": {
+      "easy": 6,
+      "hard": 7,
+      "medium": 12
+    },
+    "test": {
+      "easy": 7,
+      "hard": 7,
+      "medium": 19
+    },
+    "train": {
+      "easy": 17,
+      "hard": 20,
+      "medium": 29
+    }
+  }
+}

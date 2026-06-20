@@ -1,0 +1,2 @@
+"""Premise Resistance adapter."""
+

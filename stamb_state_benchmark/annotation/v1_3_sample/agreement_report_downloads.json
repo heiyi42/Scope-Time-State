@@ -1,0 +1,106 @@
+{
+  "against_gold": {
+    "label": "annotations_vs_gold",
+    "gold_cases": 60,
+    "predicted_cases": 60,
+    "shared_cases": 60,
+    "missing_predictions": [],
+    "extra_predictions": [],
+    "answerability_accuracy": 0.9666666666666667,
+    "answerability_confusion": {
+      "answerable->answerable": 48,
+      "insufficient_evidence->insufficient_evidence": 5,
+      "insufficient_evidence->unknown_current": 2,
+      "unknown_current->unknown_current": 5
+    },
+    "support_event": {
+      "precision": 0.6972222222222223,
+      "recall": 0.6349999999999999,
+      "f1": 0.6413888888888889
+    },
+    "hard_negative_event": {
+      "precision": 0.3666666666666668,
+      "recall": 0.3355555555555555,
+      "f1": 0.3257539682539683
+    },
+    "hard_negative_type": {
+      "precision": 0.30277777777777776,
+      "recall": 0.2507142857142858,
+      "f1": 0.24927248677248676
+    },
+    "slot_value_exact": {
+      "precision": 0.058333333333333334,
+      "recall": 0.058333333333333334,
+      "f1": 0.058333333333333334
+    }
+  },
+  "second_against_gold": {
+    "label": "second_annotations_vs_gold",
+    "gold_cases": 60,
+    "predicted_cases": 60,
+    "shared_cases": 60,
+    "missing_predictions": [],
+    "extra_predictions": [],
+    "answerability_accuracy": 0.9666666666666667,
+    "answerability_confusion": {
+      "answerable->answerable": 48,
+      "insufficient_evidence->insufficient_evidence": 5,
+      "insufficient_evidence->unknown_current": 2,
+      "unknown_current->unknown_current": 5
+    },
+    "support_event": {
+      "precision": 0.6972222222222223,
+      "recall": 0.6349999999999999,
+      "f1": 0.6413888888888889
+    },
+    "hard_negative_event": {
+      "precision": 0.3666666666666668,
+      "recall": 0.3355555555555555,
+      "f1": 0.3257539682539683
+    },
+    "hard_negative_type": {
+      "precision": 0.30277777777777776,
+      "recall": 0.2507142857142858,
+      "f1": 0.24927248677248676
+    },
+    "slot_value_exact": {
+      "precision": 0.058333333333333334,
+      "recall": 0.058333333333333334,
+      "f1": 0.058333333333333334
+    }
+  },
+  "annotator_agreement": {
+    "label": "annotations_vs_second_annotations",
+    "gold_cases": 60,
+    "predicted_cases": 60,
+    "shared_cases": 60,
+    "missing_predictions": [],
+    "extra_predictions": [],
+    "answerability_accuracy": 1.0,
+    "answerability_confusion": {
+      "answerable->answerable": 48,
+      "insufficient_evidence->insufficient_evidence": 5,
+      "unknown_current->unknown_current": 7
+    },
+    "support_event": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "hard_negative_event": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "hard_negative_type": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "slot_value_exact": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    }
+  }
+}

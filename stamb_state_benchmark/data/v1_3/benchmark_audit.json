@@ -1,0 +1,303 @@
+{
+  "events": 480,
+  "cases": 240,
+  "scopes": 24,
+  "scope_event_counts": {
+    "aaai_memory": 12,
+    "amp_project": 12,
+    "api_rate_limit": 32,
+    "billing_migration": 32,
+    "cache_refactor": 18,
+    "data_retention_policy": 18,
+    "deployment_incident": 18,
+    "eval_harness": 32,
+    "grant_app": 18,
+    "labeling_guideline": 18,
+    "mobile_auth": 18,
+    "model_serving_latency": 32,
+    "onboarding_flow": 18,
+    "privacy_audit": 18,
+    "recsys_ablation": 18,
+    "release_notes": 12,
+    "robot_nav": 18,
+    "search_index_rollout": 32,
+    "sensor_firmware": 18,
+    "sql_lab_q6": 12,
+    "support_escalation": 12,
+    "thesis_ch2": 12,
+    "ui_accessibility": 18,
+    "warehouse_backfill": 32
+  },
+  "scope_event_bins": {
+    "short_<=12": 6,
+    "medium_13_18": 12,
+    "long_19+": 6
+  },
+  "case_scope_event_bins": {
+    "short_<=12": 57,
+    "medium_13_18": 121,
+    "long_19+": 62
+  },
+  "difficulty_level": {
+    "easy": 54,
+    "hard": 72,
+    "medium": 114
+  },
+  "answerability": {
+    "answerable": 180,
+    "insufficient_evidence": 30,
+    "unknown_current": 30
+  },
+  "operation": {
+    "next_action": 48,
+    "state_lookup": 145,
+    "state_summary": 47
+  },
+  "operation_subtype": {
+    "completion_unknown": 30,
+    "correction_aware_lookup": 39,
+    "finish_condition_verification": 8,
+    "insufficient_evidence": 30,
+    "latest_valid_state_lookup": 12,
+    "multi_facet_summary": 47,
+    "partial_evidence_lookup": 16,
+    "plan_continuation": 40,
+    "stale_state_invalidation": 18
+  },
+  "gold_event_count": {
+    "0": 26,
+    "1": 105,
+    "2": 74,
+    "3": 29,
+    "4": 4,
+    "5": 1,
+    "6": 1
+  },
+  "hard_negative_count": {
+    "0": 24,
+    "1": 30,
+    "3": 114,
+    "5": 72
+  },
+  "hard_negative_type": {
+    "corrected_old_state": 44,
+    "cross_scope_collision": 126,
+    "insufficient_evidence_distractor": 26,
+    "non_update_latest": 81,
+    "other_in_scope_distractor": 40,
+    "partial_evidence": 23,
+    "plan_not_done": 80,
+    "procedural_noise": 80,
+    "stale_mention": 359
+  },
+  "hard_negative_total": 732,
+  "gold_event_total": 367,
+  "split_cases": {
+    "dev": 50,
+    "test": 52,
+    "train": 138
+  },
+  "scope_type": {
+    "admin_funding": 1,
+    "api_platform": 1,
+    "benchmark_eval": 1,
+    "business_infra": 1,
+    "coursework_debugging": 1,
+    "customer_support": 1,
+    "data_ops": 1,
+    "data_pipeline": 1,
+    "docs_release": 1,
+    "embedded_system": 1,
+    "frontend_accessibility": 1,
+    "governance_policy": 1,
+    "incident_response": 1,
+    "infra_refactor": 1,
+    "ml_infra": 1,
+    "ml_product": 2,
+    "privacy_compliance": 1,
+    "product_growth": 1,
+    "research_writing": 2,
+    "robotics_system": 1,
+    "search_infra": 1,
+    "security_product": 1
+  },
+  "case_scope_type": {
+    "admin_funding": 10,
+    "api_platform": 11,
+    "benchmark_eval": 11,
+    "business_infra": 11,
+    "coursework_debugging": 9,
+    "customer_support": 9,
+    "data_ops": 11,
+    "data_pipeline": 9,
+    "docs_release": 9,
+    "embedded_system": 9,
+    "frontend_accessibility": 11,
+    "governance_policy": 9,
+    "incident_response": 11,
+    "infra_refactor": 11,
+    "ml_infra": 9,
+    "ml_product": 21,
+    "privacy_compliance": 9,
+    "product_growth": 9,
+    "research_writing": 19,
+    "robotics_system": 11,
+    "search_infra": 11,
+    "security_product": 10
+  },
+  "answerability_by_scope": {
+    "aaai_memory": {
+      "answerable": 7,
+      "insufficient_evidence": 1,
+      "unknown_current": 1
+    },
+    "amp_project": {
+      "answerable": 9,
+      "insufficient_evidence": 1,
+      "unknown_current": 1
+    },
+    "api_rate_limit": {
+      "answerable": 9,
+      "insufficient_evidence": 1,
+      "unknown_current": 1
+    },
+    "billing_migration": {
+      "answerable": 8,
+      "insufficient_evidence": 1,
+      "unknown_current": 2
+    },
+    "cache_refactor": {
+      "answerable": 7,
+      "insufficient_evidence": 2,
+      "unknown_current": 2
+    },
+    "data_retention_policy": {
+      "answerable": 7,
+      "insufficient_evidence": 1,
+      "unknown_current": 1
+    },
+    "deployment_incident": {
+      "answerable": 9,
+      "insufficient_evidence": 1,
+      "unknown_current": 1
+    },
+    "eval_harness": {
+      "answerable": 8,
+      "insufficient_evidence": 1,
+      "unknown_current": 2
+    },
+    "grant_app": {
+      "answerable": 7,
+      "insufficient_evidence": 1,
+      "unknown_current": 2
+    },
+    "labeling_guideline": {
+      "answerable": 8,
+      "insufficient_evidence": 2,
+      "unknown_current": 1
+    },
+    "mobile_auth": {
+      "answerable": 7,
+      "insufficient_evidence": 2,
+      "unknown_current": 1
+    },
+    "model_serving_latency": {
+      "answerable": 7,
+      "insufficient_evidence": 1,
+      "unknown_current": 1
+    },
+    "onboarding_flow": {
+      "answerable": 7,
+      "insufficient_evidence": 1,
+      "unknown_current": 1
+    },
+    "privacy_audit": {
+      "answerable": 7,
+      "insufficient_evidence": 1,
+      "unknown_current": 1
+    },
+    "recsys_ablation": {
+      "answerable": 7,
+      "insufficient_evidence": 2,
+      "unknown_current": 1
+    },
+    "release_notes": {
+      "answerable": 7,
+      "insufficient_evidence": 1,
+      "unknown_current": 1
+    },
+    "robot_nav": {
+      "answerable": 8,
+      "insufficient_evidence": 2,
+      "unknown_current": 1
+    },
+    "search_index_rollout": {
+      "answerable": 8,
+      "insufficient_evidence": 1,
+      "unknown_current": 2
+    },
+    "sensor_firmware": {
+      "answerable": 7,
+      "insufficient_evidence": 1,
+      "unknown_current": 1
+    },
+    "sql_lab_q6": {
+      "answerable": 7,
+      "insufficient_evidence": 1,
+      "unknown_current": 1
+    },
+    "support_escalation": {
+      "answerable": 7,
+      "insufficient_evidence": 1,
+      "unknown_current": 1
+    },
+    "thesis_ch2": {
+      "answerable": 8,
+      "insufficient_evidence": 1,
+      "unknown_current": 1
+    },
+    "ui_accessibility": {
+      "answerable": 7,
+      "insufficient_evidence": 2,
+      "unknown_current": 2
+    },
+    "warehouse_backfill": {
+      "answerable": 7,
+      "insufficient_evidence": 1,
+      "unknown_current": 1
+    }
+  },
+  "difficulty_by_split": {
+    "dev": {
+      "easy": 10,
+      "hard": 18,
+      "medium": 22
+    },
+    "test": {
+      "easy": 11,
+      "hard": 13,
+      "medium": 28
+    },
+    "train": {
+      "easy": 33,
+      "hard": 41,
+      "medium": 64
+    }
+  },
+  "quality": {
+    "max_normalized_event_repeat": 1,
+    "max_normalized_query_repeat": 1,
+    "max_normalized_slot_value_repeat": 2,
+    "event_repeats_over_8": {},
+    "query_repeats_over_8": {},
+    "slot_value_repeats_over_8": {},
+    "generic_marker_counts": {
+      "旁路日志采样": 0,
+      "轻量复查": 0,
+      "旧完成状态": 0,
+      "主线阻塞": 0,
+      "approval": 0,
+      "acceptance": 0
+    }
+  }
+}

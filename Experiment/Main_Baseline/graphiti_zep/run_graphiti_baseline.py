@@ -16,9 +16,6 @@ from typing import Dict, Iterable, List, Optional, Sequence, Set
 GRAPHITI_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = GRAPHITI_DIR.parents[2]
 BENCHMARK_DIR = PROJECT_DIR / "stamb_state_benchmark"
-V1_DATA_DIR = BENCHMARK_DIR / "data" / "v1"
-DEFAULT_EVENTS_PATH = V1_DATA_DIR / "events_raw.json"
-DEFAULT_CASES_PATH = V1_DATA_DIR / "cases.json"
 sys.path.insert(0, str(PROJECT_DIR))
 
 try:
@@ -50,6 +47,7 @@ from Experiment.run.run_public_benchmark import (  # noqa: E402
     summarize_rows as summarize_public_rows,
     validate_public_cases,
 )
+from Experiment.run.common.subsets import load_subset_ids, select_cases_by_id  # noqa: E402
 
 
 PUBLIC_GRAPHITI_VARIANTS = ("graphiti_global_public", "graphiti_scope_routed_public")
@@ -1154,24 +1152,11 @@ def build_graphiti_clients(
     from graphiti_core.llm_client.openai_generic_client import OpenAIGenericClient
 
     class LenientOpenAIGenericClient(OpenAIGenericClient):
-        async def _generate_response(
+        async def _generate_without_response_format(
             self,
             messages: list[object],
             response_model: object = None,
-            max_tokens: int = 8192,
-            model_size: object = None,
         ) -> Dict[str, object]:
-            try:
-                return await super()._generate_response(
-                    messages,
-                    response_model=response_model,
-                    max_tokens=max_tokens,
-                    model_size=model_size,
-                )
-            except Exception as exc:
-                if "response_format" not in str(exc):
-                    raise
-
             openai_messages = []
             for message in messages:
                 content = self._clean_input(getattr(message, "content"))
@@ -1190,6 +1175,27 @@ def build_graphiti_clients(
                 max_tokens=self.max_tokens,
             )
             return parse_json_object(response.choices[0].message.content or "")
+
+        async def _generate_response(
+            self,
+            messages: list[object],
+            response_model: object = None,
+            max_tokens: int = 8192,
+            model_size: object = None,
+        ) -> Dict[str, object]:
+            if graphiti_provider == "deepseek":
+                return await self._generate_without_response_format(messages, response_model=response_model)
+            try:
+                return await super()._generate_response(
+                    messages,
+                    response_model=response_model,
+                    max_tokens=max_tokens,
+                    model_size=model_size,
+                )
+            except Exception as exc:
+                if "response_format" not in str(exc):
+                    raise
+            return await self._generate_without_response_format(messages, response_model=response_model)
 
     if graphiti_provider == "deepseek":
         api_key, model, base_url = provider_config("deepseek")
@@ -1294,6 +1300,13 @@ async def run(args: argparse.Namespace) -> int:
         hidden_cases = load_cases(gold_cases_path)
         validate_benchmark(events, hidden_cases)
         validate_public_cases(public_cases, hidden_cases)
+        subset_ids = load_subset_ids(
+            data_dir=data_dir,
+            subset_name=args.case_subset,
+            subset_path=Path(args.case_subset_file) if args.case_subset_file else None,
+        )
+        if subset_ids:
+            public_cases = select_cases_by_id(public_cases, subset_ids)
         if args.limit_cases:
             public_cases = public_cases[: args.limit_cases]
         hidden_cases_by_id = {case.case_id: case for case in hidden_cases}
@@ -1306,6 +1319,13 @@ async def run(args: argparse.Namespace) -> int:
         cases_path = Path(args.cases) if args.cases else data_dir / "cases.json"
         cases = load_cases(cases_path)
         validate_benchmark(events, cases)
+        subset_ids = load_subset_ids(
+            data_dir=data_dir,
+            subset_name=args.case_subset,
+            subset_path=Path(args.case_subset_file) if args.case_subset_file else None,
+        )
+        if subset_ids:
+            cases = select_cases_by_id(cases, subset_ids)
         if args.limit_cases:
             cases = cases[: args.limit_cases]
         selected_hidden_cases = list(cases)
@@ -1329,6 +1349,8 @@ async def run(args: argparse.Namespace) -> int:
         )
         print(f"events_path={events_path}")
         print(f"cases_path={cases_path}")
+        if subset_ids:
+            print(f"case_subset={args.case_subset or args.case_subset_file} selected_cases={len(subset_ids)}")
         if public_mode:
             print(f"gold_cases_path={gold_cases_path}")
             print(f"scope_profiles_path={scope_profiles_path} profiles={len(scope_profiles)}")
@@ -1695,6 +1717,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--judge", action="store_true")
     parser.add_argument("--judge-provider", choices=("openai", "deepseek"), default="openai")
     parser.add_argument("--limit-cases", type=int, default=0)
+    parser.add_argument("--case-subset", default="", help="Named case-id subset from data/<version>/subsets.json.")
+    parser.add_argument("--case-subset-file", default=None, help="JSON list, or JSON object used with --case-subset.")
     parser.add_argument("--limit-events", type=int, default=0)
     parser.add_argument("--search-limit", type=int, default=8)
     parser.add_argument("--search-pool-limit", type=int, default=80)

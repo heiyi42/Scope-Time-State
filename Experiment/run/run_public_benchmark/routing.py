@@ -33,9 +33,12 @@ def profile_text_from_dict(profile: Dict[str, object]) -> str:
     parts: List[str] = [
         str(profile.get("scope_id", "")),
         str(profile.get("name", "")),
+        str(profile.get("scope_type", "")),
+        str(profile.get("domain", "")),
         str(profile.get("summary", "")),
         " ".join(str(item) for item in profile.get("aliases", []) if item),
         " ".join(str(item) for item in profile.get("keywords", []) if item),
+        " ".join(str(item) for item in profile.get("task_family", []) if item),
     ]
     event_types = profile.get("event_types", {})
     if isinstance(event_types, dict):

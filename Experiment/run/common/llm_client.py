@@ -1,12 +1,13 @@
 from __future__ import annotations
 
+from copy import deepcopy
 import hashlib
 import json
 import os
 from pathlib import Path
 import re
 import time
-from typing import Dict
+from typing import Dict, Optional
 
 
 class LLMRequestError(RuntimeError):
@@ -142,7 +143,9 @@ def parse_json_object(text: str) -> Dict[str, object]:
             except json.JSONDecodeError:
                 try:
                     import json_repair
-
+                except ImportError as repair_error:
+                    raise ValueError(f"model did not return repairable JSON: {text[:200]}") from repair_error
+                try:
                     value = json.loads(json_repair.repair_json(candidate))
                 except Exception as repair_error:
                     raise repair_error from first_error

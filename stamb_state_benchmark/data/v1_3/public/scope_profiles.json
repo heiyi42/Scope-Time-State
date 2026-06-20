@@ -1,0 +1,2585 @@
+[
+  {
+    "scope_id": "aaai_memory",
+    "event_count": 12,
+    "event_types": {
+      "correction": 1,
+      "decision": 2,
+      "idea": 1,
+      "issue": 1,
+      "mention": 2,
+      "observation": 1,
+      "paper_reading": 1,
+      "plan": 1,
+      "related_work": 1,
+      "risk": 1
+    },
+    "keywords": [
+      "aaai_memory",
+      "aaai",
+      "artem",
+      "state",
+      "time",
+      "baseline",
+      "decision",
+      "latest",
+      "mention",
+      "related",
+      "scope",
+      "tsm",
+      "valid",
+      "work",
+      "benchmark",
+      "correction",
+      "dialogue",
+      "episodic",
+      "graph",
+      "idea"
+    ],
+    "summary": "AAAI 记忆论文 当前风险集中在：把已有底层 pipeline 误包装成顶层科学问题。；AAAI 记忆论文 的“早期 related-work 草稿”又声称“单时间线记忆就是主要创新点”，但备注说明这只是历史转述。；AAAI 记忆论文 安排“补一版 STSGraph 问题定义和可追溯例子”，目前只有排期，还没有完成记录。",
+    "recent_events": [
+      {
+        "event_id": "v13_aaai_memory_07",
+        "event_type": "risk",
+        "summary": "AAAI 记忆论文 当前风险集中在：把已有底层 pipeline 误包装成顶层科学问题。",
+        "occurred_at": "2026-06-07T23:00:00",
+        "mentioned_at": "2026-06-07T23:00:00",
+        "updated_at": "2026-06-07T23:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_aaai_memory_06",
+        "event_type": "mention",
+        "summary": "AAAI 记忆论文 的“早期 related-work 草稿”又声称“单时间线记忆就是主要创新点”，但备注说明这只是历史转述。",
+        "occurred_at": "2026-06-07T22:00:00",
+        "mentioned_at": "2026-06-07T22:00:00",
+        "updated_at": "2026-06-07T22:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_aaai_memory_05",
+        "event_type": "plan",
+        "summary": "AAAI 记忆论文 安排“补一版 STSGraph 问题定义和可追溯例子”，目前只有排期，还没有完成记录。",
+        "occurred_at": "2026-06-07T21:00:00",
+        "mentioned_at": "2026-06-07T21:00:00",
+        "updated_at": "2026-06-07T21:00:00",
+        "planned_for": "2026-06-10T21:00:00",
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_aaai_memory_04",
+        "event_type": "observation",
+        "summary": "AAAI 记忆论文 补充观察到：ARTEM 仍可放进相关工作对比表；它只影响“ARTEM baseline 备注”，不改变“latest-valid-state 建模主线”。",
+        "occurred_at": "2026-06-07T20:00:00",
+        "mentioned_at": "2026-06-07T20:00:00",
+        "updated_at": "2026-06-07T20:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_aaai_memory_03",
+        "event_type": "correction",
+        "summary": "AAAI 记忆论文 复盘确认：主线改为 Scope-Time-State Graph 下的有效状态追踪；旧判断不再作为当前状态。",
+        "occurred_at": "2026-06-07T19:00:00",
+        "mentioned_at": "2026-06-07T19:00:00",
+        "updated_at": "2026-06-07T19:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_aaai_memory_02",
+        "event_type": "issue",
+        "summary": "AAAI 记忆论文 新发现：TSM 已覆盖多时间角色，原卖点不足；当前状态需要重新按有效证据判断。",
+        "occurred_at": "2026-06-07T18:00:00",
+        "mentioned_at": "2026-06-07T18:00:00",
+        "updated_at": "2026-06-07T18:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "research_writing",
+    "task_family": [
+      "state_tracking",
+      "related_work",
+      "next_step_planning"
+    ],
+    "domain": "academic_project"
+  },
+  {
+    "scope_id": "amp_project",
+    "event_count": 12,
+    "event_types": {
+      "correction": 2,
+      "decision": 1,
+      "diagnosis": 1,
+      "issue": 1,
+      "mention": 2,
+      "observation": 1,
+      "plan": 2,
+      "progress": 1,
+      "risk": 1
+    },
+    "keywords": [
+      "amp_project",
+      "amp",
+      "s11",
+      "correction",
+      "mention",
+      "plan",
+      "6",
+      "9",
+      "decision",
+      "diagnosis",
+      "issue",
+      "observation",
+      "progress",
+      "risk"
+    ],
+    "summary": "AMP 级间匹配项目 当前风险集中在：继续围绕输入匹配调参会错过真正瓶颈。；AMP 级间匹配项目 的“S11 旧诊断表”又声称“主要问题在输入匹配”，但备注说明这只是历史转述。；AMP 级间匹配项目 安排“重算级间匹配网络线长”，目前只有排期，还没有完成记录。",
+    "recent_events": [
+      {
+        "event_id": "v13_amp_project_07",
+        "event_type": "risk",
+        "summary": "AMP 级间匹配项目 当前风险集中在：继续围绕输入匹配调参会错过真正瓶颈。",
+        "occurred_at": "2026-06-08T00:00:00",
+        "mentioned_at": "2026-06-08T00:00:00",
+        "updated_at": "2026-06-08T00:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_amp_project_06",
+        "event_type": "mention",
+        "summary": "AMP 级间匹配项目 的“S11 旧诊断表”又声称“主要问题在输入匹配”，但备注说明这只是历史转述。",
+        "occurred_at": "2026-06-07T23:00:00",
+        "mentioned_at": "2026-06-07T23:00:00",
+        "updated_at": "2026-06-07T23:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_amp_project_05",
+        "event_type": "plan",
+        "summary": "AMP 级间匹配项目 安排“重算级间匹配网络线长”，目前只有排期，还没有完成记录。",
+        "occurred_at": "2026-06-07T22:00:00",
+        "mentioned_at": "2026-06-07T22:00:00",
+        "updated_at": "2026-06-07T22:00:00",
+        "planned_for": "2026-06-10T22:00:00",
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_amp_project_04",
+        "event_type": "observation",
+        "summary": "AMP 级间匹配项目 补充观察到：第一级输入匹配结果已归档为辅助证据；它只影响“第一级输入匹配日志”，不改变“级间匹配网络”。",
+        "occurred_at": "2026-06-07T21:00:00",
+        "mentioned_at": "2026-06-07T21:00:00",
+        "updated_at": "2026-06-07T21:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_amp_project_03",
+        "event_type": "correction",
+        "summary": "AMP 级间匹配项目 复盘确认：S11 线长异常改按级间匹配处理；旧判断不再作为当前状态。",
+        "occurred_at": "2026-06-07T20:00:00",
+        "mentioned_at": "2026-06-07T20:00:00",
+        "updated_at": "2026-06-07T20:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_amp_project_02",
+        "event_type": "issue",
+        "summary": "AMP 级间匹配项目 新发现：复核发现瓶颈集中在级间匹配；当前状态需要重新按有效证据判断。",
+        "occurred_at": "2026-06-07T19:00:00",
+        "mentioned_at": "2026-06-07T19:00:00",
+        "updated_at": "2026-06-07T19:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "ml_product",
+    "task_family": [
+      "experiment_tracking",
+      "issue_resolution",
+      "next_step_planning"
+    ],
+    "domain": "machine_learning"
+  },
+  {
+    "scope_id": "api_rate_limit",
+    "event_count": 32,
+    "event_types": {
+      "check": 1,
+      "correction": 1,
+      "decision": 3,
+      "execution_log": 2,
+      "feedback": 1,
+      "fix": 1,
+      "issue": 2,
+      "meeting_note": 2,
+      "mention": 6,
+      "message": 1,
+      "note": 3,
+      "observation": 2,
+      "plan": 3,
+      "progress": 1,
+      "risk": 2,
+      "task_note": 1
+    },
+    "keywords": [
+      "api_rate_limit",
+      "provider",
+      "api",
+      "deepseek",
+      "judge",
+      "compatible",
+      "openai",
+      "cache",
+      "endpoint",
+      "invalid",
+      "mention",
+      "token",
+      "e2e",
+      "gpt",
+      "graphiti",
+      "public",
+      "run",
+      "appendix",
+      "baseline",
+      "decision"
+    ],
+    "summary": "API 额度和 provider 群聊再次复述“DeepSeek 同时负责回答和构图”，随后被标记为旧口径。；API 额度和 provider 评审意见要求把“额度不稳定导致 graph construction 中断”写入当前风险说明。；API 额度和 provider 已得到一个局部结果，但它只覆盖“旧 token invalid 日志”。",
+    "recent_events": [
+      {
+        "event_id": "v13_api_rate_limit_24",
+        "event_type": "mention",
+        "summary": "API 额度和 provider 群聊再次复述“DeepSeek 同时负责回答和构图”，随后被标记为旧口径。",
+        "occurred_at": "2026-06-08T12:00:00",
+        "mentioned_at": "2026-06-08T12:00:00",
+        "updated_at": "2026-06-08T12:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_api_rate_limit_23",
+        "event_type": "feedback",
+        "summary": "API 额度和 provider 评审意见要求把“额度不稳定导致 graph construction 中断”写入当前风险说明。",
+        "occurred_at": "2026-06-08T11:00:00",
+        "mentioned_at": "2026-06-08T11:00:00",
+        "updated_at": "2026-06-08T11:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_api_rate_limit_22",
+        "event_type": "progress",
+        "summary": "API 额度和 provider 已得到一个局部结果，但它只覆盖“旧 token invalid 日志”。",
+        "occurred_at": "2026-06-08T10:00:00",
+        "mentioned_at": "2026-06-08T10:00:00",
+        "updated_at": "2026-06-08T10:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_api_rate_limit_21",
+        "event_type": "message",
+        "summary": "API 额度和 provider 依赖方只确认了日程，没有确认“public E2E 和 appendix baseline 都有缓存结果”。",
+        "occurred_at": "2026-06-08T09:00:00",
+        "mentioned_at": "2026-06-08T09:00:00",
+        "updated_at": "2026-06-08T09:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_api_rate_limit_20",
+        "event_type": "check",
+        "summary": "API 额度和 provider 当前需要围绕“provider 分工”保留可追溯证据，不能只看最新噪声。",
+        "occurred_at": "2026-06-08T08:00:00",
+        "mentioned_at": "2026-06-08T08:00:00",
+        "updated_at": "2026-06-08T08:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_api_rate_limit_19",
+        "event_type": "note",
+        "summary": "API 额度和 provider 的完成信号被定义为：public E2E 和 appendix baseline 都有缓存结果。",
+        "occurred_at": "2026-06-08T07:00:00",
+        "mentioned_at": "2026-06-08T07:00:00",
+        "updated_at": "2026-06-08T07:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "api_platform",
+    "task_family": [
+      "policy_status",
+      "token_status",
+      "risk_tracking"
+    ],
+    "domain": "api_platform"
+  },
+  {
+    "scope_id": "billing_migration",
+    "event_count": 32,
+    "event_types": {
+      "check": 1,
+      "correction": 2,
+      "deadline": 1,
+      "decision": 3,
+      "execution_log": 2,
+      "feedback": 1,
+      "issue": 2,
+      "meeting_note": 2,
+      "mention": 6,
+      "message": 1,
+      "note": 3,
+      "observation": 2,
+      "plan": 3,
+      "progress": 1,
+      "risk": 1,
+      "task_note": 1
+    },
+    "keywords": [
+      "billing_migration",
+      "provider",
+      "stripe",
+      "paddle",
+      "mention",
+      "migration",
+      "csv",
+      "prototype",
+      "legal",
+      "review",
+      "decision",
+      "done",
+      "note",
+      "plan",
+      "6",
+      "correction",
+      "execution_log",
+      "issue",
+      "meeting_note",
+      "observation"
+    ],
+    "summary": "计费迁移 群聊再次复述“把订阅计费迁到 Stripe”，随后被标记为旧口径。；计费迁移 评审意见要求把“把报表导出误当成 provider 迁移”写入当前风险说明。；计费迁移 已得到一个局部结果，但它只覆盖“发票 CSV 导出”。",
+    "recent_events": [
+      {
+        "event_id": "v13_billing_migration_24",
+        "event_type": "mention",
+        "summary": "计费迁移 群聊再次复述“把订阅计费迁到 Stripe”，随后被标记为旧口径。",
+        "occurred_at": "2026-06-11T16:00:00",
+        "mentioned_at": "2026-06-11T16:00:00",
+        "updated_at": "2026-06-11T16:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_billing_migration_23",
+        "event_type": "feedback",
+        "summary": "计费迁移 评审意见要求把“把报表导出误当成 provider 迁移”写入当前风险说明。",
+        "occurred_at": "2026-06-11T15:00:00",
+        "mentioned_at": "2026-06-11T15:00:00",
+        "updated_at": "2026-06-11T15:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_billing_migration_22",
+        "event_type": "progress",
+        "summary": "计费迁移 已得到一个局部结果，但它只覆盖“发票 CSV 导出”。",
+        "occurred_at": "2026-06-11T14:00:00",
+        "mentioned_at": "2026-06-11T14:00:00",
+        "updated_at": "2026-06-11T14:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_billing_migration_21",
+        "event_type": "message",
+        "summary": "计费迁移 依赖方只确认了日程，没有确认“合同侧确认 provider 路径”。",
+        "occurred_at": "2026-06-11T13:00:00",
+        "mentioned_at": "2026-06-11T13:00:00",
+        "updated_at": "2026-06-11T13:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_billing_migration_20",
+        "event_type": "check",
+        "summary": "计费迁移 当前需要围绕“计费 provider 决策”保留可追溯证据，不能只看最新噪声。",
+        "occurred_at": "2026-06-11T12:00:00",
+        "mentioned_at": "2026-06-11T12:00:00",
+        "updated_at": "2026-06-11T12:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_billing_migration_19",
+        "event_type": "note",
+        "summary": "计费迁移 的完成信号被定义为：合同侧确认 provider 路径。",
+        "occurred_at": "2026-06-11T11:00:00",
+        "mentioned_at": "2026-06-11T11:00:00",
+        "updated_at": "2026-06-11T11:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "business_infra",
+    "task_family": [
+      "migration_status",
+      "provider_decision",
+      "compliance_review"
+    ],
+    "domain": "billing"
+  },
+  {
+    "scope_id": "cache_refactor",
+    "event_count": 18,
+    "event_types": {
+      "cleanup": 1,
+      "correction": 1,
+      "decision": 1,
+      "execution_log": 1,
+      "fix": 2,
+      "issue": 3,
+      "meeting_note": 1,
+      "mention": 3,
+      "observation": 1,
+      "plan": 3,
+      "risk": 1
+    },
+    "keywords": [
+      "cache_refactor",
+      "trace",
+      "cache",
+      "deepcopy",
+      "circular",
+      "mutation",
+      "reference",
+      "regression",
+      "test",
+      "__pycache__",
+      "fix",
+      "graphiti",
+      "issue",
+      "mention",
+      "plan",
+      "py_compile",
+      "verifier",
+      "dump",
+      "experiment",
+      "json"
+    ],
+    "summary": "有人把缓存重构与“Graphiti verifier trace 修复”混在一起，随后更正说这不是本 scope 的证据。；缓存重构 例会只同步了“输出目录、cache 文件名和 dry-run 命令”，没有更新“cache/refactor 状态”。；缓存重构 下一步是：先补 mutation regression test，再跑公共 E2E。",
+    "recent_events": [
+      {
+        "event_id": "v13_cache_refactor_10",
+        "event_type": "mention",
+        "summary": "有人把缓存重构与“Graphiti verifier trace 修复”混在一起，随后更正说这不是本 scope 的证据。",
+        "occurred_at": "2026-06-07T18:00:00",
+        "mentioned_at": "2026-06-07T18:00:00",
+        "updated_at": "2026-06-07T18:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_cache_refactor_09",
+        "event_type": "meeting_note",
+        "summary": "缓存重构 例会只同步了“输出目录、cache 文件名和 dry-run 命令”，没有更新“cache/refactor 状态”。",
+        "occurred_at": "2026-06-07T17:00:00",
+        "mentioned_at": "2026-06-07T17:00:00",
+        "updated_at": "2026-06-07T17:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_cache_refactor_08",
+        "event_type": "plan",
+        "summary": "缓存重构 下一步是：先补 mutation regression test，再跑公共 E2E。",
+        "occurred_at": "2026-06-07T16:00:00",
+        "mentioned_at": "2026-06-07T16:00:00",
+        "updated_at": "2026-06-07T16:00:00",
+        "planned_for": "2026-06-10T16:00:00",
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_cache_refactor_07",
+        "event_type": "risk",
+        "summary": "缓存重构 当前风险集中在：把 py_compile 通过误判为行为测试覆盖。",
+        "occurred_at": "2026-06-07T15:00:00",
+        "mentioned_at": "2026-06-07T15:00:00",
+        "updated_at": "2026-06-07T15:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_cache_refactor_06",
+        "event_type": "mention",
+        "summary": "缓存重构 的“circular reference 旧错误日志”又声称“trace 仍无法 JSON dump”，但备注说明这只是历史转述。",
+        "occurred_at": "2026-06-07T14:00:00",
+        "mentioned_at": "2026-06-07T14:00:00",
+        "updated_at": "2026-06-07T14:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_cache_refactor_05",
+        "event_type": "plan",
+        "summary": "缓存重构 安排“补 cache mutation regression test”，目前只有排期，还没有完成记录。",
+        "occurred_at": "2026-06-07T13:00:00",
+        "mentioned_at": "2026-06-07T13:00:00",
+        "updated_at": "2026-06-07T13:00:00",
+        "planned_for": "2026-06-10T13:00:00",
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "infra_refactor",
+    "task_family": [
+      "bug_status",
+      "cleanup_status",
+      "rollout_readiness"
+    ],
+    "domain": "infrastructure"
+  },
+  {
+    "scope_id": "data_retention_policy",
+    "event_count": 18,
+    "event_types": {
+      "correction": 1,
+      "decision": 1,
+      "execution_log": 1,
+      "issue": 1,
+      "meeting_note": 2,
+      "mention": 4,
+      "note": 2,
+      "observation": 2,
+      "plan": 2,
+      "risk": 1,
+      "task_note": 1
+    },
+    "keywords": [
+      "data_retention_policy",
+      "180",
+      "mention",
+      "30",
+      "meeting_note",
+      "note",
+      "observation",
+      "plan",
+      "correction",
+      "decision",
+      "execution_log",
+      "issue",
+      "risk",
+      "scope",
+      "task_note"
+    ],
+    "summary": "数据保留政策 仍存在证据缺口：没有证据说明审批流已通过。；数据保留政策 最近一次操作是“一次表名整理没有改变保留期限”，没有产生新的状态证据。；数据保留政策 的指标快照写着“日志量统计不说明保留期限合法”，它不能单独改变当前结论。",
+    "recent_events": [
+      {
+        "event_id": "v13_data_retention_policy_18",
+        "event_type": "note",
+        "summary": "数据保留政策 仍存在证据缺口：没有证据说明审批流已通过。",
+        "occurred_at": "2026-06-02T03:00:00",
+        "mentioned_at": "2026-06-02T03:00:00",
+        "updated_at": "2026-06-02T03:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_data_retention_policy_17",
+        "event_type": "execution_log",
+        "summary": "数据保留政策 最近一次操作是“一次表名整理没有改变保留期限”，没有产生新的状态证据。",
+        "occurred_at": "2026-06-02T02:00:00",
+        "mentioned_at": "2026-06-02T02:00:00",
+        "updated_at": "2026-06-02T02:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_data_retention_policy_16",
+        "event_type": "observation",
+        "summary": "数据保留政策 的指标快照写着“日志量统计不说明保留期限合法”，它不能单独改变当前结论。",
+        "occurred_at": "2026-06-02T01:00:00",
+        "mentioned_at": "2026-06-02T01:00:00",
+        "updated_at": "2026-06-02T01:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_data_retention_policy_15",
+        "event_type": "meeting_note",
+        "summary": "数据保留政策 交接记录列出“敏感字段、聚合指标、审批流和执行规则”，没有新增决策。",
+        "occurred_at": "2026-06-02T00:00:00",
+        "mentioned_at": "2026-06-02T00:00:00",
+        "updated_at": "2026-06-02T00:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_data_retention_policy_14",
+        "event_type": "mention",
+        "summary": "数据保留政策 的历史风险“旧草案继续被作为执行依据”被复制到新文档，负责人确认只是背景。",
+        "occurred_at": "2026-06-01T23:00:00",
+        "mentioned_at": "2026-06-01T23:00:00",
+        "updated_at": "2026-06-01T23:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_data_retention_policy_13",
+        "event_type": "task_note",
+        "summary": "数据保留政策 加入低优先级事项“统一政策文档页眉”，不改变“敏感字段 30 天脱敏、聚合指标 180 天保留”。",
+        "occurred_at": "2026-06-01T22:00:00",
+        "mentioned_at": "2026-06-01T22:00:00",
+        "updated_at": "2026-06-01T22:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "governance_policy",
+    "task_family": [
+      "policy_status",
+      "exception_tracking",
+      "approval_status"
+    ],
+    "domain": "governance"
+  },
+  {
+    "scope_id": "deployment_incident",
+    "event_count": 18,
+    "event_types": {
+      "correction": 1,
+      "decision": 1,
+      "diagnosis": 1,
+      "incident": 1,
+      "issue": 1,
+      "meeting_note": 1,
+      "mention": 4,
+      "mitigation": 1,
+      "note": 1,
+      "observation": 1,
+      "plan": 3,
+      "risk": 1,
+      "root_cause": 1
+    },
+    "keywords": [
+      "deployment_incident",
+      "5xx",
+      "key",
+      "mention",
+      "plan",
+      "05",
+      "14",
+      "call",
+      "correction",
+      "decision",
+      "diagnosis",
+      "incident",
+      "issue",
+      "meeting_note",
+      "mitigation",
+      "note",
+      "observation",
+      "on",
+      "risk",
+      "root_cause"
+    ],
+    "summary": "线上推荐事故 的旧阻塞“连接池指标异常”被转述，但没有证据说明它仍然有效。；线上推荐事故 新增“事故复盘模板字段补齐”，仅属流程记录，不影响状态判断。；有人把线上推荐事故与“支付服务 5xx 告警”混在一起，随后更正说这不是本 scope 的证据。",
+    "recent_events": [
+      {
+        "event_id": "v13_deployment_incident_12",
+        "event_type": "mention",
+        "summary": "线上推荐事故 的旧阻塞“连接池指标异常”被转述，但没有证据说明它仍然有效。",
+        "occurred_at": "2026-06-07T22:00:00",
+        "mentioned_at": "2026-06-07T22:00:00",
+        "updated_at": "2026-06-07T22:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_deployment_incident_11",
+        "event_type": "note",
+        "summary": "线上推荐事故 新增“事故复盘模板字段补齐”，仅属流程记录，不影响状态判断。",
+        "occurred_at": "2026-06-07T21:00:00",
+        "mentioned_at": "2026-06-07T21:00:00",
+        "updated_at": "2026-06-07T21:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_deployment_incident_10",
+        "event_type": "mention",
+        "summary": "有人把线上推荐事故与“支付服务 5xx 告警”混在一起，随后更正说这不是本 scope 的证据。",
+        "occurred_at": "2026-06-07T20:00:00",
+        "mentioned_at": "2026-06-07T20:00:00",
+        "updated_at": "2026-06-07T20:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_deployment_incident_09",
+        "event_type": "meeting_note",
+        "summary": "线上推荐事故 例会只同步了“on-call 轮值、状态页模板和截图归档”，没有更新“事故根因和后续动作”。",
+        "occurred_at": "2026-06-07T19:00:00",
+        "mentioned_at": "2026-06-07T19:00:00",
+        "updated_at": "2026-06-07T19:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_deployment_incident_08",
+        "event_type": "plan",
+        "summary": "线上推荐事故 下一步是：先落地热点 key 限流，再做缓存预热演练。",
+        "occurred_at": "2026-06-07T18:00:00",
+        "mentioned_at": "2026-06-07T18:00:00",
+        "updated_at": "2026-06-07T18:00:00",
+        "planned_for": "2026-06-10T18:00:00",
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_deployment_incident_07",
+        "event_type": "risk",
+        "summary": "线上推荐事故 当前风险集中在：误按数据库方向复盘会漏掉缓存防护。",
+        "occurred_at": "2026-06-07T17:00:00",
+        "mentioned_at": "2026-06-07T17:00:00",
+        "updated_at": "2026-06-07T17:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "incident_response",
+    "task_family": [
+      "incident_status",
+      "root_cause",
+      "mitigation_tracking"
+    ],
+    "domain": "operations"
+  },
+  {
+    "scope_id": "eval_harness",
+    "event_count": 32,
+    "event_types": {
+      "check": 1,
+      "correction": 1,
+      "decision": 4,
+      "execution_log": 2,
+      "feedback": 1,
+      "issue": 2,
+      "meeting_note": 2,
+      "mention": 6,
+      "message": 1,
+      "note": 3,
+      "observation": 2,
+      "plan": 3,
+      "progress": 1,
+      "risk": 2,
+      "task_note": 1
+    },
+    "keywords": [
+      "eval_harness",
+      "harness",
+      "judge",
+      "event_f1",
+      "mention",
+      "benchmark",
+      "coverage",
+      "decision",
+      "evidence",
+      "over",
+      "ans_j",
+      "graphiti",
+      "note",
+      "plan",
+      "slot_j",
+      "sup_f1",
+      "42",
+      "accuracy",
+      "appendix",
+      "baseline"
+    ],
+    "summary": "评测 harness 群聊再次复述“按 event_f1 排序所有方法”，随后被标记为旧口径。；评测 harness 评审意见要求把“为了分数修改 benchmark 语义”写入当前风险说明。；评测 harness 已得到一个局部结果，但它只覆盖“judge coverage 补跑”。",
+    "recent_events": [
+      {
+        "event_id": "v13_eval_harness_24",
+        "event_type": "mention",
+        "summary": "评测 harness 群聊再次复述“按 event_f1 排序所有方法”，随后被标记为旧口径。",
+        "occurred_at": "2026-06-09T11:00:00",
+        "mentioned_at": "2026-06-09T11:00:00",
+        "updated_at": "2026-06-09T11:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_eval_harness_23",
+        "event_type": "feedback",
+        "summary": "评测 harness 评审意见要求把“为了分数修改 benchmark 语义”写入当前风险说明。",
+        "occurred_at": "2026-06-09T10:00:00",
+        "mentioned_at": "2026-06-09T10:00:00",
+        "updated_at": "2026-06-09T10:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_eval_harness_22",
+        "event_type": "progress",
+        "summary": "评测 harness 已得到一个局部结果，但它只覆盖“judge coverage 补跑”。",
+        "occurred_at": "2026-06-09T09:00:00",
+        "mentioned_at": "2026-06-09T09:00:00",
+        "updated_at": "2026-06-09T09:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_eval_harness_21",
+        "event_type": "message",
+        "summary": "评测 harness 依赖方只确认了日程，没有确认“主表和诊断表口径一致”。",
+        "occurred_at": "2026-06-09T08:00:00",
+        "mentioned_at": "2026-06-09T08:00:00",
+        "updated_at": "2026-06-09T08:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_eval_harness_20",
+        "event_type": "check",
+        "summary": "评测 harness 当前需要围绕“评测口径”保留可追溯证据，不能只看最新噪声。",
+        "occurred_at": "2026-06-09T07:00:00",
+        "mentioned_at": "2026-06-09T07:00:00",
+        "updated_at": "2026-06-09T07:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_eval_harness_19",
+        "event_type": "note",
+        "summary": "评测 harness 的完成信号被定义为：主表和诊断表口径一致。",
+        "occurred_at": "2026-06-09T06:00:00",
+        "mentioned_at": "2026-06-09T06:00:00",
+        "updated_at": "2026-06-09T06:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "benchmark_eval",
+    "task_family": [
+      "metric_semantics",
+      "judge_coverage",
+      "diagnostic_planning"
+    ],
+    "domain": "evaluation"
+  },
+  {
+    "scope_id": "grant_app",
+    "event_count": 18,
+    "event_types": {
+      "budget": 2,
+      "correction": 1,
+      "decision": 1,
+      "issue": 1,
+      "meeting_note": 1,
+      "mention": 4,
+      "note": 1,
+      "observation": 1,
+      "plan": 2,
+      "progress": 1,
+      "risk": 1,
+      "team_change": 2
+    },
+    "keywords": [
+      "grant_app",
+      "80k",
+      "95k",
+      "b",
+      "mention",
+      "c",
+      "budget",
+      "plan",
+      "team_change",
+      "correction",
+      "decision",
+      "issue",
+      "meeting_note",
+      "note",
+      "observation",
+      "progress",
+      "risk",
+      "scope"
+    ],
+    "summary": "经费申请 的旧阻塞“合作方 B 退出”被转述，但没有证据说明它仍然有效。；经费申请 新增“申请书命名和版本号清理”，仅属流程记录，不影响状态判断。；有人把经费申请与“另一个校内设备申请”混在一起，随后更正说这不是本 scope 的证据。",
+    "recent_events": [
+      {
+        "event_id": "v13_grant_app_12",
+        "event_type": "mention",
+        "summary": "经费申请 的旧阻塞“合作方 B 退出”被转述，但没有证据说明它仍然有效。",
+        "occurred_at": "2026-06-08T04:00:00",
+        "mentioned_at": "2026-06-08T04:00:00",
+        "updated_at": "2026-06-08T04:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_grant_app_11",
+        "event_type": "note",
+        "summary": "经费申请 新增“申请书命名和版本号清理”，仅属流程记录，不影响状态判断。",
+        "occurred_at": "2026-06-08T03:00:00",
+        "mentioned_at": "2026-06-08T03:00:00",
+        "updated_at": "2026-06-08T03:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_grant_app_10",
+        "event_type": "mention",
+        "summary": "有人把经费申请与“另一个校内设备申请”混在一起，随后更正说这不是本 scope 的证据。",
+        "occurred_at": "2026-06-08T02:00:00",
+        "mentioned_at": "2026-06-08T02:00:00",
+        "updated_at": "2026-06-08T02:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_grant_app_09",
+        "event_type": "meeting_note",
+        "summary": "经费申请 例会只同步了“系统账号、盖章流程和附件编号”，没有更新“申请材料状态”。",
+        "occurred_at": "2026-06-08T01:00:00",
+        "mentioned_at": "2026-06-08T01:00:00",
+        "updated_at": "2026-06-08T01:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_grant_app_08",
+        "event_type": "plan",
+        "summary": "经费申请 下一步是：先补 95k 预算说明，再检查合作方信息。",
+        "occurred_at": "2026-06-08T00:00:00",
+        "mentioned_at": "2026-06-08T00:00:00",
+        "updated_at": "2026-06-08T00:00:00",
+        "planned_for": "2026-06-11T00:00:00",
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_grant_app_07",
+        "event_type": "risk",
+        "summary": "经费申请 当前风险集中在：旧预算附件被误作为当前金额。",
+        "occurred_at": "2026-06-07T23:00:00",
+        "mentioned_at": "2026-06-07T23:00:00",
+        "updated_at": "2026-06-07T23:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "admin_funding",
+    "task_family": [
+      "submission_status",
+      "budget_tracking",
+      "team_tracking"
+    ],
+    "domain": "administration"
+  },
+  {
+    "scope_id": "labeling_guideline",
+    "event_count": 18,
+    "event_types": {
+      "correction": 1,
+      "decision": 1,
+      "guideline": 2,
+      "issue": 2,
+      "meeting_note": 1,
+      "mention": 4,
+      "note": 1,
+      "observation": 1,
+      "plan": 3,
+      "progress": 1,
+      "risk": 1
+    },
+    "keywords": [
+      "labeling_guideline",
+      "v1",
+      "v2",
+      "a",
+      "batch",
+      "mention",
+      "partial",
+      "uncertain",
+      "plan",
+      "12",
+      "ambiguous",
+      "guideline",
+      "issue",
+      "6",
+      "8",
+      "correction",
+      "decision",
+      "meeting_note",
+      "note",
+      "observation"
+    ],
+    "summary": "标注规范 的旧阻塞“v1/v2 截图混用”被转述，但没有证据说明它仍然有效。；标注规范 新增“标注平台标签颜色调整”，仅属流程记录，不影响状态判断。；有人把标注规范与“情感标注项目”混在一起，随后更正说这不是本 scope 的证据。",
+    "recent_events": [
+      {
+        "event_id": "v13_labeling_guideline_12",
+        "event_type": "mention",
+        "summary": "标注规范 的旧阻塞“v1/v2 截图混用”被转述，但没有证据说明它仍然有效。",
+        "occurred_at": "2026-06-08T05:00:00",
+        "mentioned_at": "2026-06-08T05:00:00",
+        "updated_at": "2026-06-08T05:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_labeling_guideline_11",
+        "event_type": "note",
+        "summary": "标注规范 新增“标注平台标签颜色调整”，仅属流程记录，不影响状态判断。",
+        "occurred_at": "2026-06-08T04:00:00",
+        "mentioned_at": "2026-06-08T04:00:00",
+        "updated_at": "2026-06-08T04:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_labeling_guideline_10",
+        "event_type": "mention",
+        "summary": "有人把标注规范与“情感标注项目”混在一起，随后更正说这不是本 scope 的证据。",
+        "occurred_at": "2026-06-08T03:00:00",
+        "mentioned_at": "2026-06-08T03:00:00",
+        "updated_at": "2026-06-08T03:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_labeling_guideline_09",
+        "event_type": "meeting_note",
+        "summary": "标注规范 例会只同步了“标注员排班、样例编号和工单链接”，没有更新“标注规则”。",
+        "occurred_at": "2026-06-08T02:00:00",
+        "mentioned_at": "2026-06-08T02:00:00",
+        "updated_at": "2026-06-08T02:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_labeling_guideline_08",
+        "event_type": "plan",
+        "summary": "标注规范 下一步是：先完成 v2 培训，再复核 batch A。",
+        "occurred_at": "2026-06-08T01:00:00",
+        "mentioned_at": "2026-06-08T01:00:00",
+        "updated_at": "2026-06-08T01:00:00",
+        "planned_for": "2026-06-11T01:00:00",
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_labeling_guideline_07",
+        "event_type": "risk",
+        "summary": "标注规范 当前风险集中在：旧截图让标注员继续使用 v1。",
+        "occurred_at": "2026-06-08T00:00:00",
+        "mentioned_at": "2026-06-08T00:00:00",
+        "updated_at": "2026-06-08T00:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "data_ops",
+    "task_family": [
+      "guideline_status",
+      "quality_control",
+      "completion_unknown"
+    ],
+    "domain": "data_annotation"
+  },
+  {
+    "scope_id": "mobile_auth",
+    "event_count": 18,
+    "event_types": {
+      "correction": 1,
+      "decision": 3,
+      "fix": 1,
+      "issue": 3,
+      "meeting_note": 1,
+      "mention": 3,
+      "note": 1,
+      "observation": 1,
+      "plan": 3,
+      "risk": 1
+    },
+    "keywords": [
+      "mobile_auth",
+      "link",
+      "magic",
+      "decision",
+      "ios",
+      "issue",
+      "mention",
+      "otp",
+      "plan",
+      "correction",
+      "email",
+      "fix",
+      "meeting_note",
+      "note",
+      "observation",
+      "risk",
+      "scope",
+      "web"
+    ],
+    "summary": "移动端登录 新增“风控白名单导出”，仅属流程记录，不影响状态判断。；有人把移动端登录与“Web 端单点登录排期”混在一起，随后更正说这不是本 scope 的证据。；移动端登录 例会只同步了“登录页文案、按钮尺寸和埋点命名”，没有更新“登录方案”。",
+    "recent_events": [
+      {
+        "event_id": "v13_mobile_auth_11",
+        "event_type": "note",
+        "summary": "移动端登录 新增“风控白名单导出”，仅属流程记录，不影响状态判断。",
+        "occurred_at": "2026-06-08T06:00:00",
+        "mentioned_at": "2026-06-08T06:00:00",
+        "updated_at": "2026-06-08T06:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_mobile_auth_10",
+        "event_type": "mention",
+        "summary": "有人把移动端登录与“Web 端单点登录排期”混在一起，随后更正说这不是本 scope 的证据。",
+        "occurred_at": "2026-06-08T05:00:00",
+        "mentioned_at": "2026-06-08T05:00:00",
+        "updated_at": "2026-06-08T05:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_mobile_auth_09",
+        "event_type": "meeting_note",
+        "summary": "移动端登录 例会只同步了“登录页文案、按钮尺寸和埋点命名”，没有更新“登录方案”。",
+        "occurred_at": "2026-06-08T04:00:00",
+        "mentioned_at": "2026-06-08T04:00:00",
+        "updated_at": "2026-06-08T04:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_mobile_auth_08",
+        "event_type": "plan",
+        "summary": "移动端登录 下一步是：先补审计日志并复查 iOS 倒计时。",
+        "occurred_at": "2026-06-08T03:00:00",
+        "mentioned_at": "2026-06-08T03:00:00",
+        "updated_at": "2026-06-08T03:00:00",
+        "planned_for": "2026-06-11T03:00:00",
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_mobile_auth_07",
+        "event_type": "risk",
+        "summary": "移动端登录 当前风险集中在：旧短信方案被会议纪要误认为重新启用。",
+        "occurred_at": "2026-06-08T02:00:00",
+        "mentioned_at": "2026-06-08T02:00:00",
+        "updated_at": "2026-06-08T02:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_mobile_auth_06",
+        "event_type": "mention",
+        "summary": "移动端登录 的“短信验证码方案纪要”又声称“短信验证码仍是默认方案”，但备注说明这只是历史转述。",
+        "occurred_at": "2026-06-08T01:00:00",
+        "mentioned_at": "2026-06-08T01:00:00",
+        "updated_at": "2026-06-08T01:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "security_product",
+    "task_family": [
+      "decision_tracking",
+      "issue_resolution",
+      "audit_status"
+    ],
+    "domain": "product_security"
+  },
+  {
+    "scope_id": "model_serving_latency",
+    "event_count": 32,
+    "event_types": {
+      "check": 1,
+      "correction": 1,
+      "decision": 1,
+      "execution_log": 1,
+      "feedback": 1,
+      "issue": 1,
+      "meeting_note": 2,
+      "mention": 6,
+      "message": 2,
+      "note": 7,
+      "observation": 2,
+      "plan": 3,
+      "progress": 1,
+      "risk": 1,
+      "task_note": 2
+    },
+    "keywords": [
+      "model_serving_latency",
+      "p99",
+      "note",
+      "10",
+      "mention",
+      "sla",
+      "plan",
+      "serving",
+      "dashboard",
+      "embedding",
+      "meeting_note",
+      "message",
+      "observation",
+      "scope",
+      "task_note",
+      "check",
+      "correction",
+      "decision",
+      "execution_log",
+      "feedback"
+    ],
+    "summary": "模型服务延迟 当前回答应追溯到“serving 发布策略”的有效事件，而不是最近一条无更新记录。；模型服务延迟 已把“全量发布排期单”归档，避免继续作为当前依据。；模型服务延迟 最终可接受状态必须看到“灰度 p99 稳定低于 SLA”的明确证据。",
+    "recent_events": [
+      {
+        "event_id": "v13_model_serving_latency_32",
+        "event_type": "note",
+        "summary": "模型服务延迟 当前回答应追溯到“serving 发布策略”的有效事件，而不是最近一条无更新记录。",
+        "occurred_at": "2026-06-02T17:00:00",
+        "mentioned_at": "2026-06-02T17:00:00",
+        "updated_at": "2026-06-02T17:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_model_serving_latency_31",
+        "event_type": "mention",
+        "summary": "模型服务延迟 已把“全量发布排期单”归档，避免继续作为当前依据。",
+        "occurred_at": "2026-06-02T16:00:00",
+        "mentioned_at": "2026-06-02T16:00:00",
+        "updated_at": "2026-06-02T16:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_model_serving_latency_30",
+        "event_type": "note",
+        "summary": "模型服务延迟 最终可接受状态必须看到“灰度 p99 稳定低于 SLA”的明确证据。",
+        "occurred_at": "2026-06-02T15:00:00",
+        "mentioned_at": "2026-06-02T15:00:00",
+        "updated_at": "2026-06-02T15:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_model_serving_latency_29",
+        "event_type": "message",
+        "summary": "模型服务延迟 下游通知只同步背景，没有确认“10% 流量灰度”完成。",
+        "occurred_at": "2026-06-02T14:00:00",
+        "mentioned_at": "2026-06-02T14:00:00",
+        "updated_at": "2026-06-02T14:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_model_serving_latency_28",
+        "event_type": "plan",
+        "summary": "模型服务延迟 排期改为先处理“先做 10% 灰度并监控 p99，再决定扩量”，再检查“灰度 p99 稳定低于 SLA”。",
+        "occurred_at": "2026-06-02T13:00:00",
+        "mentioned_at": "2026-06-02T13:00:00",
+        "updated_at": "2026-06-02T13:00:00",
+        "planned_for": "2026-06-05T13:00:00",
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_model_serving_latency_27",
+        "event_type": "note",
+        "summary": "模型服务延迟 证据包优先收集“p99 延迟在高峰流量下超过 SLA”和“全量发布暂停，先改批量大小和降级缓存”。",
+        "occurred_at": "2026-06-02T12:00:00",
+        "mentioned_at": "2026-06-02T12:00:00",
+        "updated_at": "2026-06-02T12:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "ml_infra",
+    "task_family": [
+      "latency_risk",
+      "rollout_status",
+      "mitigation_tracking"
+    ],
+    "domain": "machine_learning_infra"
+  },
+  {
+    "scope_id": "onboarding_flow",
+    "event_count": 18,
+    "event_types": {
+      "correction": 1,
+      "decision": 1,
+      "execution_log": 1,
+      "issue": 1,
+      "meeting_note": 2,
+      "mention": 4,
+      "note": 2,
+      "observation": 2,
+      "plan": 2,
+      "risk": 1,
+      "task_note": 1
+    },
+    "keywords": [
+      "onboarding_flow",
+      "mention",
+      "5",
+      "meeting_note",
+      "note",
+      "observation",
+      "plan",
+      "bug",
+      "correction",
+      "decision",
+      "execution_log",
+      "issue",
+      "risk",
+      "scope",
+      "task_note"
+    ],
+    "summary": "新用户引导流程 仍存在证据缺口：没有证据说明 5% 实验已经开始。；新用户引导流程 最近一次操作是“一次文案调整没有改变校验逻辑”，没有产生新的状态证据。；新用户引导流程 的指标快照写着“漏斗截图显示流失但没有修复证据”，它不能单独改变当前结论。",
+    "recent_events": [
+      {
+        "event_id": "v13_onboarding_flow_18",
+        "event_type": "note",
+        "summary": "新用户引导流程 仍存在证据缺口：没有证据说明 5% 实验已经开始。",
+        "occurred_at": "2026-06-02T03:00:00",
+        "mentioned_at": "2026-06-02T03:00:00",
+        "updated_at": "2026-06-02T03:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_onboarding_flow_17",
+        "event_type": "execution_log",
+        "summary": "新用户引导流程 最近一次操作是“一次文案调整没有改变校验逻辑”，没有产生新的状态证据。",
+        "occurred_at": "2026-06-02T02:00:00",
+        "mentioned_at": "2026-06-02T02:00:00",
+        "updated_at": "2026-06-02T02:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_onboarding_flow_16",
+        "event_type": "observation",
+        "summary": "新用户引导流程 的指标快照写着“漏斗截图显示流失但没有修复证据”，它不能单独改变当前结论。",
+        "occurred_at": "2026-06-02T01:00:00",
+        "mentioned_at": "2026-06-02T01:00:00",
+        "updated_at": "2026-06-02T01:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_onboarding_flow_15",
+        "event_type": "meeting_note",
+        "summary": "新用户引导流程 交接记录列出“手机号校验、漏斗、实验分桶和小流量计划”，没有新增决策。",
+        "occurred_at": "2026-06-02T00:00:00",
+        "mentioned_at": "2026-06-02T00:00:00",
+        "updated_at": "2026-06-02T00:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_onboarding_flow_14",
+        "event_type": "mention",
+        "summary": "新用户引导流程 的历史风险“全量发布计划被继续引用”被复制到新文档，负责人确认只是背景。",
+        "occurred_at": "2026-06-01T23:00:00",
+        "mentioned_at": "2026-06-01T23:00:00",
+        "updated_at": "2026-06-01T23:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_onboarding_flow_13",
+        "event_type": "task_note",
+        "summary": "新用户引导流程 加入低优先级事项“整理引导页插画资源”，不改变“先修复手机号校验，再小流量实验”。",
+        "occurred_at": "2026-06-01T22:00:00",
+        "mentioned_at": "2026-06-01T22:00:00",
+        "updated_at": "2026-06-01T22:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "product_growth",
+    "task_family": [
+      "funnel_issue",
+      "experiment_tracking",
+      "next_step_planning"
+    ],
+    "domain": "product"
+  },
+  {
+    "scope_id": "privacy_audit",
+    "event_count": 18,
+    "event_types": {
+      "correction": 1,
+      "decision": 1,
+      "execution_log": 1,
+      "issue": 1,
+      "meeting_note": 2,
+      "mention": 4,
+      "note": 2,
+      "observation": 2,
+      "plan": 2,
+      "risk": 1,
+      "task_note": 1
+    },
+    "keywords": [
+      "privacy_audit",
+      "mention",
+      "dpo",
+      "meeting_note",
+      "note",
+      "observation",
+      "plan",
+      "correction",
+      "decision",
+      "execution_log",
+      "issue",
+      "risk",
+      "scope",
+      "task_note"
+    ],
+    "summary": "隐私审计 仍存在证据缺口：没有证据说明 DPO 已批准。；隐私审计 最近一次操作是“一次目录扫描没有新增审批结论”，没有产生新的状态证据。；隐私审计 的指标快照写着“扫描通过率不代表隐私审批通过”，它不能单独改变当前结论。",
+    "recent_events": [
+      {
+        "event_id": "v13_privacy_audit_18",
+        "event_type": "note",
+        "summary": "隐私审计 仍存在证据缺口：没有证据说明 DPO 已批准。",
+        "occurred_at": "2026-06-02T03:00:00",
+        "mentioned_at": "2026-06-02T03:00:00",
+        "updated_at": "2026-06-02T03:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_privacy_audit_17",
+        "event_type": "execution_log",
+        "summary": "隐私审计 最近一次操作是“一次目录扫描没有新增审批结论”，没有产生新的状态证据。",
+        "occurred_at": "2026-06-02T02:00:00",
+        "mentioned_at": "2026-06-02T02:00:00",
+        "updated_at": "2026-06-02T02:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_privacy_audit_16",
+        "event_type": "observation",
+        "summary": "隐私审计 的指标快照写着“扫描通过率不代表隐私审批通过”，它不能单独改变当前结论。",
+        "occurred_at": "2026-06-02T01:00:00",
+        "mentioned_at": "2026-06-02T01:00:00",
+        "updated_at": "2026-06-02T01:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_privacy_audit_15",
+        "event_type": "meeting_note",
+        "summary": "隐私审计 交接记录列出“新增日志字段、例外审批和 DPO 评估”，没有新增决策。",
+        "occurred_at": "2026-06-02T00:00:00",
+        "mentioned_at": "2026-06-02T00:00:00",
+        "updated_at": "2026-06-02T00:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_privacy_audit_14",
+        "event_type": "mention",
+        "summary": "隐私审计 的历史风险“旧审批邮件继续被转发”被复制到新文档，负责人确认只是背景。",
+        "occurred_at": "2026-06-01T23:00:00",
+        "mentioned_at": "2026-06-01T23:00:00",
+        "updated_at": "2026-06-01T23:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_privacy_audit_13",
+        "event_type": "task_note",
+        "summary": "隐私审计 加入低优先级事项“整理审计证据包目录”，不改变“删除无依据的长期保留例外”。",
+        "occurred_at": "2026-06-01T22:00:00",
+        "mentioned_at": "2026-06-01T22:00:00",
+        "updated_at": "2026-06-01T22:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "privacy_compliance",
+    "task_family": [
+      "audit_status",
+      "policy_exception",
+      "remediation_planning"
+    ],
+    "domain": "privacy"
+  },
+  {
+    "scope_id": "recsys_ablation",
+    "event_count": 18,
+    "event_types": {
+      "correction": 1,
+      "decision": 2,
+      "execution_log": 1,
+      "experiment": 2,
+      "issue": 2,
+      "meeting_note": 1,
+      "mention": 3,
+      "note": 1,
+      "observation": 1,
+      "plan": 3,
+      "risk": 1
+    },
+    "keywords": [
+      "recsys_ablation",
+      "ncf",
+      "lightgcn",
+      "cold",
+      "mention",
+      "plan",
+      "sasrec",
+      "split",
+      "start",
+      "2",
+      "baseline",
+      "decision",
+      "experiment",
+      "issue",
+      "1",
+      "correction",
+      "execution_log",
+      "meeting_note",
+      "note",
+      "observation"
+    ],
+    "summary": "推荐消融实验 的旧阻塞“数据泄漏未修正”被转述，但没有证据说明它仍然有效。；推荐消融实验 新增“实验目录和 seed 表整理”，仅属流程记录，不影响状态判断。；有人把推荐消融实验与“另一个召回实验”混在一起，随后更正说这不是本 scope 的证据。",
+    "recent_events": [
+      {
+        "event_id": "v13_recsys_ablation_12",
+        "event_type": "mention",
+        "summary": "推荐消融实验 的旧阻塞“数据泄漏未修正”被转述，但没有证据说明它仍然有效。",
+        "occurred_at": "2026-06-08T06:00:00",
+        "mentioned_at": "2026-06-08T06:00:00",
+        "updated_at": "2026-06-08T06:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_recsys_ablation_11",
+        "event_type": "note",
+        "summary": "推荐消融实验 新增“实验目录和 seed 表整理”，仅属流程记录，不影响状态判断。",
+        "occurred_at": "2026-06-08T05:00:00",
+        "mentioned_at": "2026-06-08T05:00:00",
+        "updated_at": "2026-06-08T05:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_recsys_ablation_10",
+        "event_type": "mention",
+        "summary": "有人把推荐消融实验与“另一个召回实验”混在一起，随后更正说这不是本 scope 的证据。",
+        "occurred_at": "2026-06-08T04:00:00",
+        "mentioned_at": "2026-06-08T04:00:00",
+        "updated_at": "2026-06-08T04:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_recsys_ablation_09",
+        "event_type": "meeting_note",
+        "summary": "推荐消融实验 例会只同步了“随机种子、数据切分和表格配色”，没有更新“模型对比结论”。",
+        "occurred_at": "2026-06-08T03:00:00",
+        "mentioned_at": "2026-06-08T03:00:00",
+        "updated_at": "2026-06-08T03:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_recsys_ablation_08",
+        "event_type": "plan",
+        "summary": "推荐消融实验 下一步是：先完成 cold-start split，再加入 SASRec 对比。",
+        "occurred_at": "2026-06-08T02:00:00",
+        "mentioned_at": "2026-06-08T02:00:00",
+        "updated_at": "2026-06-08T02:00:00",
+        "planned_for": "2026-06-11T02:00:00",
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_recsys_ablation_07",
+        "event_type": "risk",
+        "summary": "推荐消融实验 当前风险集中在：继续引用泄漏结果会误导方法排序。",
+        "occurred_at": "2026-06-08T01:00:00",
+        "mentioned_at": "2026-06-08T01:00:00",
+        "updated_at": "2026-06-08T01:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "ml_product",
+    "task_family": [
+      "experiment_tracking",
+      "metric_interpretation",
+      "plan_completion"
+    ],
+    "domain": "recommendation_system"
+  },
+  {
+    "scope_id": "release_notes",
+    "event_count": 12,
+    "event_types": {
+      "correction": 1,
+      "decision": 1,
+      "issue": 1,
+      "meeting_note": 1,
+      "mention": 3,
+      "note": 1,
+      "observation": 1,
+      "plan": 2,
+      "risk": 1
+    },
+    "keywords": [
+      "release_notes",
+      "changelog",
+      "mention",
+      "breaking",
+      "changes",
+      "plan",
+      "release",
+      "checklist",
+      "commit",
+      "correction",
+      "decision",
+      "issue",
+      "meeting_note",
+      "note",
+      "notes",
+      "observation",
+      "risk",
+      "scope",
+      "sdk"
+    ],
+    "summary": "发布说明 的旧阻塞“自动 changelog 漏掉破坏性变更”被转述，但没有证据说明它仍然有效。；发布说明 新增“release checklist 复选框整理”，仅属流程记录，不影响状态判断。；有人把发布说明与“内部 SDK 预发公告”混在一起，随后更正说这不是本 scope 的证据。",
+    "recent_events": [
+      {
+        "event_id": "v13_release_notes_12",
+        "event_type": "mention",
+        "summary": "发布说明 的旧阻塞“自动 changelog 漏掉破坏性变更”被转述，但没有证据说明它仍然有效。",
+        "occurred_at": "2026-06-01T21:00:00",
+        "mentioned_at": "2026-06-01T21:00:00",
+        "updated_at": "2026-06-01T21:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_release_notes_11",
+        "event_type": "note",
+        "summary": "发布说明 新增“release checklist 复选框整理”，仅属流程记录，不影响状态判断。",
+        "occurred_at": "2026-06-01T20:00:00",
+        "mentioned_at": "2026-06-01T20:00:00",
+        "updated_at": "2026-06-01T20:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_release_notes_10",
+        "event_type": "mention",
+        "summary": "有人把发布说明与“内部 SDK 预发公告”混在一起，随后更正说这不是本 scope 的证据。",
+        "occurred_at": "2026-06-01T19:00:00",
+        "mentioned_at": "2026-06-01T19:00:00",
+        "updated_at": "2026-06-01T19:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_release_notes_09",
+        "event_type": "meeting_note",
+        "summary": "发布说明 例会只同步了“版本号、发布日期和截图尺寸”，没有更新“发布说明准确性”。",
+        "occurred_at": "2026-06-01T18:00:00",
+        "mentioned_at": "2026-06-01T18:00:00",
+        "updated_at": "2026-06-01T18:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_release_notes_08",
+        "event_type": "plan",
+        "summary": "发布说明 下一步是：先补迁移步骤，再让负责人复核 release notes。",
+        "occurred_at": "2026-06-01T17:00:00",
+        "mentioned_at": "2026-06-01T17:00:00",
+        "updated_at": "2026-06-01T17:00:00",
+        "planned_for": "2026-06-04T17:00:00",
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_release_notes_07",
+        "event_type": "risk",
+        "summary": "发布说明 当前风险集中在：用户按旧字段升级会启动失败。",
+        "occurred_at": "2026-06-01T16:00:00",
+        "mentioned_at": "2026-06-01T16:00:00",
+        "updated_at": "2026-06-01T16:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "docs_release",
+    "task_family": [
+      "release_status",
+      "doc_accuracy",
+      "publication_planning"
+    ],
+    "domain": "documentation"
+  },
+  {
+    "scope_id": "robot_nav",
+    "event_count": 18,
+    "event_types": {
+      "correction": 1,
+      "decision": 3,
+      "execution_log": 1,
+      "experiment": 1,
+      "issue": 2,
+      "meeting_note": 1,
+      "mention": 3,
+      "note": 1,
+      "observation": 1,
+      "plan": 3,
+      "risk": 1
+    },
+    "keywords": [
+      "robot_nav",
+      "decision",
+      "mention",
+      "plan",
+      "camera",
+      "depth",
+      "issue",
+      "lidar",
+      "only",
+      "6",
+      "8",
+      "92",
+      "correction",
+      "execution_log",
+      "experiment",
+      "meeting_note",
+      "note",
+      "observation",
+      "risk",
+      "scope"
+    ],
+    "summary": "机器人导航方案 的旧阻塞“纯激光雷达地图还未清理”被转述，但没有证据说明它仍然有效。；机器人导航方案 新增“传感器支架采购记录”，仅属流程记录，不影响状态判断。；有人把机器人导航方案与“仓库避障演示”混在一起，随后更正说这不是本 scope 的证据。",
+    "recent_events": [
+      {
+        "event_id": "v13_robot_nav_12",
+        "event_type": "mention",
+        "summary": "机器人导航方案 的旧阻塞“纯激光雷达地图还未清理”被转述，但没有证据说明它仍然有效。",
+        "occurred_at": "2026-06-08T11:00:00",
+        "mentioned_at": "2026-06-08T11:00:00",
+        "updated_at": "2026-06-08T11:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_robot_nav_11",
+        "event_type": "note",
+        "summary": "机器人导航方案 新增“传感器支架采购记录”，仅属流程记录，不影响状态判断。",
+        "occurred_at": "2026-06-08T10:00:00",
+        "mentioned_at": "2026-06-08T10:00:00",
+        "updated_at": "2026-06-08T10:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_robot_nav_10",
+        "event_type": "mention",
+        "summary": "有人把机器人导航方案与“仓库避障演示”混在一起，随后更正说这不是本 scope 的证据。",
+        "occurred_at": "2026-06-08T09:00:00",
+        "mentioned_at": "2026-06-08T09:00:00",
+        "updated_at": "2026-06-08T09:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_robot_nav_09",
+        "event_type": "meeting_note",
+        "summary": "机器人导航方案 例会只同步了“场地预约、机器人编号和电池检查”，没有更新“导航传感器方案”。",
+        "occurred_at": "2026-06-08T08:00:00",
+        "mentioned_at": "2026-06-08T08:00:00",
+        "updated_at": "2026-06-08T08:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_robot_nav_08",
+        "event_type": "plan",
+        "summary": "机器人导航方案 下一步是：先完成外参标定，再复测玻璃走廊。",
+        "occurred_at": "2026-06-08T07:00:00",
+        "mentioned_at": "2026-06-08T07:00:00",
+        "updated_at": "2026-06-08T07:00:00",
+        "planned_for": "2026-06-11T07:00:00",
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_robot_nav_07",
+        "event_type": "risk",
+        "summary": "机器人导航方案 当前风险集中在：只看仿真成功率会掩盖真机漂移。",
+        "occurred_at": "2026-06-08T06:00:00",
+        "mentioned_at": "2026-06-08T06:00:00",
+        "updated_at": "2026-06-08T06:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "robotics_system",
+    "task_family": [
+      "calibration_status",
+      "plan_completion",
+      "risk_tracking"
+    ],
+    "domain": "robotics"
+  },
+  {
+    "scope_id": "search_index_rollout",
+    "event_count": 32,
+    "event_types": {
+      "check": 1,
+      "correction": 2,
+      "decision": 2,
+      "execution_log": 1,
+      "feedback": 1,
+      "issue": 3,
+      "meeting_note": 2,
+      "mention": 7,
+      "message": 1,
+      "note": 3,
+      "observation": 2,
+      "plan": 4,
+      "progress": 1,
+      "risk": 1,
+      "task_note": 1
+    },
+    "keywords": [
+      "search_index_rollout",
+      "bm25",
+      "patch",
+      "dashboard",
+      "hybrid",
+      "mention",
+      "cross",
+      "encoder",
+      "plan",
+      "reranker",
+      "rollout",
+      "dense",
+      "issue",
+      "note",
+      "sparse",
+      "180ms",
+      "6",
+      "correction",
+      "decision",
+      "finished"
+    ],
+    "summary": "搜索索引上线 群聊再次复述“上线 BM25 patch”，随后被标记为旧口径。；搜索索引上线 评审意见要求把“过期截图会被误读成已上线”写入当前风险说明。；搜索索引上线 已得到一个局部结果，但它只覆盖“旧 dashboard 截图”。",
+    "recent_events": [
+      {
+        "event_id": "v13_search_index_rollout_24",
+        "event_type": "mention",
+        "summary": "搜索索引上线 群聊再次复述“上线 BM25 patch”，随后被标记为旧口径。",
+        "occurred_at": "2026-06-09T12:00:00",
+        "mentioned_at": "2026-06-09T12:00:00",
+        "updated_at": "2026-06-09T12:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_search_index_rollout_23",
+        "event_type": "feedback",
+        "summary": "搜索索引上线 评审意见要求把“过期截图会被误读成已上线”写入当前风险说明。",
+        "occurred_at": "2026-06-09T11:00:00",
+        "mentioned_at": "2026-06-09T11:00:00",
+        "updated_at": "2026-06-09T11:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_search_index_rollout_22",
+        "event_type": "progress",
+        "summary": "搜索索引上线 已得到一个局部结果，但它只覆盖“旧 dashboard 截图”。",
+        "occurred_at": "2026-06-09T10:00:00",
+        "mentioned_at": "2026-06-09T10:00:00",
+        "updated_at": "2026-06-09T10:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_search_index_rollout_21",
+        "event_type": "message",
+        "summary": "搜索索引上线 依赖方只确认了日程，没有确认“hybrid 方案满足召回和延迟门槛”。",
+        "occurred_at": "2026-06-09T09:00:00",
+        "mentioned_at": "2026-06-09T09:00:00",
+        "updated_at": "2026-06-09T09:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_search_index_rollout_20",
+        "event_type": "check",
+        "summary": "搜索索引上线 当前需要围绕“检索上线方案”保留可追溯证据，不能只看最新噪声。",
+        "occurred_at": "2026-06-09T08:00:00",
+        "mentioned_at": "2026-06-09T08:00:00",
+        "updated_at": "2026-06-09T08:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_search_index_rollout_19",
+        "event_type": "note",
+        "summary": "搜索索引上线 的完成信号被定义为：hybrid 方案满足召回和延迟门槛。",
+        "occurred_at": "2026-06-09T07:00:00",
+        "mentioned_at": "2026-06-09T07:00:00",
+        "updated_at": "2026-06-09T07:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "search_infra",
+    "task_family": [
+      "rollout_status",
+      "latency_risk",
+      "plan_completion"
+    ],
+    "domain": "search_platform"
+  },
+  {
+    "scope_id": "sensor_firmware",
+    "event_count": 18,
+    "event_types": {
+      "correction": 1,
+      "decision": 1,
+      "execution_log": 1,
+      "issue": 1,
+      "meeting_note": 2,
+      "mention": 4,
+      "note": 2,
+      "observation": 2,
+      "plan": 2,
+      "risk": 1,
+      "task_note": 1
+    },
+    "keywords": [
+      "sensor_firmware",
+      "1",
+      "4",
+      "2",
+      "mention",
+      "3",
+      "meeting_note",
+      "note",
+      "observation",
+      "plan",
+      "correction",
+      "decision",
+      "execution_log",
+      "issue",
+      "risk",
+      "scope",
+      "task_note"
+    ],
+    "summary": "传感器固件 仍存在证据缺口：没有证据说明 1.4.3 已通过低温回归。；传感器固件 最近一次操作是“一次台账整理没有新固件”，没有产生新的状态证据。；传感器固件 的指标快照写着“常温通过率不覆盖低温漂移”，它不能单独改变当前结论。",
+    "recent_events": [
+      {
+        "event_id": "v13_sensor_firmware_18",
+        "event_type": "note",
+        "summary": "传感器固件 仍存在证据缺口：没有证据说明 1.4.3 已通过低温回归。",
+        "occurred_at": "2026-06-02T03:00:00",
+        "mentioned_at": "2026-06-02T03:00:00",
+        "updated_at": "2026-06-02T03:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_sensor_firmware_17",
+        "event_type": "execution_log",
+        "summary": "传感器固件 最近一次操作是“一次台账整理没有新固件”，没有产生新的状态证据。",
+        "occurred_at": "2026-06-02T02:00:00",
+        "mentioned_at": "2026-06-02T02:00:00",
+        "updated_at": "2026-06-02T02:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_sensor_firmware_16",
+        "event_type": "observation",
+        "summary": "传感器固件 的指标快照写着“常温通过率不覆盖低温漂移”，它不能单独改变当前结论。",
+        "occurred_at": "2026-06-02T01:00:00",
+        "mentioned_at": "2026-06-02T01:00:00",
+        "updated_at": "2026-06-02T01:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_sensor_firmware_15",
+        "event_type": "meeting_note",
+        "summary": "传感器固件 交接记录列出“温漂补偿、低温回归和烧录批次”，没有新增决策。",
+        "occurred_at": "2026-06-02T00:00:00",
+        "mentioned_at": "2026-06-02T00:00:00",
+        "updated_at": "2026-06-02T00:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_sensor_firmware_14",
+        "event_type": "mention",
+        "summary": "传感器固件 的历史风险“1.4.2 候选记录继续被引用”被复制到新文档，负责人确认只是背景。",
+        "occurred_at": "2026-06-01T23:00:00",
+        "mentioned_at": "2026-06-01T23:00:00",
+        "updated_at": "2026-06-01T23:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_sensor_firmware_13",
+        "event_type": "task_note",
+        "summary": "传感器固件 加入低优先级事项“整理温箱曲线截图”，不改变“修正温漂补偿后再做量产候选”。",
+        "occurred_at": "2026-06-01T22:00:00",
+        "mentioned_at": "2026-06-01T22:00:00",
+        "updated_at": "2026-06-01T22:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "embedded_system",
+    "task_family": [
+      "firmware_status",
+      "calibration_status",
+      "risk_tracking"
+    ],
+    "domain": "embedded"
+  },
+  {
+    "scope_id": "sql_lab_q6",
+    "event_count": 12,
+    "event_types": {
+      "correction": 1,
+      "decision": 1,
+      "draft": 1,
+      "execution_log": 1,
+      "fix": 1,
+      "issue": 2,
+      "mention": 2,
+      "observation": 1,
+      "plan": 1,
+      "risk": 1
+    },
+    "keywords": [
+      "sql_lab_q6",
+      "sql",
+      "department",
+      "project",
+      "issue",
+      "mention",
+      "correction",
+      "decision",
+      "draft",
+      "execution_log",
+      "fix",
+      "observation",
+      "plan",
+      "risk"
+    ],
+    "summary": "第六题 SQL 当前风险集中在：把能执行误判为逻辑正确。；第六题 SQL 的“SQL 初稿截图”又声称“初稿已经可以提交”，但备注说明这只是历史转述。；第六题 SQL 安排“重新跑结果集并核对样例输出”，目前只有排期，还没有完成记录。",
+    "recent_events": [
+      {
+        "event_id": "v13_sql_lab_q6_07",
+        "event_type": "risk",
+        "summary": "第六题 SQL 当前风险集中在：把能执行误判为逻辑正确。",
+        "occurred_at": "2026-06-07T22:00:00",
+        "mentioned_at": "2026-06-07T22:00:00",
+        "updated_at": "2026-06-07T22:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_sql_lab_q6_06",
+        "event_type": "mention",
+        "summary": "第六题 SQL 的“SQL 初稿截图”又声称“初稿已经可以提交”，但备注说明这只是历史转述。",
+        "occurred_at": "2026-06-07T21:00:00",
+        "mentioned_at": "2026-06-07T21:00:00",
+        "updated_at": "2026-06-07T21:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_sql_lab_q6_05",
+        "event_type": "plan",
+        "summary": "第六题 SQL 安排“重新跑结果集并核对样例输出”，目前只有排期，还没有完成记录。",
+        "occurred_at": "2026-06-07T20:00:00",
+        "mentioned_at": "2026-06-07T20:00:00",
+        "updated_at": "2026-06-07T20:00:00",
+        "planned_for": "2026-06-10T20:00:00",
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_sql_lab_q6_04",
+        "event_type": "observation",
+        "summary": "第六题 SQL 补充观察到：一次执行日志只证明 SQL 能跑通；它只影响“一次无逻辑变更的运行日志”，不改变“Department 与 Project 连接逻辑”。",
+        "occurred_at": "2026-06-07T19:00:00",
+        "mentioned_at": "2026-06-07T19:00:00",
+        "updated_at": "2026-06-07T19:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_sql_lab_q6_03",
+        "event_type": "correction",
+        "summary": "第六题 SQL 复盘确认：连接逻辑已按正确外键修正；旧判断不再作为当前状态。",
+        "occurred_at": "2026-06-07T18:00:00",
+        "mentioned_at": "2026-06-07T18:00:00",
+        "updated_at": "2026-06-07T18:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_sql_lab_q6_02",
+        "event_type": "issue",
+        "summary": "第六题 SQL 新发现：连接条件把部门项目关系连错；当前状态需要重新按有效证据判断。",
+        "occurred_at": "2026-06-07T17:00:00",
+        "mentioned_at": "2026-06-07T17:00:00",
+        "updated_at": "2026-06-07T17:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "coursework_debugging",
+    "task_family": [
+      "debug_status",
+      "fix_validation",
+      "state_tracking"
+    ],
+    "domain": "education"
+  },
+  {
+    "scope_id": "support_escalation",
+    "event_count": 12,
+    "event_types": {
+      "correction": 1,
+      "decision": 1,
+      "issue": 1,
+      "meeting_note": 1,
+      "mention": 3,
+      "note": 1,
+      "observation": 1,
+      "plan": 2,
+      "risk": 1
+    },
+    "keywords": [
+      "support_escalation",
+      "mention",
+      "plan",
+      "correction",
+      "decision",
+      "issue",
+      "meeting_note",
+      "note",
+      "observation",
+      "risk",
+      "scope",
+      "sla"
+    ],
+    "summary": "客服升级工单 的旧阻塞“客服无法看到支付平台回调”被转述，但没有证据说明它仍然有效。；客服升级工单 新增“工单标签和宏回复清理”，仅属流程记录，不影响状态判断。；有人把客服升级工单与“另一个优惠券退款工单”混在一起，随后更正说这不是本 scope 的证据。",
+    "recent_events": [
+      {
+        "event_id": "v13_support_escalation_12",
+        "event_type": "mention",
+        "summary": "客服升级工单 的旧阻塞“客服无法看到支付平台回调”被转述，但没有证据说明它仍然有效。",
+        "occurred_at": "2026-06-01T21:00:00",
+        "mentioned_at": "2026-06-01T21:00:00",
+        "updated_at": "2026-06-01T21:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_support_escalation_11",
+        "event_type": "note",
+        "summary": "客服升级工单 新增“工单标签和宏回复清理”，仅属流程记录，不影响状态判断。",
+        "occurred_at": "2026-06-01T20:00:00",
+        "mentioned_at": "2026-06-01T20:00:00",
+        "updated_at": "2026-06-01T20:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_support_escalation_10",
+        "event_type": "mention",
+        "summary": "有人把客服升级工单与“另一个优惠券退款工单”混在一起，随后更正说这不是本 scope 的证据。",
+        "occurred_at": "2026-06-01T19:00:00",
+        "mentioned_at": "2026-06-01T19:00:00",
+        "updated_at": "2026-06-01T19:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_support_escalation_09",
+        "event_type": "meeting_note",
+        "summary": "客服升级工单 例会只同步了“工单标签、客服班次和 SLA 备注”，没有更新“工单升级状态”。",
+        "occurred_at": "2026-06-01T18:00:00",
+        "mentioned_at": "2026-06-01T18:00:00",
+        "updated_at": "2026-06-01T18:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_support_escalation_08",
+        "event_type": "plan",
+        "summary": "客服升级工单 下一步是：先补发回调，再确认用户权益到账。",
+        "occurred_at": "2026-06-01T17:00:00",
+        "mentioned_at": "2026-06-01T17:00:00",
+        "updated_at": "2026-06-01T17:00:00",
+        "planned_for": "2026-06-04T17:00:00",
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_support_escalation_07",
+        "event_type": "risk",
+        "summary": "客服升级工单 当前风险集中在：继续套退款模板会错过真实故障。",
+        "occurred_at": "2026-06-01T16:00:00",
+        "mentioned_at": "2026-06-01T16:00:00",
+        "updated_at": "2026-06-01T16:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "customer_support",
+    "task_family": [
+      "escalation_status",
+      "root_cause",
+      "response_planning"
+    ],
+    "domain": "support"
+  },
+  {
+    "scope_id": "thesis_ch2",
+    "event_count": 12,
+    "event_types": {
+      "correction": 1,
+      "deadline": 2,
+      "decision": 1,
+      "draft": 1,
+      "feedback": 1,
+      "issue": 1,
+      "mention": 2,
+      "observation": 1,
+      "plan": 1,
+      "progress": 1
+    },
+    "keywords": [
+      "thesis_ch2",
+      "6",
+      "8",
+      "10",
+      "deadline",
+      "mention",
+      "correction",
+      "decision",
+      "draft",
+      "feedback",
+      "issue",
+      "observation",
+      "plan",
+      "progress"
+    ],
+    "summary": "论文第二章 的“旧截止日期群聊”又声称“第二章已经可以提交”，但备注说明这只是历史转述。；论文第二章 安排“重写动机段和研究空白段”，目前只有排期，还没有完成记录。；论文第二章 补充观察到：语法通读没有解决结构问题；它只影响“语法通读记录”，不改变“动机和研究空白补写”。",
+    "recent_events": [
+      {
+        "event_id": "v13_thesis_ch2_06",
+        "event_type": "mention",
+        "summary": "论文第二章 的“旧截止日期群聊”又声称“第二章已经可以提交”，但备注说明这只是历史转述。",
+        "occurred_at": "2026-06-07T21:00:00",
+        "mentioned_at": "2026-06-07T21:00:00",
+        "updated_at": "2026-06-07T21:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_thesis_ch2_05",
+        "event_type": "plan",
+        "summary": "论文第二章 安排“重写动机段和研究空白段”，目前只有排期，还没有完成记录。",
+        "occurred_at": "2026-06-07T20:00:00",
+        "mentioned_at": "2026-06-07T20:00:00",
+        "updated_at": "2026-06-07T20:00:00",
+        "planned_for": "2026-06-10T20:00:00",
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_thesis_ch2_04",
+        "event_type": "observation",
+        "summary": "论文第二章 补充观察到：语法通读没有解决结构问题；它只影响“语法通读记录”，不改变“动机和研究空白补写”。",
+        "occurred_at": "2026-06-07T19:00:00",
+        "mentioned_at": "2026-06-07T19:00:00",
+        "updated_at": "2026-06-07T19:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_thesis_ch2_03",
+        "event_type": "correction",
+        "summary": "论文第二章 复盘确认：提交节奏改到 6 月 10 日，内容结构仍需改；旧判断不再作为当前状态。",
+        "occurred_at": "2026-06-07T18:00:00",
+        "mentioned_at": "2026-06-07T18:00:00",
+        "updated_at": "2026-06-07T18:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_thesis_ch2_02",
+        "event_type": "issue",
+        "summary": "论文第二章 新发现：导师要求补动机和研究空白；当前状态需要重新按有效证据判断。",
+        "occurred_at": "2026-06-07T17:00:00",
+        "mentioned_at": "2026-06-07T17:00:00",
+        "updated_at": "2026-06-07T17:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_thesis_ch2_01",
+        "event_type": "decision",
+        "summary": "论文第二章 曾按“按 6 月 8 日提交旧提纲”推进，并把“旧截止日期群聊”当成默认依据。",
+        "occurred_at": "2026-06-07T16:00:00",
+        "mentioned_at": "2026-06-07T16:00:00",
+        "updated_at": "2026-06-07T16:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "research_writing",
+    "task_family": [
+      "draft_status",
+      "deadline_tracking",
+      "revision_planning"
+    ],
+    "domain": "academic_project"
+  },
+  {
+    "scope_id": "ui_accessibility",
+    "event_count": 18,
+    "event_types": {
+      "correction": 1,
+      "decision": 3,
+      "fix": 1,
+      "issue": 3,
+      "meeting_note": 1,
+      "mention": 3,
+      "observation": 1,
+      "plan": 4,
+      "risk": 1
+    },
+    "keywords": [
+      "ui_accessibility",
+      "ui",
+      "toolbar",
+      "contrast",
+      "plan",
+      "audit",
+      "decision",
+      "issue",
+      "mention",
+      "6",
+      "accessibility",
+      "mobile",
+      "10",
+      "4",
+      "constraints",
+      "correction",
+      "fix",
+      "label",
+      "meeting_note",
+      "observation"
+    ],
+    "summary": "有人把UI 可访问性与“营销首页视觉改版”混在一起，随后更正说这不是本 scope 的证据。；UI 可访问性 例会只同步了“组件命名、断点截图和设计 token 表”，没有更新“移动端可访问性状态”。；UI 可访问性 下一步是：先重调二级按钮 contrast，再做最终 audit。",
+    "recent_events": [
+      {
+        "event_id": "v13_ui_accessibility_10",
+        "event_type": "mention",
+        "summary": "有人把UI 可访问性与“营销首页视觉改版”混在一起，随后更正说这不是本 scope 的证据。",
+        "occurred_at": "2026-06-09T02:00:00",
+        "mentioned_at": "2026-06-09T02:00:00",
+        "updated_at": "2026-06-09T02:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_ui_accessibility_09",
+        "event_type": "meeting_note",
+        "summary": "UI 可访问性 例会只同步了“组件命名、断点截图和设计 token 表”，没有更新“移动端可访问性状态”。",
+        "occurred_at": "2026-06-09T01:00:00",
+        "mentioned_at": "2026-06-09T01:00:00",
+        "updated_at": "2026-06-09T01:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_ui_accessibility_08",
+        "event_type": "plan",
+        "summary": "UI 可访问性 下一步是：先重调二级按钮 contrast，再做最终 audit。",
+        "occurred_at": "2026-06-09T00:00:00",
+        "mentioned_at": "2026-06-09T00:00:00",
+        "updated_at": "2026-06-09T00:00:00",
+        "planned_for": "2026-06-12T00:00:00",
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_ui_accessibility_07",
+        "event_type": "risk",
+        "summary": "UI 可访问性 当前风险集中在：旧截图会误导为重叠问题仍存在。",
+        "occurred_at": "2026-06-08T23:00:00",
+        "mentioned_at": "2026-06-08T23:00:00",
+        "updated_at": "2026-06-08T23:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_ui_accessibility_06",
+        "event_type": "mention",
+        "summary": "UI 可访问性 的“修复前移动端截图”又声称“toolbar 仍然重叠”，但备注说明这只是历史转述。",
+        "occurred_at": "2026-06-08T22:00:00",
+        "mentioned_at": "2026-06-08T22:00:00",
+        "updated_at": "2026-06-08T22:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_ui_accessibility_05",
+        "event_type": "plan",
+        "summary": "UI 可访问性 安排“做最终 mobile accessibility audit”，目前只有排期，还没有完成记录。",
+        "occurred_at": "2026-06-08T21:00:00",
+        "mentioned_at": "2026-06-08T21:00:00",
+        "updated_at": "2026-06-08T21:00:00",
+        "planned_for": "2026-06-11T21:00:00",
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "frontend_accessibility",
+    "task_family": [
+      "audit_status",
+      "issue_resolution",
+      "acceptance_unknown"
+    ],
+    "domain": "frontend"
+  },
+  {
+    "scope_id": "warehouse_backfill",
+    "event_count": 32,
+    "event_types": {
+      "check": 1,
+      "correction": 1,
+      "decision": 1,
+      "execution_log": 1,
+      "feedback": 1,
+      "issue": 1,
+      "meeting_note": 2,
+      "mention": 6,
+      "message": 2,
+      "note": 7,
+      "observation": 2,
+      "plan": 3,
+      "progress": 1,
+      "risk": 1,
+      "task_note": 2
+    },
+    "keywords": [
+      "warehouse_backfill",
+      "7",
+      "note",
+      "mention",
+      "90",
+      "plan",
+      "dag",
+      "meeting_note",
+      "message",
+      "observation",
+      "scope",
+      "task_note",
+      "call",
+      "check",
+      "correction",
+      "decision",
+      "execution_log",
+      "feedback",
+      "issue",
+      "on"
+    ],
+    "summary": "数仓回填 当前回答应追溯到“回填执行状态”的有效事件，而不是最近一条无更新记录。；数仓回填 已把“90 天回填完成公告”归档，避免继续作为当前依据。；数仓回填 最终可接受状态必须看到“分区水位和样本回填均通过校验”的明确证据。",
+    "recent_events": [
+      {
+        "event_id": "v13_warehouse_backfill_32",
+        "event_type": "note",
+        "summary": "数仓回填 当前回答应追溯到“回填执行状态”的有效事件，而不是最近一条无更新记录。",
+        "occurred_at": "2026-06-02T17:00:00",
+        "mentioned_at": "2026-06-02T17:00:00",
+        "updated_at": "2026-06-02T17:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_warehouse_backfill_31",
+        "event_type": "mention",
+        "summary": "数仓回填 已把“90 天回填完成公告”归档，避免继续作为当前依据。",
+        "occurred_at": "2026-06-02T16:00:00",
+        "mentioned_at": "2026-06-02T16:00:00",
+        "updated_at": "2026-06-02T16:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_warehouse_backfill_30",
+        "event_type": "note",
+        "summary": "数仓回填 最终可接受状态必须看到“分区水位和样本回填均通过校验”的明确证据。",
+        "occurred_at": "2026-06-02T15:00:00",
+        "mentioned_at": "2026-06-02T15:00:00",
+        "updated_at": "2026-06-02T15:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_warehouse_backfill_29",
+        "event_type": "message",
+        "summary": "数仓回填 下游通知只同步背景，没有确认“7 天样本回填”完成。",
+        "occurred_at": "2026-06-02T14:00:00",
+        "mentioned_at": "2026-06-02T14:00:00",
+        "updated_at": "2026-06-02T14:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_warehouse_backfill_28",
+        "event_type": "plan",
+        "summary": "数仓回填 排期改为先处理“先修分区水位，再跑 7 天样本回填”，再检查“分区水位和样本回填均通过校验”。",
+        "occurred_at": "2026-06-02T13:00:00",
+        "mentioned_at": "2026-06-02T13:00:00",
+        "updated_at": "2026-06-02T13:00:00",
+        "planned_for": "2026-06-05T13:00:00",
+        "deadline_at": null
+      },
+      {
+        "event_id": "v13_warehouse_backfill_27",
+        "event_type": "note",
+        "summary": "数仓回填 证据包优先收集“分区水位缺口导致部分日期重复写入”和“完成公告作废，回填改为按分区水位分批执行”。",
+        "occurred_at": "2026-06-02T12:00:00",
+        "mentioned_at": "2026-06-02T12:00:00",
+        "updated_at": "2026-06-02T12:00:00",
+        "planned_for": null,
+        "deadline_at": null
+      }
+    ],
+    "scope_type": "data_pipeline",
+    "task_family": [
+      "backfill_status",
+      "data_quality",
+      "completion_unknown"
+    ],
+    "domain": "data_platform"
+  }
+]

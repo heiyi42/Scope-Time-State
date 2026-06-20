@@ -9,6 +9,7 @@ from typing import Dict, Optional
 from Experiment.run.common.io import load_cases, load_dotenv, load_events, validate_benchmark
 from Experiment.run.common.paths import BENCHMARK_DIR
 from Experiment.run.common.llm_client import LLMClient, LLMRequestError, provider_config
+from Experiment.run.common.subsets import load_subset_ids, select_cases_by_id
 from pipeline.public import print_public_summary, run_public_variant
 from Experiment.run.run_public_benchmark.routing import load_public_cases, load_scope_profiles, validate_public_cases
 from Experiment.run.run_public_benchmark.types import (
@@ -21,9 +22,11 @@ from Experiment.run.run_public_benchmark.types import (
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run STAMB-State public End-to-End benchmark.")
     parser.add_argument("--provider", choices=("openai", "deepseek"), default="openai")
-    parser.add_argument("--data-version", choices=("v1", "v1_1"), default="v1")
+    parser.add_argument("--data-version", choices=("v1", "v1_1", "v1_2", "v1_3"), default="v1")
     parser.add_argument("--variants", nargs="+", default=list(SUPPORTED_VARIANTS))
     parser.add_argument("--limit-cases", type=int, default=0)
+    parser.add_argument("--case-subset", default="", help="Named case-id subset from data/<version>/subsets.json.")
+    parser.add_argument("--case-subset-file", default=None, help="JSON list, or JSON object used with --case-subset.")
     parser.add_argument("--no-cache", action="store_true")
     parser.add_argument("--judge", action="store_true", help="Use an LLM judge for free-facet alignment.")
     parser.add_argument("--judge-provider", choices=("openai", "deepseek"), default="openai")
@@ -78,6 +81,13 @@ def main() -> int:
     validate_benchmark(events, hidden_cases)
     public_cases = load_public_cases(public_cases_path)
     validate_public_cases(public_cases, hidden_cases)
+    subset_ids = load_subset_ids(
+        data_dir=BENCHMARK_DIR / "data" / args.data_version,
+        subset_name=args.case_subset,
+        subset_path=Path(args.case_subset_file) if args.case_subset_file else None,
+    )
+    if subset_ids:
+        public_cases = select_cases_by_id(public_cases, subset_ids)
     if args.limit_cases:
         public_cases = public_cases[: args.limit_cases]
 
@@ -94,6 +104,8 @@ def main() -> int:
             f"valid public benchmark: events={len(events)} public_cases={len(public_cases)} "
             f"hidden_cases={len(hidden_cases)} variants={','.join(args.variants)}"
         )
+        if subset_ids:
+            print(f"case_subset={args.case_subset or args.case_subset_file} selected_cases={len(subset_ids)}")
         print(f"events_path={events_path}")
         print(f"public_cases_path={public_cases_path}")
         print(f"scope_profiles_path={scope_profiles_path} profiles={len(scope_profiles)}")

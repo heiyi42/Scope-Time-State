@@ -42,7 +42,11 @@ def public_judge_system_prompt() -> str:
     )
 
 
-def public_judge_user_prompt(case: QueryCase, row: PublicEvalRow) -> str:
+def public_judge_user_prompt(
+    case: QueryCase,
+    row: PublicEvalRow,
+    validation_error: Optional[Dict[str, object]] = None,
+) -> str:
     payload = {
         "query": case.query,
         "operation": case.operation,
@@ -58,6 +62,16 @@ def public_judge_user_prompt(case: QueryCase, row: PublicEvalRow) -> str:
             "预测 facet 如果不是 gold 状态的等价或必要上下文，算 unsupported。",
         ],
     }
+    if validation_error is not None:
+        payload["previous_output_error"] = {
+            "problem": "judge output missed required schema fields or per-facet/per-slot scores",
+            "issues": validation_error.get("issues", []),
+            "required_fix": (
+                "Rewrite the full JSON. Include gold_slot_scores for every gold_state_slots key, "
+                "pred_facet_scores for every pred_facets index, answer_slot_scores for every gold slot, "
+                "and both answer_score and answer_score_10."
+            ),
+        }
     return json.dumps(payload, ensure_ascii=False, indent=2)
 
 
@@ -94,6 +108,40 @@ def normalized_public_judge_output(judge_output: Dict[str, object]) -> Dict[str,
     return normalized
 
 
+def public_judge_schema_issues(
+    judge_output: Dict[str, object],
+    case: QueryCase,
+    facet_count: int,
+) -> List[str]:
+    raw = normalized_public_judge_output(normalized_judge_output(judge_output))
+    issues: List[str] = []
+    gold_scores = raw.get("gold_slot_scores", raw.get("slot_scores", {}))
+    if not isinstance(gold_scores, dict):
+        issues.append("missing_gold_slot_scores")
+    else:
+        for slot in case.output_slots:
+            if not isinstance(gold_scores.get(slot), dict):
+                issues.append(f"missing_gold_slot_score:{slot}")
+    pred_scores = raw.get("pred_facet_scores")
+    if facet_count:
+        if not isinstance(pred_scores, list):
+            issues.append("missing_pred_facet_scores")
+        elif len(pred_scores) < facet_count:
+            issues.append(f"incomplete_pred_facet_scores:{len(pred_scores)}/{facet_count}")
+    answer_slot_scores = raw.get("answer_slot_scores")
+    if not isinstance(answer_slot_scores, dict):
+        issues.append("missing_answer_slot_scores")
+    else:
+        for slot in case.output_slots:
+            if not isinstance(answer_slot_scores.get(slot), dict):
+                issues.append(f"missing_answer_slot_score:{slot}")
+    if not isinstance(raw.get("answer_score"), dict):
+        issues.append("missing_answer_score")
+    if not isinstance(raw.get("answer_score_10"), dict):
+        issues.append("missing_answer_score_10")
+    return issues
+
+
 def public_judge_metrics(
     judge_output: Optional[Dict[str, object]],
     case: QueryCase,
@@ -124,12 +172,12 @@ def public_judge_metrics(
     facet_precision = round(sum(scored_facets) / len(scored_facets), 3) if scored_facets else None
 
     answer_score = raw.get("answer_score", {})
-    answer_judge = score_value(answer_score.get("score", 0)) if isinstance(answer_score, dict) else 0.0
+    answer_judge = score_value(answer_score.get("score", 0)) if isinstance(answer_score, dict) else None
     answer_score_10 = raw.get("answer_score_10", {})
     answer_judge_10 = (
         score_10_value(answer_score_10.get("score"))
         if isinstance(answer_score_10, dict)
-        else score_10_value(answer_score_10)
+        else None
     )
     unsupported_claim_rate = round(1.0 - facet_precision, 3) if facet_precision is not None else None
     return facet_recall, facet_precision, answer_judge, answer_judge_10, unsupported_claim_rate
@@ -207,6 +255,19 @@ def evaluate_public_output(
 def attach_public_judge_score(judge_client: LLMClient, case: QueryCase, row: PublicEvalRow) -> PublicEvalRow:
     raw = judge_client.complete_json(public_judge_system_prompt(), public_judge_user_prompt(case, row))
     raw = normalized_public_judge_output(raw)
+    issues = public_judge_schema_issues(raw, case, len(row.pred_facets))
+    if issues:
+        retry_raw = judge_client.complete_json(
+            public_judge_system_prompt(),
+            public_judge_user_prompt(case, row, {"issues": issues}),
+        )
+        retry_raw = normalized_public_judge_output(retry_raw)
+        retry_issues = public_judge_schema_issues(retry_raw, case, len(row.pred_facets))
+        if len(retry_issues) <= len(issues):
+            raw = retry_raw
+            issues = retry_issues
+    if issues:
+        raw["_schema_issues"] = issues
     row.judge_output = raw
     (
         row.facet_recall,
