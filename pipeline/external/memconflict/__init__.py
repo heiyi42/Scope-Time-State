@@ -1,0 +1,2 @@
+"""MemConflict external benchmark adapter."""
+
