@@ -1,0 +1,58 @@
+{
+  "c0910f91a0adaeaa9f516d7770b7d2c083544af93e4f86d2c56d0fe96aa9d881": {
+    "answer": "Business Administration",
+    "evidence_session_ids": [
+      "answer_280352e9",
+      "84503ce4_1"
+    ],
+    "state_facets": [
+      {
+        "name": "degree",
+        "value": "Business Administration",
+        "support_session_ids": [
+          "answer_280352e9",
+          "84503ce4_1"
+        ]
+      }
+    ],
+    "rejected_claims": [],
+    "answer_rationale": "The user explicitly stated they graduated with a degree in Business Administration."
+  },
+  "b4b61998865a0f27413322dc6218bba7bacb24076da6f377661ea5ad74ec589c": {
+    "answer": "User's daily commute takes 45 minutes each way.",
+    "evidence_session_ids": [
+      "ultrachat_387144",
+      "answer_40a90d51"
+    ],
+    "state_facets": [
+      {
+        "name": "temporal_event",
+        "value": "User's daily commute takes 45 minutes each way.",
+        "support_session_ids": [
+          "ultrachat_387144",
+          "answer_40a90d51"
+        ]
+      }
+    ],
+    "rejected_claims": [],
+    "answer_rationale": "The evidence clearly states the duration of the user's daily commute."
+  },
+  "1dde3f174eb1260875ce541ecde86f1ec8254d22c69c21e05af7f306f95b98a7": {
+    "answer": "User redeemed a $5 coupon on coffee creamer last Sunday.",
+    "evidence_session_ids": [
+      "answer_d61669c7"
+    ],
+    "state_facets": [
+      {
+        "name": "coupon_redemption",
+        "value": "User redeemed a $5 coupon on coffee creamer last Sunday.",
+        "support_session_ids": [
+          "answer_d61669c7",
+          "217debf7"
+        ]
+      }
+    ],
+    "rejected_claims": [],
+    "answer_rationale": "The evidence directly states that the user redeemed a $5 coupon on coffee creamer last Sunday."
+  }
+}

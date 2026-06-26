@@ -1,0 +1,383 @@
+{
+  "benchmark": "LongMemEval-S",
+  "method": "prebuilt_llm_kg_graph",
+  "data_path": "C:\\Users\\93232\\Desktop\\SCIENCE\\AAAI2027_2\\Experiment\\Other_BenchMark\\LongMemEval-S\\LongMemEval-S_data\\data\\longmemeval_s_cleaned.json",
+  "graph_dir": "graph_retrieval_methods\\prebuilt_llm_kg_graph\\artifacts\\graphs_sa_dsv4pro",
+  "answer_provider": "openai",
+  "answer_model": "gpt-4o-mini",
+  "judge_provider": "openai",
+  "judge_model": "gpt-4o",
+  "variants": [
+    "prebuilt_llm_kg_graph"
+  ],
+  "limit_cases": 0,
+  "limit_per_type": 4,
+  "question_types": {
+    "single-session-assistant": 4
+  },
+  "results": [
+    {
+      "variant": "prebuilt_llm_kg_graph",
+      "summary": {
+        "n_cases": 4,
+        "local_answer_match": 0.25,
+        "official_answer_accuracy": 1.0,
+        "candidate_session_recall": 1.0,
+        "candidate_session_precision": 0.05,
+        "evidence_session_recall": 1.0,
+        "evidence_session_precision": 1.0,
+        "abstention_accuracy": null,
+        "task_averaged_official_answer_accuracy": 1.0,
+        "by_question_type": {
+          "single-session-assistant": {
+            "n_cases": 4,
+            "local_answer_match": 0.25,
+            "official_answer_accuracy": 1.0,
+            "candidate_session_recall": 1.0,
+            "candidate_session_precision": 0.05,
+            "evidence_session_recall": 1.0,
+            "evidence_session_precision": 1.0
+          }
+        }
+      },
+      "rows": [
+        {
+          "question_id": "7161e7e2",
+          "question_type": "single-session-assistant",
+          "task_adapter": "Single-session assistant memory recall",
+          "is_abstention": false,
+          "question": "I'm checking our previous chat about the shift rotation sheet for GM social media agents. Can you remind me what was the rotation for Admon on a Sunday?",
+          "gold_answer": "Admon was assigned to the 8 am - 4 pm (Day Shift) on Sundays.",
+          "hypothesis": "Admon's shift on Sunday is from 8 am to 4 pm.",
+          "candidate_session_ids": [
+            "answer_sharegpt_5Lzox6N_0",
+            "5850de18_2",
+            "dba97bb1_4",
+            "e89b6be2_2",
+            "6b17c99b_2",
+            "3c3fee41",
+            "sharegpt_PjFSCFK_9",
+            "ultrachat_68050",
+            "2bd9990a_3",
+            "5aed819f",
+            "sharegpt_yguSguz_0",
+            "ad361482_1",
+            "ultrachat_541021",
+            "sharegpt_b5rHj0c_20",
+            "3070419a_1",
+            "sharegpt_6kDZTZ2_0",
+            "ultrachat_447051",
+            "ultrachat_301437",
+            "ae73b0f7_2",
+            "b4f63a70_3"
+          ],
+          "evidence_session_ids": [
+            "answer_sharegpt_5Lzox6N_0"
+          ],
+          "answer_session_ids": [
+            "answer_sharegpt_5Lzox6N_0"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": false,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "admon_sunday_shift",
+              "value": "8 am - 4 pm",
+              "support_session_ids": [
+                "answer_sharegpt_5Lzox6N_0"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence directly states Admon's shift for Sunday.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_sharegpt_5Lzox6N_0"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_sharegpt_5Lzox6N_0",
+                "date": "2023/05/24 (Wed) 02:46",
+                "role": "assistant",
+                "content": "Thank you for providing the agent names. Here's an updated version of the shift rotation sheet for GM social media agents with 7 agents, 4 shifts, and 2 days off for every agent for a week starting on Sunday and ending on Saturday:\n\nShift Rotation Sheet for GM Social Media Agents (1 Week, Sunday - Saturday)\n\n|  | 8 am - 4 pm (Day Shift) | 12 pm - 8 pm (Afternoon Shift) | 4 pm - 12 am (Evening Shift) | 12 am - 8 am (Night Shift) |\n| --- | --- | --- | --- | --- |\n| Sunday | Admon | Magdy | Ehab | Sara |\n| Monday | Mostafa | Nemr | Adam | Admon |\n| Tuesday | Magdy | Ehab | Sara | Mostafa |\n| Wednesday | Nemr | Adam | Admon | Magdy |\n| Thursday | Ehab | Sara | Mostafa | Nemr |\n| Friday | Admon | Magdy | Ehab | Sara |\n| Saturday | Adam | Mostafa | Nemr | Admon |\n\nNote: This rotation is for a 1-week period, starting on Sunday and ending on Saturday, with each agent working one shift per day and having two days off during the week. The names of the agents have been added to the corresponding shift. You can adjust the duration of the rotation and the number of days off per week based on your team's specific needs.",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "admon_sunday_shift",
+                "value": "8 am - 4 pm",
+                "support_session_ids": [
+                  "answer_sharegpt_5Lzox6N_0"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph\\artifacts\\graphs_sa_dsv4pro\\7161e7e2.graph.json"
+        },
+        {
+          "question_id": "c4f10528",
+          "question_type": "single-session-assistant",
+          "task_adapter": "Single-session assistant memory recall",
+          "is_abstention": false,
+          "question": "I'm planning to visit Bandung again and I was wondering if you could remind me of the name of that restaurant in Cihampelas Walk that serves a great Nasi Goreng?",
+          "gold_answer": "Miss Bee Providore",
+          "hypothesis": "Miss Bee Providore in Cihampelas Walk serves a highly recommended Nasi Goreng.",
+          "candidate_session_ids": [
+            "answer_ultrachat_234453",
+            "689fec3d_1",
+            "51c89181_1",
+            "6cf1848e_2",
+            "107d40f0",
+            "29116b50_1",
+            "sharegpt_yMwEvl7_557",
+            "21ff9566_2",
+            "de55485d_1",
+            "7613d5ec_1",
+            "e12cfbcd",
+            "c8c90a81_1",
+            "5ac7f9c5_2",
+            "ultrachat_172995",
+            "sharegpt_5GYAEJe_23",
+            "ultrachat_577781",
+            "7157bff1_2",
+            "ultrachat_504611",
+            "dc1f9713_2",
+            "a17423e7_1"
+          ],
+          "evidence_session_ids": [
+            "answer_ultrachat_234453"
+          ],
+          "answer_session_ids": [
+            "answer_ultrachat_234453"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "restaurant_recommendation",
+              "value": "Miss Bee Providore in Cihampelas Walk serves a highly recommended Nasi Goreng.",
+              "support_session_ids": [
+                "answer_ultrachat_234453"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence directly supports the recommendation of Miss Bee Providore for Nasi Goreng.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_ultrachat_234453"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_ultrachat_234453",
+                "date": "2023/05/30 (Tue) 12:09",
+                "role": "assistant",
+                "content": "Miss Bee Providore offers a variety of delicious dishes, both Western and Indonesian cuisine. Here are a few signature dishes you should definitely try:\n\n1. Miss Bee's Nasi Goreng: Their take on the classic Indonesian fried rice dish is a must-try! It's served with a side of prawn crackers and topped with a fried egg. 2. Yoghurt Granola Bowl: This is a great option if you're looking for something healthy and refreshing. It's made with homemade granola, fresh fruit, and yogurt. 3. Fried Chicken Burger: This signature burger features a juicy chicken patty, crispy bacon, lettuce, tomato, and a special aioli sauce. It's served with a side of fries. 4. Beef Rendang: If you're looking for a traditional Indonesian dish, try their version of beef rendang. It's a slow-cooked beef dish in a flavorful, spicy coconut milk sauce. 5. Chocolate Brownie: Finish off your meal with a sweet treat - Miss Bee's chocolate brownie is a local favorite and is served warm with vanilla ice cream and chocolate sauce. These are just a few of the many delicious options, so feel free to explore their menu and try something new!",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "restaurant_recommendation",
+                "value": "Miss Bee Providore in Cihampelas Walk serves a highly recommended Nasi Goreng.",
+                "support_session_ids": [
+                  "answer_ultrachat_234453"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph\\artifacts\\graphs_sa_dsv4pro\\c4f10528.graph.json"
+        },
+        {
+          "question_id": "89527b6b",
+          "question_type": "single-session-assistant",
+          "task_adapter": "Single-session assistant memory recall",
+          "is_abstention": false,
+          "question": "I'm going back to our previous conversation about the children's book on dinosaurs. Can you remind me what color was the scaly body of the Plesiosaur in the image?",
+          "gold_answer": "The Plesiosaur had a blue scaly body.",
+          "hypothesis": "The scaly body of the Plesiosaur in the image was blue.",
+          "candidate_session_ids": [
+            "answer_sharegpt_YkWn1Ne_0",
+            "ultrachat_117600",
+            "51c262b6_2",
+            "9fa1d135_1",
+            "9c722816",
+            "07e363d9_2",
+            "ultrachat_41485",
+            "765ce8a7_3",
+            "ultrachat_84388",
+            "48d385f0_1",
+            "644e1d00",
+            "sharegpt_M9T66Xd_5",
+            "00cbfcfd",
+            "990f3ef9_7",
+            "bcdb3847",
+            "9661e558",
+            "sharegpt_htSCqmh_171",
+            "ultrachat_442154",
+            "ultrachat_11001",
+            "e82ce7cd_5"
+          ],
+          "evidence_session_ids": [
+            "answer_sharegpt_YkWn1Ne_0"
+          ],
+          "answer_session_ids": [
+            "answer_sharegpt_YkWn1Ne_0"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": false,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "plesiosaur_scaly_body_color",
+              "value": "blue",
+              "support_session_ids": [
+                "answer_sharegpt_YkWn1Ne_0"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence directly states the color of the Plesiosaur's scaly body.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_sharegpt_YkWn1Ne_0"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_sharegpt_YkWn1Ne_0",
+                "date": "2023/05/23 (Tue) 06:44",
+                "role": "assistant",
+                "content": "\"The Amazing Adventures of Dinosaurs\"\n\nOnce upon a time, in a land far, far away, there lived a group of incredible creatures called dinosaurs. These fascinating creatures roamed the earth, ruled the skies, and swam in the oceans.\n\nJoin us on a journey to discover the exciting world of dinosaurs and learn about their incredible abilities and traits.\n\nChapter 1: The Mighty T-Rex\n\nThe T-Rex was a giant dinosaur that lived millions of years ago. It was one of the largest carnivorous dinosaurs that ever lived, and it had sharp teeth and strong jaws that could crush anything in its path.\n\n::T-Rex Image:: == A large, fierce-looking T-Rex stands on its hind legs, roaring loudly with its sharp teeth showing. The T-Rex has a green scaly body, with small arms, and a long tail to help it balance. In the background, there is a lush forest with tall trees.\n\nChapter 2: The Flying Pterodactyl\n\nThe Pterodactyl was a flying dinosaur that lived in the skies. It had large wings that helped it soar high above the ground, and a sharp beak to catch its prey.\n\n::Pterodactyl Image:: == A Pterodactyl is shown in mid-flight, with its wings spread wide and its sharp beak open. The Pterodactyl has a green scaly body and long, thin legs. The background is a beautiful blue sky with fluffy clouds.\n\nChapter 3: The Swimming Plesiosaur\n\nThe Plesiosaur was a dinosaur that lived in the oceans. It had a long neck and powerful flippers that helped it swim gracefully through the water.\n\n::Plesiosaur Image:: == A Plesiosaur is shown swimming in the ocean, with its long neck and flippers in motion. The Plesiosaur has a blue scaly body, and its eyes are fixed on something in the distance. In the background, there are colorful fish swimming along with it and the sun shining brightly.\n\nChapter 4: The Cuddly Triceratops\n\nThe Triceratops was a herbivorous dinosaur with a large head and three horns. It was a gentle giant that lived on the land and ate only plants.\n\n::Triceratops Image:: == A Triceratops is shown grazing in a field, surrounded by tall green grasses. The Triceratops has a brown scaly body, with a large head and three horns. Its eyes are closed, and it looks happy and content. In the background, there is a beautiful sunset with orange and pink clouds.\n\nThe end\n\nThis was just the beginning of our journey through the amazing world of dinosaurs. There are many more incredible creatures to discover, and we hope you enjoyed learning about these fascinating creatures.",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "plesiosaur_scaly_body_color",
+                "value": "blue",
+                "support_session_ids": [
+                  "answer_sharegpt_YkWn1Ne_0"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph\\artifacts\\graphs_sa_dsv4pro\\89527b6b.graph.json"
+        },
+        {
+          "question_id": "e9327a54",
+          "question_type": "single-session-assistant",
+          "task_adapter": "Single-session assistant memory recall",
+          "is_abstention": false,
+          "question": "I'm planning to revisit Orlando. I was wondering if you could remind me of that unique dessert shop with the giant milkshakes we talked about last time?",
+          "gold_answer": "The Sugar Factory at Icon Park.",
+          "hypothesis": "The Sugar Factory (Icon Park, Orlando)",
+          "candidate_session_ids": [
+            "answer_ultrachat_480665",
+            "ba944cdc",
+            "c58fdf1e_2",
+            "61e1ba53_2",
+            "11decc61",
+            "sharegpt_6dPUCcK_13",
+            "c0d099e6_2",
+            "8221810f_3",
+            "7613d5ec_2",
+            "c81897cd_8",
+            "sharegpt_NP5eyFN_5",
+            "30e58d0c_1",
+            "c81897cd_2",
+            "sharegpt_Q7EQHIJ_0",
+            "28e0ea23_2",
+            "8ed77bea_1",
+            "b65f51fb_5",
+            "ultrachat_95525",
+            "ecc39c87_2",
+            "b10dce5e"
+          ],
+          "evidence_session_ids": [
+            "answer_ultrachat_480665"
+          ],
+          "answer_session_ids": [
+            "answer_ultrachat_480665"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": false,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "unique_dessert_shop_with_giant_milkshakes",
+              "value": "The Sugar Factory (Icon Park, Orlando)",
+              "support_session_ids": [
+                "answer_ultrachat_480665"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence directly identifies The Sugar Factory as the unique dessert shop with giant milkshakes.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_ultrachat_480665"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_ultrachat_480665",
+                "date": "2023/05/21 (Sun) 17:19",
+                "role": "assistant",
+                "content": "Absolutely! Here are some fun dessert spots that your family might enjoy after dinner:\n\n1. The Sugar Factory - A sweet shop located at Icon Park that offers an enormous menu of sweet treats, including specialty drinks and giant milkshakes.\n\n2. Wondermade - A gourmet marshmallow shop located in Sanford, just north of Orlando, that offers unique flavored marshmallows and s'mores kits.\n\n3. Gideon's Bakehouse - A bakery located at Disney Springs that offers delicious cookies, cakes, and other baked treats.\n\n4. Kelly's Homemade Ice Cream - A small-batch ice cream shop located in Orlando that offers unique flavors like Banana Cream Pie and Strawberry Jalapeno.\n\n5. Voodoo Doughnut - A doughnut shop located at Universal CityWalk that offers imaginative and creative doughnuts with unique toppings and flavors.\n\n6. The Glass Knife - A dessert and coffee shop located in Winter Park that serves up beautiful cakes, pastries, and other sweet treats in a stylish setting.\n\n7. Lickety Splitz - A dessert shop located in Orlando that serves up handmade frozen yogurt, sorbet, and ice cream.\n\n8. Better Than Sex - A dessert shop located in the Ivanhoe Village neighborhood of Orlando that specializes in decadent desserts like chocolate fondue and cheesecake.\n\n9. The Greenery Creamery - An ice cream shop located in the Thornton Park neighborhood of Orlando that offers all-natural ice cream flavors like lavender, honeycomb, and matcha.\n\n10. The Pastry Studio - A bakery located in Daytona Beach, just east of Orlando, that offers beautiful and delicious custom cakes and other desserts.",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "unique_dessert_shop_with_giant_milkshakes",
+                "value": "The Sugar Factory (Icon Park, Orlando)",
+                "support_session_ids": [
+                  "answer_ultrachat_480665"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph\\artifacts\\graphs_sa_dsv4pro\\e9327a54.graph.json"
+        }
+      ]
+    }
+  ]
+}

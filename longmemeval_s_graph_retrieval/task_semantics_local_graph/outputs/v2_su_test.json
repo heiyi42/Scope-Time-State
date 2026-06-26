@@ -1,0 +1,134 @@
+{
+  "benchmark": "LongMemEval-S",
+  "method": "task_semantics_local_graph",
+  "data_path": "C:\\Users\\93232\\Desktop\\SCIENCE\\AAAI2027_2\\Experiment\\Other_BenchMark\\LongMemEval-S\\LongMemEval-S_data\\data\\longmemeval_s_cleaned.json",
+  "construction_provider": "openai",
+  "construction_model": "gpt-4o-mini",
+  "answer_provider": "openai",
+  "answer_model": "gpt-4o-mini",
+  "judge_provider": "openai",
+  "judge_model": "gpt-4o-2024-08-06",
+  "variants": [
+    "task_semantics_local_graph"
+  ],
+  "task_candidate_k": 20,
+  "graph_batch_size": 5,
+  "max_facets": 12,
+  "limit_cases": 0,
+  "limit_per_type": 1,
+  "question_types": {
+    "single-session-user": 1
+  },
+  "results": [
+    {
+      "variant": "task_semantics_local_graph",
+      "summary": {
+        "n_cases": 1,
+        "local_answer_match": 1.0,
+        "official_answer_accuracy": 1.0,
+        "candidate_session_recall": 1.0,
+        "candidate_session_precision": 0.05,
+        "evidence_session_recall": 0.0,
+        "evidence_session_precision": 0.0,
+        "abstention_accuracy": null,
+        "task_averaged_official_answer_accuracy": 1.0,
+        "by_question_type": {
+          "single-session-user": {
+            "n_cases": 1,
+            "local_answer_match": 1.0,
+            "official_answer_accuracy": 1.0,
+            "candidate_session_recall": 1.0,
+            "candidate_session_precision": 0.05,
+            "evidence_session_recall": 0.0,
+            "evidence_session_precision": 0.0
+          }
+        }
+      },
+      "rows": [
+        {
+          "question_id": "e47becba",
+          "question_type": "single-session-user",
+          "task_adapter": "Single-session user fact recall",
+          "is_abstention": false,
+          "question": "What degree did I graduate with?",
+          "gold_answer": "Business Administration",
+          "hypothesis": "Business Administration",
+          "candidate_session_ids": [
+            "02bd2b90_3",
+            "answer_280352e9",
+            "f6859b48_2",
+            "sharegpt_Cr2tc1f_0",
+            "ultrachat_214101",
+            "5dac7cc2_1",
+            "41abc171_4",
+            "2ae4f277_2",
+            "7045db85_1",
+            "e27891d3_2",
+            "4fd76316",
+            "d94b721b",
+            "ec6ca9ef",
+            "3b3a77d9",
+            "ultrachat_486410",
+            "ultrachat_359984",
+            "a041cdd4_3",
+            "ultrachat_422229",
+            "ultrachat_574556",
+            "84503ce4_1"
+          ],
+          "evidence_session_ids": [
+            "d94b721b"
+          ],
+          "answer_session_ids": [
+            "answer_280352e9"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 0.0,
+          "evidence_session_precision": 0.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o-2024-08-06",
+            "label": true,
+            "response": "yes"
+          },
+          "state_facets": [
+            {
+              "name": "degree",
+              "value": "Business Administration",
+              "support_session_ids": [
+                "d94b721b"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence directly states the degree obtained.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "d94b721b"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "d94b721b",
+                "date": "2023/05/29 (Mon) 14:48",
+                "role": "user",
+                "content": "I'll try contacting the local tourism board to see if they have any information about the International Market. Do you think they would also have information about other upcoming events in the area, like the Holiday Market in December?",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "degree",
+                "value": "Business Administration",
+                "support_session_ids": [
+                  "d94b721b"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          }
+        }
+      ]
+    }
+  ]
+}

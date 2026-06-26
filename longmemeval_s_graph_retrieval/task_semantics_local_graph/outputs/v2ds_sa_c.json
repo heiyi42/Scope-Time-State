@@ -1,0 +1,3416 @@
+{
+  "28a3fd613a616bcd737234d2100441f12c494c2dfac8fd50d2d89ce84710698a": {
+    "claims": [],
+    "relations": []
+  },
+  "d1cd0f1a026b44fd50862e40f9a35e4bd7a2a7a50b83b3f4e8738144f4c3565d": {
+    "claims": [],
+    "relations": []
+  },
+  "58f91985d6619610c4d13386336fb59c5b5a5f5252a966308069543840855f06": {
+    "claims": [],
+    "relations": []
+  },
+  "6aa43f64859ef279d2fe165b0b9bee5c25707a183110427fd897f8be13caa38c": {
+    "claims": [],
+    "relations": []
+  },
+  "3606bf17929b183dafd764f16e8f7493724668ca8055121e1af84e346f20ac8f": {
+    "claims": [],
+    "relations": []
+  },
+  "8127fdeb97819e6585014f53a779ea0fbcf00cfc3a93260516dc64efe2dffe5e": {
+    "claims": [],
+    "relations": []
+  },
+  "4beae995095fd2f14eaf6760480ad3cbbabf2b5a2d4eeccc158d3b47c9559ee3": {
+    "claims": [],
+    "relations": []
+  },
+  "9f0450ee74382ec7b2fdc25c3f890c658a8dbcb99ff91b3f04207d22a5b735be": {
+    "claims": [],
+    "relations": []
+  },
+  "fe46e3fb434801a609e905b78266ddc1da3d9e9ed9c7211d287882015ebf1c02": {
+    "claims": [],
+    "relations": []
+  },
+  "aaa58b10cea70b63d512224bd9bd9365f37fa2350c9a6e9e47e1e9aa7328c68e": {
+    "claims": [],
+    "relations": []
+  },
+  "d14e4a99fdc7409f6459dd8677478afdff1566467498a9f633ae557b3bf67d1d": {
+    "claims": [],
+    "relations": []
+  },
+  "8843c33732ead46dcc74bcc9e8c42cd2896066818e9e3dd5423b9235ae895f71": {
+    "claims": [],
+    "relations": []
+  },
+  "85d805544294211c5e646780419bb09fdbfe69eab0186d8c6ca717f089b2c39f": {
+    "claims": [],
+    "relations": []
+  },
+  "9062f8874f6ff14f2dea4b25a306deddaa9f9492a8d5e9790c3165e475033cf1": {
+    "claims": [],
+    "relations": []
+  },
+  "d652883cbaf94c2445e7d994e653a17148ddac9d86f86d1f40027a3d481b03ba": {
+    "claims": [],
+    "relations": []
+  },
+  "d3df4c68f988d4f9208fd53d703960bff2f32ba86de4bae3756222ac017b2938": {
+    "claims": [],
+    "relations": []
+  },
+  "9b881386705bd72cadb2214b7c64aa3425a7758ac42a2ab996297864ebbd67e0": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:answer_sharegpt_5Lzox6N_0:3",
+        "claim": "In the 7-agent shift rotation for 4 weeks, Week 1 Sunday is assigned Agent 7.",
+        "entity_labels": [
+          "Agent 7",
+          "Sunday",
+          "Week 1"
+        ],
+        "scope_labels": [
+          "shift_rotation",
+          "GM_social_media_agents"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:answer_sharegpt_5Lzox6N_0:3",
+        "claim": "In the 7-agent shift rotation for 4 weeks, Week 2 Sunday is assigned Agent 5.",
+        "entity_labels": [
+          "Agent 5",
+          "Sunday",
+          "Week 2"
+        ],
+        "scope_labels": [
+          "shift_rotation",
+          "GM_social_media_agents"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:answer_sharegpt_5Lzox6N_0:3",
+        "claim": "In the 7-agent shift rotation for 4 weeks, Week 3 Sunday is assigned Agent 3.",
+        "entity_labels": [
+          "Agent 3",
+          "Sunday",
+          "Week 3"
+        ],
+        "scope_labels": [
+          "shift_rotation",
+          "GM_social_media_agents"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:answer_sharegpt_5Lzox6N_0:3",
+        "claim": "In the 7-agent shift rotation for 4 weeks, Week 4 Sunday is assigned Agent 1.",
+        "entity_labels": [
+          "Agent 1",
+          "Sunday",
+          "Week 4"
+        ],
+        "scope_labels": [
+          "shift_rotation",
+          "GM_social_media_agents"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:answer_sharegpt_5Lzox6N_0:0",
+        "claim": "User requested creation of a shift rotation sheet for GM social media agents.",
+        "entity_labels": [
+          "shift rotation sheet",
+          "GM social media agents"
+        ],
+        "scope_labels": [
+          "task_request"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:answer_sharegpt_5Lzox6N_0:2",
+        "claim": "User specified 7 agents for the shift rotation.",
+        "entity_labels": [
+          "7 agents"
+        ],
+        "scope_labels": [
+          "shift_rotation"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:answer_sharegpt_5Lzox6N_0:4",
+        "claim": "User requested 4 shifts: 8 am-4 pm, 12 pm-8 pm, 4 pm-12 am, 12 am-8 am.",
+        "entity_labels": [
+          "4 shifts",
+          "8 am-4 pm",
+          "12 pm-8 pm",
+          "4 pm-12 am",
+          "12 am-8 am"
+        ],
+        "scope_labels": [
+          "shift_specification"
+        ],
+        "is_current": false,
+        "state_facet": null
+      }
+    ],
+    "relations": []
+  },
+  "b23ce9dc29d2a91b29c16b1c29b932e54f45d2199637d7d0982539bcafa777b9": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:answer_sharegpt_5Lzox6N_0:9",
+        "claim": "The batch events from the previous chat do not mention any agent named 'Admon'.",
+        "entity_labels": [
+          "admon"
+        ],
+        "scope_labels": [
+          "absence_of_reference"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:answer_sharegpt_5Lzox6N_0:9",
+        "claim": "The assistant provided a 1-week shift rotation table for 7 GM social media agents with 4 shifts.",
+        "entity_labels": [
+          "gm_social_media_agents",
+          "shift_rotation"
+        ],
+        "scope_labels": [
+          "task_output"
+        ],
+        "is_current": false,
+        "state_facet": null
+      }
+    ],
+    "relations": []
+  },
+  "4e9251bd9e9c1428dc0efc88361b87eeaf20842e5b53ffaa1f969cb2b02c32cc": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:answer_sharegpt_5Lzox6N_0:10",
+        "claim": "The shift rotation covers a week from Sunday to Saturday.",
+        "entity_labels": [
+          "sunday",
+          "saturday",
+          "week"
+        ],
+        "scope_labels": [
+          "temporal"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:answer_sharegpt_5Lzox6N_0:11",
+        "claim": "Assistant provided a 1-week shift rotation table for 7 agents with 4 shifts using placeholder agent numbers.",
+        "entity_labels": [
+          "7_agents",
+          "4_shifts",
+          "placeholder_agents"
+        ],
+        "scope_labels": [
+          "task_output"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:answer_sharegpt_5Lzox6N_0:12",
+        "claim": "User provided the list of 7 agent names: Admon, Magdy, Ehab, Sara, Mostafa, Nemr, Adam.",
+        "entity_labels": [
+          "admon",
+          "magdy",
+          "ehab",
+          "sara",
+          "mostafa",
+          "nemr",
+          "adam"
+        ],
+        "scope_labels": [
+          "agent_list"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:answer_sharegpt_5Lzox6N_0:13",
+        "claim": "Assistant updated the shift rotation table using the provided agent names.",
+        "entity_labels": [
+          "shift_rotation"
+        ],
+        "scope_labels": [
+          "task_output"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:answer_sharegpt_5Lzox6N_0:13",
+        "claim": "In the updated shift rotation, on Sunday, Admon is assigned the 8 am - 4 pm shift.",
+        "entity_labels": [
+          "admon",
+          "sunday",
+          "8_am_4_pm_shift"
+        ],
+        "scope_labels": [
+          "shift_assignment"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "Admon Sunday shift",
+          "value": "8 am - 4 pm"
+        }
+      }
+    ],
+    "relations": [
+      {
+        "source_claim_ref": "c3",
+        "source_claim_id": null,
+        "target_claim_ref": null,
+        "target_claim_id": "912594dcdf9263b7",
+        "type": "corrects",
+        "reason": "User explicitly listed Admon in agent names, correcting the claim that batch events do not mention Admon."
+      },
+      {
+        "source_claim_ref": "c4",
+        "source_claim_id": null,
+        "target_claim_ref": "c2",
+        "target_claim_id": null,
+        "type": "supersedes",
+        "reason": "Updated table with names supersedes initial table with placeholders."
+      }
+    ]
+  },
+  "00c7ac5b3051b5911757a208d071b5bb0d7dc577c8a385356a3381239ae7ef8d": {
+    "claims": [],
+    "relations": []
+  },
+  "44cef5cd45f901c85361b6e3111e6b9512ed461fe10e9f2c2a141e98836a02c4": {
+    "claims": [],
+    "relations": []
+  },
+  "dc9568b3e6c3ccbbaeaba05706cdc7097253664293011df9b0e03fd7f59a8467": {
+    "claims": [],
+    "relations": []
+  },
+  "09bb8556eadff795c4da4f20dd243dcb9591440983336d9dd164ce5c9507e59e": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:ad361482_1:4",
+        "claim": "User expresses interest in Athleta's Salutation collection and intends to mix and match pieces.",
+        "entity_labels": [
+          "user",
+          "salutation_collection"
+        ],
+        "scope_labels": [
+          "preference",
+          "shopping_intent"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:ad361482_1:4",
+        "claim": "User has a friend named Rachel who is a sales associate at Athleta.",
+        "entity_labels": [
+          "user",
+          "rachel",
+          "athleta"
+        ],
+        "scope_labels": [
+          "relationship",
+          "employment"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:ad361482_1:5",
+        "claim": "Assistant mentions Athleta runs promotions during holiday weekends and special events.",
+        "entity_labels": [
+          "athleta",
+          "promotions"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "marketing"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:ad361482_1:5",
+        "claim": "Assistant suggests signing up for Athleta's email newsletter and following on social media for promotions.",
+        "entity_labels": [
+          "athleta",
+          "email_newsletter",
+          "social_media"
+        ],
+        "scope_labels": [
+          "recommendation"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:ad361482_1:5",
+        "claim": "Assistant mentions Athleta Rewards loyalty program.",
+        "entity_labels": [
+          "athleta_rewards",
+          "loyalty_program"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:ad361482_1:5",
+        "claim": "Assistant mentions Athleta semi-annual sale usually in May and November.",
+        "entity_labels": [
+          "athleta",
+          "semi-annual_sale",
+          "may",
+          "november"
+        ],
+        "scope_labels": [
+          "temporal_event",
+          "knowledge_update"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:ad361482_1:6",
+        "claim": "User asks for recommendations on workout accessories including yoga mats and bags.",
+        "entity_labels": [
+          "user",
+          "workout_accessories",
+          "yoga_mats",
+          "bags"
+        ],
+        "scope_labels": [
+          "shopping_intent",
+          "recommendation_request"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c8",
+        "event_id": "event:ad361482_1:7",
+        "claim": "Assistant recommends Athleta x Manduka eKO SuperLite Yoga Mat.",
+        "entity_labels": [
+          "athleta_x_manduka_eko_superlite_yoga_mat"
+        ],
+        "scope_labels": [
+          "recommendation"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c9",
+        "event_id": "event:ad361482_1:7",
+        "claim": "Assistant recommends Lululemon The Mat.",
+        "entity_labels": [
+          "lululemon_the_mat"
+        ],
+        "scope_labels": [
+          "recommendation"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c10",
+        "event_id": "event:ad361482_1:7",
+        "claim": "Assistant recommends Gaiam Yoga Mat.",
+        "entity_labels": [
+          "gaiam_yoga_mat"
+        ],
+        "scope_labels": [
+          "recommendation"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c11",
+        "event_id": "event:ad361482_1:7",
+        "claim": "Assistant recommends Athleta Yoga Tote bag.",
+        "entity_labels": [
+          "athleta_yoga_tote"
+        ],
+        "scope_labels": [
+          "recommendation"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c12",
+        "event_id": "event:ad361482_1:7",
+        "claim": "Assistant recommends Lululemon Namastay Yoga Bag.",
+        "entity_labels": [
+          "lululemon_namastay_yoga_bag"
+        ],
+        "scope_labels": [
+          "recommendation"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c13",
+        "event_id": "event:ad361482_1:7",
+        "claim": "Assistant recommends Manduka Go-Bag.",
+        "entity_labels": [
+          "manduka_go_bag"
+        ],
+        "scope_labels": [
+          "recommendation"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c14",
+        "event_id": "event:ad361482_1:7",
+        "claim": "Assistant recommends yoga blocks and straps from Athleta and Lululemon.",
+        "entity_labels": [
+          "yoga_blocks",
+          "yoga_straps",
+          "athleta",
+          "lululemon"
+        ],
+        "scope_labels": [
+          "recommendation"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c15",
+        "event_id": "event:ad361482_1:7",
+        "claim": "Assistant recommends water bottles from Athleta and S'well.",
+        "entity_labels": [
+          "water_bottles",
+          "athleta",
+          "s'well"
+        ],
+        "scope_labels": [
+          "recommendation"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c16",
+        "event_id": "event:ad361482_1:7",
+        "claim": "Assistant recommends sweat towels made from microfiber for hot yoga.",
+        "entity_labels": [
+          "sweat_towels",
+          "microfiber"
+        ],
+        "scope_labels": [
+          "recommendation"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c17",
+        "event_id": "event:ad361482_1:8",
+        "claim": "User indicates intention to check out the Athleta x Manduka eKO SuperLite Yoga Mat.",
+        "entity_labels": [
+          "user",
+          "athleta_x_manduka_eko_superlite_yoga_mat"
+        ],
+        "scope_labels": [
+          "shopping_intent"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c18",
+        "event_id": "event:ad361482_1:8",
+        "claim": "User mentions a new indie bookshop that opened in the arts district and asks if assistant has heard about it.",
+        "entity_labels": [
+          "user",
+          "indie_bookshop",
+          "arts_district"
+        ],
+        "scope_labels": [
+          "query",
+          "local_event"
+        ],
+        "is_current": false,
+        "state_facet": null
+      }
+    ],
+    "relations": []
+  },
+  "af488a32fe2a3c102ba14a8a26654d299386e9e854113df2358cfb3baf5445ec": {
+    "claims": [],
+    "relations": []
+  },
+  "29ff6027b7a16bc2879343c6d5e77ac2477efa164944bd45258f036cbbea4a09": {
+    "claims": [],
+    "relations": []
+  },
+  "21d9928ff16581c37466be24a78c430ece4f2aae6171f93749a00fe07a212b23": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:b4f63a70_3:7",
+        "claim": "Accommodation can be made more affordable by staying in apartments or vacation rentals instead of hotels.",
+        "entity_labels": [
+          "accommodation",
+          "apartments",
+          "vacation rentals"
+        ],
+        "scope_labels": [
+          "travel_advice",
+          "budget_tips"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:b4f63a70_3:7",
+        "claim": "Booking flights well in advance can get best deals.",
+        "entity_labels": [
+          "flights",
+          "booking"
+        ],
+        "scope_labels": [
+          "travel_advice",
+          "budget_tips"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:b4f63a70_3:7",
+        "claim": "Using public transportation, taxis, or shuttle services can reduce transportation costs.",
+        "entity_labels": [
+          "public transportation",
+          "taxis",
+          "shuttle services"
+        ],
+        "scope_labels": [
+          "travel_advice",
+          "budget_tips"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:b4f63a70_3:9",
+        "claim": "Best time to visit Italy is spring (April-May) and autumn (September-October) with mild weather and fewer tourists.",
+        "entity_labels": [
+          "Italy",
+          "spring",
+          "autumn"
+        ],
+        "scope_labels": [
+          "travel_advice",
+          "seasonal_timing"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:b4f63a70_3:9",
+        "claim": "Peak tourist season in Italy (June-August) should be avoided due to heat and crowds.",
+        "entity_labels": [
+          "Italy",
+          "June",
+          "July",
+          "August"
+        ],
+        "scope_labels": [
+          "travel_advice",
+          "seasonal_timing"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:b4f63a70_3:9",
+        "claim": "Ultra Europe Music Festival occurs in July in Split, Croatia.",
+        "entity_labels": [
+          "Ultra Europe Music Festival",
+          "July",
+          "Split",
+          "Croatia"
+        ],
+        "scope_labels": [
+          "festival",
+          "travel_advice"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:b4f63a70_3:11",
+        "claim": "Pack lightweight, breathable clothing for warm days and cooler evenings.",
+        "entity_labels": [
+          "clothing",
+          "packing"
+        ],
+        "scope_labels": [
+          "packing_tips"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c8",
+        "event_id": "event:b4f63a70_3:11",
+        "claim": "Bring comfortable walking shoes, sandals, and a pair of dress shoes.",
+        "entity_labels": [
+          "walking shoes",
+          "sandals",
+          "dress shoes"
+        ],
+        "scope_labels": [
+          "packing_tips"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c9",
+        "event_id": "event:b4f63a70_3:11",
+        "claim": "Bring a universal power adapter for Italy, Greece, and Croatia (Type F, Type E, Type C).",
+        "entity_labels": [
+          "universal power adapter",
+          "Italy",
+          "Greece",
+          "Croatia"
+        ],
+        "scope_labels": [
+          "packing_tips"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c10",
+        "event_id": "event:b4f63a70_3:11",
+        "claim": "Make sure passport is valid for at least six months beyond return date.",
+        "entity_labels": [
+          "passport",
+          "validity"
+        ],
+        "scope_labels": [
+          "packing_tips",
+          "travel_documentation"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "bf39fc4e6fe0c54b8ef91054e0ab161038e8a17cc47ac82fecdf0ff9100e7b8f": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:5aed819f:0",
+        "claim": "User loves 'Stranger Things' and 'The Crown'.",
+        "entity_labels": [
+          "Stranger Things",
+          "The Crown"
+        ],
+        "scope_labels": [
+          "preference"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:5aed819f:0",
+        "claim": "User is looking for new TV show recommendations based on 'Stranger Things' and 'The Crown'.",
+        "entity_labels": [
+          "TV show recommendations"
+        ],
+        "scope_labels": [
+          "query"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:5aed819f:1",
+        "claim": "Assistant provided a list of recommended TV shows for the user.",
+        "entity_labels": [
+          "recommended TV shows"
+        ],
+        "scope_labels": [
+          "response"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:5aed819f:2",
+        "claim": "User is currently watching 'The Handmaid's Tale' on Hulu, season 2 episode 3.",
+        "entity_labels": [
+          "The Handmaid's Tale",
+          "Hulu",
+          "season 2 episode 3"
+        ],
+        "scope_labels": [
+          "current_state"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:5aed819f:3",
+        "claim": "Assistant advised finishing 'The Handmaid's Tale' before starting new shows.",
+        "entity_labels": [
+          "The Handmaid's Tale"
+        ],
+        "scope_labels": [
+          "advice"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:5aed819f:4",
+        "claim": "User intends to prioritize finishing 'The Handmaid's Tale'.",
+        "entity_labels": [
+          "The Handmaid's Tale"
+        ],
+        "scope_labels": [
+          "intention"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:5aed819f:4",
+        "claim": "User has been using Netflix for about 6 months.",
+        "entity_labels": [
+          "Netflix",
+          "6 months"
+        ],
+        "scope_labels": [
+          "usage_history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c8",
+        "event_id": "event:5aed819f:4",
+        "claim": "User asks for documentary recommendations on Netflix.",
+        "entity_labels": [
+          "documentary",
+          "Netflix"
+        ],
+        "scope_labels": [
+          "query"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "57f2ed372d992dedcd787555bdb86f7df3c47ab03425e12cc4a7a52e57a10509": {
+    "claims": [],
+    "relations": []
+  },
+  "a3ddd88eb100ba20dd2360f0bcb36f58eb11de643f9d06105550880e129686a7": {
+    "claims": [],
+    "relations": []
+  },
+  "01042e0ff7e30f0d7e983024ebd60ffe845f512c7c6e657adb0f21f5e111f7f0": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:sharegpt_PjFSCFK_9:3",
+        "claim": "User asked whether Ralf Reichert has engaged in ventures that support indie game developers.",
+        "entity_labels": [
+          "Ralf Reichert",
+          "indie game developers"
+        ],
+        "scope_labels": [
+          "query"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:sharegpt_PjFSCFK_9:4",
+        "claim": "Assistant stated that as of 2021, Ralf Reichert has no known specific ventures directly supporting indie game developers, but his esports work could potentially benefit them.",
+        "entity_labels": [
+          "Ralf Reichert",
+          "esports",
+          "indie game developers"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:sharegpt_PjFSCFK_9:5",
+        "claim": "User requested a sample business proposal template with actual financial numbers and listed information needed from the user to create a rough draft.",
+        "entity_labels": [
+          "business proposal template",
+          "financial values"
+        ],
+        "scope_labels": [
+          "query",
+          "request"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:sharegpt_PjFSCFK_9:6",
+        "claim": "Assistant provided a list of 10 required sections for a business proposal.",
+        "entity_labels": [
+          "business proposal sections"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:sharegpt_PjFSCFK_9:7",
+        "claim": "User instructed assistant to role-play as Peter Ilves and create a detailed investment proposal for Ralf Reichert to invest in Battlerite 2 with creative control.",
+        "entity_labels": [
+          "Peter Ilves",
+          "Ralf Reichert",
+          "Battlerite 2",
+          "investment proposal"
+        ],
+        "scope_labels": [
+          "instruction",
+          "role_play"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "f36e0a41b0bf5d8a5bc093e95053d7775e45cae002e4d288ad1426d99ceda0c6": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:sharegpt_PjFSCFK_9:8",
+        "claim": "Assistant role-played as Peter Ilves and created a business proposal for Lego Battlerite 2 for Ralf Reichert.",
+        "entity_labels": [
+          "peter_ilves",
+          "lego_battlerite_2",
+          "ralf_reichert"
+        ],
+        "scope_labels": [
+          "role_play",
+          "business_proposal"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:5850de18_2:0",
+        "claim": "User requested healthy savory snack ideas for a charity bake sale at their office.",
+        "entity_labels": [
+          "healthy_savory_snacks",
+          "office",
+          "charity_bake_sale"
+        ],
+        "scope_labels": [
+          "request",
+          "charity_event"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:5850de18_2:1",
+        "claim": "Assistant provided a list of healthy savory snack ideas including Spicy Roasted Chickpeas, Trail Mix, Veggie Sticks with Hummus, etc.",
+        "entity_labels": [
+          "healthy_savory_snacks",
+          "spicy_roasted_chickpeas",
+          "trail_mix",
+          "veggie_sticks_with_hummus",
+          "herb_and_spice_nuts",
+          "energy_balls",
+          "dried_fruit_and_nut_bites",
+          "popcorn",
+          "crunchy_granola",
+          "savory_energy_bars",
+          "seed_crackers"
+        ],
+        "scope_labels": [
+          "recommendation",
+          "food"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:5850de18_2:2",
+        "claim": "User requested a detailed recipe for Spicy Roasted Chickpeas with exact measurements.",
+        "entity_labels": [
+          "spicy_roasted_chickpeas",
+          "recipe"
+        ],
+        "scope_labels": [
+          "request",
+          "recipe"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:5850de18_2:3",
+        "claim": "Assistant provided a recipe for Spicy Roasted Chickpeas including ingredients and instructions.",
+        "entity_labels": [
+          "spicy_roasted_chickpeas",
+          "ingredients",
+          "instructions"
+        ],
+        "scope_labels": [
+          "recipe",
+          "food"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "81eff335924d0291bc42529b162d63b4d06b5dfad8d835c363439e0714954b31": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:5850de18_2:4",
+        "claim": "User is organizing a charity bake sale and requests suggestions for a charity-focused social media post to promote it and encourage donations.",
+        "entity_labels": [
+          "user",
+          "charity_bake_sale",
+          "social_media_post"
+        ],
+        "scope_labels": [
+          "charity_event",
+          "query"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:5850de18_2:5",
+        "claim": "Assistant provides sample social media posts for a charity bake sale on Facebook, Twitter, and Instagram.",
+        "entity_labels": [
+          "assistant",
+          "social_media_post",
+          "facebook",
+          "twitter",
+          "instagram"
+        ],
+        "scope_labels": [
+          "response",
+          "template"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:5850de18_2:6",
+        "claim": "User requests a template for a charity thank-you note or email to send to donors and supporters after the bake sale.",
+        "entity_labels": [
+          "user",
+          "charity_thank_you_note",
+          "donors"
+        ],
+        "scope_labels": [
+          "query",
+          "template"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:5850de18_2:7",
+        "claim": "Assistant provides a template for a charity thank-you note or email.",
+        "entity_labels": [
+          "assistant",
+          "charity_thank_you_note"
+        ],
+        "scope_labels": [
+          "response",
+          "template"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:5850de18_2:8",
+        "claim": "User participated in a charity walk for cancer research last month and asks for suggestions to stay motivated to continue participating in charity events.",
+        "entity_labels": [
+          "user",
+          "charity_walk",
+          "cancer_research",
+          "motivation"
+        ],
+        "scope_labels": [
+          "personal_event",
+          "charity",
+          "query"
+        ],
+        "is_current": false,
+        "state_facet": null
+      }
+    ],
+    "relations": []
+  },
+  "483c3f5cf3959ece2c05fbce5e8883c438e4468bb3a10d748af4e5cf74304469": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:5850de18_2:9",
+        "claim": "Assistant provides suggestions to stay motivated for charity events.",
+        "entity_labels": [
+          "motivation",
+          "charity_events"
+        ],
+        "scope_labels": [
+          "advice",
+          "motivation"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:5850de18_2:10",
+        "claim": "User asks how funds from charity walk for cancer research will be used.",
+        "entity_labels": [
+          "user",
+          "charity_walk",
+          "cancer_research"
+        ],
+        "scope_labels": [
+          "query"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:5850de18_2:11",
+        "claim": "Assistant explains how funds from charity walks are used for cancer research.",
+        "entity_labels": [
+          "charity_walk",
+          "cancer_research",
+          "funds"
+        ],
+        "scope_labels": [
+          "explanation"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:ultrachat_447051:0",
+        "claim": "User asks about influence of Harlem Renaissance on Langston Hughes.",
+        "entity_labels": [
+          "harlem_renaissance",
+          "langston_hughes"
+        ],
+        "scope_labels": [
+          "query",
+          "art"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:ultrachat_447051:1",
+        "claim": "Assistant explains influence of Harlem Renaissance on Langston Hughes.",
+        "entity_labels": [
+          "harlem_renaissance",
+          "langston_hughes"
+        ],
+        "scope_labels": [
+          "explanation"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "07b8658b24bbe9bfb19cffe524b3324b47baa0006add625074622bf9b53451a2": {
+    "claims": [],
+    "relations": []
+  },
+  "39298b590097641bbee4f5c11ce497ade593be7e02d4d0d496906acb7fac41f7": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:ultrachat_447051:7",
+        "claim": "Langston Hughes' musical background influenced his writing style.",
+        "entity_labels": [
+          "langston_hughes",
+          "musical_skills",
+          "writing_style"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "art"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:ultrachat_447051:9",
+        "claim": "Langston Hughes was a prolific traveler whose travels inspired his writing.",
+        "entity_labels": [
+          "langston_hughes",
+          "travel"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:ultrachat_447051:9",
+        "claim": "Langston Hughes was an activist and vocal supporter of civil rights.",
+        "entity_labels": [
+          "langston_hughes",
+          "civil_rights_activism"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:ultrachat_447051:9",
+        "claim": "Langston Hughes had an interest in theater and wrote several plays.",
+        "entity_labels": [
+          "langston_hughes",
+          "theater",
+          "plays"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "art"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:ultrachat_447051:9",
+        "claim": "Langston Hughes was a collector of African American literature and art.",
+        "entity_labels": [
+          "langston_hughes",
+          "african_american_literature",
+          "art_collector"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:ultrachat_447051:11",
+        "claim": "Langston Hughes was a member of the NAACP and contributed to 'The Crisis'.",
+        "entity_labels": [
+          "langston_hughes",
+          "NAACP",
+          "the_crisis"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "civil_rights"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:ultrachat_447051:11",
+        "claim": "Langston Hughes traveled to the Soviet Union in the 1930s as a guest of the government.",
+        "entity_labels": [
+          "langston_hughes",
+          "soviet_union",
+          "1930s"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "travel"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c8",
+        "event_id": "event:ultrachat_447051:11",
+        "claim": "During World War II, Langston Hughes wrote for 'The Chicago Defender' calling for an end to segregation.",
+        "entity_labels": [
+          "langston_hughes",
+          "chicago_defender",
+          "segregation",
+          "world_war_ii"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "civil_rights"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c9",
+        "event_id": "event:ultrachat_447051:11",
+        "claim": "Langston Hughes was a supporter of the Civil Rights Movement and a friend of Dr. Martin Luther King Jr.",
+        "entity_labels": [
+          "langston_hughes",
+          "civil_rights_movement",
+          "martin_luther_king_jr"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c10",
+        "event_id": "event:ultrachat_447051:11",
+        "claim": "Langston Hughes participated in the 1963 March on Washington and read his poem 'I, Too, Sing America'.",
+        "entity_labels": [
+          "langston_hughes",
+          "march_on_washington",
+          "1963",
+          "i_too_sing_america"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "civil_rights"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "75d5c2833e9dc52b4bc9e129ef1f1d97ace714bc000167bac16428b855323443": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:ultrachat_447051:12",
+        "claim": "User asked about Langston Hughes's experience in the Soviet Union.",
+        "entity_labels": [
+          "langston_hughes",
+          "soviet_union"
+        ],
+        "scope_labels": [
+          "query"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:ultrachat_447051:13",
+        "claim": "Langston Hughes first visited the Soviet Union in 1932 as part of a cultural delegation of African Americans.",
+        "entity_labels": [
+          "langston_hughes",
+          "soviet_union"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:ultrachat_447051:13",
+        "claim": "Langston Hughes was initially impressed by the Soviet Union's apparent freedom from racism and economic inequality.",
+        "entity_labels": [
+          "langston_hughes",
+          "soviet_union"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:ultrachat_447051:13",
+        "claim": "Langston Hughes later became disillusioned with the Soviet system and its Communist government.",
+        "entity_labels": [
+          "langston_hughes",
+          "soviet_union",
+          "communist_government"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:ultrachat_447051:13",
+        "claim": "Langston Hughes witnessed the authoritarian nature and suppression of civil liberties in the Soviet Union.",
+        "entity_labels": [
+          "langston_hughes",
+          "soviet_union",
+          "civil_liberties"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:ultrachat_447051:13",
+        "claim": "Langston Hughes became frustrated with propaganda in the Soviet media.",
+        "entity_labels": [
+          "langston_hughes",
+          "soviet_media"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:ultrachat_447051:13",
+        "claim": "Langston Hughes continued to have respect for the Soviet Union and its people.",
+        "entity_labels": [
+          "langston_hughes",
+          "soviet_union"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c8",
+        "event_id": "event:ultrachat_447051:13",
+        "claim": "Langston Hughes remained critical of racism and inequality in the United States.",
+        "entity_labels": [
+          "langston_hughes",
+          "united_states",
+          "racism"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c9",
+        "event_id": "event:ultrachat_447051:13",
+        "claim": "Langston Hughes wrote 'A Negro Looks at Soviet Georgia' and 'Goodbye, Christ' about his experiences.",
+        "entity_labels": [
+          "langston_hughes",
+          "a_negro_looks_at_soviet_georgia",
+          "goodbye_christ"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c10",
+        "event_id": "event:ultrachat_541021:0",
+        "claim": "User asked about the history behind Shakespeare's Globe Theatre in London.",
+        "entity_labels": [
+          "shakespeare's_globe_theatre",
+          "london"
+        ],
+        "scope_labels": [
+          "query"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c11",
+        "event_id": "event:ultrachat_541021:1",
+        "claim": "The original Globe Theatre was built in 1599 by Shakespeare's playing company, the Lord Chamberlain's Men.",
+        "entity_labels": [
+          "globe_theatre",
+          "lord_chamberlain's_men"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c12",
+        "event_id": "event:ultrachat_541021:1",
+        "claim": "The Globe Theatre was located in Southwark district of London on the southern bank of the River Thames.",
+        "entity_labels": [
+          "globe_theatre",
+          "southwark",
+          "london",
+          "river_thames"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c13",
+        "event_id": "event:ultrachat_541021:1",
+        "claim": "The Globe Theatre was a round, open-air amphitheatre that could hold up to 3,000 people.",
+        "entity_labels": [
+          "globe_theatre"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c14",
+        "event_id": "event:ultrachat_541021:1",
+        "claim": "The Globe Theatre hosted many of Shakespeare's plays and was visited by King James I.",
+        "entity_labels": [
+          "globe_theatre",
+          "william_shakespeare",
+          "king_james_i"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c15",
+        "event_id": "event:ultrachat_541021:1",
+        "claim": "The Globe Theatre burned down in 1613 during a performance of Henry VIII when a cannon shot set fire to the thatched roof.",
+        "entity_labels": [
+          "globe_theatre",
+          "henry_viii"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c16",
+        "event_id": "event:ultrachat_541021:1",
+        "claim": "The Globe Theatre was rebuilt on the same site using original materials.",
+        "entity_labels": [
+          "globe_theatre"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c17",
+        "event_id": "event:ultrachat_541021:1",
+        "claim": "The Globe Theatre was closed in 1642 by the Puritan government and later demolished.",
+        "entity_labels": [
+          "globe_theatre",
+          "puritan_government"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c18",
+        "event_id": "event:ultrachat_541021:1",
+        "claim": "A new Globe Theatre opened in 1997, located near the original site, built by Sam Wanamaker.",
+        "entity_labels": [
+          "globe_theatre",
+          "sam_wanamaker"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c19",
+        "event_id": "event:ultrachat_541021:2",
+        "claim": "User asked why the Puritan government closed down the Globe Theatre in 1642.",
+        "entity_labels": [
+          "puritan_government",
+          "globe_theatre"
+        ],
+        "scope_labels": [
+          "query"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "615fa7841fea8c4b75a4636c3d8c29132c33c53c550b048938f59a4d4fbc8860": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:ultrachat_541021:3",
+        "claim": "The Puritan government closed down the Globe Theatre in 1642.",
+        "entity_labels": [
+          "globe_theatre",
+          "puritan_government"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:ultrachat_541021:3",
+        "claim": "The Puritan government passed a law in 1642 that banned all stage plays and ordered the closure and demolition of all theatres in London.",
+        "entity_labels": [
+          "puritan_government",
+          "law",
+          "stage_plays",
+          "theatres",
+          "london"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history",
+          "law"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:ultrachat_541021:3",
+        "claim": "All playhouses in London were affected by the law.",
+        "entity_labels": [
+          "playhouses",
+          "london"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:ultrachat_541021:3",
+        "claim": "Disobeying the law faced fines and imprisonment.",
+        "entity_labels": [
+          "law",
+          "fines",
+          "imprisonment"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history",
+          "law"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:ultrachat_541021:3",
+        "claim": "Many actors and playwrights were forced to leave London or give up their careers.",
+        "entity_labels": [
+          "actors",
+          "playwrights",
+          "london"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:ultrachat_541021:3",
+        "claim": "After the restoration of the monarchy in 1660, theatres returned to London with greater restrictions and regulations.",
+        "entity_labels": [
+          "theatres",
+          "london",
+          "monarchy_restoration"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:ultrachat_541021:3",
+        "claim": "The Puritan ban on theatre is considered a significant moment in English drama history.",
+        "entity_labels": [
+          "puritan_ban_on_theatre",
+          "english_drama_history"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c8",
+        "event_id": "event:ultrachat_541021:5",
+        "claim": "The Puritans' opposition to theatre was driven by their religious beliefs and desire to enforce stricter moral codes.",
+        "entity_labels": [
+          "puritans",
+          "theatre",
+          "religious_beliefs",
+          "moral_codes"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history",
+          "religion"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c9",
+        "event_id": "event:ultrachat_541021:5",
+        "claim": "Despite the Puritan government's efforts, theatre has continued to evolve and flourish as an art form throughout history.",
+        "entity_labels": [
+          "theatre",
+          "art_form"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history",
+          "culture"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "e36a4db04872443919bd82924a1f06c635ed21e5469494ac202d9d2a08574efe": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:ultrachat_541021:8",
+        "claim": "User wondered what forms of expression or entertainment were banned in the past.",
+        "entity_labels": [
+          "expression",
+          "entertainment",
+          "banned"
+        ],
+        "scope_labels": [
+          "query",
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:ultrachat_541021:9",
+        "claim": "During the Soviet era in Russia, certain forms of literature, music, and visual art were censored or banned.",
+        "entity_labels": [
+          "soviet_era",
+          "russia",
+          "literature",
+          "music",
+          "visual_art",
+          "censorship"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:ultrachat_541021:9",
+        "claim": "In ancient Rome, mime shows and pantomime were considered vulgar and were discouraged or banned.",
+        "entity_labels": [
+          "ancient_rome",
+          "mime_shows",
+          "pantomime",
+          "banned"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:ultrachat_541021:9",
+        "claim": "During the Middle Ages, some forms of dance were considered sinful and were banned or regulated by the Church.",
+        "entity_labels": [
+          "middle_ages",
+          "dance",
+          "church",
+          "banned"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:ultrachat_541021:9",
+        "claim": "In the Islamic world, visual art depicting human or animal figures was forbidden due to prohibition of idol worship.",
+        "entity_labels": [
+          "islamic_world",
+          "visual_art",
+          "human_figures",
+          "animal_figures",
+          "idol_worship"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history",
+          "religion"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:ultrachat_541021:9",
+        "claim": "Throughout history, censorship of art and entertainment has been motivated by religious, political, and moral concerns.",
+        "entity_labels": [
+          "art",
+          "entertainment",
+          "censorship",
+          "religion",
+          "politics",
+          "morality"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:ultrachat_541021:10",
+        "claim": "User believes that people always find a way to express themselves creatively regardless of authorities.",
+        "entity_labels": [
+          "creativity",
+          "authorities"
+        ],
+        "scope_labels": [
+          "user_belief"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c8",
+        "event_id": "event:ultrachat_541021:11",
+        "claim": "Assistant agrees that creativity will thrive despite censorship, as art and entertainment are essential to human culture.",
+        "entity_labels": [
+          "creativity",
+          "censorship",
+          "art",
+          "entertainment",
+          "human_culture"
+        ],
+        "scope_labels": [
+          "agreement",
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c9",
+        "event_id": "event:3070419a_1:0",
+        "claim": "User asked for easy and quick vegan lunch ideas to take to work.",
+        "entity_labels": [
+          "vegan_lunch",
+          "work"
+        ],
+        "scope_labels": [
+          "query",
+          "food_preference"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "dietary_preference",
+          "value": "vegan"
+        }
+      },
+      {
+        "claim_ref": "c10",
+        "event_id": "event:3070419a_1:0",
+        "claim": "User has been eating plant-based meals for three months and wants new lunch ideas.",
+        "entity_labels": [
+          "plant-based_meals",
+          "duration",
+          "three_months"
+        ],
+        "scope_labels": [
+          "user_preference",
+          "temporal_event"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "77500a9908a94815da405aebf4fd298b3ca74059b24c0a0bc6a959ede46154a7": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:3070419a_1:1",
+        "claim": "Assistant suggested a quinoa salad bowl as a vegan lunch option.",
+        "entity_labels": [
+          "quinoa salad",
+          "vegan lunch"
+        ],
+        "scope_labels": [
+          "food_preference",
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:3070419a_1:2",
+        "claim": "User intends to make a vegan quinoa salad for lunch tomorrow.",
+        "entity_labels": [
+          "user",
+          "quinoa salad",
+          "vegan lunch"
+        ],
+        "scope_labels": [
+          "food_preference",
+          "temporal_event"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:3070419a_1:3",
+        "claim": "Assistant recommended roasted vegetables including sweet potatoes and broccoli for quinoa salad.",
+        "entity_labels": [
+          "roasted vegetables",
+          "sweet potatoes",
+          "broccoli",
+          "quinoa salad"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "food_preparation"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:3070419a_1:4",
+        "claim": "User decided to add roasted broccoli and sweet potatoes to their quinoa salad.",
+        "entity_labels": [
+          "user",
+          "roasted broccoli",
+          "roasted sweet potatoes",
+          "quinoa salad"
+        ],
+        "scope_labels": [
+          "food_preference",
+          "decision"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:3070419a_1:4",
+        "claim": "User asked for a simple method to roast broccoli and sweet potatoes.",
+        "entity_labels": [
+          "user",
+          "roasting method",
+          "broccoli",
+          "sweet potatoes"
+        ],
+        "scope_labels": [
+          "query",
+          "food_preparation"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:3070419a_1:5",
+        "claim": "Assistant provided a method to roast broccoli and sweet potatoes at 425°F for 20-25 minutes.",
+        "entity_labels": [
+          "roasting method",
+          "broccoli",
+          "sweet potatoes",
+          "425°F",
+          "20-25 minutes"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "food_preparation"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:3070419a_1:5",
+        "claim": "Assistant recommended tossing vegetables with oil and seasonings before roasting.",
+        "entity_labels": [
+          "vegetables",
+          "oil",
+          "seasonings",
+          "roasting"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "food_preparation"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "33d1d01a93fe0b7ebd863c3b6e719153357f046ae844eebf2db52cd72d1ed739": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:3070419a_1:6",
+        "claim": "User asked for vegan protein suggestions for quinoa salad.",
+        "entity_labels": [
+          "user",
+          "quinoa_salad",
+          "vegan_protein"
+        ],
+        "scope_labels": [
+          "query",
+          "food_preference"
+        ],
+        "is_current": false
+      }
+    ]
+  },
+  "8872bc37881b2aad42ffcfdf5a2a732ddabf6567ee56fef4e9e1ceabc1cc66bc": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:ultrachat_301437:0",
+        "claim": "User asked about the evolution of the culinary scene in Athlone over the past decade regarding traditional Irish dishes.",
+        "entity_labels": [
+          "user",
+          "culinary_scene",
+          "athlone",
+          "traditional_irish_dishes"
+        ],
+        "scope_labels": [
+          "query"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:ultrachat_301437:1",
+        "claim": "The culinary scene in Athlone has evolved significantly over the past decade with a focus on modern cuisine and fusion dishes.",
+        "entity_labels": [
+          "culinary_scene",
+          "athlone",
+          "modern_cuisine",
+          "fusion_dishes"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:ultrachat_301437:1",
+        "claim": "Traditional Irish dishes have been reimagined and updated to appeal to a more modern palate.",
+        "entity_labels": [
+          "traditional_irish_dishes",
+          "modern_palate"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:ultrachat_301437:1",
+        "claim": "Many restaurants in Athlone now feature locally sourced, seasonal ingredients.",
+        "entity_labels": [
+          "restaurants",
+          "athlone",
+          "local_ingredients",
+          "seasonal_ingredients"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:ultrachat_301437:1",
+        "claim": "Classic dishes like Irish stew and colcannon have been given new life with the addition of innovative ingredients and cooking techniques.",
+        "entity_labels": [
+          "irish_stew",
+          "colcannon",
+          "innovative_ingredients",
+          "cooking_techniques"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:ultrachat_301437:1",
+        "claim": "There is an increasing trend towards vegetarian and vegan dishes in Athlone.",
+        "entity_labels": [
+          "vegetarian_dishes",
+          "vegan_dishes",
+          "athlone"
+        ],
+        "scope_labels": [
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:ultrachat_301437:2",
+        "claim": "User asked for restaurant recommendations in Athlone offering updated versions of traditional Irish dishes.",
+        "entity_labels": [
+          "user",
+          "restaurants",
+          "athlone",
+          "traditional_irish_dishes"
+        ],
+        "scope_labels": [
+          "query"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c8",
+        "event_id": "event:ultrachat_301437:3",
+        "claim": "The Fatted Calf restaurant in Athlone offers traditional Irish dishes with a modern twist, including a vegan 'shepherdless pie' and 'brown soda bread ice cream'.",
+        "entity_labels": [
+          "the_fatted_calf",
+          "athlone",
+          "traditional_irish_dishes",
+          "modern_twist",
+          "shepherdless_pie",
+          "brown_soda_bread_ice_cream"
+        ],
+        "scope_labels": [
+          "restaurant_recommendation"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c9",
+        "event_id": "event:ultrachat_301437:3",
+        "claim": "Thyme restaurant in Athlone combines Irish classics with international influences, featuring slow-cooked lamb shoulder and a signature 'thyme burger'.",
+        "entity_labels": [
+          "thyme_restaurant",
+          "athlone",
+          "irish_classics",
+          "international_influences",
+          "lamb_shoulder",
+          "thyme_burger"
+        ],
+        "scope_labels": [
+          "restaurant_recommendation"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c10",
+        "event_id": "event:ultrachat_301437:3",
+        "claim": "The Left Bank Bistro in Athlone showcases local Irish produce with a modern approach, offering dishes like 'black pudding bonbons' and 'lamb rump'.",
+        "entity_labels": [
+          "left_bank_bistro",
+          "athlone",
+          "local_irish_produce",
+          "modern_approach",
+          "black_pudding_bonbons",
+          "lamb_rump"
+        ],
+        "scope_labels": [
+          "restaurant_recommendation"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c11",
+        "event_id": "event:3070419a_1:11",
+        "claim": "Cooking legumes from scratch can be more cost-effective and allow for more control over flavor and texture.",
+        "entity_labels": [
+          "legumes",
+          "cooking_from_scratch",
+          "cost_effectiveness",
+          "flavor_control"
+        ],
+        "scope_labels": [
+          "food_preparation"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c12",
+        "event_id": "event:3070419a_1:11",
+        "claim": "Soaking legumes overnight and sprouting them can increase their nutritional value and digestibility.",
+        "entity_labels": [
+          "legumes",
+          "soaking",
+          "sprouting",
+          "nutritional_value",
+          "digestibility"
+        ],
+        "scope_labels": [
+          "food_preparation"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "6c3b674ebf3caffa6fafa70a89a02310d941e088d07f4b3686c6b3ad5d95d099": {
+    "claims": [],
+    "relations": []
+  },
+  "9c9686095d29fe7ede8edef9b8e00d3cb3db0db56b8ef0c9e046588428ad3c48": {
+    "claims": [],
+    "relations": []
+  },
+  "c53d5aa132775b0d4e4b994d32b7753114f8fca9fc87017d8fcb8ed7527801ad": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:sharegpt_b5rHj0c_20:7",
+        "claim": "There are different accounts of what happened during the 1810 Nablus Riots.",
+        "entity_labels": [
+          "1810 Nablus Riots",
+          "accounts"
+        ],
+        "scope_labels": [
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:sharegpt_b5rHj0c_20:7",
+        "claim": "It is generally believed that the synagogue was built on or near the site of an old Muslim cemetery.",
+        "entity_labels": [
+          "synagogue",
+          "Muslim cemetery",
+          "Nablus"
+        ],
+        "scope_labels": [
+          "history",
+          "belief"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:sharegpt_b5rHj0c_20:7",
+        "claim": "Some sources suggest the cemetery was destroyed to make way for the synagogue.",
+        "entity_labels": [
+          "cemetery",
+          "synagogue",
+          "destruction"
+        ],
+        "scope_labels": [
+          "history",
+          "disputed"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:sharegpt_b5rHj0c_20:7",
+        "claim": "Other sources suggest the synagogue was built adjacent to the cemetery without desecrating it.",
+        "entity_labels": [
+          "synagogue",
+          "cemetery",
+          "adjacent"
+        ],
+        "scope_labels": [
+          "history",
+          "disputed"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:sharegpt_b5rHj0c_20:7",
+        "claim": "The dispute over the synagogue and cemetery was a major source of tension between Jewish and Muslim communities in Nablus.",
+        "entity_labels": [
+          "synagogue",
+          "cemetery",
+          "tension",
+          "Jewish communities",
+          "Muslim communities",
+          "Nablus"
+        ],
+        "scope_labels": [
+          "history",
+          "tension"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:sharegpt_b5rHj0c_20:7",
+        "claim": "The dispute played a role in the outbreak of violence and the resulting riot.",
+        "entity_labels": [
+          "dispute",
+          "violence",
+          "riot",
+          "1810 Nablus Riots"
+        ],
+        "scope_labels": [
+          "history",
+          "causation"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:sharegpt_b5rHj0c_20:9",
+        "claim": "There were several incidents of violence and tension between Jews and Arabs in the region prior to the 1810 Nablus Riots.",
+        "entity_labels": [
+          "Jews",
+          "Arabs",
+          "region",
+          "violence",
+          "tension",
+          "1810 Nablus Riots"
+        ],
+        "scope_labels": [
+          "history"
+        ],
+        "is_current": false
+      }
+    ]
+  },
+  "7d4dcb32cfe2cd1c60e70c46464bb43921011ee592ee8ed7b871260b54719621": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:sharegpt_b5rHj0c_20:11",
+        "claim": "The 1660 destruction of the Jewish community in Safed was carried out by Druze ruler Fakhr al-Din II, motivated by political, economic, religious, and ethnic tensions.",
+        "entity_labels": [
+          "1660_destruction_safed",
+          "jewish_community",
+          "fakhr_al-din_ii",
+          "druze_ruler"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:sharegpt_b5rHj0c_20:11",
+        "claim": "The attack on Safed forced the Jewish population to flee and effectively destroyed the community.",
+        "entity_labels": [
+          "safed",
+          "jewish_population",
+          "community_destruction"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:sharegpt_b5rHj0c_20:13",
+        "claim": "The 1492 Granada pogrom occurred in Spain after the Alhambra Decree expelled Jews, and a mob attacked the Jewish quarter.",
+        "entity_labels": [
+          "1492_granada_pogrom",
+          "spain",
+          "alhambra_decree",
+          "jewish_quarter"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:sharegpt_b5rHj0c_20:13",
+        "claim": "The 1492 Granada pogrom was part of a larger wave of violence and persecution against Jews in Europe.",
+        "entity_labels": [
+          "1492_granada_pogrom",
+          "violence",
+          "persecution",
+          "jews",
+          "europe"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:sharegpt_b5rHj0c_20:15",
+        "claim": "The 135 CE Bar Kokhba revolt was a Jewish rebellion against Rome in the land of Israel, suppressed by Romans, leading to destruction of Jewish towns and expulsion of Jews.",
+        "entity_labels": [
+          "135_ce_bar_kokhba_revolt",
+          "jewish_rebellion",
+          "rome",
+          "land_of_israel"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "9c6c8216c759241edb657ab80f2cd0580c2c570e1f428d38cbe0f67f06689faf": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:sharegpt_b5rHj0c_20:16",
+        "claim": "The current topic is about Jews and Romans, not Jews and Arabs.",
+        "entity_labels": [
+          "topic",
+          "jews",
+          "romans",
+          "arabs"
+        ],
+        "scope_labels": [
+          "user_belief",
+          "meta_discourse"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:sharegpt_b5rHj0c_20:17",
+        "claim": "Bar Kokhba revolt was a conflict between Jews and Romans.",
+        "entity_labels": [
+          "bar_kokhba_revolt",
+          "jews",
+          "romans"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:sharegpt_b5rHj0c_20:17",
+        "claim": "614 CE Persian conquest of Jerusalem involved killing many Christian and Jewish inhabitants, including many Arabs.",
+        "entity_labels": [
+          "614_ce_persian_conquest",
+          "jerusalem",
+          "christian",
+          "jewish",
+          "arabs"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:sharegpt_b5rHj0c_20:17",
+        "claim": "Arab-Muslim conquest of the land of Israel in the 7th century CE was largely peaceful.",
+        "entity_labels": [
+          "arab_muslim_conquest",
+          "land_of_israel",
+          "7th_century",
+          "peaceful"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:sharegpt_b5rHj0c_20:19",
+        "claim": "The Safed incident in 1660 is one of the earliest recorded incidents of violence between Jews and Arabs in the land of Israel.",
+        "entity_labels": [
+          "safed_incident",
+          "1660",
+          "early_incident",
+          "violence",
+          "jews",
+          "arabs",
+          "land_of_israel"
+        ],
+        "scope_labels": [
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:sharegpt_b5rHj0c_20:19",
+        "claim": "The Safed incident is not the first recorded incident of violence between Jews and Arabs in the land of Israel.",
+        "entity_labels": [
+          "safed_incident",
+          "first_recorded_incident"
+        ],
+        "scope_labels": [
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:sharegpt_b5rHj0c_20:19",
+        "claim": "There are earlier documented instances of violence between Jews and non-Jewish groups in the region.",
+        "entity_labels": [
+          "earlier_instances",
+          "violence",
+          "jews",
+          "non_jewish_groups",
+          "region"
+        ],
+        "scope_labels": [
+          "history"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "3b6c72230b8f1d8a45893353abc97677d329b6082eb50e3ae6c9e95432b86d21": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:sharegpt_b5rHj0c_20:21",
+        "claim": "The Arab invasion of Jerusalem was not the start of the Israeli-Palestinian conflict.",
+        "entity_labels": [
+          "Arab invasion of Jerusalem",
+          "Israeli-Palestinian conflict"
+        ],
+        "scope_labels": [
+          "history",
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:sharegpt_b5rHj0c_20:23",
+        "claim": "The first recorded incident of violence specifically between Jews and Arabs occurred in 1834 during the Peasants' Revolt.",
+        "entity_labels": [
+          "first recorded incident",
+          "Jews",
+          "Arabs",
+          "1834",
+          "Peasants' Revolt"
+        ],
+        "scope_labels": [
+          "history",
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:sharegpt_b5rHj0c_20:25",
+        "claim": "The Roman conquest destroyed the Second Temple in 70 CE.",
+        "entity_labels": [
+          "Roman conquest",
+          "Second Temple",
+          "70 CE"
+        ],
+        "scope_labels": [
+          "history",
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:sharegpt_b5rHj0c_20:25",
+        "claim": "The Bar Kokhba revolt occurred from 132 to 135 CE.",
+        "entity_labels": [
+          "Bar Kokhba revolt",
+          "132 CE",
+          "135 CE"
+        ],
+        "scope_labels": [
+          "history",
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:sharegpt_b5rHj0c_20:25",
+        "claim": "The Persian invasion of the region occurred in the early 7th century CE.",
+        "entity_labels": [
+          "Persian invasion",
+          "early 7th century CE"
+        ],
+        "scope_labels": [
+          "history",
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:sharegpt_b5rHj0c_20:25",
+        "claim": "There were multiple incidents of violence and conflict in the region prior to the Arab conquest of Jerusalem in 638 CE.",
+        "entity_labels": [
+          "violence",
+          "conflict",
+          "region",
+          "Arab conquest of Jerusalem",
+          "638 CE"
+        ],
+        "scope_labels": [
+          "history",
+          "knowledge_update"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": [
+      {
+        "source_claim_ref": "c2",
+        "source_claim_id": null,
+        "target_claim_ref": null,
+        "target_claim_id": "00995d3087dfea31",
+        "type": "supersedes",
+        "reason": "c2 asserts the first recorded incident is 1834, overriding the earlier claim that the Safed incident (1660) is one of the earliest recorded."
+      }
+    ]
+  },
+  "0258f75154eb98f156abe99eebeb72ec91eba62d4f173f8d68b41bbafaf7b9af": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:sharegpt_b5rHj0c_20:27",
+        "claim": "The Arab conquest of Jerusalem in 638 CE is considered the first historical event involving Arabs and Jews in the land of Israel.",
+        "entity_labels": [
+          "arab_conquest_of_jerusalem",
+          "638_ce",
+          "first_historical_event",
+          "arabs",
+          "jews",
+          "land_of_israel"
+        ],
+        "scope_labels": [
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:sharegpt_b5rHj0c_20:27",
+        "claim": "The nature of the conflict at the time of the Arab conquest was not specifically defined as a conflict between Arabs and Jews, but rather as a conflict between different religious and political groups.",
+        "entity_labels": [
+          "arab_conquest_of_jerusalem",
+          "conflict",
+          "religious_groups",
+          "political_groups"
+        ],
+        "scope_labels": [
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:sharegpt_b5rHj0c_20:27",
+        "claim": "There were likely many smaller conflicts and incidents between Jews and Arabs over the centuries.",
+        "entity_labels": [
+          "conflicts",
+          "incidents",
+          "jews",
+          "arabs",
+          "centuries"
+        ],
+        "scope_labels": [
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:sharegpt_b5rHj0c_20:27",
+        "claim": "The Safed incident in 1660 is considered one of the earliest recorded incidents that specifically involved violence between Jews and Arabs in the region.",
+        "entity_labels": [
+          "safed_incident",
+          "1660",
+          "earliest_recorded_incident",
+          "violence",
+          "jews",
+          "arabs"
+        ],
+        "scope_labels": [
+          "history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:2bd9990a_3:0",
+        "claim": "User is looking for restaurant recommendations near current location.",
+        "entity_labels": [
+          "user",
+          "restaurant_recommendations",
+          "current_location"
+        ],
+        "scope_labels": [
+          "preference",
+          "query"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:2bd9990a_3:0",
+        "claim": "User is enjoying private beach and multiple pools at current location.",
+        "entity_labels": [
+          "user",
+          "private_beach",
+          "multiple_pools"
+        ],
+        "scope_labels": [
+          "experience"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:2bd9990a_3:0",
+        "claim": "User is attending a conference.",
+        "entity_labels": [
+          "user",
+          "conference"
+        ],
+        "scope_labels": [
+          "event",
+          "activity"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c8",
+        "event_id": "event:2bd9990a_3:1",
+        "claim": "Assistant does not have access to user's current location.",
+        "entity_labels": [
+          "assistant",
+          "current_location",
+          "access"
+        ],
+        "scope_labels": [
+          "capability",
+          "meta"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c9",
+        "event_id": "event:2bd9990a_3:1",
+        "claim": "Assistant asks user to share location for personalized recommendations.",
+        "entity_labels": [
+          "assistant",
+          "user",
+          "location_sharing"
+        ],
+        "scope_labels": [
+          "request"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c10",
+        "event_id": "event:2bd9990a_3:2",
+        "claim": "User is attending a business conference.",
+        "entity_labels": [
+          "user",
+          "business_conference"
+        ],
+        "scope_labels": [
+          "event",
+          "activity"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c11",
+        "event_id": "event:2bd9990a_3:2",
+        "claim": "User is staying at Hilton Hotel in downtown Chicago.",
+        "entity_labels": [
+          "user",
+          "hilton_hotel",
+          "downtown_chicago"
+        ],
+        "scope_labels": [
+          "location"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c12",
+        "event_id": "event:2bd9990a_3:2",
+        "claim": "The conference is being held at the Hilton Hotel.",
+        "entity_labels": [
+          "conference",
+          "hilton_hotel"
+        ],
+        "scope_labels": [
+          "event",
+          "location"
+        ],
+        "is_current": false
+      }
+    ]
+  },
+  "9c756f653773228689da393f87c5f683071a34fa8f4bff8cc4f11adab2afd621": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:2bd9990a_3:3",
+        "claim": "The Hilton Hotel in downtown Chicago is a fantastic location.",
+        "entity_labels": [
+          "hilton_hotel",
+          "downtown_chicago"
+        ],
+        "scope_labels": [
+          "restaurant_recommendation",
+          "location"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:2bd9990a_3:3",
+        "claim": "Many dining options are within walking distance of the Hilton Hotel.",
+        "entity_labels": [
+          "hilton_hotel",
+          "dining_options"
+        ],
+        "scope_labels": [
+          "restaurant_recommendation",
+          "location"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:2bd9990a_3:3",
+        "claim": "The Gage is a modern American cuisine restaurant with seasonal ingredients.",
+        "entity_labels": [
+          "the_gage",
+          "modern_american_cuisine",
+          "seasonal_ingredients"
+        ],
+        "scope_labels": [
+          "restaurant_recommendation",
+          "menu"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:2bd9990a_3:3",
+        "claim": "The Gage is about a 5-minute walk from the Hilton Hotel.",
+        "entity_labels": [
+          "the_gage",
+          "hilton_hotel"
+        ],
+        "scope_labels": [
+          "restaurant_recommendation",
+          "location"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:2bd9990a_3:3",
+        "claim": "The Gage is located at 24 S Michigan Ave.",
+        "entity_labels": [
+          "the_gage",
+          "24_s_michigan_ave"
+        ],
+        "scope_labels": [
+          "restaurant_recommendation",
+          "location"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:2bd9990a_3:5",
+        "claim": "The Gage is a modern American bistro with a chic atmosphere.",
+        "entity_labels": [
+          "the_gage",
+          "modern_american_bistro",
+          "chic_atmosphere"
+        ],
+        "scope_labels": [
+          "restaurant_recommendation",
+          "ambiance"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:2bd9990a_3:5",
+        "claim": "The Gage is a great spot for a quick lunch.",
+        "entity_labels": [
+          "the_gage",
+          "quick_lunch"
+        ],
+        "scope_labels": [
+          "restaurant_recommendation",
+          "suitability"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c8",
+        "event_id": "event:2bd9990a_3:5",
+        "claim": "The Gage's lunch menu is designed to be served within 30-45 minutes.",
+        "entity_labels": [
+          "the_gage",
+          "lunch_menu",
+          "30_45_minutes"
+        ],
+        "scope_labels": [
+          "restaurant_recommendation",
+          "menu",
+          "timing"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c9",
+        "event_id": "event:2bd9990a_3:5",
+        "claim": "The Gage has both indoor and outdoor seating.",
+        "entity_labels": [
+          "the_gage",
+          "indoor_seating",
+          "outdoor_seating"
+        ],
+        "scope_labels": [
+          "restaurant_recommendation",
+          "feature"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c10",
+        "event_id": "event:2bd9990a_3:5",
+        "claim": "The Gage's outdoor patio is lovely and first-come, first-served.",
+        "entity_labels": [
+          "the_gage",
+          "outdoor_patio",
+          "first_come_first_served"
+        ],
+        "scope_labels": [
+          "restaurant_recommendation",
+          "feature",
+          "seating_policy"
+        ],
+        "is_current": false
+      }
+    ]
+  },
+  "a59ac92381871b161adaec3dfa5a571f69e110363829c198271eb597ab9e3972": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:2bd9990a_3:8",
+        "claim": "User initially believed that Hilton Hotel in downtown Chicago has a private beach and multiple pools.",
+        "entity_labels": [
+          "user",
+          "hilton_hotel_downtown_chicago",
+          "private_beach",
+          "multiple_pools"
+        ],
+        "scope_labels": [
+          "belief",
+          "experience"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:2bd9990a_3:9",
+        "claim": "Hilton Hotel in downtown Chicago does not have a private beach or multiple pools.",
+        "entity_labels": [
+          "hilton_hotel_downtown_chicago",
+          "private_beach",
+          "multiple_pools"
+        ],
+        "scope_labels": [
+          "fact",
+          "location"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:2bd9990a_3:10",
+        "claim": "User previously stayed at Fontainebleau in Miami, which has a private beach and multiple pools.",
+        "entity_labels": [
+          "user",
+          "fontainebleau_miami",
+          "private_beach",
+          "multiple_pools"
+        ],
+        "scope_labels": [
+          "experience",
+          "past_trip"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:2bd9990a_3:10",
+        "claim": "User corrected his/her mistaken belief about hotel amenities.",
+        "entity_labels": [
+          "user"
+        ],
+        "scope_labels": [
+          "correction",
+          "meta"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:2bd9990a_3:11",
+        "claim": "User is in Chicago for a conference.",
+        "entity_labels": [
+          "user",
+          "chicago",
+          "conference"
+        ],
+        "scope_labels": [
+          "location",
+          "event"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": [
+      {
+        "source_claim_ref": "c2",
+        "target_claim_id": "claim:c5ea65f4565317ce",
+        "type": "corrects",
+        "reason": "User mistakenly believed Hilton had private beach and multiple pools; actually Hilton does not have them."
+      }
+    ]
+  },
+  "0d321725c17af30513b804cc7caba6206c9e8b2e1088407b74be45a53fcf8d2a": {
+    "state_facets": [],
+    "rejected_claims": [],
+    "relations": [],
+    "enough_evidence": false
+  },
+  "46beaa307ff74ec087b6c278509ca4fad1557b13151430a0d8b10bf5cb120b26": {
+    "claims": [],
+    "relations": []
+  },
+  "fd85164c0c66b72af9d806aa3e40ec3791d3dbeedb108cc74477d87f7a67f75d": {
+    "claims": [],
+    "relations": []
+  },
+  "8b7e853288d273cab0828e7f2e4afb6545015be719961045847d2739e34bb297": {
+    "claims": [],
+    "relations": []
+  },
+  "d50543404bfc407859ce198ef9809ca4fc05b9dd3a0b79efcca4bcf43f720a19": {
+    "claims": [],
+    "relations": []
+  },
+  "25bb31541e9bd2a7d8eda465c67cba51363807206a07065785072c5a3e304415": {
+    "claims": [],
+    "relations": []
+  },
+  "163f2d299ef81aa7238016c140fa3d0e3b121891f8ee9bfb38871bdb9f8aca0e": {
+    "claims": [],
+    "relations": []
+  },
+  "077c15b5a2a048e24295db5d4b5207e02b6326bd04faad9b4957cd1e6a8cdea4": {
+    "claims": [],
+    "relations": []
+  },
+  "e97fa91efd36a162bdb8d5b4c9527bf831b4b74451603fe835aeaf9e786435f3": {
+    "claims": [],
+    "relations": []
+  },
+  "ccc5e1eaca285b8c1d00f46dfc0242c2e5db18009718ea1f039589fb3bff445f": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:29116b50_1:6",
+        "claim": "User plays tennis on Tuesdays.",
+        "entity_labels": [
+          "User",
+          "Tennis",
+          "Tuesday"
+        ],
+        "scope_labels": [
+          "temporal_event"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:29116b50_1:6",
+        "claim": "User plays basketball on weekends at the community center.",
+        "entity_labels": [
+          "User",
+          "Basketball",
+          "Weekend",
+          "Community Center"
+        ],
+        "scope_labels": [
+          "temporal_event",
+          "location"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:29116b50_1:8",
+        "claim": "User needs a new pair of basketball shoes.",
+        "entity_labels": [
+          "User",
+          "Basketball Shoes"
+        ],
+        "scope_labels": [
+          "preference",
+          "shopping"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "b4991bdf17bf81027da1f1cf7200cb512c1eaf7a44513ecadf65dec1136a4fd7": {
+    "claims": [],
+    "relations": []
+  },
+  "60ebd9e04d455046df60c8a5985f4e361b92d0a70e3015021b40dfe374d57beb": {
+    "claims": [],
+    "relations": []
+  },
+  "5a6cb80535d40df759608bcbbb9183815d123a1f47a4254d3db160ffdac0fe7b": {
+    "claims": [],
+    "relations": []
+  },
+  "9d0fee89b272b4fc34a78df4d5f1a2906a5449451629132f9add30b18cacdb5b": {
+    "claims": [],
+    "relations": []
+  },
+  "3b2155cf551a9969f80249ad14c1971e1df9e3580d53581171bfd547274aa16f": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:sharegpt_5GYAEJe_23:3",
+        "claim": "User asks assistant to choose melee weapon and additional equipment for Legolas.",
+        "entity_labels": [
+          "user",
+          "assistant",
+          "Legolas"
+        ],
+        "scope_labels": [
+          "dnd_character_creation",
+          "request"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:sharegpt_5GYAEJe_23:4",
+        "claim": "Assistant chooses a longsword as Legolas' melee weapon.",
+        "entity_labels": [
+          "assistant",
+          "Legolas",
+          "longsword"
+        ],
+        "scope_labels": [
+          "dnd_character_creation",
+          "equipment_choice"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:sharegpt_5GYAEJe_23:4",
+        "claim": "Assistant adds a holy symbol to Legolas' equipment.",
+        "entity_labels": [
+          "assistant",
+          "Legolas",
+          "holy_symbol"
+        ],
+        "scope_labels": [
+          "dnd_character_creation",
+          "equipment_choice"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:sharegpt_5GYAEJe_23:4",
+        "claim": "Assistant adds a healer's kit to Legolas' equipment.",
+        "entity_labels": [
+          "assistant",
+          "Legolas",
+          "healer's_kit"
+        ],
+        "scope_labels": [
+          "dnd_character_creation",
+          "equipment_choice"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:sharegpt_5GYAEJe_23:4",
+        "claim": "Assistant asks user whether to roll or auto-generate Legolas' stats.",
+        "entity_labels": [
+          "assistant",
+          "user",
+          "Legolas"
+        ],
+        "scope_labels": [
+          "dnd_character_creation",
+          "stat_generation_method"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:sharegpt_5GYAEJe_23:5",
+        "claim": "User chooses to auto-generate Legolas' stats.",
+        "entity_labels": [
+          "user",
+          "Legolas"
+        ],
+        "scope_labels": [
+          "dnd_character_creation",
+          "stat_generation_method"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:sharegpt_5GYAEJe_23:6",
+        "claim": "Assistant auto-generates Legolas' stats: Strength 12, Dexterity 16, Constitution 14, Intelligence 13, Wisdom 16, Charisma 14.",
+        "entity_labels": [
+          "assistant",
+          "Legolas",
+          "stats"
+        ],
+        "scope_labels": [
+          "dnd_character_creation",
+          "statistics"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c8",
+        "event_id": "event:sharegpt_5GYAEJe_23:6",
+        "claim": "Assistant asks user if they want to change Legolas' stats.",
+        "entity_labels": [
+          "assistant",
+          "user",
+          "Legolas"
+        ],
+        "scope_labels": [
+          "dnd_character_creation",
+          "modification_request"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c9",
+        "event_id": "event:sharegpt_5GYAEJe_23:7",
+        "claim": "User wants to create the next character.",
+        "entity_labels": [
+          "user"
+        ],
+        "scope_labels": [
+          "dnd_character_creation",
+          "progression"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "0c48aacd5e32645d4968590a6a45a5c58bbbbb1f501d49a91ad108216b52d495": {
+    "claims": [],
+    "relations": []
+  },
+  "3a6bd9b8d01eb02430639c2ecf5bea303b13c50e8ce96bf83d0fb3108572c882": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:107d40f0:0",
+        "claim": "User plans a trip to Barcelona.",
+        "entity_labels": [
+          "user",
+          "Barcelona"
+        ],
+        "scope_labels": [
+          "travel_plan"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:107d40f0:1",
+        "claim": "Assistant recommended areas to stay in Barcelona.",
+        "entity_labels": [
+          "assistant",
+          "Barcelona"
+        ],
+        "scope_labels": [
+          "recommendation"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:107d40f0:2",
+        "claim": "User considers staying in Eixample.",
+        "entity_labels": [
+          "user",
+          "Eixample"
+        ],
+        "scope_labels": [
+          "accommodation_consideration"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:107d40f0:2",
+        "claim": "User asks for hostel recommendations in Eixample.",
+        "entity_labels": [
+          "user",
+          "hostels",
+          "Eixample"
+        ],
+        "scope_labels": [
+          "request"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:107d40f0:3",
+        "claim": "Assistant recommended hostels in Eixample.",
+        "entity_labels": [
+          "assistant",
+          "hostels",
+          "Eixample"
+        ],
+        "scope_labels": [
+          "recommendation"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:107d40f0:4",
+        "claim": "User budget for hostel is $30-40 per night.",
+        "entity_labels": [
+          "user",
+          "budget",
+          "30-40",
+          "hostel"
+        ],
+        "scope_labels": [
+          "budget_preference"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  }
+}

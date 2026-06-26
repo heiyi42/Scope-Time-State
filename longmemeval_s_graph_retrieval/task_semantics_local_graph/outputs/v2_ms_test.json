@@ -1,0 +1,258 @@
+{
+  "benchmark": "LongMemEval-S",
+  "method": "task_semantics_local_graph",
+  "data_path": "C:\\Users\\93232\\Desktop\\SCIENCE\\AAAI2027_2\\Experiment\\Other_BenchMark\\LongMemEval-S\\LongMemEval-S_data\\data\\longmemeval_s_cleaned.json",
+  "construction_provider": "openai",
+  "construction_model": "gpt-4o-mini",
+  "answer_provider": "openai",
+  "answer_model": "gpt-4o-mini",
+  "judge_provider": "openai",
+  "judge_model": "gpt-4o-2024-08-06",
+  "variants": [
+    "task_semantics_local_graph"
+  ],
+  "task_candidate_k": 20,
+  "graph_batch_size": 5,
+  "max_facets": 12,
+  "limit_cases": 0,
+  "limit_per_type": 2,
+  "question_types": {
+    "multi-session": 2
+  },
+  "results": [
+    {
+      "variant": "task_semantics_local_graph",
+      "summary": {
+        "n_cases": 2,
+        "local_answer_match": 0.0,
+        "official_answer_accuracy": 0.0,
+        "candidate_session_recall": 0.875,
+        "candidate_session_precision": 0.15,
+        "evidence_session_recall": 0.2917,
+        "evidence_session_precision": 0.5,
+        "abstention_accuracy": null,
+        "task_averaged_official_answer_accuracy": 0.0,
+        "by_question_type": {
+          "multi-session": {
+            "n_cases": 2,
+            "local_answer_match": 0.0,
+            "official_answer_accuracy": 0.0,
+            "candidate_session_recall": 0.875,
+            "candidate_session_precision": 0.15,
+            "evidence_session_recall": 0.2917,
+            "evidence_session_precision": 0.5
+          }
+        }
+      },
+      "rows": [
+        {
+          "question_id": "0a995998",
+          "question_type": "multi-session",
+          "task_adapter": "Multi-session synthesis",
+          "is_abstention": false,
+          "question": "How many items of clothing do I need to pick up or return from a store?",
+          "gold_answer": "3",
+          "hypothesis": "You need to pick up 1 item of clothing, which is a new pair of boots.",
+          "candidate_session_ids": [
+            "answer_afa9873b_3",
+            "answer_afa9873b_1",
+            "answer_afa9873b_2",
+            "85846900_2",
+            "25091584_1",
+            "e6790684_1",
+            "ad3d0815_1",
+            "439f9ed8_3",
+            "ultrachat_331531",
+            "afbd7193_2",
+            "fa46a10e",
+            "sharegpt_U3S02iq_0",
+            "750b437b_3",
+            "sharegpt_ZzArUrr_0",
+            "3f05c474",
+            "f5a8b1d0_1",
+            "ultrachat_158784",
+            "64b847a7_1",
+            "ultrachat_428050",
+            "b10c041b_2"
+          ],
+          "evidence_session_ids": [
+            "answer_afa9873b_1",
+            "fa46a10e"
+          ],
+          "answer_session_ids": [
+            "answer_afa9873b_2",
+            "answer_afa9873b_3",
+            "answer_afa9873b_1"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.15,
+          "evidence_session_recall": 0.3333333333333333,
+          "evidence_session_precision": 0.5,
+          "local_answer_match": false,
+          "autoeval_label": {
+            "model": "gpt-4o-2024-08-06",
+            "label": false,
+            "response": "No"
+          },
+          "state_facets": [
+            {
+              "name": "items_to_pick_up",
+              "value": "new pair of boots",
+              "support_session_ids": [
+                "answer_afa9873b_1",
+                "fa46a10e"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence indicates that you have a pending pickup for a new pair of boots.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_afa9873b_1",
+              "fa46a10e"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_afa9873b_1",
+                "date": "2023/02/15 (Wed) 16:19",
+                "role": "assistant",
+                "content": "Using boxes you already have at home is a great way to reduce waste and get started with seasonal storage.\n\nNow, about keeping track of items to pick up or return...\n\nHere are some tips to help you stay on top of your pickups and returns:\n\n1. **Create a \"To-Pickup\" list**: Write down the item, store, and pickup date on a sticky note or in a notes app on your phone. This will help you remember what you need to collect and when.\n2. **Set reminders**: Set reminders on your phone or calendar for the pickup date, so you don't forget to grab your new boots!\n3. **Designate a \"Returns\" spot**: Choose a specific area in your home, like a hook or a bin, where you'll place items that need to be returned. This will help keep them separate from your regular belongings and prevent them from getting lost or forgotten.\n4. **Keep receipts organized**: Store receipts for items you need to return in a designated spot, like a folder or envelope, so you can easily find them when you need to return the item.\n5. **Use a task management app**: Consider using an app like Todoist, Trello, or AnyList to keep track of your pickups and returns. You can create a \" Errands\" or \"Shopping\" list and add tasks for each item, complete with due dates and reminders.\n6. **Take a photo**: Take a photo of the item and the receipt as a backup, in case you need to refer to them later.\n\nBy implementing these strategies, you'll be more likely to remember to pick up your new boots and return any items that don't fit quite right.\n\nHow do you usually keep track of your pickups and returns? Do you have a system in place, or is this something you're looking to improve?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "fa46a10e",
+                "date": "2023/02/15 (Wed) 19:02",
+                "role": "assistant",
+                "content": "What a great idea! Decluttering and making some extra cash from family heirlooms can be a win-win! I'd be happy to help you find the best online marketplaces and local shops to sell your items. Here are some popular options to consider:\n\n**Online Marketplaces:**\n\n1. **eBay**: One of the largest online marketplaces, eBay is great for rare or unique items, including antiques, collectibles, and vintage items.\n2. **Etsy**: Focuses on handmade, vintage, and unique items, making it perfect for selling antique or collectible items, such as jewelry, furniture, or home decor.\n3. **Facebook Marketplace**: A great platform to sell items locally, with a large user base and easy listing process.\n4. **Ruby Lane**: Specializes in vintage and antique items, including art, collectibles, and home decor.\n5. **Chairish**: A curated marketplace for vintage and used furniture, home decor, and art.\n6. **1stdibs**: Luxury online marketplace for high-end, unique, and rare items, including antiques, art, and collectibles.\n7. **Mercari**: A mobile marketplace for buying and selling used items, including collectibles and antiques.\n\n**Local Shops and Consignment Stores:**\n\n1. **Antique Stores**: Research local antique stores in your area that might be interested in buying or consigning your items.\n2. **Vintage and Second-Hand Stores**: Stores that specialize in vintage clothing, accessories, or home decor might be interested in your items.\n3. **Consignment Stores**: These stores sell items on behalf of the owner, taking a commission on the sale price.\n4. **Pawn Shops**: While not always the best option, pawn shops can be a quick way to sell items, but be prepared to negotiate prices.\n5. **Local Auction Houses**: If you have rare or valuable items, consider consigning them to a local auction house.\n6. **Estate Sales**: Companies that specialize in selling entire estates or large collections of items.\n7. **Local Collectible Shops**: If you have items related to a specific collectible, such as coins, stamps, or sports memorabilia, look for local shops that specialize in those areas.\n\nBefore selling, make sure to:\n\n1. Research your items to determine their value and authenticity.\n2. Take high-quality photos and write detailed descriptions for online listings.\n3. Set competitive prices based on market demand and similar items.\n4. Consider getting items appraised or authenticated by experts, especially for high-value or rare items.\n5. Read and understand the terms and conditions of each marketplace or shop before listing or consigning your items.\n\nRemember to stay organized, patient, and prepared to negotiate prices. Good luck with selling your family heirlooms!",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "items_to_pick_up",
+                "value": "new pair of boots",
+                "support_session_ids": [
+                  "answer_afa9873b_1",
+                  "fa46a10e"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          }
+        },
+        {
+          "question_id": "6d550036",
+          "question_type": "multi-session",
+          "task_adapter": "Multi-session synthesis",
+          "is_abstention": false,
+          "question": "How many projects have I led or am currently leading?",
+          "gold_answer": "2",
+          "hypothesis": "1",
+          "candidate_session_ids": [
+            "2e4430d8_2",
+            "answer_ec904b3c_1",
+            "a9981dc6_3",
+            "dae3906e_2",
+            "sharegpt_zciCXP1_12",
+            "sharegpt_UbMVpdp_93",
+            "f6246b5f",
+            "answer_ec904b3c_4",
+            "sharegpt_nVi6tIt_0",
+            "0bab76de",
+            "ultrachat_184799",
+            "answer_ec904b3c_2",
+            "eb682e52_2",
+            "878271ae_2",
+            "ultrachat_271963",
+            "528f481d_5",
+            "sharegpt_J7ZAFLd_0",
+            "sharegpt_yzR1YLf_0",
+            "b37a44e4_5",
+            "a245a0df_2"
+          ],
+          "evidence_session_ids": [
+            "2e4430d8_2",
+            "answer_ec904b3c_2"
+          ],
+          "answer_session_ids": [
+            "answer_ec904b3c_1",
+            "answer_ec904b3c_4",
+            "answer_ec904b3c_3",
+            "answer_ec904b3c_2"
+          ],
+          "candidate_session_recall": 0.75,
+          "candidate_session_precision": 0.15,
+          "evidence_session_recall": 0.25,
+          "evidence_session_precision": 0.5,
+          "local_answer_match": false,
+          "autoeval_label": {
+            "model": "gpt-4o-2024-08-06",
+            "label": false,
+            "response": "No"
+          },
+          "state_facets": [
+            {
+              "name": "projects_led_or_leading",
+              "value": "1",
+              "support_session_ids": [
+                "2e4430d8_2",
+                "answer_ec904b3c_2"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence indicates that you are currently leading a team of five engineers, which counts as one project led.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "2e4430d8_2",
+              "answer_ec904b3c_2"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "2e4430d8_2",
+                "date": "2023/05/28 (Sun) 03:42",
+                "role": "assistant",
+                "content": "You're absolutely on the right track!\n\nYes, in Asana, you can:\n\n1. **Create a task**: Define the task, add a description, and attach relevant files or links.\n2. **Set a deadline**: Assign a due date for the task, which will help you and your team stay on track.\n3. **Assign a task to a team member**: Choose the team member responsible for completing the task, and they'll receive notifications and updates.\n4. **Track progress**: Asana allows team members to update the task status, add comments, and attach files. You can also set up custom workflows and approval processes.\n5. **Track dependencies between tasks**: Create dependencies between tasks to visualize the workflow and ensure that tasks are completed in the correct order. You can set up dependencies using the \"Blocked by\" and \"Blocking\" fields.\n\nAsana also offers many other features to help you manage your project, such as:\n\n* **Gantt charts**: Visualize your project timeline, including dependencies and deadlines.\n* **Calendars**: View tasks and deadlines on a calendar to ensure everyone is on track.\n* **Reports**: Generate reports to track progress, identify bottlenecks, and make data-driven decisions.\n* **Workflows**: Create custom workflows to automate repetitive tasks and streamline your process.\n* **Integrations**: Integrate Asana with other tools, such as GitHub, Slack, or Google Drive, to enhance your workflow.\n\nWith Asana, you'll be able to create a clear project plan, assign tasks, track progress, and collaborate with your team effectively.\n\nRemember, as the leader of your team, it's essential to regularly review and adjust your project plan to ensure you're on track to meet your deadlines. Asana will help you stay organized, but it's up to you to lead your team to success!",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "2e4430d8_2",
+                "date": "2023/05/28 (Sun) 03:42",
+                "role": "user",
+                "content": "I'm planning to launch a new product feature in June and I need to create a project timeline. Can you help me create a Gantt chart or recommend a tool to do so? By the way, I've been pretty busy lately, especially since I was promoted to a senior software engineer position three months ago and have been leading a team of five engineers.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "2e4430d8_2",
+                "date": "2023/05/28 (Sun) 03:42",
+                "role": "user",
+                "content": "I'm thinking of organizing a meeting with my team to discuss the project plan and assign tasks. Do you think it's a good idea to include the junior engineer, Alex, in this meeting? He's been doing well under my guidance, and I think it would be a great opportunity for him to learn more about project planning and collaboration.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_ec904b3c_2",
+                "date": "2023/05/29 (Mon) 09:25",
+                "role": "assistant",
+                "content": "Feature engineering! It's a crucial step in the data mining process, and it can make or break the performance of your models. I'm happy to help you with some tips and resources to improve your feature engineering skills.\n\n**Tips:**\n\n1. **Domain knowledge is key**: Understand the business problem, the data, and the industry. This will help you identify relevant features and create meaningful transformations.\n2. **Explore and visualize**: Use summary statistics, plots, and visualizations to understand the distribution of your data and identify patterns, correlations, and outliers.\n3. ** Handle missing values**: Decide on a strategy to handle missing values (e.g., imputation, deletion, or feature creation).\n4. **Transform and aggregate**: Apply transformations (e.g., log, sqrt, normalization) and aggregations (e.g., mean, sum, count) to create new features.\n5. **Feature selection**: Use techniques like correlation analysis, mutual information, or recursive feature elimination to select the most relevant features.\n6. **Create interaction terms**: Combine features to capture non-linear relationships.\n7. **Use domain-specific knowledge**: Incorporate external data or domain-specific knowledge to create features that are relevant to the problem.\n8. **Iterate and refine**: Feature engineering is an iterative process; refine your features based on model performance and feedback.\n\n**Resources:**\n\n**Books:**\n\n1. \"Feature Engineering for Machine Learning\" by Alice Zheng and Amanda Casari - A comprehensive guide to feature engineering.\n2. \"Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow\" by Aurélien Géron - Covers feature engineering in the context of machine learning.\n\n**Online Courses:**\n\n1. \"Feature Engineering\" by University of Michigan on Coursera - A specialization course on feature engineering.\n2. \"Data Preprocessing\" by DataCamp - A course on data preprocessing, including feature engineering.\n\n**Blogs and Articles:**\n\n1. \"Feature Engineering: The Secret to Success in Machine Learning\" by KDnuggets - A comprehensive article on feature engineering.\n2. \"Feature Engineering for Machine Learning\" by Towards Data Science - A collection of articles on feature engineering.\n3. \"10 Feature Engineering Techniques\" by DataRobot - A blog post on various feature engineering techniques.\n\n**Python Libraries:**\n\n1. **Pandas**: For data manipulation and feature creation.\n2. **NumPy**: For numerical computations and feature transformations.\n3. **Scikit-learn**: For feature selection, engineering, and preprocessing.\n4. **Featuretools**: A library specifically designed for feature engineering.\n\n**R Libraries:**\n\n1. **dplyr**: For data manipulation and feature creation.\n2. **caret**: For feature selection, engineering, and preprocessing.\n3. **recipes**: A package for feature engineering and preprocessing.\n\n**Practice**:\n\n1. **Kaggle**: Participate in competitions and practice feature engineering on various datasets.\n2. **UCI Machine Learning Repository**: Experiment with different datasets and feature engineering techniques.\n3. **Your own projects**: Apply feature engineering to your own projects and datasets.\n\nRemember, feature engineering is a skill that takes time and practice to develop. Keep experimenting, learning, and refining your skills, and you'll become a master feature engineer!",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "projects_led_or_leading",
+                "value": "1",
+                "support_session_ids": [
+                  "2e4430d8_2",
+                  "answer_ec904b3c_2"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          }
+        }
+      ]
+    }
+  ]
+}

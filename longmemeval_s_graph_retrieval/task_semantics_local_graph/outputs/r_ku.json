@@ -1,0 +1,1319 @@
+{
+  "method": "task_semantics_local_graph",
+  "model": "gpt-4o-mini",
+  "judge_model": "gpt-4o-2024-08-06",
+  "n_cases": 10,
+  "macro_acc": 0.0,
+  "micro_acc": 0.0,
+  "by_type": {
+    "knowledge-update": {
+      "n": 10,
+      "acc": 0.0
+    }
+  },
+  "rows": [
+    {
+      "question_id": "6a1eabeb",
+      "question_type": "knowledge-update",
+      "question": "What was my personal best time in the charity 5K run?",
+      "gold_answer": "25 minutes and 50 seconds (or 25:50)",
+      "hypothesis": "Your personal best time in the charity 5K run was 27:12.",
+      "question_date": "2023/06/25 (Sun) 13:22",
+      "answer_session_ids": [
+        "answer_a25d4a91_1",
+        "answer_a25d4a91_2"
+      ],
+      "evidence_session_ids": [
+        "answer_a25d4a91_1",
+        "d8cc8b5c_5",
+        "9f80607d",
+        "2ea6fda4_2",
+        "4aaf678f_3",
+        "6da0bba2_1",
+        "d03995c6",
+        "0a7c4f1c_1",
+        "5b71808d",
+        "answer_a25d4a91_2",
+        "86b8dc6e"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "**Know the market value:** Research the car's market value using tools like Kelley Blue Book, Edmunds, or TrueCar.",
+          "support_session_ids": [
+            "86b8dc6e"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "**Negotiating a good deal:** Here are some tips to help you negotiate a good deal when buying a new car: 1.",
+          "support_session_ids": [
+            "86b8dc6e"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "**New car shopping!** The Honda CR-V is a great choice!",
+          "support_session_ids": [
+            "86b8dc6e"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Do you know how often I should get it serviced?",
+          "support_session_ids": [
+            "86b8dc6e"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "What's the best way to negotiate a good deal when buying a new car?",
+          "support_session_ids": [
+            "86b8dc6e"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "I really liked the new Honda CR-V, but I'm still doing some research and crunching numbers before making a decision.",
+          "support_session_ids": [
+            "86b8dc6e"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "I'll definitely explore those options.",
+          "reason": "stale",
+          "support_session_ids": [
+            "5b71808d",
+            "86b8dc6e"
+          ]
+        },
+        {
+          "claim": "By the way, I've been taking English classes at the LINC program since November 2020, and I'm currently at level 5.",
+          "reason": "stale",
+          "support_session_ids": [
+            "5b71808d",
+            "86b8dc6e"
+          ]
+        },
+        {
+          "claim": "My teacher, Mrs.",
+          "reason": "stale",
+          "support_session_ids": [
+            "5b71808d",
+            "86b8dc6e"
+          ]
+        },
+        {
+          "claim": "That's wonderful!",
+          "reason": "stale",
+          "support_session_ids": [
+            "5b71808d",
+            "86b8dc6e"
+          ]
+        },
+        {
+          "claim": "It's great to hear that you've been making progress in your English classes and that you've had a supportive teacher like Mrs.",
+          "reason": "stale",
+          "support_session_ids": [
+            "5b71808d",
+            "86b8dc6e"
+          ]
+        },
+        {
+          "claim": "Having a good teacher can make a huge difference in one's language learning journey.",
+          "reason": "stale",
+          "support_session_ids": [
+            "5b71808d",
+            "86b8dc6e"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "6aeb4375",
+      "question_type": "knowledge-update",
+      "question": "How many Korean restaurants have I tried in my city?",
+      "gold_answer": "four",
+      "hypothesis": "I don't know",
+      "question_date": "2023/10/22 (Sun) 15:38",
+      "answer_session_ids": [
+        "answer_3f9693b7_1",
+        "answer_3f9693b7_2"
+      ],
+      "evidence_session_ids": [
+        "8a5e1497_3",
+        "93bed3d8_1",
+        "aa6afba8",
+        "sharegpt_wbbH6cZ_0",
+        "sharegpt_MWlvrvZ_0",
+        "e47d38f4_2",
+        "answer_3f9693b7_1",
+        "29621a34",
+        "08256f84_2",
+        "2e21c7d5",
+        "c3567066",
+        "dc9bf721_1",
+        "03105808_2",
+        "answer_3f9693b7_2"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "I exist solely to provide general knowledge and assist with tasks through text-based conversations.",
+          "support_session_ids": [
+            "answer_3f9693b7_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "As for the new Indian restaurant, I'm afraid I'm a large language model, I don't have personal experiences or real-time information about specific locations.",
+          "support_session_ids": [
+            "answer_3f9693b7_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Basmati rice, on the other hand, is known for its long, slender grains and nutty flavor, which pairs well with the spices and seasonings commonly used in Indian cuisine.",
+          "support_session_ids": [
+            "answer_3f9693b7_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "However, I can suggest that you check out online review sites such as Yelp or Google Reviews to see what others have to say about the restaurant.",
+          "support_session_ids": [
+            "answer_3f9693b7_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Basmati rice is a classic choice for Indian cuisine, and it will pair perfectly with your samosas and saag aloo.",
+          "support_session_ids": [
+            "answer_3f9693b7_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Japanese short-grain rice is typically stickier and clingier than Indian basmati rice, which can affect the texture and flavor of the dish.",
+          "support_session_ids": [
+            "answer_3f9693b7_2"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "I'm planning to move into a new home soon and need some help with setting up utilities.",
+          "reason": "stale",
+          "support_session_ids": [
+            "03105808_2",
+            "answer_3f9693b7_2"
+          ]
+        },
+        {
+          "claim": "Can you guide me through the process of transferring electricity and water services to my name?",
+          "reason": "stale",
+          "support_session_ids": [
+            "03105808_2",
+            "answer_3f9693b7_2"
+          ]
+        },
+        {
+          "claim": "By the way, we're really excited about the ranch-style home we're buying - we managed to snag it for $310,000, which was our final offer.",
+          "reason": "stale",
+          "support_session_ids": [
+            "03105808_2",
+            "answer_3f9693b7_2"
+          ]
+        },
+        {
+          "claim": "Congratulations on your new home purchase!",
+          "reason": "stale",
+          "support_session_ids": [
+            "03105808_2",
+            "answer_3f9693b7_2"
+          ]
+        },
+        {
+          "claim": "I'd be happy to help you with setting up utilities.",
+          "reason": "stale",
+          "support_session_ids": [
+            "03105808_2",
+            "answer_3f9693b7_2"
+          ]
+        },
+        {
+          "claim": "Transferring electricity and water services to your name is a relatively straightforward process.",
+          "reason": "stale",
+          "support_session_ids": [
+            "03105808_2",
+            "answer_3f9693b7_2"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "830ce83f",
+      "question_type": "knowledge-update",
+      "question": "Where did Rachel move to after her recent relocation?",
+      "gold_answer": "the suburbs",
+      "hypothesis": "I don't know",
+      "question_date": "2023/06/13 (Tue) 15:15",
+      "answer_session_ids": [
+        "answer_0b1a0942_1",
+        "answer_0b1a0942_2"
+      ],
+      "evidence_session_ids": [
+        "062e9120_1",
+        "47c5482a",
+        "ultrachat_288747",
+        "114c1fb7_5",
+        "sharegpt_mMTudFY_0",
+        "020149a5_1",
+        "8bc305e4_2",
+        "e19c8fd9_1",
+        "ultrachat_258380",
+        "7ddf575b",
+        "8d77be9a_2",
+        "sharegpt_hLkmbBL_0",
+        "a7f88bb3_2",
+        "ultrachat_430992",
+        "answer_0b1a0942_1",
+        "sharegpt_DJ1HtcY_0",
+        "d1e7d11c_2",
+        "dfbda5e9",
+        "ultrachat_193901",
+        "answer_0b1a0942_2"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Now that we have our accommodations sorted, let's plan the rest of the trip!",
+          "support_session_ids": [
+            "answer_0b1a0942_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "It's known for its beautiful beaches, cultural attractions, and outdoor activities.",
+          "support_session_ids": [
+            "answer_0b1a0942_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Do you know any good places to find reclaimed wood in my area?",
+          "support_session_ids": [
+            "7ddf575b"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "A reclaimed wood shelf to match your new headboard sounds like a fantastic idea.",
+          "support_session_ids": [
+            "7ddf575b"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Now, let's get to that DIY project!",
+          "support_session_ids": [
+            "7ddf575b"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "**Sanibel Island**: Only about 30 minutes from Fort Myers Beach, Sanibel Island is famous for its shell-filled beaches, wildlife refuges, and picturesque lighthouse.",
+          "support_session_ids": [
+            "answer_0b1a0942_2"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "Yunnan spices are characterized by their complex, multi-dimensional flavors, combining elements of sweet, sour, spicy, and umami.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_193901",
+            "answer_0b1a0942_2"
+          ]
+        },
+        {
+          "claim": "Some of the most popular Yunnan spices include: 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_193901",
+            "answer_0b1a0942_2"
+          ]
+        },
+        {
+          "claim": "Sichuan peppercorns: These peppercorns add a numbing sensation to dishes, which is a signature flavor of Sichuan cuisine.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_193901",
+            "answer_0b1a0942_2"
+          ]
+        },
+        {
+          "claim": "Wow, Yunnan spices really sound amazing!",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_193901",
+            "answer_0b1a0942_2"
+          ]
+        },
+        {
+          "claim": "I'll have to try some next time I visit China.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_193901",
+            "answer_0b1a0942_2"
+          ]
+        },
+        {
+          "claim": "Do you have any recommendations for a specific Yunnan dish that really highlights the use of these spices?",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_193901",
+            "answer_0b1a0942_2"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "852ce960",
+      "question_type": "knowledge-update",
+      "question": "What was the amount I was pre-approved for when I got my mortgage from Wells Fargo?",
+      "gold_answer": "$400,000",
+      "hypothesis": "The amount you were pre-approved for when you got your mortgage from Wells Fargo was $350,000.",
+      "question_date": "2023/12/18 (Mon) 04:17",
+      "answer_session_ids": [
+        "answer_3a6f1e82_1",
+        "answer_3a6f1e82_2"
+      ],
+      "evidence_session_ids": [
+        "d36d11b9_2",
+        "answer_3a6f1e82_1",
+        "0840765f_2",
+        "sharegpt_FYhsZ0Q_0",
+        "b0fd1357",
+        "sharegpt_uiECyCD_66",
+        "c578da1f_1",
+        "ultrachat_241587",
+        "a76e7e3c_1",
+        "cae09ac0_1",
+        "1e32d50a",
+        "bdfcb4d3",
+        "a110c4dc_1",
+        "f55fee5b_2",
+        "bfe8bb0e",
+        "aaf22693",
+        "010a28ab_3",
+        "e184e4c3_2",
+        "answer_3a6f1e82_2",
+        "ultrachat_224140"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "However, it's worth noting that Lloyd was a director who was known for his attention to detail and meticulous planning, so it's unlikely that he would have included controversial elements in his films without some degree of thought and intention.",
+          "support_session_ids": [
+            "ultrachat_224140"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Sorry to hear that you're experiencing issues with your laptop's battery life.",
+          "support_session_ids": [
+            "a110c4dc_1"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "I'm considering buying a soundbar to go with my new 55-inch 4K TV that I got from Best Buy during the Black Friday sale on November 27th.",
+          "support_session_ids": [
+            "a76e7e3c_1"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "Congratulations on your new TV purchase!",
+          "support_session_ids": [
+            "a76e7e3c_1"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "Can you also suggest some good power banks with a higher capacity, like 10,000mAh or 20,000mAh, for charging my refurbished laptop that I got during the Cyber Monday sale?",
+          "support_session_ids": [
+            "a76e7e3c_1"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "Filmmakers have a responsibility to create works that are both socially conscious and respectful of the experiences of marginalized individuals.",
+          "support_session_ids": [
+            "ultrachat_224140"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "**Morning stretch or exercise**: Start with some light stretching or a short exercise routine to get your blood flowing and help you feel more alert.",
+          "reason": "stale",
+          "support_session_ids": [
+            "e184e4c3_2",
+            "ultrachat_224140"
+          ]
+        },
+        {
+          "claim": "I'm thinking of trying out some of these tips to stay focused and alert during my morning commute.",
+          "reason": "stale",
+          "support_session_ids": [
+            "e184e4c3_2",
+            "ultrachat_224140"
+          ]
+        },
+        {
+          "claim": "One thing that's been helping me so far is listening to audiobooks or podcasts that are engaging and interesting, like you mentioned.",
+          "reason": "stale",
+          "support_session_ids": [
+            "e184e4c3_2",
+            "ultrachat_224140"
+          ]
+        },
+        {
+          "claim": "Speaking of which, do you have any recommendations for podcasts or audiobooks that are particularly good for a morning commute?",
+          "reason": "stale",
+          "support_session_ids": [
+            "e184e4c3_2",
+            "ultrachat_224140"
+          ]
+        },
+        {
+          "claim": "I'm glad you're finding engaging content helpful for your morning commute.",
+          "reason": "stale",
+          "support_session_ids": [
+            "e184e4c3_2",
+            "ultrachat_224140"
+          ]
+        },
+        {
+          "claim": "Here are some podcast and audiobook recommendations that are perfect for a morning commute: **Podcasts:** 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "e184e4c3_2",
+            "ultrachat_224140"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "945e3d21",
+      "question_type": "knowledge-update",
+      "question": "How often do I attend yoga classes to help with my anxiety?",
+      "gold_answer": "Three times a week.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/12/14 (Thu) 06:32",
+      "answer_session_ids": [
+        "answer_6a4f8626_1",
+        "answer_6a4f8626_2"
+      ],
+      "evidence_session_ids": [
+        "c2c11c8c_1",
+        "9bbd38a6",
+        "4019b1a8_4",
+        "ultrachat_224909",
+        "5fcca8bc_1",
+        "sharegpt_E7VUcfj_0",
+        "dc880372_3",
+        "ultrachat_518638",
+        "sharegpt_zn81iL6_9",
+        "9418c255",
+        "sharegpt_bFGyimh_0",
+        "87252d80_2"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Here's the updated entry: **Trip 1: Chicago, February** * Destination: Chicago, USA * Dates: [Insert dates, e.g., February 10-14] * Duration: 4 days * Airline: United Airlines * Class: Economy Plus (upgraded due to loyalty program) * Notes: + Layover at Denver International Airport (DEN) on return journey + Grabbed lunch at a BBQ joint at DEN (same one discovered last year) Now, are you ready to move on to another trip?",
+          "support_session_ids": [
+            "87252d80_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Here's a rough outline: **Trip 1: Chicago, February** * Destination: Chicago, USA * Dates: [Insert dates, e.g., February 10-14] * Duration: 4 days * Notes: [Insert any notable experiences, activities, or memories from the trip] Now, can you tell me about any other trips you've taken recently?",
+          "support_session_ids": [
+            "87252d80_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Here are some specific tips to help you survive and thrive: **1.",
+          "support_session_ids": [
+            "87252d80_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Since we were just discussing your Chicago trip, I can offer some general tips for Chicago or help you with recommendations for your next destination.",
+          "support_session_ids": [
+            "87252d80_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "I'd be happy to help you with travel tips and recommendations.",
+          "support_session_ids": [
+            "87252d80_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "I'd be happy to help you organize your travel history.",
+          "support_session_ids": [
+            "87252d80_2"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "Pottery: Take a ceramics class or try pottery at home, it can be loads of fun.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_518638",
+            "87252d80_2"
+          ]
+        },
+        {
+          "claim": "Fetal Development --------------------- ### a.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_zn81iL6_9",
+            "87252d80_2"
+          ]
+        },
+        {
+          "claim": "Fetal Development at Eight Weeks At eight weeks, the fetus undergoes significant growth and development.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_zn81iL6_9",
+            "87252d80_2"
+          ]
+        },
+        {
+          "claim": "The placenta, an essential organ that nourishes the baby, begins to form and function.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_zn81iL6_9",
+            "87252d80_2"
+          ]
+        },
+        {
+          "claim": "It is responsible for supplying oxygen and nutrients, as well as removing waste products, ensuring a healthy environment for the fetus.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_zn81iL6_9",
+            "87252d80_2"
+          ]
+        },
+        {
+          "claim": "continue to step 3",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_zn81iL6_9",
+            "87252d80_2"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "d7c942c3",
+      "question_type": "knowledge-update",
+      "question": "Is my mom using the same grocery list method as me?",
+      "gold_answer": "Yes.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/14 (Sun) 09:58",
+      "answer_session_ids": [
+        "answer_eecb10d9_1",
+        "answer_eecb10d9_2"
+      ],
+      "evidence_session_ids": [
+        "answer_eecb10d9_1",
+        "sharegpt_vYQdLPe_2",
+        "sharegpt_LOF3smB_25",
+        "59a6150d_1",
+        "sharegpt_zxm712D_0",
+        "sharegpt_eIgPNa5_0",
+        "e5b72a5d_3",
+        "4e70b8fd",
+        "ddf0f116_3",
+        "8843878f_2",
+        "4f435d20_2",
+        "ultrachat_104389",
+        "d15c9567_2",
+        "answer_eecb10d9_2",
+        "sharegpt_OTILwRq_0",
+        "sharegpt_ezPxUrC_0",
+        "sharegpt_8gvxaSq_0",
+        "sharegpt_1MKqbAt_0",
+        "35955958_2",
+        "b2243528_1"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "**Clarks**: Clarks is known for their comfortable and stylish shoes, and they have a vast selection of neutral colors.",
+          "support_session_ids": [
+            "b2243528_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "I am an artificial intelligence language model, and I don't have personal experiences, family, or a mom.",
+          "support_session_ids": [
+            "b2243528_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "I exist solely to provide information and assist with tasks to the best of my abilities.",
+          "support_session_ids": [
+            "b2243528_1"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "My mom and I actually went shopping for new outfits for the whole family just two weeks ago, and I'm really happy with how they turned out.",
+          "support_session_ids": [
+            "b2243528_1"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "By the way, I've been using my new smart TV to stream shows on Amazon Prime, and it's been working great, so I'm hoping to get my internet connection up to speed to match it.",
+          "support_session_ids": [
+            "8843878f_2"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "I'd be happy to help you find a great pair of shoes to match your new outfit.",
+          "support_session_ids": [
+            "b2243528_1"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "Book Description: In today's fast-paced world, it's easy to feel overwhelmed, stressed, and anxious.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_8gvxaSq_0",
+            "b2243528_1"
+          ]
+        },
+        {
+          "claim": "But what if you could find a way to cultivate inner peace and live a more fulfilling life?",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_8gvxaSq_0",
+            "b2243528_1"
+          ]
+        },
+        {
+          "claim": "\"How to Find Inner Peace: A Guide to Meditation for Beginners and Experienced Practitioners Alike\" is your comprehensive guide to discovering the transformative power of meditation.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_8gvxaSq_0",
+            "b2243528_1"
+          ]
+        },
+        {
+          "claim": "Drawing on years of experience as a meditation teacher, this book will take you on a journey through the various types of meditation, including mindfulness, visualization, and loving-kindness.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_8gvxaSq_0",
+            "b2243528_1"
+          ]
+        },
+        {
+          "claim": "Part I: Introduction to Meditation Chapter 1: What is Meditation?",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_8gvxaSq_0",
+            "b2243528_1"
+          ]
+        },
+        {
+          "claim": "Chapter 2: Why Meditate?",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_8gvxaSq_0",
+            "b2243528_1"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "71315a70",
+      "question_type": "knowledge-update",
+      "question": "How many hours have I spent on my abstract ocean sculpture?",
+      "gold_answer": "10-12 hours",
+      "hypothesis": "I don't know",
+      "question_date": "2023/06/18 (Sun) 19:47",
+      "answer_session_ids": [
+        "answer_c44b9df4_1",
+        "answer_c44b9df4_2"
+      ],
+      "evidence_session_ids": [
+        "bcd5c30f_1",
+        "1a43e6cf",
+        "464c3bb4",
+        "answer_c44b9df4_2",
+        "ultrachat_119182",
+        "ultrachat_433452",
+        "b5e94516_2",
+        "ultrachat_399278",
+        "c86a22a2_2",
+        "41743aae_1",
+        "3d82ba51_3",
+        "b3953571",
+        "d1d3fd12_1"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Now, about polishing your brown leather boots...",
+          "support_session_ids": [
+            "d1d3fd12_1"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "They also tend to focus on quality rather than quantity, which can lead to a superior product.",
+          "support_session_ids": [
+            "ultrachat_433452"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "By the way, I've been thinking about getting a new pair of shoes, those limited-edition Air Jordan 1s.",
+          "support_session_ids": [
+            "d1d3fd12_1"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "It sounds like you're trying to locate your old Reebok CrossFit shoes, which you haven't seen since you switched to the Adidas Superstars.",
+          "support_session_ids": [
+            "d1d3fd12_1"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "I haven't seen them since I switched to the Adidas Superstars.",
+          "support_session_ids": [
+            "d1d3fd12_1"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "A good cobbler can fix the loose heel and make your shoes look like new again.",
+          "support_session_ids": [
+            "d1d3fd12_1"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "The speed is usually printed on the RAM module, and it might look something like \"DDR4 2400MHz\" or \"DDR4 2133MHz\".",
+          "reason": "stale",
+          "support_session_ids": [
+            "3d82ba51_3",
+            "d1d3fd12_1"
+          ]
+        },
+        {
+          "claim": "I was thinking of buying the RAM from Best Buy, since I had a good experience buying my external hard drive from them last week.",
+          "reason": "stale",
+          "support_session_ids": [
+            "3d82ba51_3",
+            "d1d3fd12_1"
+          ]
+        },
+        {
+          "claim": "Do they usually carry a variety of RAM options?",
+          "reason": "stale",
+          "support_session_ids": [
+            "3d82ba51_3",
+            "d1d3fd12_1"
+          ]
+        },
+        {
+          "claim": "Best Buy is a great place to buy electronics, and they do carry a selection of RAM modules.",
+          "reason": "stale",
+          "support_session_ids": [
+            "3d82ba51_3",
+            "d1d3fd12_1"
+          ]
+        },
+        {
+          "claim": "However, their in-store selection might be limited compared to online retailers like Amazon or Newegg.",
+          "reason": "stale",
+          "support_session_ids": [
+            "3d82ba51_3",
+            "d1d3fd12_1"
+          ]
+        },
+        {
+          "claim": "Typically, Best Buy carries a range of RAM modules from popular brands like Crucial, Corsair, and Kingston.",
+          "reason": "stale",
+          "support_session_ids": [
+            "3d82ba51_3",
+            "d1d3fd12_1"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "89941a93",
+      "question_type": "knowledge-update",
+      "question": "How many bikes do I currently own?",
+      "gold_answer": "4",
+      "hypothesis": "I don't know",
+      "question_date": "2023/10/27 (Fri) 13:00",
+      "answer_session_ids": [
+        "answer_e1403127_1",
+        "answer_e1403127_2"
+      ],
+      "evidence_session_ids": [
+        "78c3d7ab",
+        "sharegpt_6QV1gPO_151",
+        "8e72316f",
+        "6ce1ea1b",
+        "ultrachat_204930",
+        "ultrachat_400703",
+        "dde142b2_2",
+        "answer_e1403127_2",
+        "ebb5bc7c_2",
+        "ultrachat_352196",
+        "5b44a462",
+        "ultrachat_22305",
+        "sharegpt_ZzCRfPu_30",
+        "ultrachat_512422",
+        "ultrachat_349321",
+        "sharegpt_bn0XI2B_0",
+        "44202c74_1"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Loving-kindness meditation (also known as Metta meditation) is a beautiful practice that cultivates feelings of love, compassion, and kindness towards yourself and others.",
+          "support_session_ids": [
+            "44202c74_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Now, regarding meditation techniques for stress and anxiety, here are some additional methods you might find helpful: 1.",
+          "support_session_ids": [
+            "44202c74_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "I've been doing meditation consistently for 2 months now, and it's been really helpful.",
+          "support_session_ids": [
+            "44202c74_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "**Different plant needs**: Each plant species has unique requirements, and a potting mix that worked well for your snake plant might not be optimal for your new plants.",
+          "support_session_ids": [
+            "ebb5bc7c_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "**Pothos (Epipremnum aureum)**: This popular houseplant is known for its ability to tolerate low light and infrequent watering.",
+          "support_session_ids": [
+            "ebb5bc7c_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "To help you find a suitable brunch spot, I'll need to know your location.",
+          "support_session_ids": [
+            "8e72316f"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "I cannot provide opinions, but i can understand your frustration.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_512422",
+            "44202c74_1"
+          ]
+        },
+        {
+          "claim": "it is true that female characters in game of thrones are often reduced to their sexual appeal or objectified in a way that male characters are not.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_512422",
+            "44202c74_1"
+          ]
+        },
+        {
+          "claim": "in contrast, male characters are often admired for their strength, courage, and cunning, and their actions are judged in terms of their impact on the plot.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_512422",
+            "44202c74_1"
+          ]
+        },
+        {
+          "claim": "this discrepancy in the portrayal of male and female characters is not unique to game of thrones but is a common issue in many works of fiction.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_512422",
+            "44202c74_1"
+          ]
+        },
+        {
+          "claim": "It's frustrating because it feels like the showrunners can't seem to write female characters without resorting to tropes and stereotypes.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_512422",
+            "44202c74_1"
+          ]
+        },
+        {
+          "claim": "I wish there was more nuance and complexity to their characterization.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_512422",
+            "44202c74_1"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "ce6d2d27",
+      "question_type": "knowledge-update",
+      "question": "What day of the week do I take a cocktail-making class?",
+      "gold_answer": "Friday",
+      "hypothesis": "I don't know",
+      "question_date": "2023/07/15 (Sat) 22:19",
+      "answer_session_ids": [
+        "answer_73540165_1",
+        "answer_73540165_2"
+      ],
+      "evidence_session_ids": [
+        "7a4d00b3_2",
+        "cd92ac85_1",
+        "answer_73540165_2",
+        "a1c4f65a",
+        "9f6bec4f",
+        "sharegpt_ZEBzf60_0",
+        "ultrachat_306593",
+        "d8d7eddf_2",
+        "ultrachat_573386",
+        "ultrachat_212983",
+        "a46d10a2_1",
+        "109e07e8_1",
+        "4da24fe5_2"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Do you know if there are any good online resources for finding Japanese language exchange partners or language exchange events in Tokyo?",
+          "support_session_ids": [
+            "4da24fe5_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "That sounds like a great day indeed!",
+          "support_session_ids": [
+            "4da24fe5_2"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "**Enhance vocabulary:** Learn new words, phrases, and expressions in context, and practice using them in conversations.",
+          "support_session_ids": [
+            "4da24fe5_2"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "I completely understand how you feel about feeling lonely in a new city.",
+          "support_session_ids": [
+            "4da24fe5_2"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "**NHK WORLD-JAPAN Podcasts**: NHK offers a wide range of podcasts, including news, culture, and language lessons.",
+          "support_session_ids": [
+            "4da24fe5_2"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "By the way, I've been having a great day so far - my cat, Mochi, has been keeping me company and making me laugh.",
+          "support_session_ids": [
+            "4da24fe5_2"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "I'm also thinking of styling the blouse with my new distressed denim jeans.",
+          "reason": "stale",
+          "support_session_ids": [
+            "a46d10a2_1",
+            "4da24fe5_2"
+          ]
+        },
+        {
+          "claim": "Do you think that would be a good combination?",
+          "reason": "stale",
+          "support_session_ids": [
+            "a46d10a2_1",
+            "4da24fe5_2"
+          ]
+        },
+        {
+          "claim": "The blouse with ruffles or lace details would pair perfectly with your distressed denim jeans.",
+          "reason": "stale",
+          "support_session_ids": [
+            "a46d10a2_1",
+            "4da24fe5_2"
+          ]
+        },
+        {
+          "claim": "The contrast between the feminine, delicate top and the edgy, rugged jeans would create a beautiful, stylish outfit.",
+          "reason": "stale",
+          "support_session_ids": [
+            "a46d10a2_1",
+            "4da24fe5_2"
+          ]
+        },
+        {
+          "claim": "Here are a few tips to keep in mind when styling this combination: 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "a46d10a2_1",
+            "4da24fe5_2"
+          ]
+        },
+        {
+          "claim": "**Balance the rough with the smooth**: The distressed denim jeans will add a rough, edgy touch to your outfit, so balance it out with the smooth, feminine blouse.",
+          "reason": "stale",
+          "support_session_ids": [
+            "a46d10a2_1",
+            "4da24fe5_2"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "9ea5eabc",
+      "question_type": "knowledge-update",
+      "question": "Where did I go on my most recent family trip?",
+      "gold_answer": "Paris",
+      "hypothesis": "I don't know",
+      "question_date": "2023/06/08 (Thu) 10:33",
+      "answer_session_ids": [
+        "answer_02e66dec_1",
+        "answer_02e66dec_2"
+      ],
+      "evidence_session_ids": [
+        "answer_02e66dec_1",
+        "fcb08a46_2",
+        "418c27fa",
+        "6e2cca63_1",
+        "d1f30ac6_5",
+        "answer_02e66dec_2",
+        "29695e1c_2",
+        "ultrachat_416364",
+        "66cffcc7",
+        "6519afa8",
+        "7c44bc2d_1",
+        "9bf5da2d",
+        "sharegpt_mwblaPp_96"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "rewrite, but instead of the 3 least common habits, make it about the least commonly KNOWN habits and same for the email.",
+          "support_session_ids": [
+            "sharegpt_mwblaPp_96"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "rewrite only the text pasted below , but make 3 on the least commonly known about energy balance and calorie deficit being the MOST important factor.",
+          "support_session_ids": [
+            "sharegpt_mwblaPp_96"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Did you know that energy balance and calorie deficit are the most important factors in weight loss?",
+          "support_session_ids": [
+            "sharegpt_mwblaPp_96"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "rewrite, but make 3 on the least commonly known about energy balance and calorie deficit being the MOST important factor.",
+          "support_session_ids": [
+            "sharegpt_mwblaPp_96"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "In the next email, we'll be diving deeper into the most commonly known weight loss habits, as well as the least commonly known habits that can sabotage your weight loss journey.",
+          "support_session_ids": [
+            "sharegpt_mwblaPp_96"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Let me know if there is anything else I can help you with.",
+          "support_session_ids": [
+            "sharegpt_mwblaPp_96"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "Do you have any tips on how to store borrowed jewelry or keep track of lent items?",
+          "reason": "stale",
+          "support_session_ids": [
+            "7c44bc2d_1",
+            "sharegpt_mwblaPp_96"
+          ]
+        },
+        {
+          "claim": "Borrowing and lending jewelry can be a great way to mix up your accessories, but it can also be stressful if you're worried about returning the items safely.",
+          "reason": "stale",
+          "support_session_ids": [
+            "7c44bc2d_1",
+            "sharegpt_mwblaPp_96"
+          ]
+        },
+        {
+          "claim": "Here are some tips to help you store and track borrowed jewelry: **Borrowing Jewelry:** 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "7c44bc2d_1",
+            "sharegpt_mwblaPp_96"
+          ]
+        },
+        {
+          "claim": "**Get permission**: Always ask the owner's permission before borrowing jewelry, and make sure you understand any conditions or restrictions they may have.",
+          "reason": "stale",
+          "support_session_ids": [
+            "7c44bc2d_1",
+            "sharegpt_mwblaPp_96"
+          ]
+        },
+        {
+          "claim": "**Inspect the item**: Carefully inspect the jewelry before borrowing it to ensure it's in good condition.",
+          "reason": "stale",
+          "support_session_ids": [
+            "7c44bc2d_1",
+            "sharegpt_mwblaPp_96"
+          ]
+        },
+        {
+          "claim": "I'm also thinking of getting my diamond necklace appraised, it's been passed down to me from my great-aunt and I'm not sure how much it's worth.",
+          "reason": "stale",
+          "support_session_ids": [
+            "7c44bc2d_1",
+            "sharegpt_mwblaPp_96"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    }
+  ]
+}

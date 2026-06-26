@@ -1,0 +1,1307 @@
+{
+  "method": "task_semantics_local_graph",
+  "model": "gpt-4o-mini",
+  "judge_model": "gpt-4o-2024-08-06",
+  "n_cases": 10,
+  "macro_acc": 0.0,
+  "micro_acc": 0.0,
+  "by_type": {
+    "single-session-preference": {
+      "n": 10,
+      "acc": 0.0
+    }
+  },
+  "rows": [
+    {
+      "question_id": "8a2466db",
+      "question_type": "single-session-preference",
+      "question": "Can you recommend some resources where I can learn more about video editing?",
+      "gold_answer": "The user would prefer responses that suggest resources specifically tailored to Adobe Premiere Pro, especially those that delve into its advanced settings. They might not prefer general video editing resources or resources related to other video editing software.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 22:03",
+      "answer_session_ids": [
+        "answer_edb03329"
+      ],
+      "evidence_session_ids": [
+        "b67748d1_1",
+        "sharegpt_DwfIyV9_0",
+        "ultrachat_118671",
+        "dc700e27",
+        "6a5b5a78",
+        "d8b3e1c8_2",
+        "ultrachat_10500",
+        "3392c0c7",
+        "ultrachat_319799",
+        "sharegpt_sfofrkM_7",
+        "76967d22",
+        "898bef66",
+        "3d0c9f89_1"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Here are some ways you can approach them: **1.",
+          "support_session_ids": [
+            "3d0c9f89_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Here are some key considerations to get you started: **1.",
+          "support_session_ids": [
+            "3d0c9f89_1"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "Some other ideas to consider: * Create a social media template that participants can use to share their stories.",
+          "support_session_ids": [
+            "3d0c9f89_1"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "The cancer society could share their own stories of the impact of cancer research, and we could feature some of these stories on our social media channels as well.",
+          "support_session_ids": [
+            "3d0c9f89_1"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "It's all about making it easy and convenient for them to participate and share their experiences.",
+          "support_session_ids": [
+            "3d0c9f89_1"
+          ]
+        },
+        {
+          "name": "preference_grounding",
+          "value": "I'm actually thinking of planning another charity event, this time a charity run.",
+          "support_session_ids": [
+            "3d0c9f89_1"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "From what I've gathered from interviews, previews, and developer insights, here's what you can expect: **Difficulty Level:** Ragnarök's difficulty is expected to be on par with, if not slightly higher than, the previous game.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "898bef66",
+            "3d0c9f89_1"
+          ]
+        },
+        {
+          "claim": "The theoretical background of SVM can be explained as follows: 1.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "sharegpt_sfofrkM_7",
+            "3d0c9f89_1"
+          ]
+        },
+        {
+          "claim": "Vapnik (1995) introduced SVM",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "sharegpt_sfofrkM_7",
+            "3d0c9f89_1"
+          ]
+        },
+        {
+          "claim": "Vapnik did indeed introduce Support Vector Machines (SVM) in 1995, along with his colleague Alexey Chervonenkis.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "sharegpt_sfofrkM_7",
+            "3d0c9f89_1"
+          ]
+        },
+        {
+          "claim": "In their paper titled \"Support Vector Method for Function Approximation, Regression Estimation, and Signal Processing,\" they presented a new approach to supervised learning based on the idea of finding the optimal separating hyperplane for binary classification problems.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "sharegpt_sfofrkM_7",
+            "3d0c9f89_1"
+          ]
+        },
+        {
+          "claim": "This approach involves maximizing the margin between the hyperplane and the nearest data points, which are referred to as support vectors.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "sharegpt_sfofrkM_7",
+            "3d0c9f89_1"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "06878be2",
+      "question_type": "single-session-preference",
+      "question": "Can you suggest some accessories that would complement my current photography setup?",
+      "gold_answer": "The user would prefer suggestions of Sony-compatible accessories or high-quality photography gear that can enhance their photography experience. They may not prefer suggestions of other brands' equipment or low-quality gear.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 16:40",
+      "answer_session_ids": [
+        "answer_555dfb94"
+      ],
+      "evidence_session_ids": [
+        "sharegpt_cn3iUbp_7",
+        "a67c1862_4",
+        "be1c6872",
+        "368276ab_3",
+        "ca929779_1",
+        "ultrachat_506627",
+        "42165950_2",
+        "ultrachat_489051",
+        "sharegpt_InRLwN7_0",
+        "answer_555dfb94",
+        "sharegpt_GSC090N_6",
+        "ultrachat_556731",
+        "ultrachat_31347",
+        "465e7ef9",
+        "3e9fce53_1"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Here are some popular baby gym brands known for their high-quality products and commitment to safety: **1.",
+          "support_session_ids": [
+            "3e9fce53_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Can you recommend some popular baby gym brands that are known for their durability and safety features?",
+          "support_session_ids": [
+            "3e9fce53_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Do you know if any of these stores offer customization options, or would I need to look elsewhere?",
+          "support_session_ids": [
+            "3e9fce53_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Many of the stores I mentioned earlier offer customization options, but I'll highlight a few that are known for their personalized baby blankets: **Stores with Personalization Options:** 1.",
+          "support_session_ids": [
+            "3e9fce53_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Congratulations to your friend on their new addition!",
+          "support_session_ids": [
+            "3e9fce53_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Now, let's find a fantastic resort in Hawaii that can accommodate your big, lovely family!",
+          "support_session_ids": [
+            "a67c1862_4"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "I need something unique and exciting, something that has never been done before.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_31347",
+            "3e9fce53_1"
+          ]
+        },
+        {
+          "claim": "These ideas seem like variations of what is already out there.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_31347",
+            "3e9fce53_1"
+          ]
+        },
+        {
+          "claim": "What else do you have?",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_31347",
+            "3e9fce53_1"
+          ]
+        },
+        {
+          "claim": "As an AI language model, I can provide more ideas that may be unique and different.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_31347",
+            "3e9fce53_1"
+          ]
+        },
+        {
+          "claim": "Here are some more potential tactics that could create a sense of tension and anticipation in your plot: 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_31347",
+            "3e9fce53_1"
+          ]
+        },
+        {
+          "claim": "Multiple personalities: In your story, the main character could be suffering from multiple personality disorder.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_31347",
+            "3e9fce53_1"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "75832dbd",
+      "question_type": "single-session-preference",
+      "question": "Can you recommend some recent publications or conferences that I might find interesting?",
+      "gold_answer": "The user would prefer suggestions related to recent research papers, articles, or conferences that focus on artificial intelligence in healthcare, particularly those that involve deep learning for medical image analysis. They would not be interested in general AI topics or those unrelated to healthcare.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 13:53",
+      "answer_session_ids": [
+        "answer_d87a6ef8"
+      ],
+      "evidence_session_ids": [
+        "5a6b1065",
+        "5f1f5891",
+        "ultrachat_533748",
+        "sharegpt_FYqt26U_0",
+        "e6921729",
+        "ultrachat_382018",
+        "answer_d87a6ef8",
+        "sharegpt_E0YL5SX_157",
+        "c7270a1b_1",
+        "sharegpt_xni9yYO_6",
+        "d49b1a24_1",
+        "sharegpt_fK7pfNf_0",
+        "1ef63c66",
+        "ultrachat_165893",
+        "c884b67a_1",
+        "ultrachat_569211",
+        "c51583cd_1",
+        "47ec1674_2",
+        "sharegpt_GrLzv0V_262",
+        "ultrachat_299979"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "I don't know if I can keep going with this weight loss journey.",
+          "support_session_ids": [
+            "ultrachat_382018"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "in some cultures, for example, an authoritarian leadership style may be more acceptable or even expected, while in others, a more democratic or participatory style may be preferred.",
+          "support_session_ids": [
+            "ultrachat_299979"
+          ]
+        },
+        {
+          "name": "preference_grounding",
+          "value": "Focus on the bigger picture: Rather than getting discouraged by small setbacks, try to focus on the bigger picture and remember why you started on this journey in the first place.",
+          "support_session_ids": [
+            "ultrachat_382018"
+          ]
+        },
+        {
+          "name": "preference_grounding",
+          "value": "It's interesting how some societies still hold onto the idea of a divine ruler, even in the modern era.",
+          "support_session_ids": [
+            "ultrachat_299979"
+          ]
+        },
+        {
+          "name": "preference_grounding",
+          "value": "the idea of a divine ruler is no longer a widespread belief in most societies, and modern political systems typically have institutionalized methods for selecting and removing leaders.",
+          "support_session_ids": [
+            "ultrachat_299979"
+          ]
+        },
+        {
+          "name": "preference_grounding",
+          "value": "Yeah, it's really interesting to see how leadership styles can differ so much across different cultures.",
+          "support_session_ids": [
+            "ultrachat_299979"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "\"Beautiful Disaster\" by Jamie McGuire 4.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_533748",
+            "ultrachat_382018"
+          ]
+        },
+        {
+          "claim": "Can you say some comforting words?",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_FYqt26U_0",
+            "ultrachat_382018"
+          ]
+        },
+        {
+          "claim": "Of course, I'd be happy to offer you some comforting words!",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_FYqt26U_0",
+            "ultrachat_382018"
+          ]
+        },
+        {
+          "claim": "Remember that life is full of ups and downs, and while it may feel difficult at times, you are strong enough to get through it.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_FYqt26U_0",
+            "ultrachat_382018"
+          ]
+        },
+        {
+          "claim": "You have overcome challenges before, and you will do so again.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_FYqt26U_0",
+            "ultrachat_382018"
+          ]
+        },
+        {
+          "claim": "Take things one day at a time, and don't be afraid to reach out to loved ones for support.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_FYqt26U_0",
+            "ultrachat_382018"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "0edc2aef",
+      "question_type": "single-session-preference",
+      "question": "Can you suggest a hotel for my upcoming trip to Miami?",
+      "gold_answer": "The user would prefer suggestions of hotels in Miami that offer great views, possibly of the ocean or the city skyline, and have unique features such as a rooftop pool or a hot tub on the balcony. They may not prefer suggestions of basic or budget hotels without these features.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 20:23",
+      "answer_session_ids": [
+        "answer_d586e9cd"
+      ],
+      "evidence_session_ids": [
+        "3692218d_1",
+        "sharegpt_vbNrVtS_293",
+        "6a747f2e",
+        "8464304d_2",
+        "25b1afbc",
+        "sharegpt_aVExml0_92",
+        "c6c3a982_1",
+        "ultrachat_166065",
+        "ba01118a",
+        "answer_d586e9cd",
+        "08ca1f31_2",
+        "f20e72e4_1",
+        "sharegpt_DWorlZE_0"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Funnel 1: Lead Magnet 1: \"The Ultimate Guide to Safe and Secure Real Estate Investments in the UAE\" Description: This guide provides a comprehensive overview of the local real estate market, regulations, and investment options in the UAE, addressing the target audience's lack of knowledge and concerns about safety and security.",
+          "support_session_ids": [
+            "sharegpt_DWorlZE_0"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Lack of knowledge about the local real estate market and regulations in the UAE.",
+          "support_session_ids": [
+            "sharegpt_DWorlZE_0"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Sells next product: By highlighting the potential risks and benefits of investing in real estate, the guide creates a sense of urgency for the target audience to take action and seek additional support in navigating the process.",
+          "support_session_ids": [
+            "sharegpt_DWorlZE_0"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Value: This guide provides valuable information and education on how to make informed real estate investments in the UAE.",
+          "support_session_ids": [
+            "sharegpt_DWorlZE_0"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Here are 5 options for the marketing funnel: 1.",
+          "support_session_ids": [
+            "sharegpt_DWorlZE_0"
+          ]
+        },
+        {
+          "name": "preference_grounding",
+          "value": "* Discussion of the various real estate investment options, including residential, commercial, and industrial properties.",
+          "support_session_ids": [
+            "sharegpt_DWorlZE_0"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "However, to provide specific route suggestions, I would need to know your location.",
+          "reason": "stale",
+          "support_session_ids": [
+            "08ca1f31_2",
+            "sharegpt_DWorlZE_0"
+          ]
+        },
+        {
+          "claim": "Could you please share your city or region with me?",
+          "reason": "stale",
+          "support_session_ids": [
+            "08ca1f31_2",
+            "sharegpt_DWorlZE_0"
+          ]
+        },
+        {
+          "claim": "That being said, I can offer some general tips to help you find scenic routes with good hill climbs near you: 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "08ca1f31_2",
+            "sharegpt_DWorlZE_0"
+          ]
+        },
+        {
+          "claim": "I'm located in the San Francisco Bay Area, specifically in the South Bay.",
+          "reason": "stale",
+          "support_session_ids": [
+            "08ca1f31_2",
+            "sharegpt_DWorlZE_0"
+          ]
+        },
+        {
+          "claim": "The San Francisco Bay Area is a fantastic place for cycling, with its scenic routes, varied terrain, and mild climate.",
+          "reason": "stale",
+          "support_session_ids": [
+            "08ca1f31_2",
+            "sharegpt_DWorlZE_0"
+          ]
+        },
+        {
+          "claim": "The South Bay has plenty of options for hill climbs and scenic rides.",
+          "reason": "stale",
+          "support_session_ids": [
+            "08ca1f31_2",
+            "sharegpt_DWorlZE_0"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "35a27287",
+      "question_type": "single-session-preference",
+      "question": "Can you recommend some interesting cultural events happening around me this weekend?",
+      "gold_answer": "The user would prefer responses that suggest cultural events where they can practice their language skills, particularly Spanish and French. They would also appreciate if the event has a focus on language learning resources. They would not prefer events that do not provide opportunities for language practice or cultural exchange.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 22:15",
+      "answer_session_ids": [
+        "answer_9b182436"
+      ],
+      "evidence_session_ids": [
+        "d20be4f3_1",
+        "0a00a4ca_2",
+        "58ae7c4f_3",
+        "sharegpt_Vjkqc5J_0",
+        "a98ff421_1",
+        "64071e19_2",
+        "ultrachat_267380",
+        "answer_9b182436",
+        "c9b1c309_4",
+        "880ee13e",
+        "e4a1b565_2",
+        "465f0d1b_1",
+        "ultrachat_510702"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Sure, here are a few interesting stats and facts about the Chicago Cubs: 1.",
+          "support_session_ids": [
+            "ultrachat_510702"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "Since you're open to exploring new areas, I'll provide options with varying scenery and attractions.",
+          "support_session_ids": [
+            "465f0d1b_1"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "Here are some recommendations: **Clothing:** * **Jersey:** A breathable, moisture-wicking jersey with a full-zip front and three rear pockets for storing snacks, phone, and other essentials.",
+          "support_session_ids": [
+            "465f0d1b_1"
+          ]
+        },
+        {
+          "name": "preference_grounding",
+          "value": "I'm thinking around 30-40 miles, and I'm open to exploring new areas.",
+          "support_session_ids": [
+            "465f0d1b_1"
+          ]
+        },
+        {
+          "name": "preference_grounding",
+          "value": "I'm sorry, I cannot answer this question as I do not have access to real-time sports data.",
+          "support_session_ids": [
+            "ultrachat_510702"
+          ]
+        },
+        {
+          "name": "preference_grounding",
+          "value": "I'm looking for some route suggestions for my weekend ride.",
+          "support_session_ids": [
+            "465f0d1b_1"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "It's a personal and intimate space where you can express yourself freely, without fear of criticism or judgment.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "e4a1b565_2",
+            "ultrachat_510702"
+          ]
+        },
+        {
+          "claim": "I want to make it a habit, but I also don't want to feel too pressured or stressed about it.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "e4a1b565_2",
+            "ultrachat_510702"
+          ]
+        },
+        {
+          "claim": "Remember, it's not about creating a masterpiece or producing something perfect – it's about expressing yourself, exploring your ideas, and having fun.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "e4a1b565_2",
+            "ultrachat_510702"
+          ]
+        },
+        {
+          "claim": "What a great choice!",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "880ee13e",
+            "ultrachat_510702"
+          ]
+        },
+        {
+          "claim": "Colombia is a foodie's paradise!",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "880ee13e",
+            "ultrachat_510702"
+          ]
+        },
+        {
+          "claim": "You'll find a diverse and vibrant culinary scene, with influences from indigenous, Spanish, African, and Caribbean cuisines.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "880ee13e",
+            "ultrachat_510702"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "32260d93",
+      "question_type": "single-session-preference",
+      "question": "Can you recommend a show or movie for me to watch tonight?",
+      "gold_answer": "The user would prefer recommendations for stand-up comedy specials on Netflix, especially those that are known for their storytelling. They may not prefer recommendations for other genres or platforms.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 23:43",
+      "answer_session_ids": [
+        "answer_0250ae1c"
+      ],
+      "evidence_session_ids": [
+        "sharegpt_FbRVgO3_39",
+        "b70358bc_2",
+        "ultrachat_507667",
+        "1b26bdd5_5",
+        "04bef53b",
+        "d6bbe94d_3",
+        "259d58da_2",
+        "6d3f5c68_4",
+        "35c5419d_abs_2",
+        "c9a763e9",
+        "ultrachat_26485",
+        "573dc24b_1",
+        "answer_0250ae1c",
+        "sharegpt_H4jw5s7_39",
+        "sharegpt_WYQSZ3n_0"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "The Voynich Manuscript is a mysterious and undeciphered medieval manuscript written in an unknown script and language.",
+          "support_session_ids": [
+            "sharegpt_WYQSZ3n_0"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "we still dont know who is the original author",
+          "support_session_ids": [
+            "sharegpt_WYQSZ3n_0"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "the text is historically significant because it revealed information that was previously unknown.",
+          "support_session_ids": [
+            "sharegpt_WYQSZ3n_0"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "it shoudl be something obscure - something almost no-one knows about, and interview me using the same rules as above",
+          "support_session_ids": [
+            "sharegpt_WYQSZ3n_0"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "ok, now choose your own topic.",
+          "support_session_ids": [
+            "sharegpt_WYQSZ3n_0"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "You have shown some understanding of its significance, the illustrations, and its medieval European origin, but the specific details about the manuscript's unique qualities and its connection to the person it's named after are not as clear.",
+          "support_session_ids": [
+            "sharegpt_WYQSZ3n_0"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "The Visibility Void 3.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_H4jw5s7_39",
+            "sharegpt_WYQSZ3n_0"
+          ]
+        },
+        {
+          "claim": "The Search Snafu 4.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_H4jw5s7_39",
+            "sharegpt_WYQSZ3n_0"
+          ]
+        },
+        {
+          "claim": "The Organic Obscurity 5.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_H4jw5s7_39",
+            "sharegpt_WYQSZ3n_0"
+          ]
+        },
+        {
+          "claim": "Amazon is incentivized to make the sellers spend money on ads to get their products ranked, otherwise they just rank the copy of their own products at the top.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_H4jw5s7_39",
+            "sharegpt_WYQSZ3n_0"
+          ]
+        },
+        {
+          "claim": "Either way, amazon makes money, but once I figured out this system, I was able to get out of this NICKNAME cycle and then I was able to maximize my products and sell out my entire stock without spending a penny on ads.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_H4jw5s7_39",
+            "sharegpt_WYQSZ3n_0"
+          ]
+        },
+        {
+          "claim": "Generate 50 nicknames to describe a situation where my amazon fba products are not being ranked by amazon's organic search algorithm.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_H4jw5s7_39",
+            "sharegpt_WYQSZ3n_0"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "195a1a1b",
+      "question_type": "single-session-preference",
+      "question": "Can you suggest some activities that I can do in the evening?",
+      "gold_answer": "The user would prefer suggestions that involve relaxing activities that can be done in the evening, preferably before 9:30 pm. They would not prefer suggestions that involve using their phone or watching TV, as these activities have been affecting their sleep quality.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 22:28",
+      "answer_session_ids": [
+        "answer_6dc4305e"
+      ],
+      "evidence_session_ids": [
+        "b76006cb_2",
+        "87fff4b4_1",
+        "ultrachat_374565",
+        "89a1800c_2",
+        "af0ab6ab",
+        "668a301e",
+        "ultrachat_576932",
+        "ultrachat_396124",
+        "9f12daa1_1",
+        "d03b6a05_2",
+        "ed9dad6c_2",
+        "answer_6dc4305e"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "I'm glad to know that the meditation experience was helpful in relaxing and calming your mind and body, making it easier for you to fall asleep.",
+          "support_session_ids": [
+            "answer_6dc4305e"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "To get started, can you please share some information about your current situation?",
+          "support_session_ids": [
+            "answer_6dc4305e"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "**Body Scan (8-10 minutes)** * The meditation will guide you to bring your attention to different parts of your body, starting from your toes and moving up to the top of your head.",
+          "support_session_ids": [
+            "answer_6dc4305e"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "* You'll be encouraged to take a few deep breaths, relax your body, and let go of any tension or stress.",
+          "support_session_ids": [
+            "answer_6dc4305e"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Here's a brief overview of what you can expect: **Introduction (1-2 minutes)** * The meditation will begin with a gentle introduction, guiding you to find a comfortable seated or lying position.",
+          "support_session_ids": [
+            "answer_6dc4305e"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "Here are some popular meditation apps and guided meditation resources that can help you relax before bed: **Meditation Apps:** 1.",
+          "support_session_ids": [
+            "answer_6dc4305e"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "I'm planning to start a new exercise routine and was wondering if you could recommend some outdoor activities that are easy on the joints?",
+          "reason": "stale",
+          "support_session_ids": [
+            "ed9dad6c_2",
+            "answer_6dc4305e"
+          ]
+        },
+        {
+          "claim": "By the way, I've noticed a significant improvement in my flexibility after 8 weeks of yoga classes, which I finished recently.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ed9dad6c_2",
+            "answer_6dc4305e"
+          ]
+        },
+        {
+          "claim": "Congratulations on completing 8 weeks of yoga classes and noticing an improvement in your flexibility!",
+          "reason": "stale",
+          "support_session_ids": [
+            "ed9dad6c_2",
+            "answer_6dc4305e"
+          ]
+        },
+        {
+          "claim": "That's a great accomplishment!",
+          "reason": "stale",
+          "support_session_ids": [
+            "ed9dad6c_2",
+            "answer_6dc4305e"
+          ]
+        },
+        {
+          "claim": "Absolutely, I'd be happy to recommend some outdoor activities that are easy on the joints.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ed9dad6c_2",
+            "answer_6dc4305e"
+          ]
+        },
+        {
+          "claim": "Since you've already experienced the benefits of yoga, you'll likely enjoy these low-impact activities that can help you maintain or improve your flexibility while minimizing stress on your joints: 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ed9dad6c_2",
+            "answer_6dc4305e"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "afdc33df",
+      "question_type": "single-session-preference",
+      "question": "My kitchen's becoming a bit of a mess again. Any tips for keeping it clean?",
+      "gold_answer": "The user would prefer responses that acknowledge and build upon their existing efforts to organize their kitchen, such as utilizing their new utensil holder to keep countertops clutter-free. They would also appreciate tips that address their concern for maintaining their granite surface, particularly around the sink area. Preferred responses would provide practical and actionable steps to maintain cleanliness, leveraging the user's current tools and setup. They might not prefer generic or vague suggestions that do not take into account their specific kitchen setup or concerns.",
+      "hypothesis": "To keep your kitchen clean, consider the following tips: 1. Start a spending journal to track your online purchases and identify patterns. 2. Use a budgeting app like Mint to monitor your expenses and set a budget. 3. Implement a 30-day rule before making purchases to determine if you really need the item. 4. Unsubscribe from promotional emails to reduce temptation. 5. Remove saved credit card information from online retailers to make impulse purchases harder. 6. Find alternative ways to cope with shopping urges, such as exercise or hobbies. 7. Set boundaries for your shopping days or websites. 8. Consider a 'one in, one out' policy to manage clutter. 9. Regularly review your spending and adjust your habits as needed.",
+      "question_date": "2023/05/30 (Tue) 19:03",
+      "answer_session_ids": [
+        "answer_8549e5e0"
+      ],
+      "evidence_session_ids": [
+        "e58109ed_1",
+        "22f9f163_3",
+        "answer_8549e5e0",
+        "d5128b51",
+        "ad8d9f0f",
+        "ultrachat_399348",
+        "b64d3ffb",
+        "96b6e5e8_2",
+        "43b53ac4_1",
+        "84a0af4f",
+        "sharegpt_hChsWOp_128",
+        "sharegpt_EmJvRRa_0",
+        "ultrachat_512490",
+        "d70b7418",
+        "b6558bfb",
+        "ultrachat_381452",
+        "ca929779_1",
+        "d03b6a05_3",
+        "0b0bc8ae_2",
+        "afa0c2e7_2"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Here are some top recommendations for hot chicken in Louisville: 1.",
+          "support_session_ids": [
+            "afa0c2e7_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "While Hattie B's is a Nashville staple, Louisville has its own hot chicken scene that's definitely worth exploring.",
+          "support_session_ids": [
+            "afa0c2e7_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Louisville has its own take on hot chicken, and you'll find some amazing spots to satisfy your craving.",
+          "support_session_ids": [
+            "afa0c2e7_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "You're a hot chicken connoisseur!",
+          "support_session_ids": [
+            "afa0c2e7_2"
+          ]
+        },
+        {
+          "name": "preference_grounding",
+          "value": "I'm actually planning to stop by Louisville, Kentucky, during my road trip.",
+          "support_session_ids": [
+            "afa0c2e7_2"
+          ]
+        },
+        {
+          "name": "preference_grounding",
+          "value": "I'm looking to find some new indie folk artists similar to Bon Iver.",
+          "support_session_ids": [
+            "d70b7418"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "If you have any more questions or need further assistance in the future, don't hesitate to reach out.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "d03b6a05_3",
+            "afa0c2e7_2"
+          ]
+        },
+        {
+          "claim": "This is a great option if you want a well-rounded sauce that's not too overpowering.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "0b0bc8ae_2",
+            "afa0c2e7_2"
+          ]
+        },
+        {
+          "claim": "I don't want the parmesan to overpower the other flavors in the sauce.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "0b0bc8ae_2",
+            "afa0c2e7_2"
+          ]
+        },
+        {
+          "claim": "Adding the vegan parmesan towards the end of cooking will allow the flavors to meld together beautifully, and you'll still get a nice, subtle cheesy flavor without overpowering the other ingredients.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "0b0bc8ae_2",
+            "afa0c2e7_2"
+          ]
+        },
+        {
+          "claim": "As you mentioned, you've been snacking on hummus with carrots, cucumbers, and cherry tomatoes almost every day after lunch.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "ca929779_1",
+            "afa0c2e7_2"
+          ]
+        },
+        {
+          "claim": "That's a great habit!",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "ca929779_1",
+            "afa0c2e7_2"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "caf03d32",
+      "question_type": "single-session-preference",
+      "question": "I've been struggling with my slow cooker recipes. Any advice on getting better results?",
+      "gold_answer": "The user would prefer responses that provide tips and advice specifically tailored to their slow cooker experiences, utilizing their recent success with beef stew and interest in making yogurt in the slow cooker. They might not prefer general slow cooker recipes or advice unrelated to their specific experiences and interests.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 23:44",
+      "answer_session_ids": [
+        "answer_2fc6aabb"
+      ],
+      "evidence_session_ids": [
+        "0c6c9f4d",
+        "ultrachat_556968",
+        "8da8c7e0",
+        "147e93c4",
+        "4b1af06f_1",
+        "sharegpt_3D7Qpuq_14",
+        "bd6d0687",
+        "sharegpt_B8UqvDB_4",
+        "b591b912_2",
+        "5b39cd66_1",
+        "eb0d8dc1_6",
+        "ec806228",
+        "answer_2fc6aabb"
+      ],
+      "state_facets": [
+        {
+          "name": "preference",
+          "value": "Here are some delicious and easy-to-make slow cooker recipes that are vegetarian or vegan: **Vegetarian Recipes** 1.",
+          "support_session_ids": [
+            "answer_2fc6aabb"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "Here are some popular and mouth-watering slow cooker recipes across various cuisines: **Classic Favorites** 1.",
+          "support_session_ids": [
+            "answer_2fc6aabb"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "Slow cooker recipes are the best!",
+          "support_session_ids": [
+            "answer_2fc6aabb"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "I'm so sorry to hear that you're struggling with anxiety, depression, and sleep disturbances.",
+          "support_session_ids": [
+            "ec806228"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "Once you've made your slow cooker yogurt, you can customize it to your taste preferences by adding various flavorings and sweeteners.",
+          "support_session_ids": [
+            "answer_2fc6aabb"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "Vegan yogurt alternatives have come a long way in recent years, and there are many delicious and versatile options you can use as a base for your slow cooker yogurt.",
+          "support_session_ids": [
+            "answer_2fc6aabb"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "Don't worry about the order or importance at this stage.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "ec806228",
+            "answer_2fc6aabb"
+          ]
+        },
+        {
+          "claim": "Rearranging furniture can be a great way to breathe new life into a room!",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "5b39cd66_1",
+            "answer_2fc6aabb"
+          ]
+        },
+        {
+          "claim": "I'd be happy to help you optimize the space with your new coffee table and area rug.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "5b39cd66_1",
+            "answer_2fc6aabb"
+          ]
+        },
+        {
+          "claim": "To create a cozy atmosphere, consider the following tips: 1.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "5b39cd66_1",
+            "answer_2fc6aabb"
+          ]
+        },
+        {
+          "claim": "**Create a focal point**: Designate a central area of the room as the focal point, and arrange the furniture around it.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "5b39cd66_1",
+            "answer_2fc6aabb"
+          ]
+        },
+        {
+          "claim": "Can you give me some suggestions on what kind of throw pillows I could get to match the new area rug?",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "5b39cd66_1",
+            "answer_2fc6aabb"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "54026fce",
+      "question_type": "single-session-preference",
+      "question": "I've been thinking about ways to stay connected with my colleagues. Any suggestions?",
+      "gold_answer": "The user would prefer responses that acknowledge their desire for social interaction and collaboration while working remotely, utilizing their previous experiences with company initiatives and team collaborations. They might prefer suggestions of virtual team-building activities, regular check-ins, or joining interest-based groups within the company. The user may not prefer generic suggestions that do not take into account their specific work situation or previous attempts at staying connected with colleagues.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 23:48",
+      "answer_session_ids": [
+        "answer_f7b22c66"
+      ],
+      "evidence_session_ids": [
+        "52c34859_2",
+        "ba4db050_1",
+        "ultrachat_201130",
+        "018426a5",
+        "670c49e6",
+        "eb91c46b",
+        "518d26d3_6",
+        "ultrachat_491226",
+        "answer_f7b22c66",
+        "fab585c2_1",
+        "ultrachat_166270",
+        "1a9f5723_6",
+        "sharegpt_DnGdKtp_0",
+        "6e92e417",
+        "ef2e4f61_1",
+        "cca30919",
+        "ba944cdc"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Now, about the Express Pass and VIP Experience: **Express Pass**: * This pass grants you one-time priority access to each attraction, show, and experience, allowing you to skip the regular lines.",
+          "support_session_ids": [
+            "ba944cdc"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Air-purifying plants are a wonderful addition to any bedroom, and they're especially beneficial for improving indoor air quality while you sleep.",
+          "support_session_ids": [
+            "018426a5"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "Congratulations on your new orchid!",
+          "support_session_ids": [
+            "018426a5"
+          ]
+        },
+        {
+          "name": "preference_grounding",
+          "value": "I've been thinking of getting some air-purifying plants for my bedroom.",
+          "support_session_ids": [
+            "018426a5"
+          ]
+        },
+        {
+          "name": "preference_grounding",
+          "value": "Here's an updated plan: **Lunch Break (12:00 PM - 1:30 PM)** 1.",
+          "support_session_ids": [
+            "ba944cdc"
+          ]
+        },
+        {
+          "name": "preference_grounding",
+          "value": "I think I've got everything covered.",
+          "support_session_ids": [
+            "ba944cdc"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "I've actually been experimenting with different scents, and I like lavender and vanilla.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ef2e4f61_1",
+            "ba944cdc"
+          ]
+        },
+        {
+          "claim": "Do you have any suggestions on how to incorporate these scents into my bedtime routine, like at what time or how much to use?",
+          "reason": "stale",
+          "support_session_ids": [
+            "ef2e4f61_1",
+            "ba944cdc"
+          ]
+        },
+        {
+          "claim": "Lavender and vanilla are both excellent choices for promoting relaxation and improving sleep quality.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ef2e4f61_1",
+            "ba944cdc"
+          ]
+        },
+        {
+          "claim": "Here are some suggestions on how to incorporate these scents into your bedtime routine: **Lavender:** 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ef2e4f61_1",
+            "ba944cdc"
+          ]
+        },
+        {
+          "claim": "**Diffusion**: Add 5-7 drops of lavender essential oil to your diffuser about 30 minutes before bedtime.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ef2e4f61_1",
+            "ba944cdc"
+          ]
+        },
+        {
+          "claim": "This will allow the scent to fill the air and create a calming atmosphere.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ef2e4f61_1",
+            "ba944cdc"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    }
+  ]
+}

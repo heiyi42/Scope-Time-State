@@ -1,0 +1,45 @@
+{
+  "d27a9e6dbf3e9319080153be76683fcc9295804bfdcea834411e75850ad5976d": {
+    "answer": "2",
+    "evidence_session_ids": [
+      "answer_afa9873b_2",
+      "answer_afa9873b_1"
+    ],
+    "state_facets": [
+      {
+        "name": "pick_up_items",
+        "value": "['navy blue blazer from dry cleaning', 'new pair of boots from Zara']",
+        "support_session_ids": [
+          "answer_afa9873b_2",
+          "answer_afa9873b_1"
+        ]
+      },
+      {
+        "name": "total_items_to_pick_up_or_return",
+        "value": "2",
+        "support_session_ids": [
+          "answer_afa9873b_2",
+          "answer_afa9873b_1"
+        ]
+      }
+    ],
+    "rejected_claims": [
+      {
+        "claim": "User needs to pick up dry cleaning for a navy blue blazer.",
+        "reason": "contradicted",
+        "support_session_ids": [
+          "answer_afa9873b_2"
+        ]
+      },
+      {
+        "claim": "User needs to pick up larger size boots from Zara.",
+        "reason": "stale",
+        "support_session_ids": [
+          "answer_afa9873b_3",
+          "answer_afa9873b_1"
+        ]
+      }
+    ],
+    "answer_rationale": "The state facets indicate there are 2 items to pick up or return: a navy blue blazer from dry cleaning and a new pair of boots from Zara. The rejected claims note that these obligations were once considered but are now active in the current state. Thus, the total is 2."
+  }
+}

@@ -1,0 +1,1291 @@
+{
+  "benchmark": "LongMemEval-S",
+  "method": "prebuilt_llm_kg_graph",
+  "data_path": "C:\\Users\\93232\\Desktop\\SCIENCE\\AAAI2027_2\\Experiment\\Other_BenchMark\\LongMemEval-S\\LongMemEval-S_data\\data\\longmemeval_s_cleaned.json",
+  "graph_dir": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-assistant",
+  "answer_provider": "openai",
+  "answer_model": "gpt-4o-mini",
+  "judge_provider": "openai",
+  "judge_model": "gpt-4o",
+  "variants": [
+    "prebuilt_llm_kg_graph"
+  ],
+  "limit_cases": 0,
+  "limit_per_type": 10,
+  "question_types": {
+    "single-session-assistant": 10
+  },
+  "results": [
+    {
+      "variant": "prebuilt_llm_kg_graph",
+      "summary": {
+        "n_cases": 10,
+        "local_answer_match": 0.5,
+        "official_answer_accuracy": 1.0,
+        "candidate_session_recall": 1.0,
+        "candidate_session_precision": 0.05,
+        "evidence_session_recall": 1.0,
+        "evidence_session_precision": 1.0,
+        "abstention_accuracy": null,
+        "task_averaged_official_answer_accuracy": 1.0,
+        "by_question_type": {
+          "single-session-assistant": {
+            "n_cases": 10,
+            "local_answer_match": 0.5,
+            "official_answer_accuracy": 1.0,
+            "candidate_session_recall": 1.0,
+            "candidate_session_precision": 0.05,
+            "evidence_session_recall": 1.0,
+            "evidence_session_precision": 1.0
+          }
+        }
+      },
+      "rows": [
+        {
+          "question_id": "7161e7e2",
+          "question_type": "single-session-assistant",
+          "task_adapter": "Single-session assistant memory recall",
+          "is_abstention": false,
+          "question": "I'm checking our previous chat about the shift rotation sheet for GM social media agents. Can you remind me what was the rotation for Admon on a Sunday?",
+          "gold_answer": "Admon was assigned to the 8 am - 4 pm (Day Shift) on Sundays.",
+          "hypothesis": "On Sunday, Admon is assigned to the 8 am - 4 pm Day Shift.",
+          "candidate_session_ids": [
+            "answer_sharegpt_5Lzox6N_0",
+            "5850de18_2",
+            "dba97bb1_4",
+            "e89b6be2_2",
+            "6b17c99b_2",
+            "3c3fee41",
+            "sharegpt_PjFSCFK_9",
+            "ultrachat_68050",
+            "2bd9990a_3",
+            "5aed819f",
+            "sharegpt_yguSguz_0",
+            "ad361482_1",
+            "ultrachat_541021",
+            "sharegpt_b5rHj0c_20",
+            "3070419a_1",
+            "sharegpt_6kDZTZ2_0",
+            "ultrachat_447051",
+            "ultrachat_301437",
+            "ae73b0f7_2",
+            "b4f63a70_3"
+          ],
+          "evidence_session_ids": [
+            "answer_sharegpt_5Lzox6N_0"
+          ],
+          "answer_session_ids": [
+            "answer_sharegpt_5Lzox6N_0"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": false,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "shift_assignment",
+              "value": "On Sunday, Admon is assigned to the 8 am - 4 pm Day Shift.",
+              "support_session_ids": [
+                "answer_sharegpt_5Lzox6N_0"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The answer is directly supported by the shift rotation sheet provided in the previous chat.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "sharegpt_6kDZTZ2_0",
+              "6b17c99b_2",
+              "answer_sharegpt_5Lzox6N_0",
+              "5aed819f",
+              "5850de18_2",
+              "2bd9990a_3"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "sharegpt_6kDZTZ2_0",
+                "date": "2023/05/20 (Sat) 12:09",
+                "role": "assistant",
+                "content": "A biblical theology of faith healing is rooted in the belief that God has the power to heal, and that faith in Him is necessary for healing to occur. Throughout the Bible, we see instances of God healing individuals through the faith of the person or the faith of others on their behalf.\n\nIn the Old Testament, we see examples of God healing through the prophet Elijah and Elisha, such as when Elijah restored the life of a boy (1 Kings 17:17-24) and when Elisha healed Naaman, the Syrian general, of leprosy (2 Kings 5:1-14). These healing miracles demonstrate that God has the power to heal, and that faith in Him is necessary for healing to occur.\n\nIn the New Testament, we see Jesus performing many healing miracles, such as when he healed the paralyzed man (Mark 2:1-12), the blind man (John 9:1-7) and the woman with the flow of blood (Mark 5:34). Jesus himself affirmed that He had the authority to heal and that people need to have faith in him to receive healing. In Matthew 9:29 Jesus says \"According to your faith let it be done to you.\"\n\nAdditionally, the book of Acts shows that the early Christian community continued to practice faith healing, such as when Peter healed a beggar at the gate of the Temple (Acts 3:1-10) and when Paul healed a man who had been an invalid for eight years (Acts 9:32-35).\n\nIn the Bible, healing is often connected to salvation and redemption. In Isaiah 53:5, it's said that \"by his wounds we are healed.\" which refers to the physical and spiritual healing that Christ brought through his death and resurrection. The Bible teaches that healing is a part of the atonement made by Jesus, and it is available to all believers through faith in Him.\n\nIn summary, biblical theology of faith healing teaches that God has the power to heal, and that faith in Him is necessary for healing to occur. The Bible shows us many examples of God healing through the faith of individuals, and it also teaches that healing is a part of the atonement made by Jesus and available to all believers.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "sharegpt_6kDZTZ2_0",
+                "date": "2023/05/20 (Sat) 12:09",
+                "role": "assistant",
+                "content": "There are many worship songs and hymns that relate to the theme of faith healing and the passage in Luke 7:1-17. Here are a few examples:\n\n* \"Healer\" by Kari Jobe: This song is a modern worship song that expresses the belief in the power of God to heal and restore.\n* \"Great Are You Lord\" by All Sons & Daughters: This song is a modern worship song that expresses faith in God's power and authority, and acknowledges that He is sovereign over all things.\n* \"I Believe in Miracles\" by Jackson Browne: This song is a secular song that expresses faith in the power of God to heal and perform miracles.\n* \"O For a Thousand Tongues to Sing\" by Charles Wesley: This hymn is a classic hymn that expresses joy and gratitude for the salvation offered by Jesus and his power to heal and save.\n* \"Amazing Grace\" by John Newton: This hymn is one of the most well-known hymns and expresses the belief that through faith in Jesus, we can be forgiven and healed.\n* \"There is Power in the Blood\" by Lewis E. Jones: This hymn is a classic hymn that expresses the belief that through faith in Jesus and the shedding of his blood, we can be forgiven and healed.\n* \"Heal Me, O Lord\" by William Walsham How: This hymn is a classic hymn that expresses the belief that through faith in Jesus, we can be healed and restored.\n\nAll these songs and hymns are expressing the belief in the power of God to heal and restore through faith in him, and they are great options to sing and use during worship services or personal devotionals.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "6b17c99b_2",
+                "date": "2023/05/23 (Tue) 02:16",
+                "role": "assistant",
+                "content": "The biological media basket in the Hydor Professional Canister Filter is a key component of the filter's biological stage. It's designed to provide a large surface area for beneficial bacteria to colonize and thrive, which is essential for breaking down ammonia and nitrite in your aquarium.\n\n**Biological Media Options:**\n\nThe Hydor Professional Canister Filter comes with a biological media basket that can be filled with a variety of media types. Here are some popular options:\n\n1. **Ceramic rings or noodles**: These are a popular choice for biological media because they provide a large surface area for bacteria to colonize. They're also long-lasting and can be cleaned and reused multiple times.\n2. **Bio-balls**: These are small, spherical media that provide a large surface area for bacteria to grow. They're often used in conjunction with ceramic rings or noodles.\n3. **Sintered glass media**: This type of media is made from sintered glass particles that provide a large surface area for bacteria to colonize. It's a popular choice for biological media because it's long-lasting and easy to clean.\n4. **Biological filter pads**: These are pre-colonized pads that contain beneficial bacteria and other microorganisms. They're a good option if you're setting up a new tank or want to boost the biological capacity of your filter.\n\n**Recommended Media Capacity:**\n\nThe biological media basket in the Hydor Professional Canister Filter can hold a significant amount of media. As a general rule, you'll want to fill the basket to around 2/3 to 3/4 capacity to allow for good water flow and prevent clogging.\n\n**Replacement Schedule:**\n\nThe frequency of replacing biological media depends on several factors, including the type of media, water quality, and tank conditions. Here are some general guidelines:\n\n1. **Ceramic rings or noodles**: These can be cleaned and reused every 2-3 months. Replace them every 6-12 months or when they become clogged or degraded.\n2. **Bio-balls**: These can be cleaned and reused every 2-3 months. Replace them every 6-12 months or when they become clogged or degraded.\n3. **Sintered glass media**: This type of media can be cleaned and reused every 3-6 months. Replace it every 12-24 months or when it becomes clogged or degraded.\n4. **Biological filter pads**: These typically need to be replaced every 1-3 months, depending on the manufacturer's instructions.\n\n**Tips and Reminders:**\n\n* Always rinse new biological media in old tank water before adding it to the filter to prevent sudden changes in water chemistry.\n* Clean and maintain the biological media regularly to prevent clogging and ensure optimal performance.\n* Monitor water quality parameters, such as ammonia and nitrite levels, to determine when it's time to replace the biological media.\n* Consider keeping a spare set of biological media on hand to ensure a smooth transition when replacing the old media.\n\nBy following these guidelines and tips, you can ensure that your Hydor Professional Canister Filter's biological stage is working efficiently and effectively to maintain a healthy and thriving aquarium.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_sharegpt_5Lzox6N_0",
+                "date": "2023/05/24 (Wed) 02:46",
+                "role": "assistant",
+                "content": "Thank you for providing the agent names. Here's an updated version of the shift rotation sheet for GM social media agents with 7 agents, 4 shifts, and 2 days off for every agent for a week starting on Sunday and ending on Saturday:\n\nShift Rotation Sheet for GM Social Media Agents (1 Week, Sunday - Saturday)\n\n|  | 8 am - 4 pm (Day Shift) | 12 pm - 8 pm (Afternoon Shift) | 4 pm - 12 am (Evening Shift) | 12 am - 8 am (Night Shift) |\n| --- | --- | --- | --- | --- |\n| Sunday | Admon | Magdy | Ehab | Sara |\n| Monday | Mostafa | Nemr | Adam | Admon |\n| Tuesday | Magdy | Ehab | Sara | Mostafa |\n| Wednesday | Nemr | Adam | Admon | Magdy |\n| Thursday | Ehab | Sara | Mostafa | Nemr |\n| Friday | Admon | Magdy | Ehab | Sara |\n| Saturday | Adam | Mostafa | Nemr | Admon |\n\nNote: This rotation is for a 1-week period, starting on Sunday and ending on Saturday, with each agent working one shift per day and having two days off during the week. The names of the agents have been added to the corresponding shift. You can adjust the duration of the rotation and the number of days off per week based on your team's specific needs.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_sharegpt_5Lzox6N_0",
+                "date": "2023/05/24 (Wed) 02:46",
+                "role": "assistant",
+                "content": "Sure! Here's a shift rotation sheet for GM social media agents with 7 agents:\n\nShift Rotation Sheet for GM Social Media Agents\n\n|  | Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n| Week 1 | Agent 1 | Agent 2 | Agent 3 | Agent 4 | Agent 5 | Agent 6 | Agent 7 |\n| Week 2 | Agent 6 | Agent 7 | Agent 1 | Agent 2 | Agent 3 | Agent 4 | Agent 5 |\n| Week 3 | Agent 4 | Agent 5 | Agent 6 | Agent 7 | Agent 1 | Agent 2 | Agent 3 |\n| Week 4 | Agent 2 | Agent 3 | Agent 4 | Agent 5 | Agent 6 | Agent 7 | Agent 1 |\n\nNote: This rotation is for a 4-week period, with each agent working one day off per week. You can adjust the duration of the rotation and the number of days off per week based on your team's specific needs.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_sharegpt_5Lzox6N_0",
+                "date": "2023/05/24 (Wed) 02:46",
+                "role": "assistant",
+                "content": "Sure, I can help you create a shift rotation sheet for GM social media agents. Here's an example template that you can customize according to your team's needs:\n\nShift Rotation Sheet for GM Social Media Agents\n\n|  | Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n| Week 1 | Agent 1 | Agent 2 | Agent 3 | Agent 4 | Agent 5 | Agent 6 | Agent 7 |\n| Week 2 | Agent 8 | Agent 9 | Agent 10 | Agent 1 | Agent 2 | Agent 3 | Agent 4 |\n| Week 3 | Agent 5 | Agent 6 | Agent 7 | Agent 8 | Agent 9 | Agent 10 | Agent 1 |\n| Week 4 | Agent 2 | Agent 3 | Agent 4 | Agent 5 | Agent 6 | Agent 7 | Agent 8 |\n\nNote: You can adjust the number of agents and weeks according to your team's size and rotation schedule.",
+                "why_relevant": "supports rejected claim (stale)"
+              },
+              {
+                "session_id": "answer_sharegpt_5Lzox6N_0",
+                "date": "2023/05/24 (Wed) 02:46",
+                "role": "user",
+                "content": "4 shifts as follows: \"8 am till 4 pm - 12 pm till 8 pm - 4 pm till 12 am - 12 am till 8 am \"",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "5aed819f",
+                "date": "2023/05/26 (Fri) 04:57",
+                "role": "assistant",
+                "content": "Great taste! \"Free Solo\" and \"Fyre\" are both amazing documentaries.\n\nNow, about Disney+... They have an impressive collection of movies, and I'd be happy to recommend some family-friendly options:\n\n**Classic Disney Movies**\n\n1. **Snow White and the Seven Dwarfs** (1937) - A timeless classic and the first full-length animated feature film.\n2. **The Lion King** (1994) - A beloved Disney classic with stunning animation and memorable music.\n3. **Beauty and the Beast** (1991) - A tale as old as time, with enchanting music and lovable characters.\n\n**Modern Disney Movies**\n\n1. **Moana** (2016) - An inspiring adventure about a young princess who sets sail to save her island.\n2. **Zootopia** (2016) - A clever and visually stunning animated film set in a world of anthropomorphic animals.\n3. **The Incredibles** (2004) - A superhero classic with a lovable family and plenty of action.\n\n**Pixar Favorites**\n\n1. **Toy Story** (1995) - The original and still one of the best, about a toy cowboy and his jealousy of a new toy.\n2. **Finding Nemo** (2003) - A heartwarming story about a clownfish searching for his son in the vast ocean.\n3. **Inside Out** (2015) - A creative and emotional journey inside the mind of a young girl.\n\n**Live-Action Movies**\n\n1. **The Jungle Book** (2016) - A live-action adaptation of Rudyard Kipling's classic tale, with stunning CGI and a great cast.\n2. **The Princess Bride** (1987) - A swashbuckling adventure with a heartwarming story, memorable characters, and plenty of humor.\n3. **Mary Poppins** (1964) - A classic musical with a magical nanny and a spoonful of sugar.\n\nThese should provide plenty of entertainment for your family movie night!\n\n(Remember, you can also explore Disney+'s original content, like \"The Mandalorian\" and \"Encore!\", if you're interested in more mature or niche content.)",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "5850de18_2",
+                "date": "2023/05/26 (Fri) 07:51",
+                "role": "assistant",
+                "content": "What a great idea! Social media is a fantastic way to promote your charity bake sale and encourage donations. Here's a sample post you can use as inspiration:\n\n**Facebook Post:**\n\n\"Bake Sale for a Cause!\n\nJoin us [today/tomorrow] at [location] for our charity bake sale, benefiting [charity name]!\n\nIndulge in a variety of sweet and savory treats, from classic cookies to spicy roasted chickpeas (yes, you read that right!). Every bite you take will help make a difference in the lives of [who/what the charity supports].\n\n**Donate and Make a Difference:**\n\n* Buy a treat (or two, or three...) to support our charity\n* Share this post with your friends and colleagues to spread the word\n* Donate directly to [charity name] using the link in our bio\n\nEvery dollar counts, and with your help, we can [briefly mention the impact of the charity's work].\n\n**When:** [Date and time]\n**Where:** [Location]\n**Why:** To make a difference in our community and support [charity name]!\n\nSee you there, and thank you for your generosity! #CharityBakeSale #SweetTreatsForACause #SavorySnacksForSocialGood\"\n\n**Twitter Post:**\n\n\"Bake Sale for a Cause! Join us [today/tomorrow] at [location] to indulge in sweet & savory treats and support [charity name]! Every bite makes a diff! Donate, share, and help us make a difference! #CharityBakeSale #SweetTreatsForACause\"\n\n**Instagram Post:**\n\n\"Bake Sale for a Cause! Join us [today/tomorrow] at [location] for a sweet and savory treat fest, all for a great cause! Every bite you take will help support [charity name] and make a difference in our community! Donate, share, and spread the love! #CharityBakeSale #SweetTreatsForACause #SavorySnacksForSocialGood\"\n\nFeel free to customize the post to fit your charity's tone and style, and don't forget to include any necessary details, such as the location, date, and time of the event. Good luck with your charity bake sale, and I hope you raise lots of funds for your chosen charity!",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "5850de18_2",
+                "date": "2023/05/26 (Fri) 07:51",
+                "role": "user",
+                "content": "I'm glad I can bring some savory snacks to balance out the sweet treats. Do you have any suggestions for a charity-focused social media post to promote our bake sale and encourage people to donate?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "2bd9990a_3",
+                "date": "2023/05/30 (Tue) 17:31",
+                "role": "user",
+                "content": "I must have gotten carried away with the relaxation vibes! You're right, there's no private beach or multiple pools at the Hilton Hotel in downtown Chicago. I'm actually remembering my previous stay at the Fontainebleau in Miami, where I did enjoy the private beach and multiple pools. Anyway, thanks for the correction!",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "assistant_template",
+                "value": "Assistant provides a social media post template for a charity bake sale (including Facebook, Twitter, and Instagram versions).",
+                "support_session_ids": [
+                  "5850de18_2"
+                ]
+              },
+              {
+                "name": "biblical_narrative",
+                "value": "In the New Testament, Jesus performed many healing miracles, such as healing the paralyzed man (Mark 2:1-12), the blind man (John 9:1-7), and the woman with the flow of blood (Mark 5:34).",
+                "support_session_ids": [
+                  "sharegpt_6kDZTZ2_0"
+                ]
+              },
+              {
+                "name": "product_recommendation",
+                "value": "Biological filter pads are recommended biological media for the Hydor Professional Canister Filter.",
+                "support_session_ids": [
+                  "6b17c99b_2"
+                ]
+              },
+              {
+                "name": "product_recommendation",
+                "value": "Sintered glass media is recommended biological media for the Hydor Professional Canister Filter.",
+                "support_session_ids": [
+                  "6b17c99b_2"
+                ]
+              },
+              {
+                "name": "product_recommendation",
+                "value": "Bio-balls are recommended biological media for the Hydor Professional Canister Filter.",
+                "support_session_ids": [
+                  "6b17c99b_2"
+                ]
+              },
+              {
+                "name": "recommendation",
+                "value": "Assistant recommends \"Snow White and the Seven Dwarfs\" (1937) on Disney+.",
+                "support_session_ids": [
+                  "5aed819f"
+                ]
+              },
+              {
+                "name": "shift_assignment",
+                "value": "On Sunday, Admon is assigned to the 8 am - 4 pm Day Shift.",
+                "support_session_ids": [
+                  "answer_sharegpt_5Lzox6N_0"
+                ]
+              },
+              {
+                "name": "shift_rotation",
+                "value": "Shift rotation sheet for 7 GM social media agents has Sunday shifts: Week 1: Agent 7, Week 2: Agent 5, Week 3: Agent 3, Week 4: Agent 1.",
+                "support_session_ids": [
+                  "answer_sharegpt_5Lzox6N_0"
+                ]
+              },
+              {
+                "name": "user_history",
+                "value": "The user had a previous stay at the Fontainebleau in Miami.",
+                "support_session_ids": [
+                  "2bd9990a_3"
+                ]
+              },
+              {
+                "name": "user_request",
+                "value": "User requested shift rotation sheet to include 4 daily shifts: 8am-4pm, 12pm-8pm, 4pm-12am, 12am-8am.",
+                "support_session_ids": [
+                  "answer_sharegpt_5Lzox6N_0"
+                ]
+              },
+              {
+                "name": "user_request",
+                "value": "User requests suggestions for a charity-focused social media post to promote a bake sale and encourage donations.",
+                "support_session_ids": [
+                  "5850de18_2"
+                ]
+              },
+              {
+                "name": "worship_music",
+                "value": "'Amazing Grace' by John Newton expresses the belief that through faith in Jesus we can be forgiven and healed.",
+                "support_session_ids": [
+                  "sharegpt_6kDZTZ2_0"
+                ]
+              }
+            ],
+            "rejected_claims": [
+              {
+                "claim": "Initial shift rotation sheet for 10 GM social media agents had Sunday shifts: Week 1: Agent 7, Week 2: Agent 4, Week 3: Agent 1, Week 4: Agent 8.",
+                "reason": "stale",
+                "support_session_ids": [
+                  "answer_sharegpt_5Lzox6N_0"
+                ]
+              }
+            ],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-assistant\\7161e7e2.graph.json"
+        },
+        {
+          "question_id": "c4f10528",
+          "question_type": "single-session-assistant",
+          "task_adapter": "Single-session assistant memory recall",
+          "is_abstention": false,
+          "question": "I'm planning to visit Bandung again and I was wondering if you could remind me of the name of that restaurant in Cihampelas Walk that serves a great Nasi Goreng?",
+          "gold_answer": "Miss Bee Providore",
+          "hypothesis": "The restaurant in Cihampelas Walk that serves a great Nasi Goreng is Miss Bee Providore.",
+          "candidate_session_ids": [
+            "answer_ultrachat_234453",
+            "689fec3d_1",
+            "51c89181_1",
+            "6cf1848e_2",
+            "107d40f0",
+            "29116b50_1",
+            "sharegpt_yMwEvl7_557",
+            "21ff9566_2",
+            "de55485d_1",
+            "7613d5ec_1",
+            "e12cfbcd",
+            "c8c90a81_1",
+            "5ac7f9c5_2",
+            "ultrachat_172995",
+            "sharegpt_5GYAEJe_23",
+            "ultrachat_577781",
+            "7157bff1_2",
+            "ultrachat_504611",
+            "dc1f9713_2",
+            "a17423e7_1"
+          ],
+          "evidence_session_ids": [
+            "answer_ultrachat_234453"
+          ],
+          "answer_session_ids": [
+            "answer_ultrachat_234453"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "dish",
+              "value": "Miss Bee's Nasi Goreng",
+              "support_session_ids": [
+                "answer_ultrachat_234453"
+              ]
+            },
+            {
+              "name": "restaurant",
+              "value": "Miss Bee Providore",
+              "support_session_ids": [
+                "answer_ultrachat_234453"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence directly states that Miss Bee Providore offers a must-try Nasi Goreng.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_ultrachat_234453"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_ultrachat_234453",
+                "date": "2023/05/30 (Tue) 12:09",
+                "role": "assistant",
+                "content": "Miss Bee Providore offers a variety of delicious dishes, both Western and Indonesian cuisine. Here are a few signature dishes you should definitely try:\n\n1. Miss Bee's Nasi Goreng: Their take on the classic Indonesian fried rice dish is a must-try! It's served with a side of prawn crackers and topped with a fried egg. 2. Yoghurt Granola Bowl: This is a great option if you're looking for something healthy and refreshing. It's made with homemade granola, fresh fruit, and yogurt. 3. Fried Chicken Burger: This signature burger features a juicy chicken patty, crispy bacon, lettuce, tomato, and a special aioli sauce. It's served with a side of fries. 4. Beef Rendang: If you're looking for a traditional Indonesian dish, try their version of beef rendang. It's a slow-cooked beef dish in a flavorful, spicy coconut milk sauce. 5. Chocolate Brownie: Finish off your meal with a sweet treat - Miss Bee's chocolate brownie is a local favorite and is served warm with vanilla ice cream and chocolate sauce. These are just a few of the many delicious options, so feel free to explore their menu and try something new!",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_ultrachat_234453",
+                "date": "2023/05/30 (Tue) 12:09",
+                "role": "assistant",
+                "content": "Sure! There are many good restaurants and cafes in the Cihampelas Walk area. Here are a few options:\n\n1. Miss Bee Providore: This restaurant serves a mix of western and Indonesian cuisine and has a cozy and stylish interior. 2. Bakery & Co: A great place to relax and enjoy a cup of coffee and a pastry. 3. Raa Cha Suki & BBQ: If you're looking for something spicy and delicious, this Thai restaurant is a great option. 4. Sumoboo: This Japanese shaved ice dessert place features a wide variety of flavors, toppings, and combinations. 5. Holycow! Steakhouse by Chef Afit: This steakhouse has a warm atmosphere and serves high-quality steaks at reasonable prices. These are just a few of the many options you can explore in the area. Make sure to do some research and read reviews before making a final decision. Enjoy your visit!",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "dish",
+                "value": "Miss Bee's Nasi Goreng",
+                "support_session_ids": [
+                  "answer_ultrachat_234453"
+                ]
+              },
+              {
+                "name": "restaurant",
+                "value": "Miss Bee Providore",
+                "support_session_ids": [
+                  "answer_ultrachat_234453"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-assistant\\c4f10528.graph.json"
+        },
+        {
+          "question_id": "89527b6b",
+          "question_type": "single-session-assistant",
+          "task_adapter": "Single-session assistant memory recall",
+          "is_abstention": false,
+          "question": "I'm going back to our previous conversation about the children's book on dinosaurs. Can you remind me what color was the scaly body of the Plesiosaur in the image?",
+          "gold_answer": "The Plesiosaur had a blue scaly body.",
+          "hypothesis": "The scaly body of the Plesiosaur in the image was blue.",
+          "candidate_session_ids": [
+            "answer_sharegpt_YkWn1Ne_0",
+            "ultrachat_117600",
+            "51c262b6_2",
+            "9fa1d135_1",
+            "9c722816",
+            "07e363d9_2",
+            "ultrachat_41485",
+            "765ce8a7_3",
+            "ultrachat_84388",
+            "48d385f0_1",
+            "644e1d00",
+            "sharegpt_M9T66Xd_5",
+            "00cbfcfd",
+            "990f3ef9_7",
+            "bcdb3847",
+            "9661e558",
+            "sharegpt_htSCqmh_171",
+            "ultrachat_442154",
+            "ultrachat_11001",
+            "e82ce7cd_5"
+          ],
+          "evidence_session_ids": [
+            "answer_sharegpt_YkWn1Ne_0"
+          ],
+          "answer_session_ids": [
+            "answer_sharegpt_YkWn1Ne_0"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": false,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "plesiosaur_scaly_body_color",
+              "value": "blue",
+              "support_session_ids": [
+                "answer_sharegpt_YkWn1Ne_0"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence directly states the color of the Plesiosaur's scaly body.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_sharegpt_YkWn1Ne_0"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_sharegpt_YkWn1Ne_0",
+                "date": "2023/05/23 (Tue) 06:44",
+                "role": "assistant",
+                "content": "\"The Amazing Adventures of Dinosaurs\"\n\nOnce upon a time, in a land far, far away, there lived a group of incredible creatures called dinosaurs. These fascinating creatures roamed the earth, ruled the skies, and swam in the oceans.\n\nJoin us on a journey to discover the exciting world of dinosaurs and learn about their incredible abilities and traits.\n\nChapter 1: The Mighty T-Rex\n\nThe T-Rex was a giant dinosaur that lived millions of years ago. It was one of the largest carnivorous dinosaurs that ever lived, and it had sharp teeth and strong jaws that could crush anything in its path.\n\n::T-Rex Image:: == A large, fierce-looking T-Rex stands on its hind legs, roaring loudly with its sharp teeth showing. The T-Rex has a green scaly body, with small arms, and a long tail to help it balance. In the background, there is a lush forest with tall trees.\n\nChapter 2: The Flying Pterodactyl\n\nThe Pterodactyl was a flying dinosaur that lived in the skies. It had large wings that helped it soar high above the ground, and a sharp beak to catch its prey.\n\n::Pterodactyl Image:: == A Pterodactyl is shown in mid-flight, with its wings spread wide and its sharp beak open. The Pterodactyl has a green scaly body and long, thin legs. The background is a beautiful blue sky with fluffy clouds.\n\nChapter 3: The Swimming Plesiosaur\n\nThe Plesiosaur was a dinosaur that lived in the oceans. It had a long neck and powerful flippers that helped it swim gracefully through the water.\n\n::Plesiosaur Image:: == A Plesiosaur is shown swimming in the ocean, with its long neck and flippers in motion. The Plesiosaur has a blue scaly body, and its eyes are fixed on something in the distance. In the background, there are colorful fish swimming along with it and the sun shining brightly.\n\nChapter 4: The Cuddly Triceratops\n\nThe Triceratops was a herbivorous dinosaur with a large head and three horns. It was a gentle giant that lived on the land and ate only plants.\n\n::Triceratops Image:: == A Triceratops is shown grazing in a field, surrounded by tall green grasses. The Triceratops has a brown scaly body, with a large head and three horns. Its eyes are closed, and it looks happy and content. In the background, there is a beautiful sunset with orange and pink clouds.\n\nThe end\n\nThis was just the beginning of our journey through the amazing world of dinosaurs. There are many more incredible creatures to discover, and we hope you enjoyed learning about these fascinating creatures.",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "plesiosaur_scaly_body_color",
+                "value": "blue",
+                "support_session_ids": [
+                  "answer_sharegpt_YkWn1Ne_0"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-assistant\\89527b6b.graph.json"
+        },
+        {
+          "question_id": "e9327a54",
+          "question_type": "single-session-assistant",
+          "task_adapter": "Single-session assistant memory recall",
+          "is_abstention": false,
+          "question": "I'm planning to revisit Orlando. I was wondering if you could remind me of that unique dessert shop with the giant milkshakes we talked about last time?",
+          "gold_answer": "The Sugar Factory at Icon Park.",
+          "hypothesis": "The Sugar Factory is a sweet shop located at Icon Park that offers giant milkshakes.",
+          "candidate_session_ids": [
+            "answer_ultrachat_480665",
+            "ba944cdc",
+            "c58fdf1e_2",
+            "61e1ba53_2",
+            "11decc61",
+            "sharegpt_6dPUCcK_13",
+            "c0d099e6_2",
+            "8221810f_3",
+            "7613d5ec_2",
+            "c81897cd_8",
+            "sharegpt_NP5eyFN_5",
+            "30e58d0c_1",
+            "c81897cd_2",
+            "sharegpt_Q7EQHIJ_0",
+            "28e0ea23_2",
+            "8ed77bea_1",
+            "b65f51fb_5",
+            "ultrachat_95525",
+            "ecc39c87_2",
+            "b10dce5e"
+          ],
+          "evidence_session_ids": [
+            "answer_ultrachat_480665"
+          ],
+          "answer_session_ids": [
+            "answer_ultrachat_480665"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": false,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "dessert_recommendation",
+              "value": "The Sugar Factory is a sweet shop located at Icon Park that offers giant milkshakes.",
+              "support_session_ids": [
+                "answer_ultrachat_480665"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The answer is directly supported by the evidence provided in the session where The Sugar Factory was mentioned as a dessert spot with giant milkshakes.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_ultrachat_480665",
+              "61e1ba53_2",
+              "11decc61",
+              "28e0ea23_2",
+              "c81897cd_2",
+              "c0d099e6_2",
+              "ecc39c87_2"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_ultrachat_480665",
+                "date": "2023/05/21 (Sun) 17:19",
+                "role": "assistant",
+                "content": "Absolutely! Here are some fun dessert spots that your family might enjoy after dinner:\n\n1. The Sugar Factory - A sweet shop located at Icon Park that offers an enormous menu of sweet treats, including specialty drinks and giant milkshakes.\n\n2. Wondermade - A gourmet marshmallow shop located in Sanford, just north of Orlando, that offers unique flavored marshmallows and s'mores kits.\n\n3. Gideon's Bakehouse - A bakery located at Disney Springs that offers delicious cookies, cakes, and other baked treats.\n\n4. Kelly's Homemade Ice Cream - A small-batch ice cream shop located in Orlando that offers unique flavors like Banana Cream Pie and Strawberry Jalapeno.\n\n5. Voodoo Doughnut - A doughnut shop located at Universal CityWalk that offers imaginative and creative doughnuts with unique toppings and flavors.\n\n6. The Glass Knife - A dessert and coffee shop located in Winter Park that serves up beautiful cakes, pastries, and other sweet treats in a stylish setting.\n\n7. Lickety Splitz - A dessert shop located in Orlando that serves up handmade frozen yogurt, sorbet, and ice cream.\n\n8. Better Than Sex - A dessert shop located in the Ivanhoe Village neighborhood of Orlando that specializes in decadent desserts like chocolate fondue and cheesecake.\n\n9. The Greenery Creamery - An ice cream shop located in the Thornton Park neighborhood of Orlando that offers all-natural ice cream flavors like lavender, honeycomb, and matcha.\n\n10. The Pastry Studio - A bakery located in Daytona Beach, just east of Orlando, that offers beautiful and delicious custom cakes and other desserts.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "61e1ba53_2",
+                "date": "2023/05/24 (Wed) 10:15",
+                "role": "user",
+                "content": "I'm looking for a spot that serves a mix of everything, and our group is usually around 4-5 people. We're pretty open to trying new things, so no specific cuisine in mind. By the way, I just tried this new place downtown last week and it was amazing - I think you might want to consider adding it to your recommendations!",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "11decc61",
+                "date": "2023/05/24 (Wed) 13:53",
+                "role": "user",
+                "content": "I've actually already listened to a bit of The Nightingale, but I'm looking for something new. I'm almost done with my current read, The Hating Game, and I need something to look forward to. By the way, I just finished a really great book last month, The Seven Husbands of Evelyn Hugo, and I'm still thinking about it. Anyway, back to historical fiction audiobooks... What's the average length of these books? I prefer ones that are around 15-20 hours long.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "11decc61",
+                "date": "2023/05/24 (Wed) 13:53",
+                "role": "user",
+                "content": "I'm thinking of trying out a new audiobook for my workouts. Can you recommend some popular ones in the historical fiction genre?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "28e0ea23_2",
+                "date": "2023/05/26 (Fri) 21:42",
+                "role": "user",
+                "content": "I'm glad you mentioned sticking to my new shampoo, because I actually got it as a gift from my sister and it's supposed to be good for my hair type. What are some good leave-in conditioners or hair serums that you would recommend to keep my hair moisturized throughout the day?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "28e0ea23_2",
+                "date": "2023/05/26 (Fri) 21:42",
+                "role": "user",
+                "content": "I'm looking for some recommendations on hair care routines. I've been using a new shampoo for about a week now, and I'm really happy with how my hair is feeling - it's softer and shinier than it has in a while. Do you have any tips on how to maintain this?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "c81897cd_2",
+                "date": "2023/05/27 (Sat) 06:38",
+                "role": "user",
+                "content": "I'm also considering selling my rare 1980s-era Sony Walkman Professional, which I think could fetch a good price online. I've had it since college and it still works perfectly, but I've converted all my cassette tapes to digital files so I don't need it anymore. Do you have any advice on how to find the right buyer for this vintage electronics item?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "c0d099e6_2",
+                "date": "2023/05/28 (Sun) 06:48",
+                "role": "user",
+                "content": "I'm excited to try this recipe. By the way, I actually bought those fresh strawberries on sale for 2 bucks a pint last Sunday, and I just finished eating them today. Do you have any other tips on how to store strawberries to keep them fresh for a longer period?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "ecc39c87_2",
+                "date": "2023/05/28 (Sun) 09:28",
+                "role": "assistant",
+                "content": "Paper quality and finish can greatly impact the overall look and feel of your prints. I'm happy to help you explore the paper options offered by these services.\n\n**Matte and Textured Finishes:**\n\n1. **Mpix**: Mpix offers a range of paper finishes, including:\n\t* E-Surface Paper (matte finish): A popular choice for landscape photography, this paper reduces glare and showcases details well.\n\t* Metallic Paper (glossy finish with a metallic sheen): Adds depth and contrast to your images, but may not be suitable for all types of photography.\n\t* Kodak Pro Endura Paper (matte finish): A high-quality paper with a subtle texture, ideal for portraits and landscapes.\n2. **Nations Photo Lab**: Nations Photo Lab offers:\n\t* Matte Paper (matte finish): A popular choice for landscape and fine art photography, this paper reduces glare and showcases details well.\n\t* Velvet Paper (textured finish): Adds a luxurious feel to your prints, with a subtle texture that enhances the sense of depth and dimensionality.\n\t* Bamboo Paper (matte finish): A eco-friendly option with a natural texture, suitable for landscape and nature photography.\n3. **Shutterfly**: Shutterfly offers:\n\t* Matte Finish: A standard matte finish that reduces glare and showcases details well.\n\t* Textured Finish: A subtle, canvas-like texture that adds depth and interest to your prints.\n\t* Pearl Finish: A glossy finish with a subtle sheen, suitable for portrait and product photography.\n4. **Snapfish**: Snapfish offers:\n\t* Matte Finish: A standard matte finish that reduces glare and showcases details well.\n\t* Textured Finish: A subtle, canvas-like texture that adds depth and interest to your prints.\n\t* Premium Paper (matte finish): A high-quality paper with a subtle texture, ideal for landscape and portrait photography.\n5. **Costco Photo Center**: Costco Photo Center offers:\n\t* Matte Finish: A standard matte finish that reduces glare and showcases details well.\n\t* Glossy Finish: A high-gloss finish that enhances colors and contrast.\n6. **Walmart Photo**: Walmart Photo offers:\n\t* Matte Finish: A standard matte finish that reduces glare and showcases details well.\n\t* Glossy Finish: A high-gloss finish that enhances colors and contrast.\n7. **SmugMug**: SmugMug offers:\n\t* Matte Finish: A standard matte finish that reduces glare and showcases details well.\n\t* Lustre Finish: A subtle, pearl-like finish that adds depth and interest to your prints.\n\t* Metallic Finish: A glossy finish with a metallic sheen, suitable for portrait and product photography.\n8. **Google Photos**: Google Photos offers:\n\t* Matte Finish: A standard matte finish that reduces glare and showcases details well.\n\t* Glossy Finish: A high-gloss finish that enhances colors and contrast.\n\n**Tips for Choosing the Right Paper:**\n\n1. **Consider the subject matter**: Matte finishes are often preferred for landscapes and nature photography, while glossy finishes are better suited for portraits and product photography.\n2. **Think about the lighting**: If your images have high contrast or bright highlights, a matte finish may help reduce glare.\n3. **Experiment with different finishes**: If possible, order samples or test prints on different paper finishes to see which one works best for your images.\n4. **Check the paper weight and thickness**: Thicker papers (e.g., 300gsm) tend to have a more premium feel and may be more suitable for fine art photography.\n\nFor your tree tunnel shots, a matte or textured finish could enhance the sense of depth and contrast. Mpix's E-Surface Paper or Nations Photo Lab's Velvet Paper might be great options to consider.",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "dessert_recommendation",
+                "value": "The Sugar Factory is a sweet shop located at Icon Park that offers giant milkshakes.",
+                "support_session_ids": [
+                  "answer_ultrachat_480665"
+                ]
+              },
+              {
+                "name": "dining_experience",
+                "value": "User tried a new restaurant downtown last week.",
+                "support_session_ids": [
+                  "61e1ba53_2"
+                ]
+              },
+              {
+                "name": "dining_preference",
+                "value": "User is open to trying new things.",
+                "support_session_ids": [
+                  "61e1ba53_2"
+                ]
+              },
+              {
+                "name": "disuse",
+                "value": "User no longer needs the Sony Walkman Professional.",
+                "support_session_ids": [
+                  "c81897cd_2"
+                ]
+              },
+              {
+                "name": "personal_care",
+                "value": "The new shampoo is intended for user's hair type.",
+                "support_session_ids": [
+                  "28e0ea23_2"
+                ]
+              },
+              {
+                "name": "personal_care",
+                "value": "User received the new shampoo as a gift from their sister.",
+                "support_session_ids": [
+                  "28e0ea23_2"
+                ]
+              },
+              {
+                "name": "personal_care",
+                "value": "User has been using a new shampoo for about a week and is satisfied with the results (softer and shinier hair).",
+                "support_session_ids": [
+                  "28e0ea23_2"
+                ]
+              },
+              {
+                "name": "preference",
+                "value": "User is looking for a new audiobook, not The Nightingale.",
+                "support_session_ids": [
+                  "11decc61"
+                ]
+              },
+              {
+                "name": "preference",
+                "value": "User is thinking of trying a new audiobook for workouts.",
+                "support_session_ids": [
+                  "11decc61"
+                ]
+              },
+              {
+                "name": "purchase",
+                "value": "User purchased fresh strawberries on sale for $2 per pint last Sunday (relative to 2023-05-28).",
+                "support_session_ids": [
+                  "c0d099e6_2"
+                ]
+              },
+              {
+                "name": "reading_history",
+                "value": "User finished reading The Seven Husbands of Evelyn Hugo last month.",
+                "support_session_ids": [
+                  "11decc61"
+                ]
+              },
+              {
+                "name": "recommendation",
+                "value": "For the user's tree tunnel shots, a matte or textured finish could enhance the sense of depth and contrast.",
+                "support_session_ids": [
+                  "ecc39c87_2"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-assistant\\e9327a54.graph.json"
+        },
+        {
+          "question_id": "4c36ccef",
+          "question_type": "single-session-assistant",
+          "task_adapter": "Single-session assistant memory recall",
+          "is_abstention": false,
+          "question": "Can you remind me of the name of the romantic Italian restaurant in Rome you recommended for dinner?",
+          "gold_answer": "Roscioli",
+          "hypothesis": "The romantic Italian restaurant in Rome I recommended for dinner is Roscioli.",
+          "candidate_session_ids": [
+            "answer_ultrachat_448704",
+            "1ba83815_4",
+            "3dc8ba5f_2",
+            "sharegpt_m8F4NxL_0",
+            "5fc83435_2",
+            "89749c78_1",
+            "289b3dae",
+            "40ab8035",
+            "7db28e68_1",
+            "07e6a3bd_1",
+            "7b1d1f43_2",
+            "sharegpt_gqkL2Dr_0",
+            "940629b2_1",
+            "sharegpt_TXDvX38_0",
+            "ultrachat_149723",
+            "sharegpt_ZfdAEyM_0",
+            "f35cb519_2",
+            "aa569c1e",
+            "1fd56a1b",
+            "3410b52a_1"
+          ],
+          "evidence_session_ids": [
+            "answer_ultrachat_448704"
+          ],
+          "answer_session_ids": [
+            "answer_ultrachat_448704"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "recommended_romantic_italian_restaurant_in_rome",
+              "value": "Roscioli",
+              "support_session_ids": [
+                "answer_ultrachat_448704"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence directly supports the recommendation of Roscioli as the restaurant.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_ultrachat_448704"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_ultrachat_448704",
+                "date": "2023/05/30 (Tue) 12:20",
+                "role": "assistant",
+                "content": "For a romantic dinner, I would recommend Roscioli. It has a cozy and intimate atmosphere with soft lighting and excellent service. They also have a great wine list and a menu that offers a range of dishes made with high-quality ingredients. You can even request a private wine and cheese tasting for a unique and romantic dining experience.",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "recommended_romantic_italian_restaurant_in_rome",
+                "value": "Roscioli",
+                "support_session_ids": [
+                  "answer_ultrachat_448704"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-assistant\\4c36ccef.graph.json"
+        },
+        {
+          "question_id": "6ae235be",
+          "question_type": "single-session-assistant",
+          "task_adapter": "Single-session assistant memory recall",
+          "is_abstention": false,
+          "question": "I remember you told me about the refining processes at CITGO's three refineries earlier. Can you remind me what kind of processes are used at the Lake Charles Refinery?",
+          "gold_answer": "Atmospheric distillation, fluid catalytic cracking (FCC), alkylation, and hydrotreating.",
+          "hypothesis": "The refining processes used at the Lake Charles Refinery include: 1. Atmospheric distillation, 2. Fluid catalytic cracking (FCC), 3. Alkylation, and 4. Hydrotreating.",
+          "candidate_session_ids": [
+            "answer_sharegpt_IUWQYGQ_0",
+            "61a91bc9_2",
+            "31cde680",
+            "809cabca_1",
+            "39358a85_1",
+            "ultrachat_82847",
+            "8e608aad",
+            "99188307",
+            "sharegpt_AEwb22H_18",
+            "0a1e90d1_2",
+            "cc5a6057_1",
+            "sharegpt_TVK4gjw_24",
+            "1e957711",
+            "sharegpt_KzDwaf1_211",
+            "sharegpt_QIcIecM_0",
+            "c25b95c5_2",
+            "ultrachat_431987",
+            "fa69fc6a_1",
+            "ec8fa65d_1",
+            "sharegpt_eWQFoct_9"
+          ],
+          "evidence_session_ids": [
+            "answer_sharegpt_IUWQYGQ_0"
+          ],
+          "answer_session_ids": [
+            "answer_sharegpt_IUWQYGQ_0"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": false,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "alkylation",
+              "value": "used at Lake Charles Refinery",
+              "support_session_ids": [
+                "answer_sharegpt_IUWQYGQ_0"
+              ]
+            },
+            {
+              "name": "atmospheric_distillation",
+              "value": "used at Lake Charles Refinery",
+              "support_session_ids": [
+                "answer_sharegpt_IUWQYGQ_0"
+              ]
+            },
+            {
+              "name": "fluid_catalytic_cracking",
+              "value": "used at Lake Charles Refinery",
+              "support_session_ids": [
+                "answer_sharegpt_IUWQYGQ_0"
+              ]
+            },
+            {
+              "name": "hydrotreating",
+              "value": "used at Lake Charles Refinery",
+              "support_session_ids": [
+                "answer_sharegpt_IUWQYGQ_0"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The answer is directly supported by the evidence provided in the previous session.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_sharegpt_IUWQYGQ_0"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_sharegpt_IUWQYGQ_0",
+                "date": "2023/05/28 (Sun) 18:50",
+                "role": "assistant",
+                "content": "CITGO operates three refineries in the United States, located in Lake Charles, Louisiana; Lemont, Illinois; and Corpus Christi, Texas. Each refinery has its own set of refining processes, but here are some of the main processes that go on at each facility:\n\n1. Lake Charles Refinery:\n* Atmospheric distillation: This is the first step in the refining process, where crude oil is heated and separated into different fractions based on their boiling points.\n* Fluid catalytic cracking (FCC): This process breaks down heavier fractions of crude oil into lighter, more valuable products such as gasoline and diesel fuel.\n* Alkylation: This process combines smaller molecules to form larger ones, creating high-octane gasoline components.\n* Hydrotreating: This process removes impurities from the gasoline and diesel fractions to improve their quality.\n1. Lemont Refinery:\n* Atmospheric distillation: As with the Lake Charles Refinery, this is the initial step in the refining process.\n* Delayed coking: This process breaks down heavy, residual oils into lighter products such as naphtha, diesel, and petroleum coke.\n* Hydrocracking: This process uses hydrogen and a catalyst to break down heavier fractions of crude oil into lighter, more valuable products.\n* Hydrotreating: This process is used to remove sulfur and other impurities from the gasoline and diesel fractions.\n1. Corpus Christi Refinery:\n* Atmospheric distillation: Again, this is the first step in the refining process.\n* Fluid catalytic cracking (FCC): As with the Lake Charles Refinery, this process is used to break down heavier fractions of crude oil into lighter, more valuable products.\n* Alkylation: This process combines smaller molecules to form larger ones, creating high-octane gasoline components.\n* Hydrocracking: This process is used to break down heavier fractions of crude oil into lighter, more valuable products.\n* Hydrotreating: This process removes impurities from the gasoline and diesel fractions to improve their quality.\n\nIt's worth noting that these are just some of the processes that take place at each refinery, and there may be others as well. Additionally, the specific refining processes used can vary depending on the type of crude oil being processed and the market demand for different petroleum products.",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "alkylation",
+                "value": "used at Lake Charles Refinery",
+                "support_session_ids": [
+                  "answer_sharegpt_IUWQYGQ_0"
+                ]
+              },
+              {
+                "name": "atmospheric_distillation",
+                "value": "used at Lake Charles Refinery",
+                "support_session_ids": [
+                  "answer_sharegpt_IUWQYGQ_0"
+                ]
+              },
+              {
+                "name": "fluid_catalytic_cracking",
+                "value": "used at Lake Charles Refinery",
+                "support_session_ids": [
+                  "answer_sharegpt_IUWQYGQ_0"
+                ]
+              },
+              {
+                "name": "hydrotreating",
+                "value": "used at Lake Charles Refinery",
+                "support_session_ids": [
+                  "answer_sharegpt_IUWQYGQ_0"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-assistant\\6ae235be.graph.json"
+        },
+        {
+          "question_id": "7e00a6cb",
+          "question_type": "single-session-assistant",
+          "task_adapter": "Single-session assistant memory recall",
+          "is_abstention": false,
+          "question": "I'm planning my trip to Amsterdam again and I was wondering, what was the name of that hostel near the Red Light District that you recommended last time?",
+          "gold_answer": "International Budget Hostel",
+          "hypothesis": "The name of the hostel near the Red Light District that I recommended last time is the International Budget Hostel.",
+          "candidate_session_ids": [
+            "answer_ultrachat_370515",
+            "4dd1ba8d_2",
+            "24f78a31_2",
+            "2fa50779_5",
+            "b7dca8f1_1",
+            "39358a85_3",
+            "sharegpt_FQA1tLr_50",
+            "e2cd250e_1",
+            "956ce238",
+            "sharegpt_0dfpdJm_0",
+            "d334bea4_2",
+            "174cccbc",
+            "sharegpt_MW0whoh_17",
+            "9998814e_2",
+            "ultrachat_29266",
+            "ultrachat_188131",
+            "sharegpt_3swiY8I_36",
+            "64c2b3c8",
+            "d39b7977_2",
+            "sharegpt_vRfbcKe_87"
+          ],
+          "evidence_session_ids": [
+            "answer_ultrachat_370515"
+          ],
+          "answer_session_ids": [
+            "answer_ultrachat_370515"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "hostel_name",
+              "value": "International Budget Hostel",
+              "support_session_ids": [
+                "answer_ultrachat_370515"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence directly states that the International Budget Hostel is situated near the Red Light District.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_ultrachat_370515"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_ultrachat_370515",
+                "date": "2023/05/27 (Sat) 06:49",
+                "role": "assistant",
+                "content": "Yes, there are several budget-friendly hostels in Amsterdam. Some options include:\n\n1. Stayokay Amsterdam Vondelpark: Located in the heart of Amsterdam, next to the famous Vondelpark, this hostel offers dormitory-style rooms and private rooms at an affordable price.\n\n2. ClinkNOORD Hostel: Situated in a former laboratory in Amsterdam Noord, this hostel offers a unique and budget-friendly accommodation option. The hostel has a bar, a restaurant, and bike rental services.\n\n3. The Bulldog Hostel Amsterdam: This hostel is located in the city center and offers shared dorms and private rooms at a reasonable price. The hostel has a bar and a smoking lounge.\n\n4. International Budget Hostel: This hostel is situated near the famous Red Light District and offers affordable dormitory-style rooms and private rooms. The hostel has a fully equipped kitchen and a lounge area.\n\n5. Amsterdam Hostel Centre: Located in the heart of Amsterdam, this hostel offers budget-friendly dormitory-style rooms and private rooms. The hostel has a communal kitchen, a bar, and a lounge area.",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "hostel_name",
+                "value": "International Budget Hostel",
+                "support_session_ids": [
+                  "answer_ultrachat_370515"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-assistant\\7e00a6cb.graph.json"
+        },
+        {
+          "question_id": "1903aded",
+          "question_type": "single-session-assistant",
+          "task_adapter": "Single-session assistant memory recall",
+          "is_abstention": false,
+          "question": "I think we discussed work from home jobs for seniors earlier. Can you remind me what was the 7th job in the list you provided?",
+          "gold_answer": "Transcriptionist.",
+          "hypothesis": "Transcriptionist",
+          "candidate_session_ids": [
+            "answer_sharegpt_hA7AkP3_0",
+            "da36bc2c_2",
+            "66369fde_1",
+            "sharegpt_64onasJ_0",
+            "9b4c070c",
+            "sharegpt_emE20LI_0",
+            "ultrachat_134914",
+            "fa68c9d6_1",
+            "sharegpt_ELyN256_27",
+            "ultrachat_30401",
+            "4d287828_2",
+            "184efb91_3",
+            "b163d176",
+            "sharegpt_dxirwR4_25",
+            "201df030",
+            "8adb232f_1",
+            "ultrachat_110523",
+            "4774287c_1",
+            "sharegpt_MCI1EVK_39",
+            "a126eeab_1"
+          ],
+          "evidence_session_ids": [
+            "answer_sharegpt_hA7AkP3_0"
+          ],
+          "answer_session_ids": [
+            "answer_sharegpt_hA7AkP3_0"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "yes"
+          },
+          "state_facets": [
+            {
+              "name": "7th_work_from_home_job_for_seniors",
+              "value": "Transcriptionist",
+              "support_session_ids": [
+                "answer_sharegpt_hA7AkP3_0"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The 7th job in the list provided was directly stated as 'Transcriptionist'.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_sharegpt_hA7AkP3_0"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_sharegpt_hA7AkP3_0",
+                "date": "2023/05/26 (Fri) 12:40",
+                "role": "assistant",
+                "content": "1. Virtual customer service representative\n2. Telehealth professional\n3. Remote bookkeeper\n4. Virtual tutor or teacher\n5. Freelance writer or editor\n6. Online survey taker\n7. Transcriptionist\n8. Social media manager\n9. Virtual travel agent\n10. E-commerce seller\n11. Remote IT support specialist\n12. Home-based customer service representative\n13. Online data entry specialist\n14. Telemarketing representative\n15. Virtual administrative assistant",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "7th_work_from_home_job_for_seniors",
+                "value": "Transcriptionist",
+                "support_session_ids": [
+                  "answer_sharegpt_hA7AkP3_0"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-assistant\\1903aded.graph.json"
+        },
+        {
+          "question_id": "ceb54acb",
+          "question_type": "single-session-assistant",
+          "task_adapter": "Single-session assistant memory recall",
+          "is_abstention": false,
+          "question": "In our previous chat, you suggested 'sexual compulsions' and a few other options for alternative terms for certain behaviors. Can you remind me what the other four options were?",
+          "gold_answer": "I suggested 'sexual fixations', 'problematic sexual behaviors', 'sexual impulsivity', and 'compulsive sexuality'.",
+          "hypothesis": "The other four options suggested were: 1. Sexual fixations, 2. Problematic sexual behaviors, 3. Sexual impulsivity, 4. Compulsive sexuality.",
+          "candidate_session_ids": [
+            "answer_sharegpt_cGdjmYo_0",
+            "f6fd00cf",
+            "511bdbe3_2",
+            "de293134_1",
+            "sharegpt_5XGtDkz_0",
+            "63b72857",
+            "7aa2a9af_2",
+            "a1cbe83a",
+            "44202c74_2",
+            "197d99cc",
+            "dddce60a_1",
+            "9f220c66_2",
+            "0840765f_1",
+            "ultrachat_150417",
+            "ultrachat_352012",
+            "sharegpt_FfxWZ49_0",
+            "ultrachat_539537",
+            "187b4852_2",
+            "sharegpt_uATA5m5_41",
+            "ultrachat_238565"
+          ],
+          "evidence_session_ids": [
+            "answer_sharegpt_cGdjmYo_0"
+          ],
+          "answer_session_ids": [
+            "answer_sharegpt_cGdjmYo_0"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": false,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "alternative_term_1",
+              "value": "Sexual fixations",
+              "support_session_ids": [
+                "answer_sharegpt_cGdjmYo_0"
+              ]
+            },
+            {
+              "name": "alternative_term_2",
+              "value": "Problematic sexual behaviors",
+              "support_session_ids": [
+                "answer_sharegpt_cGdjmYo_0"
+              ]
+            },
+            {
+              "name": "alternative_term_3",
+              "value": "Sexual impulsivity",
+              "support_session_ids": [
+                "answer_sharegpt_cGdjmYo_0"
+              ]
+            },
+            {
+              "name": "alternative_term_4",
+              "value": "Compulsive sexuality",
+              "support_session_ids": [
+                "answer_sharegpt_cGdjmYo_0"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The answer is directly supported by the evidence provided in the previous session.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_sharegpt_cGdjmYo_0"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_sharegpt_cGdjmYo_0",
+                "date": "2023/05/27 (Sat) 11:16",
+                "role": "assistant",
+                "content": "I apologize if my previous suggestions were not helpful. Here are some other alternatives:\n\n1. Sexual fixations - This term implies a strong preoccupation with sexual thoughts or behaviors that may interfere with other areas of life.\n2. Problematic sexual behaviors - This phrase is straightforward and describes behaviors that cause problems or difficulties in an individual's life.\n3. Sexual impulsivity - This term emphasizes the impulsive or compulsive nature of certain sexual behaviors and the difficulties individuals may face in controlling them.\n4. Compulsive sexuality - This phrase emphasizes the compulsive nature of certain sexual behaviors and the difficulties individuals may face in breaking free from them.\n\nI hope these suggestions are more helpful for you.",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "alternative_term_1",
+                "value": "Sexual fixations",
+                "support_session_ids": [
+                  "answer_sharegpt_cGdjmYo_0"
+                ]
+              },
+              {
+                "name": "alternative_term_2",
+                "value": "Problematic sexual behaviors",
+                "support_session_ids": [
+                  "answer_sharegpt_cGdjmYo_0"
+                ]
+              },
+              {
+                "name": "alternative_term_3",
+                "value": "Sexual impulsivity",
+                "support_session_ids": [
+                  "answer_sharegpt_cGdjmYo_0"
+                ]
+              },
+              {
+                "name": "alternative_term_4",
+                "value": "Compulsive sexuality",
+                "support_session_ids": [
+                  "answer_sharegpt_cGdjmYo_0"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-assistant\\ceb54acb.graph.json"
+        },
+        {
+          "question_id": "f523d9fe",
+          "question_type": "single-session-assistant",
+          "task_adapter": "Single-session assistant memory recall",
+          "is_abstention": false,
+          "question": "I wanted to check back on our previous conversation about Netflix. I mentioned that I wanted to be able to access all seasons of old shows? Do you remember what show I used as an example, the one that only had the last season available?",
+          "gold_answer": "Doc Martin",
+          "hypothesis": "The show you used as an example is \"doc martin.\"",
+          "candidate_session_ids": [
+            "answer_sharegpt_m2xJfjo_0",
+            "73f75ab4",
+            "debc34d7_1",
+            "193c23bd_1",
+            "sharegpt_4RnbgQt_0",
+            "b1de645e",
+            "22aa7cca_4",
+            "9ccea2f0_1",
+            "a07f9d5c_1",
+            "661b711f_1",
+            "ultrachat_391251",
+            "fbfda981",
+            "733e443a_abs_4",
+            "ultrachat_320115",
+            "ultrachat_57629",
+            "44165708",
+            "636e0e32_1",
+            "ultrachat_16868",
+            "f5604d30_3",
+            "ultrachat_201541"
+          ],
+          "evidence_session_ids": [
+            "answer_sharegpt_m2xJfjo_0"
+          ],
+          "answer_session_ids": [
+            "answer_sharegpt_m2xJfjo_0"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "example_show",
+              "value": "doc martin",
+              "support_session_ids": [
+                "answer_sharegpt_m2xJfjo_0"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence directly states that you mentioned \"doc martin\" as an example of a show that only has the last season available.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_sharegpt_m2xJfjo_0"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_sharegpt_m2xJfjo_0",
+                "date": "2023/05/26 (Fri) 18:07",
+                "role": "user",
+                "content": "Yes. I have a comment. After a while Netflix takes down shows. I want to be able to have access to all seasons for old shows. I will give you an example, \"doc martin\" show went down after a while, and now we have access only to the last season. One question at a time is mandatory! Make sure to follow up on every thread",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "example_show",
+                "value": "doc martin",
+                "support_session_ids": [
+                  "answer_sharegpt_m2xJfjo_0"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-assistant\\f523d9fe.graph.json"
+        }
+      ]
+    }
+  ]
+}

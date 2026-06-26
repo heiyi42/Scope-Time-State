@@ -1,0 +1,266 @@
+{
+  "benchmark": "LongMemEval-S",
+  "method": "prebuilt_llm_kg_graph",
+  "data_path": "C:\\Users\\93232\\Desktop\\SCIENCE\\AAAI2027_2\\Experiment\\Other_BenchMark\\LongMemEval-S\\LongMemEval-S_data\\data\\longmemeval_s_cleaned.json",
+  "graph_dir": "graph_retrieval_methods\\prebuilt_llm_kg_graph\\artifacts\\graphs_60_gpt55_test",
+  "answer_provider": "openai",
+  "answer_model": "gpt-4o-mini",
+  "judge_provider": "openai",
+  "judge_model": "gpt-4o-2024-08-06",
+  "variants": [
+    "prebuilt_llm_kg_graph"
+  ],
+  "limit_cases": 0,
+  "limit_per_type": 1,
+  "question_types": {
+    "single-session-user": 1,
+    "multi-session": 1
+  },
+  "results": [
+    {
+      "variant": "prebuilt_llm_kg_graph",
+      "summary": {
+        "n_cases": 2,
+        "local_answer_match": 0.5,
+        "official_answer_accuracy": 0.5,
+        "candidate_session_recall": 1.0,
+        "candidate_session_precision": 0.1,
+        "evidence_session_recall": 0.8333,
+        "evidence_session_precision": 1.0,
+        "abstention_accuracy": null,
+        "task_averaged_official_answer_accuracy": 0.5,
+        "by_question_type": {
+          "multi-session": {
+            "n_cases": 1,
+            "local_answer_match": 0.0,
+            "official_answer_accuracy": 0.0,
+            "candidate_session_recall": 1.0,
+            "candidate_session_precision": 0.15,
+            "evidence_session_recall": 0.6667,
+            "evidence_session_precision": 1.0
+          },
+          "single-session-user": {
+            "n_cases": 1,
+            "local_answer_match": 1.0,
+            "official_answer_accuracy": 1.0,
+            "candidate_session_recall": 1.0,
+            "candidate_session_precision": 0.05,
+            "evidence_session_recall": 1.0,
+            "evidence_session_precision": 1.0
+          }
+        }
+      },
+      "rows": [
+        {
+          "question_id": "e47becba",
+          "question_type": "single-session-user",
+          "task_adapter": "Single-session user fact recall",
+          "is_abstention": false,
+          "question": "What degree did I graduate with?",
+          "gold_answer": "Business Administration",
+          "hypothesis": "Business Administration",
+          "candidate_session_ids": [
+            "02bd2b90_3",
+            "answer_280352e9",
+            "f6859b48_2",
+            "sharegpt_Cr2tc1f_0",
+            "ultrachat_214101",
+            "5dac7cc2_1",
+            "41abc171_4",
+            "2ae4f277_2",
+            "7045db85_1",
+            "e27891d3_2",
+            "4fd76316",
+            "d94b721b",
+            "ec6ca9ef",
+            "3b3a77d9",
+            "ultrachat_486410",
+            "ultrachat_359984",
+            "a041cdd4_3",
+            "ultrachat_422229",
+            "ultrachat_574556",
+            "84503ce4_1"
+          ],
+          "evidence_session_ids": [
+            "answer_280352e9"
+          ],
+          "answer_session_ids": [
+            "answer_280352e9"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o-2024-08-06",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "graduated_degree",
+              "value": "Business Administration",
+              "support_session_ids": [
+                "answer_280352e9"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The user stated they graduated with a degree in Business Administration.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_280352e9"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_280352e9",
+                "date": "2023/05/30 (Tue) 17:27",
+                "role": "user",
+                "content": "I graduated with a degree in Business Administration, which has definitely helped me in my new role. Do you have any advice on how to stay organized when it comes to paperwork and documentation, especially when it comes to tracking expenses and reimbursements?",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "graduated_degree",
+                "value": "Business Administration",
+                "support_session_ids": [
+                  "answer_280352e9"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph\\artifacts\\graphs_60_gpt55_test\\e47becba.graph.json"
+        },
+        {
+          "question_id": "0a995998",
+          "question_type": "multi-session",
+          "task_adapter": "Multi-session synthesis",
+          "is_abstention": false,
+          "question": "How many items of clothing do I need to pick up or return from a store?",
+          "gold_answer": "3",
+          "hypothesis": "You need to pick up 2 items of clothing from the store.",
+          "candidate_session_ids": [
+            "answer_afa9873b_3",
+            "answer_afa9873b_1",
+            "answer_afa9873b_2",
+            "85846900_2",
+            "25091584_1",
+            "e6790684_1",
+            "ad3d0815_1",
+            "439f9ed8_3",
+            "ultrachat_331531",
+            "afbd7193_2",
+            "fa46a10e",
+            "sharegpt_U3S02iq_0",
+            "750b437b_3",
+            "sharegpt_ZzArUrr_0",
+            "3f05c474",
+            "f5a8b1d0_1",
+            "ultrachat_158784",
+            "64b847a7_1",
+            "ultrachat_428050",
+            "b10c041b_2"
+          ],
+          "evidence_session_ids": [
+            "answer_afa9873b_2",
+            "answer_afa9873b_1"
+          ],
+          "answer_session_ids": [
+            "answer_afa9873b_2",
+            "answer_afa9873b_3",
+            "answer_afa9873b_1"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.15,
+          "evidence_session_recall": 0.6666666666666666,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": false,
+          "autoeval_label": {
+            "model": "gpt-4o-2024-08-06",
+            "label": false,
+            "response": "No"
+          },
+          "state_facets": [
+            {
+              "name": "store_clothing_item",
+              "value": "one navy blue blazer to pick up from dry cleaning",
+              "support_session_ids": [
+                "answer_afa9873b_2"
+              ]
+            },
+            {
+              "name": "store_clothing_item",
+              "value": "one new pair of boots to pick up from Zara",
+              "support_session_ids": [
+                "answer_afa9873b_1"
+              ]
+            },
+            {
+              "name": "total_items",
+              "value": "2 items",
+              "support_session_ids": [
+                "answer_afa9873b_2",
+                "answer_afa9873b_1"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence indicates that you need to pick up one navy blue blazer from dry cleaning and one new pair of boots from Zara, totaling 2 items.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_afa9873b_2",
+              "answer_afa9873b_1"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_afa9873b_2",
+                "date": "2023/02/15 (Wed) 06:30",
+                "role": "user",
+                "content": "I'm making progress, but I still have a lot to sort through. I think I'll take a break and pick up my dry cleaning for the navy blue blazer I wore to a meeting a few weeks ago. What's the best way to care for a blazer like that?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_afa9873b_1",
+                "date": "2023/02/15 (Wed) 16:19",
+                "role": "user",
+                "content": "I think I'll use some boxes I have at home to store my winter clothes. By the way, I just exchanged a pair of boots I got from Zara on 2/5, and I still need to pick up the new pair. Do you have any tips on how to keep track of items I need to pick up or return?",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "store_clothing_item",
+                "value": "one navy blue blazer to pick up from dry cleaning",
+                "support_session_ids": [
+                  "answer_afa9873b_2"
+                ]
+              },
+              {
+                "name": "store_clothing_item",
+                "value": "one new pair of boots to pick up from Zara",
+                "support_session_ids": [
+                  "answer_afa9873b_1"
+                ]
+              },
+              {
+                "name": "total_items",
+                "value": "2 items",
+                "support_session_ids": [
+                  "answer_afa9873b_2",
+                  "answer_afa9873b_1"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph\\artifacts\\graphs_60_gpt55_test\\0a995998.graph.json"
+        }
+      ]
+    }
+  ]
+}

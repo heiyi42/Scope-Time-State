@@ -1,0 +1,3552 @@
+{
+  "e87934523c98d5bc6d9eea5b74aa8b7e8d7a5488bc6408cf7d90866217478727": {
+    "claims": [],
+    "relations": []
+  },
+  "bc1aa239c593a92b06353c4b44bfbf7733aae3553b5cdbde2d0e9633a4e3052b": {
+    "claims": [],
+    "relations": []
+  },
+  "58d4fc11cbbe72755bf0c8392f1bcf57191b04afe7617cadf3856ccffcb6e179": {
+    "claims": [],
+    "relations": []
+  },
+  "6bcb555eade316438fc775ce372e84ea9b6faaf014365772e3b9ee726791e39b": {
+    "claims": [],
+    "relations": []
+  },
+  "8604e3b6363f944ae9ab08637b79ecae13148e58ce8e95bb32982a0181d6735a": {
+    "claims": [],
+    "relations": []
+  },
+  "e31887b619771a965315825191614601b39973e2a21482184b29593d56d57995": {
+    "claims": [],
+    "relations": []
+  },
+  "c00a4ea57169c175972b4b6b49e44ffe109b677fb361dd7cd542cf66658cdf31": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:6c456a5d:6",
+        "claim": "User plans to apply one-touch rule to simple tasks like putting away dirty dishes immediately after meals.",
+        "entity_labels": [
+          "user",
+          "one-touch rule",
+          "dirty dishes",
+          "meals"
+        ],
+        "scope_labels": [
+          "habit",
+          "productivity"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:6c456a5d:6",
+        "claim": "User plans to apply one-touch rule to responding to simple emails as soon as they are read.",
+        "entity_labels": [
+          "user",
+          "one-touch rule",
+          "simple emails"
+        ],
+        "scope_labels": [
+          "habit",
+          "productivity"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:6c456a5d:6",
+        "claim": "User plans to organize digital files and documents by handling each file once and either deleting, filing, or taking action on it immediately.",
+        "entity_labels": [
+          "user",
+          "digital files",
+          "documents"
+        ],
+        "scope_labels": [
+          "habit",
+          "productivity"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:6c456a5d:8",
+        "claim": "User plans to use Habitica's rewards system to track progress and stay motivated for the one-touch rule.",
+        "entity_labels": [
+          "user",
+          "Habitica's rewards system",
+          "one-touch rule"
+        ],
+        "scope_labels": [
+          "habit",
+          "productivity",
+          "motivation"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:6c456a5d:8",
+        "claim": "User will set up a reward for completing a certain number of days or tasks following the one-touch rule.",
+        "entity_labels": [
+          "user",
+          "reward"
+        ],
+        "scope_labels": [
+          "habit",
+          "motivation"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:6c456a5d:8",
+        "claim": "User likes the idea of creating a 'Someday' folder for items that don't require immediate attention but might be useful in the future.",
+        "entity_labels": [
+          "user",
+          "Someday folder"
+        ],
+        "scope_labels": [
+          "productivity",
+          "digital organization"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:6c456a5d:10",
+        "claim": "User has been doing a daily cleaning routine for 3 weeks and wants to track it in Habitica.",
+        "entity_labels": [
+          "user",
+          "daily cleaning routine",
+          "Habitica"
+        ],
+        "scope_labels": [
+          "habit",
+          "cleaning",
+          "tracking"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c8",
+        "event_id": "event:6c456a5d:10",
+        "claim": "User considers setting up a habit for each specific cleaning task or a general 'daily cleaning' habit.",
+        "entity_labels": [
+          "user",
+          "specific cleaning task",
+          "general daily cleaning habit"
+        ],
+        "scope_labels": [
+          "habit",
+          "planning"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "07735883b4854bebbdaf0cd1cd9bf8a67d25db55f367a78dac680ba9a2f05ceb": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:6c456a5d:11",
+        "claim": "User maintained daily cleaning routine for 3 weeks as of 2023-05-05.",
+        "entity_labels": [
+          "user",
+          "daily cleaning routine"
+        ],
+        "scope_labels": [
+          "habit",
+          "achievement"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:59a6150d_1:0",
+        "claim": "User is planning a birding trip to Costa Rica.",
+        "entity_labels": [
+          "user",
+          "birding trip",
+          "Costa Rica"
+        ],
+        "scope_labels": [
+          "planning",
+          "travel"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:59a6150d_1:0",
+        "claim": "User owns a portable hide and practiced using it for over three hours without getting restless.",
+        "entity_labels": [
+          "user",
+          "portable hide",
+          "practice",
+          "three hours"
+        ],
+        "scope_labels": [
+          "equipment",
+          "skill"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:59a6150d_1:2",
+        "claim": "User wants recommendations for reputable birding tour operators in Costa Rica.",
+        "entity_labels": [
+          "user",
+          "birding tour operators",
+          "Costa Rica"
+        ],
+        "scope_labels": [
+          "preference",
+          "planning"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:59a6150d_1:2",
+        "claim": "User wants guides knowledgeable about bird calls and behavior.",
+        "entity_labels": [
+          "user",
+          "guides",
+          "bird calls",
+          "behavior"
+        ],
+        "scope_labels": [
+          "preference"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "1ff8e53e16dcb357c165093f9f747594ed2108318b0452046d414dc81b28aa73": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:59a6150d_1:4",
+        "claim": "User has heard good things about Tropical Birding Tours but has mixed reviews about their accommodation options.",
+        "entity_labels": [
+          "user",
+          "Tropical Birding Tours",
+          "accommodation_options"
+        ],
+        "scope_labels": [
+          "preference",
+          "travel"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:59a6150d_1:5",
+        "claim": "Tropical Birding Tours offers a range of accommodation options to cater to different budgets and preferences.",
+        "entity_labels": [
+          "Tropical Birding Tours",
+          "accommodation_options"
+        ],
+        "scope_labels": [
+          "knowledge",
+          "travel"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:59a6150d_1:5",
+        "claim": "Tropical Birding Tours can accommodate special dietary needs.",
+        "entity_labels": [
+          "Tropical Birding Tours",
+          "dietary_needs"
+        ],
+        "scope_labels": [
+          "knowledge",
+          "travel"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:59a6150d_1:5",
+        "claim": "Tropical Birding Tours offers camping options for a rustic experience.",
+        "entity_labels": [
+          "Tropical Birding Tours",
+          "camping_options"
+        ],
+        "scope_labels": [
+          "knowledge",
+          "travel"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:59a6150d_1:6",
+        "claim": "User will reach out to Tropical Birding Tours to ask about accommodation options and birding itineraries.",
+        "entity_labels": [
+          "user",
+          "Tropical Birding Tours",
+          "accommodation_options",
+          "birding_itineraries"
+        ],
+        "scope_labels": [
+          "planning",
+          "travel"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:59a6150d_1:6",
+        "claim": "User is curious about Quetzal-focused tours and customized itineraries.",
+        "entity_labels": [
+          "user",
+          "Quetzal-focused tours",
+          "customized itineraries"
+        ],
+        "scope_labels": [
+          "preference",
+          "travel"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:59a6150d_1:7",
+        "claim": "Tropical Birding Tours offers Quetzal-focused tours.",
+        "entity_labels": [
+          "Tropical Birding Tours",
+          "Quetzal-focused tours"
+        ],
+        "scope_labels": [
+          "knowledge",
+          "travel"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c8",
+        "event_id": "event:59a6150d_1:7",
+        "claim": "Tropical Birding Tours can create customized itineraries targeting specific bird species.",
+        "entity_labels": [
+          "Tropical Birding Tours",
+          "customized itineraries",
+          "bird species"
+        ],
+        "scope_labels": [
+          "knowledge",
+          "travel"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c9",
+        "event_id": "event:59a6150d_1:8",
+        "claim": "User has been thinking about photography gear and wants recommendations for lenses and camera settings for capturing birds in flight.",
+        "entity_labels": [
+          "user",
+          "photography gear",
+          "lenses",
+          "camera settings",
+          "birds in flight"
+        ],
+        "scope_labels": [
+          "equipment",
+          "skill",
+          "preference"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c10",
+        "event_id": "event:59a6150d_1:8",
+        "claim": "User has experience with Nikon camera.",
+        "entity_labels": [
+          "user",
+          "Nikon camera"
+        ],
+        "scope_labels": [
+          "equipment",
+          "skill"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "31a5db799ad348db71d13076a1c6e42fd69aa239580e2b48944094aee2674955": {
+    "claims": [],
+    "relations": []
+  },
+  "217a79099d9db7892c137cf083b99b07cec76fa6d49997099cc888bb5878c085": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:sharegpt_3Jpu3tr_13:2",
+        "claim": "Keiko Sena is a Japanese author and illustrator known for her work in children's books.",
+        "entity_labels": [
+          "keiko_sena",
+          "author",
+          "illustrator",
+          "children's_books"
+        ],
+        "scope_labels": [
+          "knowledge",
+          "biography"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:sharegpt_3Jpu3tr_13:2",
+        "claim": "Keiko Sena was born in Tokyo in 1932.",
+        "entity_labels": [
+          "keiko_sena",
+          "tokyo",
+          "1932"
+        ],
+        "scope_labels": [
+          "knowledge",
+          "biography"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:sharegpt_3Jpu3tr_13:2",
+        "claim": "Keiko Sena began her career as an illustrator in the 1950s.",
+        "entity_labels": [
+          "keiko_sena",
+          "illustrator",
+          "1950s"
+        ],
+        "scope_labels": [
+          "knowledge",
+          "career"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:sharegpt_3Jpu3tr_13:2",
+        "claim": "Keiko Sena has published numerous picture books, many translated into multiple languages.",
+        "entity_labels": [
+          "keiko_sena",
+          "picture_books",
+          "translation"
+        ],
+        "scope_labels": [
+          "knowledge",
+          "publication"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:sharegpt_3Jpu3tr_13:2",
+        "claim": "Keiko Sena's work is characterized by simple, imaginative stories and whimsical illustrations, often featuring animals or other non-human characters.",
+        "entity_labels": [
+          "keiko_sena",
+          "illustrations",
+          "animals"
+        ],
+        "scope_labels": [
+          "knowledge",
+          "style"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:sharegpt_3Jpu3tr_13:4",
+        "claim": "The assistant provided 30 picture book titles inspired by Keiko Sena's style.",
+        "entity_labels": [
+          "assistant",
+          "picture_book_titles",
+          "keiko_sena"
+        ],
+        "scope_labels": [
+          "knowledge",
+          "list"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:sharegpt_3Jpu3tr_13:6",
+        "claim": "As of September 2021, the assistant is not familiar with Miwa Nakaya as a prominent author or illustrator of children's books.",
+        "entity_labels": [
+          "assistant",
+          "miwa_nakaya",
+          "author",
+          "illustrator"
+        ],
+        "scope_labels": [
+          "knowledge",
+          "limitation"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "5be938d61c2ca90c1f8ed69df8af1a3878f5e659aecde87e9b14bd549625eb3e": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:sharegpt_3Jpu3tr_13:7",
+        "claim": "User requested 30 picture book title ideas inspired by Miwa Nakaya.",
+        "entity_labels": [
+          "user",
+          "Miwa Nakaya",
+          "picture book titles"
+        ],
+        "scope_labels": [
+          "request"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:sharegpt_3Jpu3tr_13:8",
+        "claim": "Assistant is not familiar with Miwa Nakaya's work.",
+        "entity_labels": [
+          "assistant",
+          "Miwa Nakaya"
+        ],
+        "scope_labels": [
+          "knowledge limitation"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:sharegpt_3Jpu3tr_13:9",
+        "claim": "User asked if assistant knows Tatsuya Miyanishi.",
+        "entity_labels": [
+          "user",
+          "Tatsuya Miyanishi"
+        ],
+        "scope_labels": [
+          "query"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:sharegpt_3Jpu3tr_13:10",
+        "claim": "Assistant is familiar with Tatsuya Miyanishi.",
+        "entity_labels": [
+          "assistant",
+          "Tatsuya Miyanishi"
+        ],
+        "scope_labels": [
+          "knowledge"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:sharegpt_3Jpu3tr_13:10",
+        "claim": "Tatsuya Miyanishi is a Japanese author and illustrator known for children's books.",
+        "entity_labels": [
+          "Tatsuya Miyanishi",
+          "Japanese author",
+          "illustrator",
+          "children's books"
+        ],
+        "scope_labels": [
+          "knowledge"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:sharegpt_3Jpu3tr_13:10",
+        "claim": "Tatsuya Miyanishi is best known for his series 'You Are Umasou'.",
+        "entity_labels": [
+          "Tatsuya Miyanishi",
+          "You Are Umasou series"
+        ],
+        "scope_labels": [
+          "knowledge"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:sharegpt_3Jpu3tr_13:10",
+        "claim": "Tatsuya Miyanishi's work often features dinosaurs and prehistoric creatures.",
+        "entity_labels": [
+          "Tatsuya Miyanishi's work",
+          "dinosaurs",
+          "prehistoric creatures"
+        ],
+        "scope_labels": [
+          "style"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c8",
+        "event_id": "event:sharegpt_3Jpu3tr_13:10",
+        "claim": "Tatsuya Miyanishi's work blends adventure, emotion, and humor.",
+        "entity_labels": [
+          "Tatsuya Miyanishi's work",
+          "adventure",
+          "emotion",
+          "humor"
+        ],
+        "scope_labels": [
+          "style"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c9",
+        "event_id": "event:sharegpt_3Jpu3tr_13:10",
+        "claim": "Tatsuya Miyanishi's illustrations are characterized by bright colors and dynamic compositions.",
+        "entity_labels": [
+          "Tatsuya Miyanishi's illustrations",
+          "bright colors",
+          "dynamic compositions"
+        ],
+        "scope_labels": [
+          "style"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c10",
+        "event_id": "event:sharegpt_3Jpu3tr_13:10",
+        "claim": "Some popular books in 'You Are Umasou' series include 'You Are Umasou', 'I Will Love You Forever', 'Excavator Digger', and 'The Earthquake and the Dinosaur Friends'.",
+        "entity_labels": [
+          "You Are Umasou series",
+          "You Are Umasou",
+          "I Will Love You Forever",
+          "Excavator Digger",
+          "The Earthquake and the Dinosaur Friends"
+        ],
+        "scope_labels": [
+          "list"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c11",
+        "event_id": "event:sharegpt_3Jpu3tr_13:11",
+        "claim": "User requested 30 picture book title ideas inspired by Tatsuya Miyanishi.",
+        "entity_labels": [
+          "user",
+          "Tatsuya Miyanishi",
+          "picture book titles"
+        ],
+        "scope_labels": [
+          "request"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "7b4cfa256c55f10f102a51e694099fb9620a031bafbf9dbc8a80ff564cfaad95": {
+    "claims": [],
+    "relations": []
+  },
+  "9d694c3b6939bad19579d3cdd5840781abbd714f1cfd44a6bede70a95fcbc5be": {
+    "claims": [],
+    "relations": []
+  },
+  "fddd51988ac36ecd20e14d82e47bfc42d1e2b336a57bf9a0476586483aa2cec4": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:d3ee5958_2:0",
+        "claim": "User is in the process of buying a house.",
+        "entity_labels": [
+          "user",
+          "house"
+        ],
+        "scope_labels": [
+          "real_estate",
+          "purchase"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:d3ee5958_2:2",
+        "claim": "User reached an agreement with the seller to buy the house for $500,000.",
+        "entity_labels": [
+          "user",
+          "seller",
+          "house",
+          "$500,000"
+        ],
+        "scope_labels": [
+          "real_estate",
+          "purchase",
+          "agreement"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:d3ee5958_2:2",
+        "claim": "User has set up utility accounts.",
+        "entity_labels": [
+          "user",
+          "utility_accounts"
+        ],
+        "scope_labels": [
+          "home_setup",
+          "utilities"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "f7e350f7a19f31616646cbba3c00e18ae66b87e8cae777aee99c409c5353e19f": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:d3ee5958_2:3",
+        "claim": "User finalized purchase price of new home.",
+        "entity_labels": [
+          "user",
+          "new_home",
+          "purchase_price"
+        ],
+        "scope_labels": [
+          "real_estate",
+          "purchase"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:d3ee5958_2:3",
+        "claim": "User is setting up homeowner's insurance.",
+        "entity_labels": [
+          "user",
+          "homeowner_s_insurance"
+        ],
+        "scope_labels": [
+          "real_estate",
+          "insurance"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:d3ee5958_2:4",
+        "claim": "User is not sure about coverage limits for personal belongings.",
+        "entity_labels": [
+          "user",
+          "coverage_limits",
+          "personal_belongings"
+        ],
+        "scope_labels": [
+          "insurance",
+          "uncertainty"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:d3ee5958_2:6",
+        "claim": "User asked about the difference between ACV and RCV coverage.",
+        "entity_labels": [
+          "user",
+          "ACV",
+          "RCV",
+          "coverage"
+        ],
+        "scope_labels": [
+          "insurance",
+          "query"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "48dc61fb5d1f4d0587562e06208276c2955f020f8943f3f961c772f2e73711dd": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:d3ee5958_2:8",
+        "claim": "User decided to choose RCV coverage for homeowner's insurance.",
+        "entity_labels": [
+          "user",
+          "RCV coverage",
+          "homeowner's insurance"
+        ],
+        "scope_labels": [
+          "insurance",
+          "decision"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:d3ee5958_2:10",
+        "claim": "User understood the claims process for homeowner's insurance.",
+        "entity_labels": [
+          "user",
+          "claims process"
+        ],
+        "scope_labels": [
+          "knowledge"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:9b3a7f2c_1:0",
+        "claim": "User was spending average 3 hours per day on social media before taking a break.",
+        "entity_labels": [
+          "user",
+          "social media",
+          "3 hours"
+        ],
+        "scope_labels": [
+          "time_management",
+          "social_media"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:9b3a7f2c_1:0",
+        "claim": "User seeks tools to stay productive and avoid procrastination.",
+        "entity_labels": [
+          "user",
+          "productivity tools"
+        ],
+        "scope_labels": [
+          "preference",
+          "productivity"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "5d256930f5a373715bdfdf39301287939d813933f2f150b3c8f1ffa5c647cb99": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:9b3a7f2c_1:2",
+        "claim": "User will check out productivity tools mentioned by assistant.",
+        "entity_labels": [
+          "user",
+          "productivity_tools"
+        ],
+        "scope_labels": [
+          "preference",
+          "productivity"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:9b3a7f2c_1:2",
+        "claim": "User is thinking of setting up a daily routine for productivity and focus.",
+        "entity_labels": [
+          "user",
+          "daily_routine",
+          "productivity",
+          "focus"
+        ],
+        "scope_labels": [
+          "preference",
+          "productivity",
+          "planning"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:9b3a7f2c_1:4",
+        "claim": "User likes the idea of a morning routine to set the tone for the day.",
+        "entity_labels": [
+          "user",
+          "morning_routine"
+        ],
+        "scope_labels": [
+          "preference",
+          "productivity"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:9b3a7f2c_1:4",
+        "claim": "User wants journaling techniques to process thoughts and emotions.",
+        "entity_labels": [
+          "user",
+          "journaling",
+          "thoughts",
+          "emotions"
+        ],
+        "scope_labels": [
+          "preference",
+          "self_care"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "ccb09288f1637ca0c27a29bd6bb13a00f46155ad3328d68604bb6767b2f33f51": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:9b3a7f2c_1:6",
+        "claim": "User was spending average 3 hours per day on social media before taking a break.",
+        "entity_labels": [
+          "user",
+          "social_media",
+          "3_hours"
+        ],
+        "scope_labels": [
+          "time_management",
+          "social_media"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:9b3a7f2c_1:8",
+        "claim": "User has recently started journaling.",
+        "entity_labels": [
+          "user",
+          "journaling"
+        ],
+        "scope_labels": [
+          "preference",
+          "self_care"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:9b3a7f2c_1:10",
+        "claim": "User is thinking of taking up photography as a hobby.",
+        "entity_labels": [
+          "user",
+          "photography",
+          "hobby"
+        ],
+        "scope_labels": [
+          "preference",
+          "hobby"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:9b3a7f2c_1:8",
+        "claim": "User wants to replace social media with more meaningful activities.",
+        "entity_labels": [
+          "user",
+          "social_media",
+          "meaningful_activities"
+        ],
+        "scope_labels": [
+          "preference",
+          "lifestyle"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "eee69eaf0e8bb6b1f6b0b3f0b327eb670c20490431f54a5c118d3063fa2021cb": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:answer_a25d4a91_1:0",
+        "claim": "User is planning a fitness schedule and plays soccer with coworkers.",
+        "entity_labels": [
+          "user",
+          "fitness_schedule",
+          "soccer",
+          "coworkers"
+        ],
+        "scope_labels": [
+          "preference",
+          "sports",
+          "temporal_event"
+        ],
+        "is_current": true,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:answer_a25d4a91_1:2",
+        "claim": "User's next soccer game with coworkers is approximately two weeks from May 23, 2023.",
+        "entity_labels": [
+          "user",
+          "soccer_game",
+          "two_weeks"
+        ],
+        "scope_labels": [
+          "temporal_event",
+          "sports",
+          "schedule"
+        ],
+        "is_current": true,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:answer_a25d4a91_1:2",
+        "claim": "User plays soccer with coworkers every two weeks.",
+        "entity_labels": [
+          "user",
+          "soccer",
+          "coworkers",
+          "frequency"
+        ],
+        "scope_labels": [
+          "sports",
+          "schedule",
+          "recurring_event"
+        ],
+        "is_current": true,
+        "state_facet": null
+      }
+    ],
+    "relations": []
+  },
+  "d5f0ad48c3395c93abdbfb78c46f4de70b87399fadb74a2ead29d5f5187dd5ac": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:answer_a25d4a91_1:4",
+        "claim": "User set a personal best time in a charity 5K run with a time of 27:12.",
+        "entity_labels": [
+          "user",
+          "charity_5k_run",
+          "personal_best_time",
+          "27:12"
+        ],
+        "scope_labels": [
+          "fitness",
+          "achievement",
+          "temporal_event"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "personal_best_time",
+          "value": "27:12"
+        }
+      }
+    ],
+    "relations": []
+  },
+  "c336e0ead38a12c19e07d309ea49d3763b2cde79bb793115d4f3ef645601bda1": {
+    "claims": [],
+    "relations": []
+  },
+  "720230aee491a8196c8ab672b29d88e5ca9cf24d379ffe15ca85aec6eaa0b4bf": {
+    "claims": [],
+    "relations": []
+  },
+  "9f41ae132aab4576c3b44ab6a59b71e350defdd18828049b32c05c8d18f8d145": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:d8cc8b5c_5:8",
+        "claim": "User plans to include a soothing message on the label of the custom tea blend for grandma.",
+        "entity_labels": [
+          "user",
+          "grandma",
+          "tea_blend",
+          "label",
+          "soothing_message"
+        ],
+        "scope_labels": [
+          "planning",
+          "gift_preparation"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:d8cc8b5c_5:8",
+        "claim": "User plans to add a calming accessory (stress ball) to complement the tea blend.",
+        "entity_labels": [
+          "user",
+          "stress_ball",
+          "tea_blend"
+        ],
+        "scope_labels": [
+          "planning",
+          "gift_preparation"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:d8cc8b5c_5:8",
+        "claim": "User plans to invite grandma to share a cup of tea over a video call.",
+        "entity_labels": [
+          "user",
+          "grandma",
+          "video_call",
+          "tea"
+        ],
+        "scope_labels": [
+          "planning",
+          "gift_preparation"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:d8cc8b5c_5:10",
+        "claim": "User plans to prepare a photo album or scrapbook for grandma's birthday.",
+        "entity_labels": [
+          "user",
+          "grandma",
+          "photo_album",
+          "scrapbook",
+          "birthday"
+        ],
+        "scope_labels": [
+          "planning",
+          "gift_preparation"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "670b32836bec45142098085fb8567694912747e263f7b15e78098a49139adba1": {
+    "claims": [],
+    "relations": []
+  },
+  "4936a278e26ae26a66c6718317b096a78907b7fa4dcab3b955d63671b42499c8": {
+    "claims": [],
+    "relations": []
+  },
+  "2587ffb7db0245deeddac0476ae90d492d32ecf33b5ea64d748341b250b98c62": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:9f80607d:10",
+        "claim": "User will bring copies of script to AFI Fest.",
+        "entity_labels": [
+          "user",
+          "script",
+          "AFI Fest"
+        ],
+        "scope_labels": [
+          "planning",
+          "event_attendance"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:9f80607d:10",
+        "claim": "User will focus on building relationships and having conversations at AFI Fest.",
+        "entity_labels": [
+          "user",
+          "relationships",
+          "conversations",
+          "AFI Fest"
+        ],
+        "scope_labels": [
+          "planning",
+          "event_attendance"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:9f80607d:10",
+        "claim": "User is considering attending panels and workshops at AFI Fest.",
+        "entity_labels": [
+          "user",
+          "panels",
+          "workshops",
+          "AFI Fest"
+        ],
+        "scope_labels": [
+          "planning",
+          "event_attendance"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:2ea6fda4_2:0",
+        "claim": "User's bathroom fan is making a weird noise.",
+        "entity_labels": [
+          "user",
+          "bathroom_fan",
+          "noise"
+        ],
+        "scope_labels": [
+          "home_maintenance",
+          "problem"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:2ea6fda4_2:0",
+        "claim": "User thinks the bathroom fan might need replacement.",
+        "entity_labels": [
+          "user",
+          "bathroom_fan",
+          "replacement"
+        ],
+        "scope_labels": [
+          "home_maintenance",
+          "opinion"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:2ea6fda4_2:0",
+        "claim": "User replaced bathroom towels on the same day they did laundry.",
+        "entity_labels": [
+          "user",
+          "bathroom_towels",
+          "laundry"
+        ],
+        "scope_labels": [
+          "home_maintenance",
+          "temporal_event"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:2ea6fda4_2:0",
+        "claim": "User got a new set of four towels from Bed Bath & Beyond.",
+        "entity_labels": [
+          "user",
+          "towels",
+          "four",
+          "Bed Bath & Beyond"
+        ],
+        "scope_labels": [
+          "purchase",
+          "home"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c8",
+        "event_id": "event:2ea6fda4_2:2",
+        "claim": "The noise from the bathroom fan is a rattling sound.",
+        "entity_labels": [
+          "bathroom_fan",
+          "noise",
+          "rattling"
+        ],
+        "scope_labels": [
+          "home_maintenance",
+          "problem"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c9",
+        "event_id": "event:2ea6fda4_2:2",
+        "claim": "The rattling noise occurs only when the fan is turned on.",
+        "entity_labels": [
+          "bathroom_fan",
+          "noise",
+          "rattling",
+          "condition"
+        ],
+        "scope_labels": [
+          "home_maintenance",
+          "problem"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c10",
+        "event_id": "event:2ea6fda4_2:2",
+        "claim": "The rattling noise has been present for a few weeks.",
+        "entity_labels": [
+          "bathroom_fan",
+          "noise",
+          "duration"
+        ],
+        "scope_labels": [
+          "home_maintenance",
+          "temporal_event"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "7c8472ea8072ea42a8fc1ab75dde0e0ea69889928d91a97096f359f5b6e5b45c": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:2ea6fda4_2:4",
+        "claim": "User will clean the bathroom fan and check for loose screws to fix the rattling noise.",
+        "entity_labels": [
+          "user",
+          "bathroom_fan",
+          "cleaning",
+          "screws"
+        ],
+        "scope_labels": [
+          "plan",
+          "home_maintenance"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:2ea6fda4_2:6",
+        "claim": "User has two blue towels and two white towels.",
+        "entity_labels": [
+          "user",
+          "towels",
+          "blue",
+          "white"
+        ],
+        "scope_labels": [
+          "purchase",
+          "home"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:2ea6fda4_2:6",
+        "claim": "User's towels are soft.",
+        "entity_labels": [
+          "user",
+          "towels",
+          "softness"
+        ],
+        "scope_labels": [
+          "preference",
+          "home"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "72d4c0c3bc6d3d513e2bd202ac86dc910633ee408ca5a2f52eefb7ca5be1f8b1": {
+    "claims": [],
+    "relations": []
+  },
+  "84a461ae05de4b0409507044fdd8cb04f6a60ae4338d2e975066b4cf7800e197": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:4aaf678f_3:2",
+        "claim": "User completed a marathon.",
+        "entity_labels": [
+          "user",
+          "marathon"
+        ],
+        "scope_labels": [
+          "achievement",
+          "running"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:4aaf678f_3:2",
+        "claim": "User's marathon finish time is around 4 hours 15 minutes.",
+        "entity_labels": [
+          "user",
+          "marathon",
+          "finish_time",
+          "4h15m"
+        ],
+        "scope_labels": [
+          "running",
+          "statistics"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:4aaf678f_3:2",
+        "claim": "User aims to reduce marathon time by at least 15 minutes in next marathon.",
+        "entity_labels": [
+          "user",
+          "marathon",
+          "goal",
+          "improvement"
+        ],
+        "scope_labels": [
+          "goal",
+          "running"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:4aaf678f_3:4",
+        "claim": "User plans to incorporate strength training into training routine.",
+        "entity_labels": [
+          "user",
+          "strength_training"
+        ],
+        "scope_labels": [
+          "plan",
+          "fitness"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "c5fd91abd1903b375c732ceb15722816909439e67fc25c79779dd1a8ecc0616b": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:4aaf678f_3:6",
+        "claim": "User plans to make stretching a priority after runs.",
+        "entity_labels": [
+          "user",
+          "stretching"
+        ],
+        "scope_labels": [
+          "health",
+          "fitness",
+          "planning"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:4aaf678f_3:8",
+        "claim": "User plans to schedule stretching into daily planner.",
+        "entity_labels": [
+          "user",
+          "daily_planner",
+          "stretching"
+        ],
+        "scope_labels": [
+          "planning",
+          "fitness"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:4aaf678f_3:8",
+        "claim": "User plans to find a stretching buddy.",
+        "entity_labels": [
+          "user",
+          "stretching_buddy"
+        ],
+        "scope_labels": [
+          "planning",
+          "fitness"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:4aaf678f_3:8",
+        "claim": "User plans to track stretching progress in running log.",
+        "entity_labels": [
+          "user",
+          "running_log",
+          "stretching"
+        ],
+        "scope_labels": [
+          "planning",
+          "fitness"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:4aaf678f_3:10",
+        "claim": "User expresses willingness to discuss fueling for performance.",
+        "entity_labels": [
+          "user",
+          "nutrition",
+          "performance"
+        ],
+        "scope_labels": [
+          "preference",
+          "nutrition"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "a04386cdac274177659f7188dbe498306ca2629b6a2048200b32e7c149848fa1": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:6da0bba2_1:0",
+        "claim": "User attended their college roommate's PhD graduation ceremony on 2023/05/28.",
+        "entity_labels": [
+          "user",
+          "college_roommate",
+          "phd_graduation_ceremony",
+          "2023-05-28"
+        ],
+        "scope_labels": [
+          "temporal_event",
+          "personal_event"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:6da0bba2_1:0",
+        "claim": "User is planning a short getaway trip to a nearby city.",
+        "entity_labels": [
+          "user",
+          "short_getaway",
+          "nearby_city"
+        ],
+        "scope_labels": [
+          "planning",
+          "travel"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:6da0bba2_1:2",
+        "claim": "User plans to visit a city that is approximately 2 hours away from their location.",
+        "entity_labels": [
+          "user",
+          "city",
+          "2_hours_away"
+        ],
+        "scope_labels": [
+          "planning",
+          "travel"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:6da0bba2_1:2",
+        "claim": "User's hotel budget is between $150 and $200 per night.",
+        "entity_labels": [
+          "user",
+          "hotel_budget",
+          "150-200_dollars"
+        ],
+        "scope_labels": [
+          "preference",
+          "budget"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:6da0bba2_1:2",
+        "claim": "User prefers casual and affordable cuisine.",
+        "entity_labels": [
+          "user",
+          "cuisine_preference",
+          "casual",
+          "affordable"
+        ],
+        "scope_labels": [
+          "preference",
+          "food"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:6da0bba2_1:2",
+        "claim": "User wants a hotel that offers free parking and a gym.",
+        "entity_labels": [
+          "user",
+          "hotel_amenities",
+          "free_parking",
+          "gym"
+        ],
+        "scope_labels": [
+          "preference",
+          "travel"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:6da0bba2_1:2",
+        "claim": "User plans to spend 3 to 4 days on the trip.",
+        "entity_labels": [
+          "user",
+          "trip_duration",
+          "3-4_days"
+        ],
+        "scope_labels": [
+          "planning",
+          "travel"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "4debb08081e607c5b901e16f0e9995acad9cc49660cf44fefd879206a1cd45ee": {
+    "claims": [],
+    "relations": []
+  },
+  "13d6278f4f6b19a85eb03a1f04f399083c17a3b34ed84587a620c2cdfd76514d": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:6da0bba2_1:10",
+        "claim": "User is planning to rent a bike and explore the Swamp Rabbit Trail.",
+        "entity_labels": [
+          "user",
+          "bike",
+          "Swamp Rabbit Trail",
+          "plan"
+        ],
+        "scope_labels": [
+          "planning",
+          "recreation",
+          "travel"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:6da0bba2_1:10",
+        "claim": "User plans to stop by Falls Park for a picnic.",
+        "entity_labels": [
+          "user",
+          "Falls Park",
+          "picnic",
+          "plan"
+        ],
+        "scope_labels": [
+          "planning",
+          "recreation"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:6da0bba2_1:10",
+        "claim": "User has been putting off learning a new skill.",
+        "entity_labels": [
+          "user",
+          "new skill",
+          "learning"
+        ],
+        "scope_labels": [
+          "personal_development",
+          "delay"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:6da0bba2_1:10",
+        "claim": "User is interested in resources for learning a new language or taking online courses during trip.",
+        "entity_labels": [
+          "user",
+          "language learning",
+          "online courses",
+          "resources"
+        ],
+        "scope_labels": [
+          "planning",
+          "education",
+          "travel"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:d03995c6:0",
+        "claim": "User wants help with staying consistent with waking up early.",
+        "entity_labels": [
+          "user",
+          "wake-up time",
+          "routine"
+        ],
+        "scope_labels": [
+          "health",
+          "habit",
+          "planning"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "6de6244c7c03a8c0708d284debd62ff06bd496f1ecbb2509e84a1ca07bba6b3d": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:d03995c6:6",
+        "claim": "User has been tracking sleep and wake-up time in a physical journal.",
+        "entity_labels": [
+          "user",
+          "physical_journal",
+          "sleep_time",
+          "wake-up_time"
+        ],
+        "scope_labels": [
+          "habit_tracking",
+          "sleep_hygiene"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:d03995c6:6",
+        "claim": "User started tracking meditation and reading habits in the same journal.",
+        "entity_labels": [
+          "user",
+          "meditation",
+          "reading",
+          "journal"
+        ],
+        "scope_labels": [
+          "habit_tracking",
+          "personal_development"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:d03995c6:6",
+        "claim": "User decided to set alarm clock 30 minutes earlier every day three weeks ago.",
+        "entity_labels": [
+          "user",
+          "alarm_clock",
+          "30_minutes",
+          "three_weeks_ago"
+        ],
+        "scope_labels": [
+          "habit_change",
+          "morning_routine",
+          "temporal_event"
+        ],
+        "is_current": false,
+        "state_facet": null
+      }
+    ],
+    "relations": [
+      {
+        "source_claim_ref": "c3",
+        "source_claim_id": null,
+        "target_claim_ref": null,
+        "target_claim_id": "824ee01bfd139650",
+        "type": "supersedes",
+        "reason": "User has started implementing the desired behavior of waking up earlier, moving beyond just wanting help."
+      }
+    ]
+  },
+  "e369782bafe08abcdd0bd91633a7e633d7c0c992119600879b8fe633eb2e3dbc": {
+    "claims": [],
+    "relations": []
+  },
+  "22621f432395226a50195e669715a5d233972896447d932f1216226a3eeb858d": {
+    "claims": [],
+    "relations": []
+  },
+  "a897d8c1320eab6da399923ad485d444c168e2701f538b44b3b997dcd599b117": {
+    "claims": [],
+    "relations": []
+  },
+  "14de1a209447f877fb6f91db95d6e2a9fec553b605c2ee18ba086a7f76085b98": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:0a7c4f1c_1:10",
+        "claim": "User is considering adding a bold and bright throw pillow in deep red or orange with geometric patterns to complement the neutral tones of couch and armchair.",
+        "entity_labels": [
+          "user",
+          "throw_pillow",
+          "couch",
+          "armchair",
+          "deep_red",
+          "orange",
+          "geometric_pattern"
+        ],
+        "scope_labels": [
+          "planning",
+          "home_decor",
+          "preference"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "preference",
+          "value": "bold and bright"
+        }
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:5b71808d:2",
+        "claim": "User has a folder for asylum application documents including approval letter, medical exam results, and background checks.",
+        "entity_labels": [
+          "user",
+          "asylum_application_documents",
+          "approval_letter",
+          "medical_exam_results",
+          "background_checks"
+        ],
+        "scope_labels": [
+          "personal_documents",
+          "immigration"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "document_type",
+          "value": "asylum"
+        }
+      }
+    ],
+    "relations": []
+  },
+  "29e61e265703e02b6f369ae3c81786f998b26567e3efe6483e36b77442340a64": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:5b71808d:4",
+        "claim": "User received asylum approval letter on February 20th, 2023.",
+        "entity_labels": [
+          "user",
+          "asylum_approval_letter",
+          "2023_02_20"
+        ],
+        "scope_labels": [
+          "personal_event",
+          "immigration"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:5b71808d:4",
+        "claim": "User plans to focus on rebuilding life in Canada.",
+        "entity_labels": [
+          "user",
+          "life_rebuilding",
+          "Canada"
+        ],
+        "scope_labels": [
+          "planning",
+          "immigration"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:5b71808d:6",
+        "claim": "User is thinking of enrolling in a language course to improve English skills.",
+        "entity_labels": [
+          "user",
+          "language_course",
+          "English_skills"
+        ],
+        "scope_labels": [
+          "planning",
+          "education"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:5b71808d:6",
+        "claim": "User is looking for a new job.",
+        "entity_labels": [
+          "user",
+          "job_search"
+        ],
+        "scope_labels": [
+          "planning",
+          "employment"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:5b71808d:6",
+        "claim": "User has been taking English classes at LINC program.",
+        "entity_labels": [
+          "user",
+          "English_classes",
+          "LINC_program"
+        ],
+        "scope_labels": [
+          "education",
+          "ongoing_activity"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:5b71808d:6",
+        "claim": "User wants to focus on more advanced language skills.",
+        "entity_labels": [
+          "user",
+          "advanced_language_skills"
+        ],
+        "scope_labels": [
+          "goal",
+          "education"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": [
+      {
+        "source_claim_ref": "c1",
+        "target_claim_id": "e790747aa04654f4",
+        "type": "supersedes",
+        "reason": "New claim provides specific date of approval letter receipt, updating previous general claim about folder contents."
+      }
+    ]
+  },
+  "05847b969bf5a53a978e969c01e4e380680b7752aeb18d9fd0fd8f5c3da04928": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:answer_a25d4a91_2:0",
+        "claim": "User's personal best time in a charity 5K run is 25 minutes and 50 seconds.",
+        "entity_labels": [
+          "user",
+          "personal_best_time",
+          "charity_5K_run"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "running",
+          "statistics"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "personal_best_time_5K",
+          "value": "25:50"
+        }
+      }
+    ],
+    "relations": []
+  },
+  "ea07b9f2e14607063d877a761e63d8e0f79884b5e4c46b8489f560044cc3d529": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:answer_a25d4a91_2:1",
+        "claim": "User's personal best time in a charity 5K run is 25 minutes and 50 seconds.",
+        "entity_labels": [
+          "user",
+          "personal_best_time",
+          "charity_5k_run",
+          "25_minutes_50_seconds"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "running",
+          "statistics"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "personal_best_time",
+          "value": "25 minutes 50 seconds"
+        }
+      }
+    ],
+    "relations": []
+  },
+  "3250877a80af05ae752c5d850a04549cd10dd7154e252bdc5c095f16d215504e": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:answer_a25d4a91_2:6",
+        "claim": "User is preparing for a tennis tournament on May 6th.",
+        "entity_labels": [
+          "user",
+          "tennis_tournament",
+          "May_6th"
+        ],
+        "scope_labels": [
+          "planning",
+          "temporal_event"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:answer_a25d4a91_2:10",
+        "claim": "User is preparing for a charity 5K run.",
+        "entity_labels": [
+          "user",
+          "charity_5K_run"
+        ],
+        "scope_labels": [
+          "planning",
+          "running"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:answer_a25d4a91_2:10",
+        "claim": "User hopes to beat their personal best time in the charity 5K run.",
+        "entity_labels": [
+          "user",
+          "personal_best_time",
+          "charity_5K_run"
+        ],
+        "scope_labels": [
+          "goal",
+          "running"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "da993ad78ce07ae2242601889e6eb2fa56d6cf5703dd75201e70e0e30fae5d1a": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:answer_a25d4a91_2:11",
+        "claim": "User's personal best time in a charity 5K run is 25 minutes and 50 seconds.",
+        "entity_labels": [
+          "user",
+          "personal_best_time",
+          "charity_5k_run",
+          "25_minutes_50_seconds"
+        ],
+        "scope_labels": [
+          "knowledge_update",
+          "running",
+          "statistics"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "time",
+          "value": "25 minutes 50 seconds"
+        }
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:answer_a25d4a91_2:11",
+        "claim": "User's goal is to beat their personal best time in the charity 5K run.",
+        "entity_labels": [
+          "user",
+          "goal",
+          "personal_best_time",
+          "charity_5k_run"
+        ],
+        "scope_labels": [
+          "goal",
+          "running"
+        ],
+        "is_current": false,
+        "state_facet": null
+      }
+    ],
+    "relations": []
+  },
+  "fc8896a3ba870ba16379ae6106adb8efb4d18d10d29a63d44d9709369e3548b3": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:86b8dc6e:4",
+        "claim": "User waxed car in February 2023.",
+        "entity_labels": [
+          "user",
+          "car",
+          "waxing",
+          "february_2023"
+        ],
+        "scope_labels": [
+          "maintenance",
+          "temporal_event"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:86b8dc6e:4",
+        "claim": "User took car to dealership for routine maintenance in February 2023.",
+        "entity_labels": [
+          "user",
+          "car",
+          "dealership",
+          "routine_maintenance",
+          "february_2023"
+        ],
+        "scope_labels": [
+          "maintenance",
+          "temporal_event"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:86b8dc6e:4",
+        "claim": "User plans to get car's air conditioning system serviced before summer.",
+        "entity_labels": [
+          "user",
+          "car",
+          "air_conditioning",
+          "summer"
+        ],
+        "scope_labels": [
+          "plan",
+          "maintenance"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:86b8dc6e:6",
+        "claim": "User will check owner's manual for air conditioning service schedule.",
+        "entity_labels": [
+          "user",
+          "owner_manual",
+          "ac_service_schedule"
+        ],
+        "scope_labels": [
+          "plan",
+          "research"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:86b8dc6e:6",
+        "claim": "User took motorcycle out of storage about a month ago.",
+        "entity_labels": [
+          "user",
+          "motorcycle",
+          "storage",
+          "april_2023"
+        ],
+        "scope_labels": [
+          "temporal_event",
+          "vehicle_maintenance"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:86b8dc6e:6",
+        "claim": "User test-drove new cars last weekend.",
+        "entity_labels": [
+          "user",
+          "new_cars",
+          "test_drive",
+          "may_27_28_2023"
+        ],
+        "scope_labels": [
+          "temporal_event",
+          "car_shopping"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:86b8dc6e:8",
+        "claim": "User liked new Honda CR-V.",
+        "entity_labels": [
+          "user",
+          "honda_cr_v",
+          "preference"
+        ],
+        "scope_labels": [
+          "preference",
+          "car_shopping"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c8",
+        "event_id": "event:86b8dc6e:8",
+        "claim": "User is researching before buying a new car.",
+        "entity_labels": [
+          "user",
+          "research",
+          "car_purchase"
+        ],
+        "scope_labels": [
+          "plan",
+          "research"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c9",
+        "event_id": "event:86b8dc6e:8",
+        "claim": "User is considering buying a new car.",
+        "entity_labels": [
+          "user",
+          "car_purchase",
+          "decision"
+        ],
+        "scope_labels": [
+          "plan",
+          "decision"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "4debce4d794e961389bed2a6cc2622226fac7d9668ee13f4a7ac85423ab3b32f": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:86b8dc6e:10",
+        "claim": "User is considering selling their old SUV.",
+        "entity_labels": [
+          "user",
+          "old_SUV",
+          "selling"
+        ],
+        "scope_labels": [
+          "planning",
+          "decision"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:86b8dc6e:10",
+        "claim": "User needs to research market value of old SUV.",
+        "entity_labels": [
+          "user",
+          "old_SUV",
+          "market_value",
+          "research"
+        ],
+        "scope_labels": [
+          "planning",
+          "research"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:86b8dc6e:10",
+        "claim": "User is seeking advice on pricing and selling a used car.",
+        "entity_labels": [
+          "user",
+          "used_car",
+          "pricing",
+          "selling",
+          "advice"
+        ],
+        "scope_labels": [
+          "information_request"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "564313aa5efe7e377d3aaa2a9a2910f4a325621d9cb7ab04f0b09e5e78030a8d": {
+    "state_facets": [
+      {
+        "name": "personal_best_time",
+        "value": "25 minutes 50 seconds",
+        "support_claim_ids": [
+          "a0f9ab414cc6033c",
+          "6b546456127aed08",
+          "f576608a720cf7fe"
+        ]
+      }
+    ],
+    "rejected_claims": [
+      {
+        "claim_id": "3828fa43867c083d",
+        "rejected_by_claim_id": "a0f9ab414cc6033c",
+        "reason": "stale"
+      }
+    ],
+    "relations": [
+      {
+        "source_claim_id": "a0f9ab414cc6033c",
+        "target_claim_id": "3828fa43867c083d",
+        "type": "supersedes",
+        "reason": "later claim updates personal best time from 27:12 to 25:50"
+      }
+    ],
+    "enough_evidence": true
+  },
+  "01f34606399ca2027015e91363071cf0959fa772c96b578c8a58b8856aabe478": {
+    "claims": [],
+    "relations": []
+  },
+  "36c0d74141497aa929997587650c2a59b1b71c6b9357d368820e127886d288d6": {
+    "claims": [],
+    "relations": []
+  },
+  "7ac8456d0ba5c2ba771bdac0913c05fcf715fe1eaa951a1369dd6e4b6f9ccf20": {
+    "claims": [],
+    "relations": []
+  },
+  "4590cacec1dee59a531fbce63b22269170dde42ac67262916b430cd6399bdb1b": {
+    "claims": [],
+    "relations": []
+  },
+  "de1fc8ba2839cdabb01811c19e6f420cb7a8b2a0c1e9df381b87ebc5f23f5375": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:2ed7c45e_2:0",
+        "claim": "User recently got a new pair of black boots from Zara.",
+        "entity_labels": [
+          "black boots",
+          "Zara"
+        ],
+        "scope_labels": [
+          "purchase",
+          "fashion"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:2ed7c45e_2:0",
+        "claim": "User got a 30% discount on the black boots from Zara.",
+        "entity_labels": [
+          "black boots",
+          "Zara",
+          "30% discount"
+        ],
+        "scope_labels": [
+          "purchase",
+          "discount"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:2ed7c45e_2:0",
+        "claim": "User has a little white dress from Madewell.",
+        "entity_labels": [
+          "white dress",
+          "Madewell"
+        ],
+        "scope_labels": [
+          "purchase",
+          "fashion"
+        ],
+        "is_current": false,
+        "state_facet": null
+      }
+    ],
+    "relations": []
+  },
+  "42a3b31f053c8dac9595943c0bf266c3f81053ea2ab0a59a02eb33ffc38dfaae": {
+    "claims": [],
+    "relations": []
+  },
+  "0d76557f9639f7bec3a8aa9e210eaa03b312899ddbd1162fb73d3c27eb2b6dcb": {
+    "claims": [],
+    "relations": []
+  },
+  "2a8d2fef9a803bf3ee8852397ca404828feb7a1745f07637f6a5c84f6b8c0c6a": {
+    "claims": [],
+    "relations": []
+  },
+  "e4d9c92bacccd90901b127146bb3588edb833b5140f307d8ef39a01443558188": {
+    "claims": [],
+    "relations": []
+  },
+  "e31ca4b1baedcea183520b99d84b1c665c935ae2292241abed0141bf844498ba": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:1bc87711_1:0",
+        "claim": "User attended 'Impressionist Masters' exhibition at City Art Museum last month.",
+        "entity_labels": [
+          "Impressionist Masters",
+          "City Art Museum"
+        ],
+        "scope_labels": [
+          "art_event",
+          "visit"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:1bc87711_1:2",
+        "claim": "User spent about 3 hours at City Art Museum.",
+        "entity_labels": [
+          "City Art Museum",
+          "3_hours"
+        ],
+        "scope_labels": [
+          "duration",
+          "visit"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:1bc87711_1:2",
+        "claim": "User took notes and photographs of favorite pieces at the 'Impressionist Masters' exhibition.",
+        "entity_labels": [
+          "Impressionist Masters",
+          "notes",
+          "photographs"
+        ],
+        "scope_labels": [
+          "activity",
+          "art_experience"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:1bc87711_1:2",
+        "claim": "User particularly enjoyed the audio guide at the 'Impressionist Masters' exhibition.",
+        "entity_labels": [
+          "Impressionist Masters",
+          "audio_guide"
+        ],
+        "scope_labels": [
+          "preference",
+          "art_experience"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:1bc87711_1:4",
+        "claim": "User recently visited Photography Museum to see 'Street Photography' exhibition featuring Henri Cartier-Bresson and Garry Winogrand.",
+        "entity_labels": [
+          "Photography Museum",
+          "Street Photography",
+          "Henri Cartier-Bresson",
+          "Garry Winogrand"
+        ],
+        "scope_labels": [
+          "art_event",
+          "visit"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:1bc87711_1:0",
+        "claim": "User is planning a weekend getaway to a nearby city.",
+        "entity_labels": [
+          "weekend_getaway",
+          "nearby_city"
+        ],
+        "scope_labels": [
+          "planning",
+          "travel"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:1bc87711_1:2",
+        "claim": "User is planning to visit Springfield.",
+        "entity_labels": [
+          "Springfield"
+        ],
+        "scope_labels": [
+          "planning",
+          "destination"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c8",
+        "event_id": "event:1bc87711_1:2",
+        "claim": "Springfield is about a 2-hour drive from user's location.",
+        "entity_labels": [
+          "Springfield",
+          "2_hour_drive"
+        ],
+        "scope_labels": [
+          "location",
+          "distance"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c9",
+        "event_id": "event:1bc87711_1:2",
+        "claim": "User is open to any type of art.",
+        "entity_labels": [
+          "art_type",
+          "any"
+        ],
+        "scope_labels": [
+          "preference",
+          "art"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "34d91700a6aa7581daf584caa0c551b2d63d5cf237c31450dcc88a416a33decf": {
+    "claims": [],
+    "relations": []
+  },
+  "959b4ac81a59d84122510284a304de25b2c232eca19a978480cf79204fd4e4df": {
+    "claims": [],
+    "relations": []
+  },
+  "b01fd5845115d867e0abf202549c26647da38a9f4677d4db26000809bc06fc4d": {
+    "claims": [],
+    "relations": []
+  },
+  "94545325296f8468d4b3e0c9a74a0744f4004ac575628a4dd179109c47c40b26": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:2fd43bba:8",
+        "claim": "User buys gourmet ingredients from high-end stores.",
+        "entity_labels": [
+          "gourmet_ingredients",
+          "high_end_stores"
+        ],
+        "scope_labels": [
+          "grocery_shopping",
+          "spending_habit"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:2fd43bba:10",
+        "claim": "User wants to create a budget and track expenses.",
+        "entity_labels": [
+          "budget",
+          "expense_tracking"
+        ],
+        "scope_labels": [
+          "financial_planning",
+          "goal"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:8a5e1497_3:0",
+        "claim": "User attended a networking workshop at alma mater on the 22nd.",
+        "entity_labels": [
+          "networking_workshop",
+          "alma_mater"
+        ],
+        "scope_labels": [
+          "professional_development",
+          "event"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:8a5e1497_3:0",
+        "claim": "User intends to improve LinkedIn profile.",
+        "entity_labels": [
+          "linkedin_profile"
+        ],
+        "scope_labels": [
+          "professional_development",
+          "goal"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "246ec36a43a7888d4a2a680b7d217181ce65d71eaa612d8918c273fe54710a08": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:8a5e1497_3:2",
+        "claim": "User intends to optimize LinkedIn profile.",
+        "entity_labels": [
+          "linkedin_profile"
+        ],
+        "scope_labels": [
+          "professional_development",
+          "goal"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:8a5e1497_3:2",
+        "claim": "User attended a workshop on digital marketing recently.",
+        "entity_labels": [
+          "digital_marketing_workshop"
+        ],
+        "scope_labels": [
+          "event",
+          "learning"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:8a5e1497_3:2",
+        "claim": "User is interested in learning SEO and social media analytics.",
+        "entity_labels": [
+          "seo",
+          "social_media_analytics"
+        ],
+        "scope_labels": [
+          "interest",
+          "learning_goal"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:8a5e1497_3:4",
+        "claim": "User is considering learning Python programming.",
+        "entity_labels": [
+          "python_programming"
+        ],
+        "scope_labels": [
+          "interest",
+          "learning_goal"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:8a5e1497_3:4",
+        "claim": "User took an online workshop on Python a while back.",
+        "entity_labels": [
+          "online_workshop",
+          "python"
+        ],
+        "scope_labels": [
+          "event",
+          "learning"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "8e4e75936d4f37b5e52d3ad7496dfabb1bb390cea3f97952be6d766a2aba3b8a": {
+    "claims": [],
+    "relations": []
+  },
+  "c5ec009f2eb702f2689960cc3cf4b329beb737dbe0e8dc910640d40d7715333b": {
+    "claims": [],
+    "relations": []
+  },
+  "f0051bcf9cc191bf069f7c337fa0ec824a5c2f3a6e12a0b74c602101c1ae9563": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:93bed3d8_1:4",
+        "claim": "User is planning a solo trip.",
+        "entity_labels": [
+          "solo_trip"
+        ],
+        "scope_labels": [
+          "planning",
+          "travel"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:93bed3d8_1:4",
+        "claim": "User had a family trip where they had to plan details and skip activities.",
+        "entity_labels": [
+          "family_trip"
+        ],
+        "scope_labels": [
+          "past_event",
+          "travel"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:93bed3d8_1:4",
+        "claim": "User wants to do all desired activities without compromise on solo trip.",
+        "entity_labels": [
+          "desired_activities",
+          "solo_trip"
+        ],
+        "scope_labels": [
+          "preference",
+          "travel"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:93bed3d8_1:6",
+        "claim": "User is interested in visiting Haleakala National Park to watch sunrise.",
+        "entity_labels": [
+          "Haleakala National Park",
+          "sunrise"
+        ],
+        "scope_labels": [
+          "interest",
+          "activity"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:93bed3d8_1:8",
+        "claim": "User is considering visiting Road to Hana but is unsure about the drive.",
+        "entity_labels": [
+          "Road to Hana"
+        ],
+        "scope_labels": [
+          "consideration",
+          "activity"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "83b9287755f200b3573688d62f6712140e744dd18e2677785b59fde0b4346c96": {
+    "claims": [],
+    "relations": []
+  },
+  "206be9d320b16608e2cc1d38514bd48e29f77ab4871f8b5fb55de71fce4d9a0c": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:aa6afba8:2",
+        "claim": "User intends to try out Todoist and RescueTime.",
+        "entity_labels": [
+          "Todoist",
+          "RescueTime"
+        ],
+        "scope_labels": [
+          "app_usage",
+          "intention"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:aa6afba8:2",
+        "claim": "User has been dealing with anxiety and depression for about 6 months.",
+        "entity_labels": [
+          "anxiety",
+          "depression",
+          "6 months"
+        ],
+        "scope_labels": [
+          "health",
+          "mental_health"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:aa6afba8:2",
+        "claim": "User sees a therapist.",
+        "entity_labels": [
+          "therapist"
+        ],
+        "scope_labels": [
+          "health",
+          "therapy"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:aa6afba8:2",
+        "claim": "User practices meditation and yoga.",
+        "entity_labels": [
+          "meditation",
+          "yoga"
+        ],
+        "scope_labels": [
+          "health",
+          "coping_mechanism"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:aa6afba8:6",
+        "claim": "User tried Headspace app and enjoyed it.",
+        "entity_labels": [
+          "Headspace"
+        ],
+        "scope_labels": [
+          "app_usage",
+          "experience"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:aa6afba8:6",
+        "claim": "User intends to meditate 3 times a week.",
+        "entity_labels": [
+          "meditation",
+          "3 times per week"
+        ],
+        "scope_labels": [
+          "intention",
+          "habit"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "71987b846b6f127398bf7234fa0abbc348588d79e3cf1370dc378455464ff6e7": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:aa6afba8:8",
+        "claim": "User intends to have periodic check-ins with assistant regarding meditation progress.",
+        "entity_labels": [
+          "user",
+          "assistant",
+          "check_ins",
+          "meditation"
+        ],
+        "scope_labels": [
+          "intention",
+          "habit"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:aa6afba8:11",
+        "claim": "Assistant is an AI without personal experiences or emotions.",
+        "entity_labels": [
+          "assistant",
+          "ai",
+          "personal_experiences",
+          "emotions"
+        ],
+        "scope_labels": [
+          "identity",
+          "clarification"
+        ],
+        "is_current": false,
+        "state_facet": null
+      }
+    ],
+    "relations": [
+      {
+        "source_claim_ref": "c2",
+        "source_claim_id": null,
+        "target_claim_ref": null,
+        "target_claim_id": "012df94f71b1726d",
+        "type": "corrects",
+        "reason": "Assistant clarifies it has no personal experiences, correcting the mistaken claim that user has anxiety and depression."
+      }
+    ]
+  },
+  "afcbd9a6af4c18e2d1f12d9f9ff5a54dced8bf29e98f4779c624566fd3ce5288": {
+    "claims": [],
+    "relations": []
+  },
+  "cc348ed02358f7381fcc953a6aeb39642547fcff8cca82bfa495ffc81ecdb3ce": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:sharegpt_MWlvrvZ_0:3",
+        "claim": "Kanji is a system of Japanese writing using Chinese characters.",
+        "entity_labels": [
+          "kanji",
+          "japanese_writing",
+          "chinese_characters"
+        ],
+        "scope_labels": [
+          "knowledge",
+          "language"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:sharegpt_MWlvrvZ_0:3",
+        "claim": "Korean names can sometimes be written using Hanja.",
+        "entity_labels": [
+          "korean_names",
+          "hanja"
+        ],
+        "scope_labels": [
+          "knowledge",
+          "language"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:sharegpt_MWlvrvZ_0:3",
+        "claim": "Not all Korean names have corresponding Hanja.",
+        "entity_labels": [
+          "korean_names",
+          "hanja"
+        ],
+        "scope_labels": [
+          "knowledge",
+          "language"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:sharegpt_MWlvrvZ_0:3",
+        "claim": "Assistant provided a list of 10 Korean baby girl names with Hanja in response to user request.",
+        "entity_labels": [
+          "korean_baby_girl_names",
+          "hanja",
+          "user"
+        ],
+        "scope_labels": [
+          "knowledge",
+          "language",
+          "interaction"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:sharegpt_MWlvrvZ_0:5",
+        "claim": "Assistant provided a second list of 10 Korean baby girl names with Hanja and meanings in response to user request.",
+        "entity_labels": [
+          "korean_baby_girl_names",
+          "hanja",
+          "meanings",
+          "user"
+        ],
+        "scope_labels": [
+          "knowledge",
+          "language",
+          "interaction"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:sharegpt_MWlvrvZ_0:7",
+        "claim": "Assistant provided a third list of 10 Korean baby girl names with Hanja and meanings in response to user request.",
+        "entity_labels": [
+          "korean_baby_girl_names",
+          "hanja",
+          "meanings",
+          "user"
+        ],
+        "scope_labels": [
+          "knowledge",
+          "language",
+          "interaction"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "a98f7803675f52bd9aa080af1e6a05e019e9566e994b4345459782bff1afc05c": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:sharegpt_MWlvrvZ_0:8",
+        "claim": "User requests Korean-style names combined with Chinese romantic novel character names for a Taiwanese baby.",
+        "entity_labels": [
+          "korean_style_names",
+          "chinese_romantic_novel_character_names",
+          "taiwanese_baby"
+        ],
+        "scope_labels": [
+          "baby_naming",
+          "request"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:sharegpt_MWlvrvZ_0:9",
+        "claim": "Assistant provides list of Korean-style baby girl names with meanings.",
+        "entity_labels": [
+          "korean_baby_girl_names",
+          "meanings"
+        ],
+        "scope_labels": [
+          "baby_naming",
+          "assistant_response"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:sharegpt_MWlvrvZ_0:10",
+        "claim": "User specifies last name will be Ko and requests 10 names.",
+        "entity_labels": [
+          "last_name_ko",
+          "ten_names"
+        ],
+        "scope_labels": [
+          "baby_naming",
+          "request"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:sharegpt_MWlvrvZ_0:11",
+        "claim": "Assistant provides 10 names with last name Ko, including characters and meanings.",
+        "entity_labels": [
+          "ten_names",
+          "last_name_ko",
+          "characters",
+          "meanings"
+        ],
+        "scope_labels": [
+          "baby_naming",
+          "assistant_response"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:e47d38f4_2:0",
+        "claim": "User wants recommendations for jewelry repair and cleaning.",
+        "entity_labels": [
+          "jewelry_repair",
+          "jewelry_cleaning"
+        ],
+        "scope_labels": [
+          "service_request",
+          "jewelry"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:e47d38f4_2:0",
+        "claim": "User recently tried on grandmother's old diamond necklace.",
+        "entity_labels": [
+          "grandmother_diamond_necklace"
+        ],
+        "scope_labels": [
+          "personal_experience",
+          "heirloom"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:e47d38f4_2:0",
+        "claim": "The diamond necklace is a family heirloom given by grandfather to grandmother.",
+        "entity_labels": [
+          "diamond_necklace",
+          "family_heirloom",
+          "grandfather",
+          "grandmother"
+        ],
+        "scope_labels": [
+          "heirloom",
+          "family_history"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "abb050a58936bc4520bec0380d02678140955a7bedecac0a4c7ad506d8a2488c": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:e47d38f4_2:2",
+        "claim": "User's great aunt's pearl earrings need cleaning and restringing.",
+        "entity_labels": [
+          "pearl_earrings",
+          "great_aunt",
+          "cleaning",
+          "restringing"
+        ],
+        "scope_labels": [
+          "jewelry_maintenance",
+          "heirloom"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:e47d38f4_2:4",
+        "claim": "User intends to ask at local jewelry stores or bead shops to find a pearl restorer.",
+        "entity_labels": [
+          "local_jewelry_stores",
+          "bead_shops",
+          "pearl_restorer"
+        ],
+        "scope_labels": [
+          "intention",
+          "action"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:e47d38f4_2:4",
+        "claim": "User wants silver chain necklace checked for condition.",
+        "entity_labels": [
+          "silver_chain_necklace",
+          "condition_check"
+        ],
+        "scope_labels": [
+          "jewelry_maintenance"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "0460ab0e81781a06033b439fac74f7f87b5dd0812370ca2638987de1d9c19f33": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:e47d38f4_2:6",
+        "claim": "User will take silver chain necklace to a separate silver specialist.",
+        "entity_labels": [
+          "silver_chain_necklace",
+          "silver_specialist"
+        ],
+        "scope_labels": [
+          "intention",
+          "jewelry_maintenance"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:e47d38f4_2:6",
+        "claim": "User tried on grandmother's diamond necklace recently.",
+        "entity_labels": [
+          "grandmother_diamond_necklace"
+        ],
+        "scope_labels": [
+          "personal_experience",
+          "heirloom"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:e47d38f4_2:6",
+        "claim": "The diamond necklace sparkles beautifully.",
+        "entity_labels": [
+          "diamond_necklace",
+          "sparkle"
+        ],
+        "scope_labels": [
+          "property"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:e47d38f4_2:6",
+        "claim": "The diamond necklace was given by grandfather to grandmother.",
+        "entity_labels": [
+          "diamond_necklace",
+          "grandfather",
+          "grandmother",
+          "gift"
+        ],
+        "scope_labels": [
+          "family_history"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:e47d38f4_2:8",
+        "claim": "User may wear diamond necklace to upcoming birthday dinner.",
+        "entity_labels": [
+          "diamond_necklace",
+          "birthday_dinner"
+        ],
+        "scope_labels": [
+          "intention",
+          "event_planning"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:e47d38f4_2:8",
+        "claim": "User is considering buying a silver cuff online.",
+        "entity_labels": [
+          "silver_cuff",
+          "online_purchase"
+        ],
+        "scope_labels": [
+          "consideration",
+          "shopping"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:e47d38f4_2:10",
+        "claim": "User will take more time to research for perfect piece.",
+        "entity_labels": [
+          "research",
+          "perfect_piece"
+        ],
+        "scope_labels": [
+          "decision",
+          "shopping"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c8",
+        "event_id": "event:e47d38f4_2:10",
+        "claim": "User needs to get engagement ring resized.",
+        "entity_labels": [
+          "engagement_ring",
+          "resizing"
+        ],
+        "scope_labels": [
+          "need",
+          "jewelry_maintenance"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c9",
+        "event_id": "event:e47d38f4_2:10",
+        "claim": "User is considering taking engagement ring to same place as pearl earrings for resizing.",
+        "entity_labels": [
+          "engagement_ring",
+          "pearl_earrings",
+          "same_jeweler"
+        ],
+        "scope_labels": [
+          "consideration",
+          "jewelry_maintenance"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "4c198e8107782e04ecd30b456e638d56f5bf94e0cf6394300e709a5ce990debd": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:answer_3f9693b7_1:0",
+        "claim": "User is planning a dinner party.",
+        "entity_labels": [
+          "dinner_party"
+        ],
+        "scope_labels": [
+          "planning"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:answer_3f9693b7_1:0",
+        "claim": "User plans to serve Korean BBQ dishes at the dinner party.",
+        "entity_labels": [
+          "korean_bbq",
+          "dinner_party"
+        ],
+        "scope_labels": [
+          "planning",
+          "cuisine"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:answer_3f9693b7_1:2",
+        "claim": "User plans to pair Korean BBQ with Indian and Middle Eastern dishes.",
+        "entity_labels": [
+          "korean_bbq",
+          "indian_cuisine",
+          "middle_eastern_cuisine",
+          "dinner_party"
+        ],
+        "scope_labels": [
+          "planning",
+          "cuisine"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "e35c7143759482a301fead601fddda99d2c8057637b649eaf76f30ca30a4fae8": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:answer_3f9693b7_1:8",
+        "claim": "User has tried three Korean restaurants recently.",
+        "entity_labels": [
+          "user",
+          "korean_restaurants"
+        ],
+        "scope_labels": [
+          "personal_experience",
+          "knowledge_update"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "count",
+          "value": "3"
+        }
+      }
+    ],
+    "relations": []
+  },
+  "a1968a503512717e6ca812a92d43d7866a21b403f99911df55669c603da107e5": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:answer_3f9693b7_1:10",
+        "claim": "User has tried three Korean restaurants.",
+        "entity_labels": [
+          "user",
+          "korean_restaurants"
+        ],
+        "scope_labels": [
+          "personal_experience",
+          "knowledge_update"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "count",
+          "value": "3"
+        }
+      }
+    ],
+    "relations": []
+  },
+  "bdaa0659c9e8968d4ada66faad9997c787768f4b42389da7e2c3e04b38ec0711": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:29621a34:2",
+        "claim": "User listens to Rex Orange County's album 'Pony' nonstop and wants similar artists.",
+        "entity_labels": [
+          "rex_orange_county",
+          "pony",
+          "music_discovery"
+        ],
+        "scope_labels": [
+          "interest",
+          "listening_habit"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:29621a34:4",
+        "claim": "User enjoys music podcasts that explore background stories behind songs.",
+        "entity_labels": [
+          "music_podcasts",
+          "background_stories"
+        ],
+        "scope_labels": [
+          "interest",
+          "preference"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:29621a34:4",
+        "claim": "User likes the podcasts 'All Songs Considered' and 'Song Exploder'.",
+        "entity_labels": [
+          "all_songs_considered",
+          "song_exploder"
+        ],
+        "scope_labels": [
+          "preference",
+          "listening"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:29621a34:6",
+        "claim": "User wants to learn about popular music festivals around the world.",
+        "entity_labels": [
+          "music_festivals",
+          "travel"
+        ],
+        "scope_labels": [
+          "interest",
+          "exploration"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "42929570b12c35b46e2d8923ec4107bd25afa70540c6dae9b59b49915abf5d7f": {
+    "claims": [],
+    "relations": []
+  },
+  "e971168c5875d3b63d7ffcd62eda10154ad7bd45add49e8c9a0241272048bd90": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:08256f84_2:0",
+        "claim": "User started a dream job one week after their birthday.",
+        "entity_labels": [
+          "user",
+          "dream_job",
+          "birthday"
+        ],
+        "scope_labels": [
+          "employment",
+          "temporal_event"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:08256f84_2:2",
+        "claim": "User is interested in learning new skills for career growth.",
+        "entity_labels": [
+          "user",
+          "skills",
+          "career"
+        ],
+        "scope_labels": [
+          "intention",
+          "professional_development"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:08256f84_2:4",
+        "claim": "User is interested in learning data science and analytics.",
+        "entity_labels": [
+          "user",
+          "data_science",
+          "analytics"
+        ],
+        "scope_labels": [
+          "interest",
+          "learning"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "92e2c4e52fa0ba461ef1f56bf77052437e7f3245748b0b5779704a340f97e94b": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:08256f84_2:6",
+        "claim": "User is interested in data science and analytics.",
+        "entity_labels": [
+          "user",
+          "data_science",
+          "analytics"
+        ],
+        "scope_labels": [
+          "interest",
+          "learning"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:08256f84_2:8",
+        "claim": "User decided to buy a Windows laptop for data science courses.",
+        "entity_labels": [
+          "user",
+          "windows_laptop",
+          "data_science_courses"
+        ],
+        "scope_labels": [
+          "decision",
+          "shopping"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:08256f84_2:8",
+        "claim": "User is interested in learning Python for data science.",
+        "entity_labels": [
+          "user",
+          "python",
+          "data_science"
+        ],
+        "scope_labels": [
+          "interest",
+          "learning"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:08256f84_2:9",
+        "claim": "Assistant provided a list of Python learning resources.",
+        "entity_labels": [
+          "assistant",
+          "python_resources"
+        ],
+        "scope_labels": [
+          "interaction",
+          "knowledge"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "a2970393545619266a27c88607e9a231790b3eb7d1a74bfe1924e0cc43533e80": {
+    "claims": [],
+    "relations": []
+  }
+}

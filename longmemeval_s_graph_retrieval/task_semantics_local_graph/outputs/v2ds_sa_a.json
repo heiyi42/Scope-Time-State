@@ -1,0 +1,27 @@
+{
+  "d5874442cf56c17f1f9f5f8fe0864d1713c530e535d6b73beee041b9bdc99feb": {
+    "answer": "Admon is assigned the 8 am - 4 pm (Day Shift) on Sunday.",
+    "evidence_session_ids": [
+      "answer_sharegpt_5Lzox6N_0"
+    ],
+    "state_facets": [
+      {
+        "name": "shift_assignment",
+        "value": "In the updated shift rotation, on Sunday, Admon is assigned the 8 am - 4 pm shift.",
+        "support_session_ids": [
+          "answer_sharegpt_5Lzox6N_0"
+        ]
+      }
+    ],
+    "rejected_claims": [
+      {
+        "claim": "Assistant provided a 1-week shift rotation table for 7 agents with 4 shifts using placeholder agent numbers.",
+        "reason": "stale",
+        "support_session_ids": [
+          "answer_sharegpt_5Lzox6N_0"
+        ]
+      }
+    ],
+    "answer_rationale": "The shift_assignment state facet, supported by session answer_sharegpt_5Lzox6N_0, directly provides the rotation for Admon on Sunday as the 8 am - 4 pm shift."
+  }
+}
