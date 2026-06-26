@@ -1,0 +1,1050 @@
+{
+  "benchmark": "LongMemEval-S",
+  "method": "prebuilt_llm_kg_graph",
+  "data_path": "C:\\Users\\93232\\Desktop\\SCIENCE\\AAAI2027_2\\Experiment\\Other_BenchMark\\LongMemEval-S\\LongMemEval-S_data\\data\\longmemeval_s_cleaned.json",
+  "graph_dir": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs",
+  "answer_provider": "openai",
+  "answer_model": "gpt-4o-mini",
+  "judge_provider": "openai",
+  "judge_model": "gpt-4o",
+  "variants": [
+    "prebuilt_llm_kg_graph"
+  ],
+  "limit_cases": 0,
+  "limit_per_type": 10,
+  "question_types": {
+    "temporal-reasoning": 10
+  },
+  "results": [
+    {
+      "variant": "prebuilt_llm_kg_graph",
+      "summary": {
+        "n_cases": 10,
+        "local_answer_match": 0.8,
+        "official_answer_accuracy": 0.9,
+        "candidate_session_recall": 1.0,
+        "candidate_session_precision": 0.105,
+        "evidence_session_recall": 0.8333,
+        "evidence_session_precision": 1.0,
+        "abstention_accuracy": null,
+        "task_averaged_official_answer_accuracy": 0.9,
+        "by_question_type": {
+          "temporal-reasoning": {
+            "n_cases": 10,
+            "local_answer_match": 0.8,
+            "official_answer_accuracy": 0.9,
+            "candidate_session_recall": 1.0,
+            "candidate_session_precision": 0.105,
+            "evidence_session_recall": 0.8333,
+            "evidence_session_precision": 1.0
+          }
+        }
+      },
+      "rows": [
+        {
+          "question_id": "gpt4_59149c77",
+          "question_type": "temporal-reasoning",
+          "task_adapter": "Temporal reasoning",
+          "is_abstention": false,
+          "question": "How many days passed between my visit to the Museum of Modern Art (MoMA) and the 'Ancient Civilizations' exhibit at the Metropolitan Museum of Art?",
+          "gold_answer": "7 days. 8 days (including the last day) is also acceptable.",
+          "hypothesis": "7 days",
+          "candidate_session_ids": [
+            "answer_d00ba6d0_2",
+            "9e2c2a6c_2",
+            "answer_d00ba6d0_1",
+            "sharegpt_XlNs8Lz_199",
+            "9242fbe3_1",
+            "ultrachat_280434",
+            "148f87a0_2",
+            "6e672b84_1",
+            "a7403b3d_4",
+            "31829c1b_1",
+            "8d952ece_2",
+            "ab520c81_1",
+            "ultrachat_510339",
+            "f04fae0a",
+            "0f5b1f8d",
+            "c07ae000_2",
+            "7966888b_3",
+            "ultrachat_237018",
+            "54a05e72_2",
+            "64c2b3c8"
+          ],
+          "evidence_session_ids": [
+            "answer_d00ba6d0_1",
+            "answer_d00ba6d0_2"
+          ],
+          "answer_session_ids": [
+            "answer_d00ba6d0_1",
+            "answer_d00ba6d0_2"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.1,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "ancient_civilizations_exhibit_date",
+              "value": "2023-01-15",
+              "support_session_ids": [
+                "answer_d00ba6d0_2"
+              ]
+            },
+            {
+              "name": "moma_visit_date",
+              "value": "2023-01-08",
+              "support_session_ids": [
+                "answer_d00ba6d0_1"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The visit to the Museum of Modern Art was on January 8, 2023, and the 'Ancient Civilizations' exhibit was attended on January 15, 2023. The difference between these two dates is 7 days.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_d00ba6d0_1",
+              "answer_d00ba6d0_2"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_d00ba6d0_1",
+                "date": "2023/01/08 (Sun) 12:49",
+                "role": "user",
+                "content": "I'm looking for some information on modern art movements. I just got back from a guided tour at the Museum of Modern Art focused on 20th-century modern art movements, and it really sparked my interest. Can you tell me more about the key artists associated with Cubism?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_d00ba6d0_2",
+                "date": "2023/01/15 (Sun) 00:27",
+                "role": "user",
+                "content": "That's fascinating! I had no idea that mummification was practiced in so many ancient cultures. I've always been interested in ancient civilizations, which is why I attended the \"Ancient Civilizations\" exhibit at the Metropolitan Museum of Art today. Speaking of which, I was wondering, are there any other exhibits or museums in New York City that you would recommend for someone interested in ancient cultures?",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "ancient_civilizations_exhibit_date",
+                "value": "2023-01-15",
+                "support_session_ids": [
+                  "answer_d00ba6d0_2"
+                ]
+              },
+              {
+                "name": "moma_visit_date",
+                "value": "2023-01-08",
+                "support_session_ids": [
+                  "answer_d00ba6d0_1"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\gpt4_59149c77.graph.json"
+        },
+        {
+          "question_id": "gpt4_f49edff3",
+          "question_type": "temporal-reasoning",
+          "task_adapter": "Temporal reasoning",
+          "is_abstention": false,
+          "question": "Which three events happened in the order from first to last: the day I helped my friend prepare the nursery, the day I helped my cousin pick out stuff for her baby shower, and the day I ordered a customized phone case for my friend's birthday?",
+          "gold_answer": "First, I helped my friend prepare the nursery, then I helped my cousin pick out stuff for her baby shower, and lastly, I ordered a customized phone case for my friend's birthday.",
+          "hypothesis": "The order of events from first to last is: 1) helped my friend prepare the nursery on 2023/02/05, 2) helped my cousin pick out stuff for her baby shower on 2023/02/10, and 3) ordered a customized phone case for my friend's birthday on 2023/02/20.",
+          "candidate_session_ids": [
+            "answer_3e9fce53_3",
+            "answer_3e9fce53_2",
+            "7d33fcb4_1",
+            "answer_3e9fce53_1",
+            "bb27df5e_3",
+            "4376945f",
+            "dc7c53fa_4",
+            "76703db4_3",
+            "c73cebb3_2",
+            "9f8fa5e4_2",
+            "sharegpt_nbQ5RpR_0",
+            "acfdbdcb",
+            "36f8b380_1",
+            "1a29bf1f",
+            "4798296c_2",
+            "20fa75e8_4",
+            "ultrachat_369361",
+            "ultrachat_308848",
+            "9f091256_2",
+            "1b3e086b"
+          ],
+          "evidence_session_ids": [
+            "answer_3e9fce53_1",
+            "answer_3e9fce53_2",
+            "answer_3e9fce53_3"
+          ],
+          "answer_session_ids": [
+            "answer_3e9fce53_1",
+            "answer_3e9fce53_2",
+            "answer_3e9fce53_3"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.15,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": false,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "helped_cousin_pick_out_baby_shower_items",
+              "value": "2023-02-10",
+              "support_session_ids": [
+                "answer_3e9fce53_2"
+              ]
+            },
+            {
+              "name": "helped_friend_prepare_nursery",
+              "value": "2023-02-05",
+              "support_session_ids": [
+                "answer_3e9fce53_1"
+              ]
+            },
+            {
+              "name": "ordered_customized_phone_case_for_friend_s_birthday",
+              "value": "2023-02-20",
+              "support_session_ids": [
+                "answer_3e9fce53_3"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The events are ordered based on their dates: the nursery preparation on 2023/02/05 is first, followed by the baby shower preparation on 2023/02/10, and finally the phone case order on 2023/02/20.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_3e9fce53_1",
+              "answer_3e9fce53_2",
+              "answer_3e9fce53_3"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_3e9fce53_1",
+                "date": "2023/02/05 (Sun) 18:29",
+                "role": "user",
+                "content": "I'm expecting a new baby in my social circle soon and I'm thinking of getting a gift. Can you recommend some popular baby stores or online marketplaces where I can find a wide range of baby supplies and decorations? By the way, I just helped my friend prepare a nursery today, and we spent an entire Sunday afternoon shopping for baby supplies and decorations at Buy Buy Baby.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_3e9fce53_2",
+                "date": "2023/02/10 (Fri) 21:05",
+                "role": "user",
+                "content": "I'm thinking of getting a baby gift for a coworker's new baby, and I was wondering if you could give me some recommendations for essential items that new parents usually need. By the way, I just helped my cousin pick out some stuff for her baby shower, and we ended up getting diapers, wipes, and a baby monitor at Target.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_3e9fce53_3",
+                "date": "2023/02/20 (Mon) 13:12",
+                "role": "user",
+                "content": "I'm looking for some gift ideas for my siblings. Do you have any suggestions? By the way, I just ordered a customized phone case for my friend's birthday today, which she really loves.",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "helped_cousin_pick_out_baby_shower_items",
+                "value": "2023-02-10",
+                "support_session_ids": [
+                  "answer_3e9fce53_2"
+                ]
+              },
+              {
+                "name": "helped_friend_prepare_nursery",
+                "value": "2023-02-05",
+                "support_session_ids": [
+                  "answer_3e9fce53_1"
+                ]
+              },
+              {
+                "name": "ordered_customized_phone_case_for_friend_s_birthday",
+                "value": "2023-02-20",
+                "support_session_ids": [
+                  "answer_3e9fce53_3"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\gpt4_f49edff3.graph.json"
+        },
+        {
+          "question_id": "71017276",
+          "question_type": "temporal-reasoning",
+          "task_adapter": "Temporal reasoning",
+          "is_abstention": false,
+          "question": "How many weeks ago did I meet up with my aunt and receive the crystal chandelier?",
+          "gold_answer": "4",
+          "hypothesis": "4 weeks ago",
+          "candidate_session_ids": [
+            "answer_0b4a8adc_1",
+            "sharegpt_tCLMKZY_0",
+            "10889cf0_1",
+            "4d6927c2_2",
+            "58ec258f_2",
+            "sharegpt_11WxPMZ_0",
+            "ultrachat_491808",
+            "683c8358_1",
+            "ultrachat_431324",
+            "4a545031_2",
+            "398f23e7",
+            "ae1343ee",
+            "44e4ae7e",
+            "sharegpt_ZUJIuGt_13",
+            "ultrachat_230339",
+            "e5bb084c",
+            "sharegpt_XWqXdom_19",
+            "sharegpt_tmFunkX_20",
+            "4fe27c66_1",
+            "20dcaf44"
+          ],
+          "evidence_session_ids": [
+            "answer_0b4a8adc_1"
+          ],
+          "answer_session_ids": [
+            "answer_0b4a8adc_1"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "meeting_with_aunt_and_gift",
+              "value": "2023-03-04",
+              "support_session_ids": [
+                "answer_0b4a8adc_1"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The date of meeting with the aunt and receiving the chandelier is 2023-03-04. The current date is 2023-04-01, which is 4 weeks later.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_0b4a8adc_1"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_0b4a8adc_1",
+                "date": "2023/03/04 (Sat) 22:43",
+                "role": "user",
+                "content": "I'm looking for some advice on cleaning and maintaining my antique furniture. I recently acquired a beautiful vintage armchair from the 1950s and I want to make sure I'm taking good care of it. By the way, I also got a stunning crystal chandelier from my aunt today, which used to belong to my great-grandmother - it's got intricate etchings and sparkling droplets that catch the light. Do you have any general tips on how to dust and polish these types of pieces?",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "meeting_with_aunt_and_gift",
+                "value": "2023-03-04",
+                "support_session_ids": [
+                  "answer_0b4a8adc_1"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\71017276.graph.json"
+        },
+        {
+          "question_id": "b46e15ed",
+          "question_type": "temporal-reasoning",
+          "task_adapter": "Temporal reasoning",
+          "is_abstention": false,
+          "question": "How many months have passed since I participated in two charity events in a row, on consecutive days?",
+          "gold_answer": "2",
+          "hypothesis": "2",
+          "candidate_session_ids": [
+            "answer_4bfcc250_1",
+            "aeab3296",
+            "answer_4bfcc250_2",
+            "answer_4bfcc250_3",
+            "ultrachat_520419",
+            "4bf66c38_2",
+            "a410bab2_3",
+            "940629b2_2",
+            "b2542345_2",
+            "443dea75",
+            "f598d30f_1",
+            "sharegpt_cXkL3cR_28",
+            "answer_4bfcc250_4",
+            "ultrachat_396986",
+            "9d754f54",
+            "47311a4c_1",
+            "sharegpt_KCGdZJP_0",
+            "ultrachat_507989",
+            "53949711_2",
+            "ultrachat_265690"
+          ],
+          "evidence_session_ids": [
+            "answer_4bfcc250_3",
+            "answer_4bfcc250_2"
+          ],
+          "answer_session_ids": [
+            "answer_4bfcc250_4",
+            "answer_4bfcc250_3",
+            "answer_4bfcc250_2",
+            "answer_4bfcc250_1"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.2,
+          "evidence_session_recall": 0.5,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "charity_event_1",
+              "value": "2023-02-14: 24-Hour Bike Ride",
+              "support_session_ids": [
+                "answer_4bfcc250_3"
+              ]
+            },
+            {
+              "name": "charity_event_2",
+              "value": "2023-02-15: Books for Kids",
+              "support_session_ids": [
+                "answer_4bfcc250_2"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The two charity events occurred on consecutive days, February 14 and February 15, 2023. The current date is April 18, 2023, which is 2 months after the last event.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_4bfcc250_3",
+              "answer_4bfcc250_2"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_4bfcc250_3",
+                "date": "2023/02/14 (Tue) 09:06",
+                "role": "user",
+                "content": "I'm feeling a bit tired today, just got back from the \"24-Hour Bike Ride\" charity event, where I cycled for 4 hours non-stop to raise money for a local children's hospital. I was wondering if you could help me find some good stretches to relieve my leg muscles?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_4bfcc250_2",
+                "date": "2023/02/15 (Wed) 19:39",
+                "role": "user",
+                "content": "Hi! I'm looking for some book recommendations for kids. I volunteered at the \"Books for Kids\" charity book drive event at my local library today, helping to sort and pack over 500 books for underprivileged kids in the neighborhood. Do you have any suggestions for popular kids' books that are both fun and educational?",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "charity_event_1",
+                "value": "2023-02-14: 24-Hour Bike Ride",
+                "support_session_ids": [
+                  "answer_4bfcc250_3"
+                ]
+              },
+              {
+                "name": "charity_event_2",
+                "value": "2023-02-15: Books for Kids",
+                "support_session_ids": [
+                  "answer_4bfcc250_2"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\b46e15ed.graph.json"
+        },
+        {
+          "question_id": "gpt4_fa19884c",
+          "question_type": "temporal-reasoning",
+          "task_adapter": "Temporal reasoning",
+          "is_abstention": false,
+          "question": "How many days passed between the day I started playing along to my favorite songs on my old keyboard and the day I discovered a bluegrass band?",
+          "gold_answer": "6 days. 7 days (including the last day) is also acceptable.",
+          "hypothesis": "6",
+          "candidate_session_ids": [
+            "answer_ff201786_2",
+            "answer_ff201786_1",
+            "cbf48918_1",
+            "70de1bd2",
+            "a7b1b27c",
+            "1b066639",
+            "800cfd94",
+            "f3745025_1",
+            "fee8e72a_5",
+            "bb2180e9_3",
+            "128082f8_1",
+            "ultrachat_423544",
+            "8414cc57",
+            "6414f676_2",
+            "f4f4b504_2",
+            "ultrachat_57039",
+            "630b2de2_1",
+            "8e895867",
+            "87a02ddc_3",
+            "7ea7741b_2"
+          ],
+          "evidence_session_ids": [
+            "answer_ff201786_1",
+            "answer_ff201786_2"
+          ],
+          "answer_session_ids": [
+            "answer_ff201786_1",
+            "answer_ff201786_2"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.1,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "bluegrass_band_discovery_date",
+              "value": "2023-03-31",
+              "support_session_ids": [
+                "answer_ff201786_2"
+              ]
+            },
+            {
+              "name": "keyboard_play_start_date",
+              "value": "2023-03-25",
+              "support_session_ids": [
+                "answer_ff201786_1"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The keyboard playing started on 2023/03/25 and the bluegrass band was discovered on 2023/03/31. The difference between these two dates is 6 days.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_ff201786_1",
+              "answer_ff201786_2"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_ff201786_1",
+                "date": "2023/03/25 (Sat) 05:54",
+                "role": "user",
+                "content": "I'll definitely consider your advice on buying a ukulele. By the way, I started playing along to my favorite songs on my old keyboard today, and it was a lot of fun! I've been listening to a lot of music featuring the piano, which inspired me to dust off my old keyboard and start playing again.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_ff201786_2",
+                "date": "2023/03/31 (Fri) 12:35",
+                "role": "user",
+                "content": "I'm thinking of exploring bluegrass music more, and I recently discovered a bluegrass band that features a banjo player and started enjoying their music today. Can you recommend some popular bluegrass artists or bands I should check out?",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "bluegrass_band_discovery_date",
+                "value": "2023-03-31",
+                "support_session_ids": [
+                  "answer_ff201786_2"
+                ]
+              },
+              {
+                "name": "keyboard_play_start_date",
+                "value": "2023-03-25",
+                "support_session_ids": [
+                  "answer_ff201786_1"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\gpt4_fa19884c.graph.json"
+        },
+        {
+          "question_id": "0bc8ad92",
+          "question_type": "temporal-reasoning",
+          "task_adapter": "Temporal reasoning",
+          "is_abstention": false,
+          "question": "How many months have passed since I last visited a museum with a friend?",
+          "gold_answer": "5",
+          "hypothesis": "5 months",
+          "candidate_session_ids": [
+            "answer_f4ea84fb_3",
+            "answer_f4ea84fb_1",
+            "d3cc5bdc_1",
+            "ultrachat_349938",
+            "0868982f_1",
+            "cc36cd3e",
+            "fccc9400",
+            "f87fb137_1",
+            "sharegpt_vClQxDr_21",
+            "sharegpt_Le7CqkS_0",
+            "881acf41_1",
+            "sharegpt_scMKXPh_9",
+            "eca613fc",
+            "ultrachat_276712",
+            "f58c36b8_1",
+            "sharegpt_ntu1Cds_0",
+            "86e218e3_2",
+            "717d1aea_1",
+            "89c1cdfa_2",
+            "answer_f4ea84fb_2"
+          ],
+          "evidence_session_ids": [
+            "answer_f4ea84fb_3"
+          ],
+          "answer_session_ids": [
+            "answer_f4ea84fb_3",
+            "answer_f4ea84fb_2",
+            "answer_f4ea84fb_1"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.15,
+          "evidence_session_recall": 0.3333333333333333,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "last_museum_visit_with_friend_date",
+              "value": "2022-10-22",
+              "support_session_ids": [
+                "answer_f4ea84fb_3"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The last museum visit with a friend was on 2022-10-22. The current date is 2023-03-25, which is 5 months later.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_f4ea84fb_3"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_f4ea84fb_3",
+                "date": "2022/10/22 (Sat) 18:38",
+                "role": "user",
+                "content": "That's a great idea! I'll definitely try searching online and checking out those directories. I'm sure I'll stumble upon some new museums or science centers that I haven't visited yet. By the way, I was thinking about my behind-the-scenes tour of the Science Museum today, and I remembered that I went with a friend who's a chemistry professor. We had a great time exploring the museum's collection of rare minerals and participating in that hands-on experiment with the educational team. It was really amazing to see the complexity of the exhibits and the amount of work that goes into creating them.",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "last_museum_visit_with_friend_date",
+                "value": "2022-10-22",
+                "support_session_ids": [
+                  "answer_f4ea84fb_3"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\0bc8ad92.graph.json"
+        },
+        {
+          "question_id": "af082822",
+          "question_type": "temporal-reasoning",
+          "task_adapter": "Temporal reasoning",
+          "is_abstention": false,
+          "question": "How many weeks ago did I attend the friends and family sale at Nordstrom?",
+          "gold_answer": "2",
+          "hypothesis": "2 weeks ago",
+          "candidate_session_ids": [
+            "answer_b51b6115_1",
+            "cdf068b1_2",
+            "bc5827b5",
+            "cae65795_2",
+            "facef6e0_1",
+            "1fcb4134_2",
+            "b28990c8_7",
+            "1dfef591_2",
+            "6cf1848e_3",
+            "1a920713_2",
+            "e132259f",
+            "1040e24b_1",
+            "d048ae4b_2",
+            "09c3d921",
+            "51ec01a4",
+            "bf38543d_2",
+            "6bb8af95_2",
+            "sharegpt_mJ7MnQS_9",
+            "ultrachat_396809",
+            "a113eec0"
+          ],
+          "evidence_session_ids": [
+            "answer_b51b6115_1"
+          ],
+          "answer_session_ids": [
+            "answer_b51b6115_1"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "attended_nordstrom_friends_family_sale_date",
+              "value": "2022-11-17",
+              "support_session_ids": [
+                "answer_b51b6115_1"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The friends and family sale at Nordstrom was attended on 2022-11-17. The current date is 2022-12-01, which is 2 weeks after the sale.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_b51b6115_1"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_b51b6115_1",
+                "date": "2022/11/18 (Fri) 17:03",
+                "role": "user",
+                "content": "I'm actually going to be using the TV in my living room, and I think a full-motion mount would be perfect. I've been doing some shopping lately and scored some great deals, by the way. Yesterday, I attended a friends and family sale at Nordstrom and picked up a few dresses and tops for 20% off. I also got a $20 gift card for making a purchase over $100, which was a nice bonus. Anyway, back to the TV mount - what do you think about the Sanus VMF408? Is it a good option for my living room?",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "attended_nordstrom_friends_family_sale_date",
+                "value": "2022-11-17",
+                "support_session_ids": [
+                  "answer_b51b6115_1"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\af082822.graph.json"
+        },
+        {
+          "question_id": "gpt4_4929293a",
+          "question_type": "temporal-reasoning",
+          "task_adapter": "Temporal reasoning",
+          "is_abstention": false,
+          "question": "Which event happened first, my cousin's wedding or Michael's engagement party?",
+          "gold_answer": "Michael's engagement party",
+          "hypothesis": "Michael's engagement party happened first.",
+          "candidate_session_ids": [
+            "answer_add9b012_2",
+            "answer_add9b012_1",
+            "ultrachat_329640",
+            "ultrachat_127833",
+            "e2304e5e_1",
+            "73353aee_1",
+            "78e40ca2_3",
+            "623ea729_2",
+            "ultrachat_139245",
+            "8cfe5096_1",
+            "ultrachat_512282",
+            "sharegpt_VUBjUDH_0",
+            "d76030af_2",
+            "sharegpt_mWFmQxk_36",
+            "b8bc1464_4",
+            "27d378b2_3",
+            "b73a4d04_1",
+            "7c1eb248_1",
+            "96c743d0_abs_2",
+            "6172cc72_2"
+          ],
+          "evidence_session_ids": [
+            "answer_add9b012_2",
+            "answer_add9b012_1"
+          ],
+          "answer_session_ids": [
+            "answer_add9b012_2",
+            "answer_add9b012_1"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.1,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "cousin_s_wedding_date",
+              "value": "2023-06-15",
+              "support_session_ids": [
+                "answer_add9b012_1"
+              ]
+            },
+            {
+              "name": "michael_s_engagement_party_date",
+              "value": "2023-05-06",
+              "support_session_ids": [
+                "answer_add9b012_2"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The engagement party occurred on 2023/05/06, while the cousin's wedding took place on 2023/06/15, establishing the order of events.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_add9b012_2",
+              "answer_add9b012_1"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_add9b012_2",
+                "date": "2023/05/06 (Sat) 03:02",
+                "role": "user",
+                "content": "I'm thinking of planning a small ceremony for my own wedding next year. Can you give me some tips on how to choose the right venue? By the way, I just came back from Michael's engagement party at a trendy rooftop bar today, and it got me thinking about my own wedding plans.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_add9b012_1",
+                "date": "2023/06/15 (Thu) 03:20",
+                "role": "user",
+                "content": "I'm getting ready to start planning my own wedding and I was wondering if you could give me some advice on how to choose the right wedding planner. By the way, I just walked down the aisle as a bridesmaid at my cousin's wedding today, and it got me thinking about my own big day.",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "cousin_s_wedding_date",
+                "value": "2023-06-15",
+                "support_session_ids": [
+                  "answer_add9b012_1"
+                ]
+              },
+              {
+                "name": "michael_s_engagement_party_date",
+                "value": "2023-05-06",
+                "support_session_ids": [
+                  "answer_add9b012_2"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\gpt4_4929293a.graph.json"
+        },
+        {
+          "question_id": "gpt4_b5700ca9",
+          "question_type": "temporal-reasoning",
+          "task_adapter": "Temporal reasoning",
+          "is_abstention": false,
+          "question": "How many days ago did I attend the Maundy Thursday service at the Episcopal Church?",
+          "gold_answer": "4 days.",
+          "hypothesis": "4 days ago",
+          "candidate_session_ids": [
+            "answer_a17423e7_1",
+            "33bdd89a_1",
+            "a53c7542_1",
+            "ultrachat_46958",
+            "44c62f26",
+            "ultrachat_346810",
+            "sharegpt_6sDqw6L_0",
+            "5053474c_2",
+            "ultrachat_366301",
+            "0de045b3",
+            "46a7f71a",
+            "555e1a02",
+            "sharegpt_FqOC5e9_169",
+            "ultrachat_383774",
+            "sharegpt_bp51PRm_4",
+            "d743153b_1",
+            "ultrachat_220788",
+            "31829c1b_1",
+            "c45b1632",
+            "12b34e79_1"
+          ],
+          "evidence_session_ids": [
+            "answer_a17423e7_1"
+          ],
+          "answer_session_ids": [
+            "answer_a17423e7_1"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "maundy_thursday_attendance_date",
+              "value": "2023-04-06",
+              "support_session_ids": [
+                "answer_a17423e7_1"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The Maundy Thursday service was attended on 2023/04/06, and today is 2023/04/10, which is 4 days later.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_a17423e7_1"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_a17423e7_1",
+                "date": "2023/04/06 (Thu) 22:22",
+                "role": "user",
+                "content": "Yes, I'd like to take the next step. Please provide me with the contact information and application form. I'm looking forward to volunteering at the food bank and making a difference in my community. By the way, I'm glad I got to attend the Maundy Thursday service at the Episcopal Church today, it was a beautiful and moving experience.",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "maundy_thursday_attendance_date",
+                "value": "2023-04-06",
+                "support_session_ids": [
+                  "answer_a17423e7_1"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\gpt4_b5700ca9.graph.json"
+        },
+        {
+          "question_id": "9a707b81",
+          "question_type": "temporal-reasoning",
+          "task_adapter": "Temporal reasoning",
+          "is_abstention": false,
+          "question": "How many days ago did I attend a baking class at a local culinary school when I made my friend's birthday cake?",
+          "gold_answer": "21 days. 22 days (including the last day) is also acceptable.",
+          "hypothesis": "26",
+          "candidate_session_ids": [
+            "answer_dba89487_2",
+            "answer_dba89487_1",
+            "5a13d047_1",
+            "990f3ef9_6",
+            "4abbeb2a_2",
+            "ultrachat_233519",
+            "59510ab6",
+            "6862e478_2",
+            "e75c302b_2",
+            "318048af_1",
+            "e1d11615_1",
+            "a8e24e22",
+            "ultrachat_550996",
+            "07548ed6",
+            "ultrachat_510964",
+            "3fcbb58c_4",
+            "ultrachat_206990",
+            "ultrachat_257240",
+            "ultrachat_509415",
+            "ultrachat_243091"
+          ],
+          "evidence_session_ids": [
+            "answer_dba89487_2"
+          ],
+          "answer_session_ids": [
+            "answer_dba89487_2",
+            "answer_dba89487_1"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.1,
+          "evidence_session_recall": 0.5,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": false,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": false,
+            "response": "No"
+          },
+          "state_facets": [
+            {
+              "name": "baking_class_attendance_date",
+              "value": "2022-03-20",
+              "support_session_ids": [
+                "answer_dba89487_2"
+              ]
+            },
+            {
+              "name": "days_ago_from_question_date",
+              "value": "26",
+              "support_session_ids": [
+                "answer_dba89487_2"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The baking class was attended on 2022-03-20, and the question date is 2022-04-15, which is 26 days later.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_dba89487_2"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_dba89487_2",
+                "date": "2022/03/21 (Mon) 15:54",
+                "role": "user",
+                "content": "I've been obsessed with strawberries lately, especially after that amazing baking class I took at a local culinary school yesterday. I was thinking of making a strawberry shortcake. Do you have any tips on how to make the perfect shortcake?",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "baking_class_attendance_date",
+                "value": "2022-03-20",
+                "support_session_ids": [
+                  "answer_dba89487_2"
+                ]
+              },
+              {
+                "name": "days_ago_from_question_date",
+                "value": "26",
+                "support_session_ids": [
+                  "answer_dba89487_2"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\9a707b81.graph.json"
+        }
+      ]
+    }
+  ]
+}

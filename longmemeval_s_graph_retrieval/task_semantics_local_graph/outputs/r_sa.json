@@ -1,0 +1,1311 @@
+{
+  "method": "task_semantics_local_graph",
+  "model": "gpt-4o-mini",
+  "judge_model": "gpt-4o-2024-08-06",
+  "n_cases": 10,
+  "macro_acc": 0.0,
+  "micro_acc": 0.0,
+  "by_type": {
+    "single-session-assistant": {
+      "n": 10,
+      "acc": 0.0
+    }
+  },
+  "rows": [
+    {
+      "question_id": "7161e7e2",
+      "question_type": "single-session-assistant",
+      "question": "I'm checking our previous chat about the shift rotation sheet for GM social media agents. Can you remind me what was the rotation for Admon on a Sunday?",
+      "gold_answer": "Admon was assigned to the 8 am - 4 pm (Day Shift) on Sundays.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 20:16",
+      "answer_session_ids": [
+        "answer_sharegpt_5Lzox6N_0"
+      ],
+      "evidence_session_ids": [
+        "dba97bb1_4",
+        "sharegpt_6kDZTZ2_0",
+        "ultrachat_68050",
+        "ae73b0f7_2",
+        "e89b6be2_2",
+        "6b17c99b_2",
+        "3c3fee41",
+        "answer_sharegpt_5Lzox6N_0",
+        "sharegpt_yguSguz_0",
+        "ad361482_1",
+        "b4f63a70_3",
+        "5aed819f",
+        "sharegpt_PjFSCFK_9",
+        "5850de18_2",
+        "ultrachat_447051",
+        "ultrachat_541021",
+        "3070419a_1",
+        "ultrachat_301437",
+        "sharegpt_b5rHj0c_20",
+        "2bd9990a_3"
+      ],
+      "state_facets": [
+        {
+          "name": "assistant_memory",
+          "value": "I'm looking for some new workout outfit ideas.",
+          "support_session_ids": [
+            "ad361482_1"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "Anyway, thanks for the correction!",
+          "support_session_ids": [
+            "2bd9990a_3"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "I've been obsessed with the new Athleta store that opened up at the outdoor mall near my house about two months ago.",
+          "support_session_ids": [
+            "ad361482_1"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "The Fontainebleau in Miami sounds like an amazing place to relax and unwind, and I'm sure you must have had a wonderful time there.",
+          "support_session_ids": [
+            "2bd9990a_3"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "I'm glad I could help you snap back to reality.",
+          "support_session_ids": [
+            "2bd9990a_3"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "I'm glad to hear that!",
+          "support_session_ids": [
+            "ad361482_1"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "Oh, and that NFL playoff game I mentioned earlier was on January 15th, by the way.",
+          "reason": "stale",
+          "support_session_ids": [
+            "3c3fee41",
+            "ad361482_1"
+          ]
+        },
+        {
+          "claim": "Kansas City, Missouri!",
+          "reason": "stale",
+          "support_session_ids": [
+            "3c3fee41",
+            "ad361482_1"
+          ]
+        },
+        {
+          "claim": "Home of the Kansas City Chiefs!",
+          "reason": "stale",
+          "support_session_ids": [
+            "3c3fee41",
+            "ad361482_1"
+          ]
+        },
+        {
+          "claim": "As for your NFL playoff game, I think I can guess which game you're referring to.",
+          "reason": "stale",
+          "support_session_ids": [
+            "3c3fee41",
+            "ad361482_1"
+          ]
+        },
+        {
+          "claim": "On January 15th, the Kansas City Chiefs played the Houston Texans in the AFC Divisional Round, and it was an epic comeback victory for the Chiefs!",
+          "reason": "stale",
+          "support_session_ids": [
+            "3c3fee41",
+            "ad361482_1"
+          ]
+        },
+        {
+          "claim": "What's a good way to keep track of all the different sports schedules and scores without having to constantly check multiple websites or apps?",
+          "reason": "stale",
+          "support_session_ids": [
+            "3c3fee41",
+            "ad361482_1"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "c4f10528",
+      "question_type": "single-session-assistant",
+      "question": "I'm planning to visit Bandung again and I was wondering if you could remind me of the name of that restaurant in Cihampelas Walk that serves a great Nasi Goreng?",
+      "gold_answer": "Miss Bee Providore",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 23:00",
+      "answer_session_ids": [
+        "answer_ultrachat_234453"
+      ],
+      "evidence_session_ids": [
+        "21ff9566_2",
+        "5ac7f9c5_2",
+        "a17423e7_1",
+        "29116b50_1",
+        "ultrachat_504611",
+        "sharegpt_5GYAEJe_23",
+        "107d40f0",
+        "51c89181_1",
+        "e12cfbcd",
+        "dc1f9713_2",
+        "ultrachat_172995",
+        "c8c90a81_1",
+        "de55485d_1",
+        "6cf1848e_2",
+        "689fec3d_1",
+        "answer_ultrachat_234453",
+        "ultrachat_577781",
+        "sharegpt_yMwEvl7_557",
+        "7157bff1_2",
+        "7613d5ec_1"
+      ],
+      "state_facets": [
+        {
+          "name": "assistant_memory",
+          "value": "I'm planning a trip to Barcelona, Spain and I was wondering if you could recommend some good areas to stay in?",
+          "support_session_ids": [
+            "107d40f0"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "I'm planning to make some oatmeal for breakfast tomorrow and I was wondering if you have any recipe suggestions?",
+          "support_session_ids": [
+            "7613d5ec_1"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "I'm also planning to make some chicken breasts for lunch, do you have any recipe suggestions that use common pantry staples like rice, canned black beans, and oatmeal?",
+          "support_session_ids": [
+            "7613d5ec_1"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "**Granny Smith**: Known for their green skin and tart flavor, Granny Smith apples add a nice balance of sweetness and acidity to oatmeal.",
+          "support_session_ids": [
+            "7613d5ec_1"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "Do you know if there are any good hostels in that area?",
+          "support_session_ids": [
+            "107d40f0"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "I love to travel and explore new cities.",
+          "support_session_ids": [
+            "107d40f0"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "The pandemic has had a significant impact on the sports industry, with many sporting events being postponed, cancelled or held in empty stadiums without spectators.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "ultrachat_504611",
+            "107d40f0"
+          ]
+        },
+        {
+          "claim": "It's been strange to watch sports without fans in the stadium.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "ultrachat_504611",
+            "107d40f0"
+          ]
+        },
+        {
+          "claim": "I cannot predict the future, but i can provide information that may help with your question.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "ultrachat_504611",
+            "107d40f0"
+          ]
+        },
+        {
+          "claim": "Watching games on TV just isn't the same.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "ultrachat_504611",
+            "107d40f0"
+          ]
+        },
+        {
+          "claim": "Fans bring a unique energy, emotion and excitement that cannot be replicated.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "ultrachat_504611",
+            "107d40f0"
+          ]
+        },
+        {
+          "claim": "Yeah, those virtual fan experiences are cool, but it's just not the same as being there in person.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "ultrachat_504611",
+            "107d40f0"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "89527b6b",
+      "question_type": "single-session-assistant",
+      "question": "I'm going back to our previous conversation about the children's book on dinosaurs. Can you remind me what color was the scaly body of the Plesiosaur in the image?",
+      "gold_answer": "The Plesiosaur had a blue scaly body.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 23:39",
+      "answer_session_ids": [
+        "answer_sharegpt_YkWn1Ne_0"
+      ],
+      "evidence_session_ids": [
+        "9661e558",
+        "ultrachat_117600",
+        "00cbfcfd",
+        "answer_sharegpt_YkWn1Ne_0",
+        "bcdb3847",
+        "e82ce7cd_5",
+        "07e363d9_2",
+        "ultrachat_84388",
+        "9c722816",
+        "48d385f0_1",
+        "ultrachat_11001",
+        "sharegpt_M9T66Xd_5",
+        "51c262b6_2",
+        "sharegpt_htSCqmh_171"
+      ],
+      "state_facets": [
+        {
+          "name": "assistant_memory",
+          "value": "In her free time, she enjoys cooking and trying new recipes.",
+          "support_session_ids": [
+            "sharegpt_htSCqmh_171"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "Leave rollover: You might want to include provisions in your leave policy to allow new joiners to roll over a certain number of unused leave days to the next year.",
+          "support_session_ids": [
+            "sharegpt_htSCqmh_171"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "For example, you might choose to start new joiners with a full leave balance based on their joined or confirmation date, or you might choose to start them with a partial leave balance and allow them to accrue additional leave days over time.",
+          "support_session_ids": [
+            "sharegpt_htSCqmh_171"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "Leave balance calculation: You might want to consider how to calculate the leave balance of new joiners.",
+          "support_session_ids": [
+            "sharegpt_htSCqmh_171"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "Here are some additional considerations that you might want to keep in mind when designing a comprehensive leave management system that allocates leave days to new joiners based on their joined or confirmation date: 1.",
+          "support_session_ids": [
+            "sharegpt_htSCqmh_171"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "Rachel is responsible for managing the leave and time off requests of the employees at her company.",
+          "support_session_ids": [
+            "sharegpt_htSCqmh_171"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "Have you seen either of them?",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_11001",
+            "sharegpt_htSCqmh_171"
+          ]
+        },
+        {
+          "claim": "As an AI language model, I don't have the ability to see movies, as I don't have eyes, but I can recommend both of them as they are highly acclaimed and provide valuable insights into the Civil Rights Movement.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_11001",
+            "sharegpt_htSCqmh_171"
+          ]
+        },
+        {
+          "claim": "\"Selma\" is a powerful and moving film that focuses on the strategies and tactics used in the fight for civil rights, as well as the political and social struggles faced by Martin Luther King Jr.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_11001",
+            "sharegpt_htSCqmh_171"
+          ]
+        },
+        {
+          "claim": "and other leaders of the movement.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_11001",
+            "sharegpt_htSCqmh_171"
+          ]
+        },
+        {
+          "claim": "The film has received widespread critical acclaim and was nominated for Best Picture at the Academy Awards.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_11001",
+            "sharegpt_htSCqmh_171"
+          ]
+        },
+        {
+          "claim": "I appreciate your help.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_11001",
+            "sharegpt_htSCqmh_171"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "e9327a54",
+      "question_type": "single-session-assistant",
+      "question": "I'm planning to revisit Orlando. I was wondering if you could remind me of that unique dessert shop with the giant milkshakes we talked about last time?",
+      "gold_answer": "The Sugar Factory at Icon Park.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 19:46",
+      "answer_session_ids": [
+        "answer_ultrachat_480665"
+      ],
+      "evidence_session_ids": [
+        "30e58d0c_1",
+        "8ed77bea_1",
+        "8221810f_3",
+        "7613d5ec_2",
+        "61e1ba53_2",
+        "11decc61",
+        "b10dce5e",
+        "28e0ea23_2",
+        "c81897cd_2",
+        "ba944cdc",
+        "c0d099e6_2",
+        "ecc39c87_2",
+        "sharegpt_6dPUCcK_13",
+        "sharegpt_Q7EQHIJ_0"
+      ],
+      "state_facets": [
+        {
+          "name": "assistant_memory",
+          "value": "Billie Eilish is known for her unique, edgy, and often experimental sound, which blends elements of pop, electronic, and alternative genres.",
+          "support_session_ids": [
+            "8ed77bea_1"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "I loved the energy of Billie's concert at the LA Forum, and I'm always looking for new music with a similar vibe.",
+          "support_session_ids": [
+            "8ed77bea_1"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "The Sussex student, being the newbie, accidentally shot the Falmouth student in the game, mistaking them for a zombie.",
+          "support_session_ids": [
+            "sharegpt_Q7EQHIJ_0"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "The Sussex student responds, \"Squid Game.\" The security guard looks puzzled and asks, \"Excuse me, what did you say?\" The Sussex student repeats, \"Squid Game.\" The Falmouth student then jumps in and says, \"Oh, I know what he means!",
+          "support_session_ids": [
+            "sharegpt_Q7EQHIJ_0"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "As for their tour dates and festival appearances, I've got some good news for you!",
+          "support_session_ids": [
+            "8ed77bea_1"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "Do you know if they've announced any tour dates or if they'll be performing at any upcoming festivals?",
+          "support_session_ids": [
+            "8ed77bea_1"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "I'm looking for some advice on how to properly store and maintain my vintage cameras.",
+          "reason": "stale",
+          "support_session_ids": [
+            "30e58d0c_1",
+            "8ed77bea_1"
+          ]
+        },
+        {
+          "claim": "I just got a 1960s Rolleiflex TLR from a local antique shop a few weeks ago, and I want to make sure I'm keeping it in good condition.",
+          "reason": "stale",
+          "support_session_ids": [
+            "30e58d0c_1",
+            "8ed77bea_1"
+          ]
+        },
+        {
+          "claim": "Congratulations on your new vintage camera acquisition!",
+          "reason": "stale",
+          "support_session_ids": [
+            "30e58d0c_1",
+            "8ed77bea_1"
+          ]
+        },
+        {
+          "claim": "Proper storage and maintenance are crucial to preserving the condition and functionality of your 1960s Rolleiflex TLR.",
+          "reason": "stale",
+          "support_session_ids": [
+            "30e58d0c_1",
+            "8ed77bea_1"
+          ]
+        },
+        {
+          "claim": "Here are some tips to help you keep your camera in top shape: **Storage:** 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "30e58d0c_1",
+            "8ed77bea_1"
+          ]
+        },
+        {
+          "claim": "**Dry, cool environment**: Store your camera in a dry, cool place with a consistent temperature between 60°F to 70°F (15°C to 21°C).",
+          "reason": "stale",
+          "support_session_ids": [
+            "30e58d0c_1",
+            "8ed77bea_1"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "4c36ccef",
+      "question_type": "single-session-assistant",
+      "question": "Can you remind me of the name of the romantic Italian restaurant in Rome you recommended for dinner?",
+      "gold_answer": "Roscioli",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 23:29",
+      "answer_session_ids": [
+        "answer_ultrachat_448704"
+      ],
+      "evidence_session_ids": [
+        "3410b52a_1",
+        "sharegpt_ZfdAEyM_0",
+        "ultrachat_149723",
+        "07e6a3bd_1",
+        "940629b2_1",
+        "f35cb519_2",
+        "sharegpt_gqkL2Dr_0",
+        "7db28e68_1",
+        "1fd56a1b",
+        "5fc83435_2",
+        "sharegpt_TXDvX38_0",
+        "aa569c1e",
+        "answer_ultrachat_448704"
+      ],
+      "state_facets": [
+        {
+          "name": "assistant_memory",
+          "value": "I actually just finished The Last of Us Part II, and I'm looking for something to fill the void.",
+          "support_session_ids": [
+            "aa569c1e"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "I'm sorry but i am unable to make reservations.",
+          "support_session_ids": [
+            "answer_ultrachat_448704"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "I've been meaning to play Ghost of Tsushima for a while now, but I haven't had the time.",
+          "support_session_ids": [
+            "aa569c1e"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "Giolitti - founded in 1900, Giolitti is one of the oldest and most famous gelaterias in Rome.",
+          "support_session_ids": [
+            "answer_ultrachat_448704"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "Here are a few highly recommended ones: 1.",
+          "support_session_ids": [
+            "answer_ultrachat_448704"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "Rome is home to some excellent gelato spots.",
+          "support_session_ids": [
+            "answer_ultrachat_448704"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "After your dance class, you can head to the gym on your bike.",
+          "reason": "stale",
+          "support_session_ids": [
+            "5fc83435_2",
+            "aa569c1e"
+          ]
+        },
+        {
+          "claim": "Since I don't know the exact location of your gym, I'll need a bit more information from you.",
+          "reason": "stale",
+          "support_session_ids": [
+            "5fc83435_2",
+            "aa569c1e"
+          ]
+        },
+        {
+          "claim": "Could you please provide me with the name of your gym or its approximate location (e.g., intersection, neighborhood, or zip code)?",
+          "reason": "stale",
+          "support_session_ids": [
+            "5fc83435_2",
+            "aa569c1e"
+          ]
+        },
+        {
+          "claim": "That way, I can give you the most efficient bike route from your dance studio to the gym.",
+          "reason": "stale",
+          "support_session_ids": [
+            "5fc83435_2",
+            "aa569c1e"
+          ]
+        },
+        {
+          "claim": "I forgot to mention that my gym is actually closer to my new apartment, so I'll be heading in that direction after the dance class.",
+          "reason": "stale",
+          "support_session_ids": [
+            "5fc83435_2",
+            "aa569c1e"
+          ]
+        },
+        {
+          "claim": "Would it be a good idea to stop by my apartment to drop off my dance gear before heading to the gym?",
+          "reason": "stale",
+          "support_session_ids": [
+            "5fc83435_2",
+            "aa569c1e"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "6ae235be",
+      "question_type": "single-session-assistant",
+      "question": "I remember you told me about the refining processes at CITGO's three refineries earlier. Can you remind me what kind of processes are used at the Lake Charles Refinery?",
+      "gold_answer": "Atmospheric distillation, fluid catalytic cracking (FCC), alkylation, and hydrotreating.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 23:41",
+      "answer_session_ids": [
+        "answer_sharegpt_IUWQYGQ_0"
+      ],
+      "evidence_session_ids": [
+        "ec8fa65d_1",
+        "cc5a6057_1",
+        "0a1e90d1_2",
+        "sharegpt_AEwb22H_18",
+        "sharegpt_QIcIecM_0",
+        "ultrachat_82847",
+        "sharegpt_eWQFoct_9",
+        "1e957711",
+        "fa69fc6a_1",
+        "c25b95c5_2",
+        "8e608aad",
+        "99188307",
+        "answer_sharegpt_IUWQYGQ_0",
+        "sharegpt_KzDwaf1_211",
+        "61a91bc9_2",
+        "ultrachat_431987",
+        "809cabca_1",
+        "sharegpt_TVK4gjw_24",
+        "39358a85_1",
+        "31cde680"
+      ],
+      "state_facets": [
+        {
+          "name": "assistant_memory",
+          "value": "**Dave Ramsey**: Dave Ramsey is a well-known personal finance expert who offers advice on budgeting, debt reduction, and investing.",
+          "support_session_ids": [
+            "31cde680"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "**Climate Reality**: Founded by Al Gore, this channel features documentaries, explainers, and interviews on climate change, renewable energy, and sustainable living.",
+          "support_session_ids": [
+            "31cde680"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "Here are some video recommendations and channels that focus on climate change, renewable energy, eco-friendly living, and more: **Channels:** 1.",
+          "support_session_ids": [
+            "31cde680"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "I'm particularly interested in learning about climate change, renewable energy, and eco-friendly living.",
+          "support_session_ids": [
+            "31cde680"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "**Duolingo**: A well-known and highly-rated app that offers a comprehensive Japanese course with interactive lessons, quizzes, and exercises.",
+          "support_session_ids": [
+            "fa69fc6a_1"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "**Giant Store Kichijoji** (5-minute walk from Kichijoji Station) Giant is a well-known international bike brand with a store in Kichijoji.",
+          "support_session_ids": [
+            "fa69fc6a_1"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "Okay, start with a passage about a school project.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_TVK4gjw_24",
+            "31cde680"
+          ]
+        },
+        {
+          "claim": "Passage: School Project Title: Building a Birdhouse 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_TVK4gjw_24",
+            "31cde680"
+          ]
+        },
+        {
+          "claim": "Johnson assigned a school project to the class.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_TVK4gjw_24",
+            "31cde680"
+          ]
+        },
+        {
+          "claim": "The project was to build a birdhouse that was functional and decorative.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_TVK4gjw_24",
+            "31cde680"
+          ]
+        },
+        {
+          "claim": "Each student was given a set of instructions and a list of materials they would need to complete the project.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_TVK4gjw_24",
+            "31cde680"
+          ]
+        },
+        {
+          "claim": "Okay, let's try this again.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_TVK4gjw_24",
+            "31cde680"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "7e00a6cb",
+      "question_type": "single-session-assistant",
+      "question": "I'm planning my trip to Amsterdam again and I was wondering, what was the name of that hostel near the Red Light District that you recommended last time?",
+      "gold_answer": "International Budget Hostel",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 21:40",
+      "answer_session_ids": [
+        "answer_ultrachat_370515"
+      ],
+      "evidence_session_ids": [
+        "b7dca8f1_1",
+        "956ce238",
+        "e2cd250e_1",
+        "39358a85_3",
+        "d334bea4_2",
+        "sharegpt_0dfpdJm_0",
+        "answer_ultrachat_370515",
+        "2fa50779_5",
+        "sharegpt_FQA1tLr_50",
+        "d39b7977_2",
+        "sharegpt_3swiY8I_36",
+        "9998814e_2",
+        "sharegpt_vRfbcKe_87",
+        "174cccbc"
+      ],
+      "state_facets": [
+        {
+          "name": "assistant_memory",
+          "value": "I've been meaning to try out some new productivity apps, so thanks for the recommendations!",
+          "support_session_ids": [
+            "174cccbc"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "I'm glad you're looking to make the most of your commute time!",
+          "support_session_ids": [
+            "174cccbc"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "**\"Mindset: The New Psychology of Success\" by Carol S.",
+          "support_session_ids": [
+            "174cccbc"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "I think you'll really enjoy their podcast, and I'm curious to hear what you think of it!",
+          "support_session_ids": [
+            "174cccbc"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "I've heard great things about it, and I'm curious to see what all the fuss is about.",
+          "support_session_ids": [
+            "174cccbc"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "Here are some highly-recommended true crime podcasts: **Classic True Crime Podcasts:** 1.",
+          "support_session_ids": [
+            "174cccbc"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "Here are some low-maintenance plant recommendations that fit perfectly with the minimalist aesthetic: 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "9998814e_2",
+            "174cccbc"
+          ]
+        },
+        {
+          "claim": "**Snake Plant (Sansevieria Trifasciata)**: This stylish plant is almost impossible to kill and comes in a variety of shapes and sizes.",
+          "reason": "stale",
+          "support_session_ids": [
+            "9998814e_2",
+            "174cccbc"
+          ]
+        },
+        {
+          "claim": "Its sleek, upright leaves add a touch of modernity to any space.",
+          "reason": "stale",
+          "support_session_ids": [
+            "9998814e_2",
+            "174cccbc"
+          ]
+        },
+        {
+          "claim": "I think I'll go with the Snake Plant.",
+          "reason": "stale",
+          "support_session_ids": [
+            "9998814e_2",
+            "174cccbc"
+          ]
+        },
+        {
+          "claim": "I like its sleek and modern look.",
+          "reason": "stale",
+          "support_session_ids": [
+            "9998814e_2",
+            "174cccbc"
+          ]
+        },
+        {
+          "claim": "By the way, I'm really happy with how my closet organization project turned out.",
+          "reason": "stale",
+          "support_session_ids": [
+            "9998814e_2",
+            "174cccbc"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "1903aded",
+      "question_type": "single-session-assistant",
+      "question": "I think we discussed work from home jobs for seniors earlier. Can you remind me what was the 7th job in the list you provided?",
+      "gold_answer": "Transcriptionist.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 20:57",
+      "answer_session_ids": [
+        "answer_sharegpt_hA7AkP3_0"
+      ],
+      "evidence_session_ids": [
+        "4774287c_1",
+        "sharegpt_emE20LI_0",
+        "a126eeab_1",
+        "answer_sharegpt_hA7AkP3_0",
+        "sharegpt_MCI1EVK_39",
+        "ultrachat_110523",
+        "9b4c070c",
+        "184efb91_3",
+        "ultrachat_30401",
+        "8adb232f_1",
+        "b163d176",
+        "66369fde_1"
+      ],
+      "state_facets": [
+        {
+          "name": "assistant_memory",
+          "value": "Instead of waking up at 7:30, I've started waking up at 7:15, and it's made a huge difference in how rushed I feel in the mornings.",
+          "support_session_ids": [
+            "66369fde_1"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "Waking up 15 minutes earlier can make a significant difference in how you feel, especially if you're someone who values having some extra time to relax before starting your day.",
+          "support_session_ids": [
+            "66369fde_1"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "**Slow down**: You can take your time getting ready, without feeling rushed or frantic.",
+          "support_session_ids": [
+            "66369fde_1"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "By waking up at 7:15, you're giving yourself a buffer to: 1.",
+          "support_session_ids": [
+            "66369fde_1"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "You're already taking steps to optimize your morning routine!",
+          "support_session_ids": [
+            "66369fde_1"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "**Clean and prepare the parts**: Ensure the parts are free of oils, grease, and other contaminants.",
+          "reason": "stale",
+          "support_session_ids": [
+            "8adb232f_1",
+            "66369fde_1"
+          ]
+        },
+        {
+          "claim": "I'm glad to hear that the epoxy-based glue worked well for you on the F-16's engine cowling.",
+          "reason": "stale",
+          "support_session_ids": [
+            "8adb232f_1",
+            "66369fde_1"
+          ]
+        },
+        {
+          "claim": "I've been thinking about upgrading my workspace, and I've been eyeing a new workstation online that has better storage and a larger surface area.",
+          "reason": "stale",
+          "support_session_ids": [
+            "8adb232f_1",
+            "66369fde_1"
+          ]
+        },
+        {
+          "claim": "I think it would really help me stay organized and focused while building.",
+          "reason": "stale",
+          "support_session_ids": [
+            "8adb232f_1",
+            "66369fde_1"
+          ]
+        },
+        {
+          "claim": "I might treat myself to it after I finish the F-16.",
+          "reason": "stale",
+          "support_session_ids": [
+            "8adb232f_1",
+            "66369fde_1"
+          ]
+        },
+        {
+          "claim": "Upgrading your workspace can make a huge difference in your modeling experience!",
+          "reason": "stale",
+          "support_session_ids": [
+            "8adb232f_1",
+            "66369fde_1"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "ceb54acb",
+      "question_type": "single-session-assistant",
+      "question": "In our previous chat, you suggested 'sexual compulsions' and a few other options for alternative terms for certain behaviors. Can you remind me what the other four options were?",
+      "gold_answer": "I suggested 'sexual fixations', 'problematic sexual behaviors', 'sexual impulsivity', and 'compulsive sexuality'.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 22:56",
+      "answer_session_ids": [
+        "answer_sharegpt_cGdjmYo_0"
+      ],
+      "evidence_session_ids": [
+        "511bdbe3_2",
+        "ultrachat_539537",
+        "a1cbe83a",
+        "sharegpt_FfxWZ49_0",
+        "de293134_1",
+        "ultrachat_352012",
+        "63b72857",
+        "sharegpt_5XGtDkz_0",
+        "7aa2a9af_2",
+        "answer_sharegpt_cGdjmYo_0",
+        "ultrachat_238565",
+        "0840765f_1",
+        "197d99cc",
+        "9f220c66_2",
+        "44202c74_2",
+        "f6fd00cf",
+        "dddce60a_1",
+        "187b4852_2"
+      ],
+      "state_facets": [
+        {
+          "name": "assistant_memory",
+          "value": "I'm actually thinking of getting some souvenirs for my friends who are roller coaster enthusiasts.",
+          "support_session_ids": [
+            "187b4852_2"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "Heim Barbecue is known for their standout brisket, but they also have some other delicious menu items that you might want to try: - Bacon Burnt Ends: Crispy, caramelized cubes of pork belly that are smoked and seasoned to perfection.",
+          "support_session_ids": [
+            "ultrachat_238565"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "For example, you could block social media from 8:00 AM to 12:00 PM, but still allow access to email, news, and productivity tools during that time.",
+          "support_session_ids": [
+            "de293134_1"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "Do you think it's possible to set up a schedule that blocks social media during certain times of the day, but still allows me to access other websites and apps?",
+          "support_session_ids": [
+            "de293134_1"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "By the way, the article I read in The New Yorker about the impact of social media on mental health really got me thinking about my own social media use, and I'm looking for ways to cut back.",
+          "support_session_ids": [
+            "de293134_1"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "By the way, I read an article in The New Yorker about the impact of social media on mental health today, and it really got me thinking about making some changes.",
+          "support_session_ids": [
+            "de293134_1"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "I've heard great things about it, and it seems like a good fit for my space and budget.",
+          "reason": "stale",
+          "support_session_ids": [
+            "f6fd00cf",
+            "187b4852_2"
+          ]
+        },
+        {
+          "claim": "I also like that it's easy to customize and can be used for other things besides game storage.",
+          "reason": "stale",
+          "support_session_ids": [
+            "f6fd00cf",
+            "187b4852_2"
+          ]
+        },
+        {
+          "claim": "Do you think it's a good idea to get some stackable plastic bins or crates to store my games in on the shelf?",
+          "reason": "stale",
+          "support_session_ids": [
+            "f6fd00cf",
+            "187b4852_2"
+          ]
+        },
+        {
+          "claim": "The KALLAX is a fantastic choice!",
+          "reason": "stale",
+          "support_session_ids": [
+            "f6fd00cf",
+            "187b4852_2"
+          ]
+        },
+        {
+          "claim": "It's a versatile and affordable shelving unit that can be customized to fit your needs.",
+          "reason": "stale",
+          "support_session_ids": [
+            "f6fd00cf",
+            "187b4852_2"
+          ]
+        },
+        {
+          "claim": "Adding stackable plastic bins or crates is an excellent idea to keep your games organized and make the most out of your shelf space.",
+          "reason": "stale",
+          "support_session_ids": [
+            "f6fd00cf",
+            "187b4852_2"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "f523d9fe",
+      "question_type": "single-session-assistant",
+      "question": "I wanted to check back on our previous conversation about Netflix. I mentioned that I wanted to be able to access all seasons of old shows? Do you remember what show I used as an example, the one that only had the last season available?",
+      "gold_answer": "Doc Martin",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 22:00",
+      "answer_session_ids": [
+        "answer_sharegpt_m2xJfjo_0"
+      ],
+      "evidence_session_ids": [
+        "ultrachat_391251",
+        "636e0e32_1",
+        "ultrachat_16868",
+        "f5604d30_3",
+        "22aa7cca_4",
+        "ultrachat_201541",
+        "answer_sharegpt_m2xJfjo_0",
+        "debc34d7_1",
+        "sharegpt_4RnbgQt_0",
+        "193c23bd_1",
+        "661b711f_1",
+        "a07f9d5c_1",
+        "fbfda981",
+        "73f75ab4",
+        "733e443a_abs_4",
+        "44165708",
+        "ultrachat_320115"
+      ],
+      "state_facets": [
+        {
+          "name": "assistant_memory",
+          "value": "Do you know if there are any plans to increase the number of accessible taxis and motorcycles in Kuala Lumpur?",
+          "support_session_ids": [
+            "ultrachat_320115"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "That's good to know.",
+          "support_session_ids": [
+            "ultrachat_320115"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "New Castle (Neues Schloss): The New Castle is a grand palace built in the Renaissance style that now houses the local government offices.",
+          "support_session_ids": [
+            "ultrachat_201541"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "in 2011, the government launched a program called the \"accessible taxi fund\" to provide financial assistance to taxi operators who wanted to upgrade their vehicles to be wheelchair-accessible.",
+          "support_session_ids": [
+            "ultrachat_320115"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "I do not have access to the most up-to-date information on this topic, but i can tell you that kuala lumpur has been addressing the lack of accessible taxis and motorcycles in recent years.",
+          "support_session_ids": [
+            "ultrachat_320115"
+          ]
+        },
+        {
+          "name": "assistant_memory",
+          "value": "the city has implemented barrier-free access on public transport services like buses, trains, and monorails.",
+          "support_session_ids": [
+            "ultrachat_320115"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "**Improved crust crispiness**: The circulating air can help to dry out the crust more efficiently, leading to a crisper texture.",
+          "reason": "stale",
+          "support_session_ids": [
+            "733e443a_abs_4",
+            "ultrachat_320115"
+          ]
+        },
+        {
+          "claim": "I've had good results with the convection setting on my oven, like when I used it to bake a batch of cookies last Thursday.",
+          "reason": "stale",
+          "support_session_ids": [
+            "733e443a_abs_4",
+            "ultrachat_320115"
+          ]
+        },
+        {
+          "claim": "They turned out perfectly crispy on the outside and chewy on the inside.",
+          "reason": "stale",
+          "support_session_ids": [
+            "733e443a_abs_4",
+            "ultrachat_320115"
+          ]
+        },
+        {
+          "claim": "Do you think I should try a slower rise or delayed fermentation for this Italian bread recipe?",
+          "reason": "stale",
+          "support_session_ids": [
+            "733e443a_abs_4",
+            "ultrachat_320115"
+          ]
+        },
+        {
+          "claim": "Cookies are a great example of how convection can help with browning and crispiness!",
+          "reason": "stale",
+          "support_session_ids": [
+            "733e443a_abs_4",
+            "ultrachat_320115"
+          ]
+        },
+        {
+          "claim": "Now, about the slower rise or delayed fermentation for your Italian bread recipe...",
+          "reason": "stale",
+          "support_session_ids": [
+            "733e443a_abs_4",
+            "ultrachat_320115"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    }
+  ]
+}

@@ -1,0 +1,1597 @@
+{
+  "benchmark": "LongMemEval-S",
+  "method": "prebuilt_llm_kg_graph",
+  "data_path": "C:\\Users\\93232\\Desktop\\SCIENCE\\AAAI2027_2\\Experiment\\Other_BenchMark\\LongMemEval-S\\LongMemEval-S_data\\data\\longmemeval_s_cleaned.json",
+  "graph_dir": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session",
+  "answer_provider": "openai",
+  "answer_model": "gpt-4o-mini",
+  "judge_provider": "openai",
+  "judge_model": "gpt-4o",
+  "variants": [
+    "prebuilt_llm_kg_graph"
+  ],
+  "limit_cases": 0,
+  "limit_per_type": 10,
+  "question_types": {
+    "multi-session": 10
+  },
+  "results": [
+    {
+      "variant": "prebuilt_llm_kg_graph",
+      "summary": {
+        "n_cases": 10,
+        "local_answer_match": 0.6,
+        "official_answer_accuracy": 0.7,
+        "candidate_session_recall": 0.975,
+        "candidate_session_precision": 0.15,
+        "evidence_session_recall": 0.6917,
+        "evidence_session_precision": 0.9,
+        "abstention_accuracy": null,
+        "task_averaged_official_answer_accuracy": 0.7,
+        "by_question_type": {
+          "multi-session": {
+            "n_cases": 10,
+            "local_answer_match": 0.6,
+            "official_answer_accuracy": 0.7,
+            "candidate_session_recall": 0.975,
+            "candidate_session_precision": 0.15,
+            "evidence_session_recall": 0.6917,
+            "evidence_session_precision": 0.9
+          }
+        }
+      },
+      "rows": [
+        {
+          "question_id": "0a995998",
+          "question_type": "multi-session",
+          "task_adapter": "Multi-session synthesis",
+          "is_abstention": false,
+          "question": "How many items of clothing do I need to pick up or return from a store?",
+          "gold_answer": "3",
+          "hypothesis": "You need to pick up 2 items of clothing from the store: the navy blue blazer from dry cleaning and the exchanged boots from Zara.",
+          "candidate_session_ids": [
+            "answer_afa9873b_3",
+            "answer_afa9873b_1",
+            "answer_afa9873b_2",
+            "85846900_2",
+            "25091584_1",
+            "e6790684_1",
+            "ad3d0815_1",
+            "439f9ed8_3",
+            "ultrachat_331531",
+            "afbd7193_2",
+            "fa46a10e",
+            "sharegpt_U3S02iq_0",
+            "750b437b_3",
+            "sharegpt_ZzArUrr_0",
+            "3f05c474",
+            "f5a8b1d0_1",
+            "ultrachat_158784",
+            "64b847a7_1",
+            "ultrachat_428050",
+            "b10c041b_2"
+          ],
+          "evidence_session_ids": [
+            "answer_afa9873b_2",
+            "answer_afa9873b_1"
+          ],
+          "answer_session_ids": [
+            "answer_afa9873b_2",
+            "answer_afa9873b_3",
+            "answer_afa9873b_1"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.15,
+          "evidence_session_recall": 0.6666666666666666,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": false,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": false,
+            "response": "No"
+          },
+          "state_facets": [
+            {
+              "name": "pickup_item_1",
+              "value": "navy blue blazer from dry cleaning",
+              "support_session_ids": [
+                "answer_afa9873b_2"
+              ]
+            },
+            {
+              "name": "pickup_item_2",
+              "value": "exchanged boots from Zara",
+              "support_session_ids": [
+                "answer_afa9873b_1"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence clearly states the items that need to be picked up, totaling 2 items.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_afa9873b_2",
+              "answer_afa9873b_1"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_afa9873b_2",
+                "date": "2023/02/15 (Wed) 06:30",
+                "role": "user",
+                "content": "I need help organizing my closet. Can you give me some tips on how to declutter and categorize my clothes? Also, by the way, I still need to pick up my dry cleaning for the navy blue blazer I wore to a meeting a few weeks ago.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_afa9873b_1",
+                "date": "2023/02/15 (Wed) 16:19",
+                "role": "user",
+                "content": "I think I'll use some boxes I have at home to store my winter clothes. By the way, I just exchanged a pair of boots I got from Zara on 2/5, and I still need to pick up the new pair. Do you have any tips on how to keep track of items I need to pick up or return?",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "pickup_item_1",
+                "value": "navy blue blazer from dry cleaning",
+                "support_session_ids": [
+                  "answer_afa9873b_2"
+                ]
+              },
+              {
+                "name": "pickup_item_2",
+                "value": "exchanged boots from Zara",
+                "support_session_ids": [
+                  "answer_afa9873b_1"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\0a995998.graph.json"
+        },
+        {
+          "question_id": "6d550036",
+          "question_type": "multi-session",
+          "task_adapter": "Multi-session synthesis",
+          "is_abstention": false,
+          "question": "How many projects have I led or am currently leading?",
+          "gold_answer": "2",
+          "hypothesis": "You are currently leading 2 projects: the Ethereum Mexico project, a large IRL Web3 community event, and a project involving a team of five engineers to launch a new product feature in June.",
+          "candidate_session_ids": [
+            "2e4430d8_2",
+            "answer_ec904b3c_1",
+            "a9981dc6_3",
+            "dae3906e_2",
+            "sharegpt_zciCXP1_12",
+            "sharegpt_UbMVpdp_93",
+            "f6246b5f",
+            "answer_ec904b3c_4",
+            "sharegpt_nVi6tIt_0",
+            "0bab76de",
+            "ultrachat_184799",
+            "answer_ec904b3c_2",
+            "eb682e52_2",
+            "878271ae_2",
+            "ultrachat_271963",
+            "528f481d_5",
+            "sharegpt_J7ZAFLd_0",
+            "sharegpt_yzR1YLf_0",
+            "b37a44e4_5",
+            "a245a0df_2"
+          ],
+          "evidence_session_ids": [
+            "sharegpt_zciCXP1_12",
+            "2e4430d8_2"
+          ],
+          "answer_session_ids": [
+            "answer_ec904b3c_1",
+            "answer_ec904b3c_4",
+            "answer_ec904b3c_3",
+            "answer_ec904b3c_2"
+          ],
+          "candidate_session_recall": 0.75,
+          "candidate_session_precision": 0.15,
+          "evidence_session_recall": 0.0,
+          "evidence_session_precision": 0.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "project",
+              "value": "User is currently leading a project.",
+              "support_session_ids": [
+                "2e4430d8_2"
+              ]
+            },
+            {
+              "name": "project",
+              "value": "User is currently leading the Ethereum Mexico project, a large IRL Web3 community event.",
+              "support_session_ids": [
+                "sharegpt_zciCXP1_12"
+              ]
+            },
+            {
+              "name": "project",
+              "value": "User is currently leading a team of five engineers.",
+              "support_session_ids": [
+                "2e4430d8_2"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence clearly states that you are leading two distinct projects, one related to the Ethereum Mexico event and another involving a team of engineers.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "0bab76de",
+              "dae3906e_2",
+              "sharegpt_zciCXP1_12",
+              "b37a44e4_5",
+              "2e4430d8_2",
+              "answer_ec904b3c_2"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "0bab76de",
+                "date": "2023/05/20 (Sat) 05:54",
+                "role": "user",
+                "content": "I actually replaced the table lamp on my coffee table with a new one from IKEA two weekends ago, and it has a USB port, which is super convenient for charging my phone or tablet while I'm watching TV.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "dae3906e_2",
+                "date": "2023/05/24 (Wed) 17:05",
+                "role": "user",
+                "content": "I'm trying to get my living room lighting just right. I've recently updated my table lamp with a new lampshade from IKEA last weekend, which lets more light through and has a modern design. Can you help me figure out what kind of bulbs would work best with it?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "dae3906e_2",
+                "date": "2023/05/24 (Wed) 17:05",
+                "role": "user",
+                "content": "I'm also thinking about adjusting the lighting in my hallway. Do you have any suggestions for new lampshades for my floor lamps there? The current ones are a bit dusty and faded.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "sharegpt_zciCXP1_12",
+                "date": "2023/05/27 (Sat) 02:54",
+                "role": "assistant",
+                "content": "To improve the answer to the question, “How does your project differ from similar ones?” the following could be added:\nOur project differs from similar ones in Mexico in several key ways. Firstly, unlike the two big events held in the country last year, which were run by ETHGlobal and a private entity, respectively, our event is being created by the Ethereum Mexico Community Team, with a focus on community building and education. We believe that the most important event about Web3 should be created by the community for the community, and that workshops and talks about how Ethereum and all the protocols built on it could bring new tools and opportunities for the people are essential.\nSecondly, our event aims to highlight the strong core values of the Ethereum ecosystem in Mexico. In the past year, we have seen a growing community of people who are involved in projects and getting on board with the Ethereum ecosystem. We believe that our event will provide an opportunity for attendees to network and collaborate with others who share their passion and values for Ethereum.\nLastly, our event is focused on accessibility and affordability for the Mexican people. We recognize that many individuals in Mexico are interested in learning about the Ethereum ecosystem but cannot afford to attend events in other parts of the world. By hosting an event in Mexico City, we are providing a more accessible and affordable option for individuals who want to learn about Ethereum and its potential to transform industries beyond finance.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "sharegpt_zciCXP1_12",
+                "date": "2023/05/27 (Sat) 02:54",
+                "role": "user",
+                "content": "Improve the answer saying yes we have applied with the ESP but not for an event of this magnitudeHave you previously applied to ESP with this same idea or project?\\*Has anything changed? If you're considering reapplying, we recommend signing up for Office Hours first before restarting the application process.This is the first time we applied for an IRL event of this magnitude! In the past, we applied to host events during The Merge, we hosted 3 events in 3 different cities for 80-100 people each one.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "sharegpt_zciCXP1_12",
+                "date": "2023/05/27 (Sat) 02:54",
+                "role": "user",
+                "content": "Answer the following quesiton in a better way.\nHow does your project differ from similar ones?\\*\nWe would answer this question from the perspective of what is happening in Mexico. In the last year, we have seen a growing community. More people are involved in projects, more people are getting on board and maybe the best part, most people are walking with strong core values about the ecosystem. \n\nLast year we had two big events in the country. ETHMexico, run by ETHGlobal and Blockchainland, run by a private entity. Both events got more than 700 attendees.\n\nThis year, the only big event confirmed about blockchain is BlockchainLand, so we, as the Ethereum México Community Team, believe that the most important event about Web3 should not be a private one. We aim to make an event created by the community for the community, with workshops and talks about how Ethereum and all the protocols built on it could bring new tools and opportunities for the people.\nHow does your project differ from similar ones?\\*\nWe would answer this question from the perspective of what is happening in Mexico. In the last year, we have seen a growing community. More people are involved in projects, more people are getting on board and maybe the best part, most people are walking with strong core values about the ecosystem. \n\nLast year we had two big events in the country. ETHMexico, run by ETHGlobal and Blockchainland, run by a private entity. Both events got more than 700 attendees.\n\nThis year, the only big event confirmed about blockchain is BlockchainLand, so we, as the Ethereum México Community Team, believe that the most important event about Web3 should not be a private one. We aim to make an event created by the community for the community, with workshops and talks about how Ethereum and all the protocols built on it could bring new tools and opportunities for the people.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "b37a44e4_5",
+                "date": "2023/05/27 (Sat) 14:13",
+                "role": "user",
+                "content": "I'm going to write a post that combines the detective story and family heirloom approaches, sharing the story of how we found the chair in the attic and then diving into its history and significance within our family. I'll also include some historical context to help readers understand the era in which it was created. Can you give me some examples of how to structure the body of the post and how to break up the text with images and other media?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "2e4430d8_2",
+                "date": "2023/05/28 (Sun) 03:42",
+                "role": "user",
+                "content": "I'm thinking of organizing a meeting with my team to discuss the project plan and assign tasks. Do you think it's a good idea to include the junior engineer, Alex, in this meeting? He's been doing well under my guidance, and I think it would be a great opportunity for him to learn more about project planning and collaboration.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "2e4430d8_2",
+                "date": "2023/05/28 (Sun) 03:42",
+                "role": "user",
+                "content": "I'm planning to launch a new product feature in June and I need to create a project timeline. Can you help me create a Gantt chart or recommend a tool to do so? By the way, I've been pretty busy lately, especially since I was promoted to a senior software engineer position three months ago and have been leading a team of five engineers.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "2e4430d8_2",
+                "date": "2023/05/28 (Sun) 03:42",
+                "role": "user",
+                "content": "I think I'll try out Asana for creating a Gantt chart, since I've heard good things about it. Can you help me estimate the duration of each task based on my team's velocity? We've been doing pretty well lately, delivering features ahead of schedule, like that high-priority project I completed two months ahead of time, which led to a significant increase in company revenue.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_ec904b3c_2",
+                "date": "2023/05/29 (Mon) 09:25",
+                "role": "user",
+                "content": "These tips are really helpful, thanks! I'm going to try out a few of them, especially the grouping and binning method. I think it'll really help me to identify patterns in my customer purchase data. By the way, do you have any suggestions on how to visualize the results of my analysis? I want to present my findings in a way that's easy to understand for my professor and classmates.",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "project",
+                "value": "The project differs from ETHMexico and Blockchainland by being community-created rather than run by a private entity or ETHGlobal.",
+                "support_session_ids": [
+                  "sharegpt_zciCXP1_12"
+                ]
+              },
+              {
+                "name": "project",
+                "value": "User is currently leading a project.",
+                "support_session_ids": [
+                  "2e4430d8_2"
+                ]
+              },
+              {
+                "name": "project",
+                "value": "The user is planning to launch a new product feature in June.",
+                "support_session_ids": [
+                  "2e4430d8_2"
+                ]
+              },
+              {
+                "name": "project",
+                "value": "The user is currently leading a team of five engineers.",
+                "support_session_ids": [
+                  "2e4430d8_2"
+                ]
+              },
+              {
+                "name": "project",
+                "value": "User is currently leading the Ethereum Mexico project, a large IRL Web3 community event.",
+                "support_session_ids": [
+                  "sharegpt_zciCXP1_12"
+                ]
+              },
+              {
+                "name": "project",
+                "value": "User updated their table lamp with a new lampshade from IKEA last weekend (around May 20-21, 2023).",
+                "support_session_ids": [
+                  "dae3906e_2"
+                ]
+              },
+              {
+                "name": "project",
+                "value": "User replaced the coffee table lamp with a new IKEA lamp featuring a USB port, approximately two weekends before May 20, 2023.",
+                "support_session_ids": [
+                  "0bab76de"
+                ]
+              },
+              {
+                "name": "project",
+                "value": "User is currently working on an analysis of customer purchase data, intends to use visualization methods, and plans to present findings to their professor and classmates.",
+                "support_session_ids": [
+                  "answer_ec904b3c_2"
+                ]
+              },
+              {
+                "name": "project",
+                "value": "User completed a high-priority project two months ahead of schedule, which led to a significant increase in company revenue.",
+                "support_session_ids": [
+                  "2e4430d8_2"
+                ]
+              },
+              {
+                "name": "project",
+                "value": "The user is currently writing a blog post about their wooden rocking chair, combining detective story and family heirloom approaches.",
+                "support_session_ids": [
+                  "b37a44e4_5"
+                ]
+              },
+              {
+                "name": "project_detail",
+                "value": "The event will include workshops and talks about how Ethereum and its protocols could bring new tools and opportunities.",
+                "support_session_ids": [
+                  "sharegpt_zciCXP1_12"
+                ]
+              },
+              {
+                "name": "task",
+                "value": "The user is seeking suggestions for new lampshades for the hallway floor lamps.",
+                "support_session_ids": [
+                  "dae3906e_2"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\6d550036.graph.json"
+        },
+        {
+          "question_id": "gpt4_59c863d7",
+          "question_type": "multi-session",
+          "task_adapter": "Multi-session synthesis",
+          "is_abstention": false,
+          "question": "How many model kits have I worked on or bought?",
+          "gold_answer": "I have worked on or bought five model kits. The scales of the models are: Revell F-15 Eagle (scale not mentioned), Tamiya 1/48 scale Spitfire Mk.V, 1/16 scale German Tiger I tank, 1/72 scale B-29 bomber, and 1/24 scale '69 Camaro.",
+          "hypothesis": "You have worked on or bought 5 model kits: 1/72 scale B-29 bomber model kit, 1/24 scale '69 Camaro model kit, Revell F-15 Eagle model kit, 1/16 scale German Tiger I tank model kit, and Tamiya 1/48 scale Spitfire Mk.V model kit.",
+          "candidate_session_ids": [
+            "answer_593bdffd_4",
+            "answer_593bdffd_1",
+            "a7d014e4_1",
+            "eb47739f_2",
+            "sharegpt_MNdE67E_17",
+            "2f09d4c8",
+            "9ef698bc_2",
+            "e60a93ff_2",
+            "ultrachat_233858",
+            "b70358bc_1",
+            "ultrachat_126967",
+            "c263f1c0",
+            "sharegpt_AhS7uI8_351",
+            "ultrachat_34319",
+            "answer_593bdffd_3",
+            "answer_593bdffd_2",
+            "ultrachat_566770",
+            "ultrachat_59708",
+            "5b9c49f7",
+            "ultrachat_307895"
+          ],
+          "evidence_session_ids": [
+            "answer_593bdffd_4",
+            "answer_593bdffd_1",
+            "answer_593bdffd_3",
+            "answer_593bdffd_2"
+          ],
+          "answer_session_ids": [
+            "answer_593bdffd_4",
+            "answer_593bdffd_1",
+            "answer_593bdffd_3",
+            "answer_593bdffd_2"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.2,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": false,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "model_kit_worked_on_or_bought",
+              "value": "1/72 scale B-29 bomber model kit",
+              "support_session_ids": [
+                "answer_593bdffd_4"
+              ]
+            },
+            {
+              "name": "model_kit_worked_on_or_bought",
+              "value": "1/24 scale '69 Camaro model kit",
+              "support_session_ids": [
+                "answer_593bdffd_4"
+              ]
+            },
+            {
+              "name": "model_kit_worked_on_or_bought",
+              "value": "Revell F-15 Eagle model kit",
+              "support_session_ids": [
+                "answer_593bdffd_1"
+              ]
+            },
+            {
+              "name": "model_kit_worked_on_or_bought",
+              "value": "1/16 scale German Tiger I tank model kit",
+              "support_session_ids": [
+                "answer_593bdffd_3"
+              ]
+            },
+            {
+              "name": "model_kit_worked_on_or_bought",
+              "value": "Tamiya 1/48 scale Spitfire Mk.V model kit",
+              "support_session_ids": [
+                "answer_593bdffd_2"
+              ]
+            }
+          ],
+          "rejected_claims": [
+            {
+              "claim": "User bought a Revell F-15 Eagle model kit in late April.",
+              "reason": "contradicted",
+              "support_session_ids": [
+                "answer_593bdffd_1"
+              ]
+            }
+          ],
+          "answer_rationale": "The answer is based on the explicit mentions of model kits worked on or bought in the evidence snippets.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_593bdffd_4",
+              "answer_593bdffd_1",
+              "answer_593bdffd_3",
+              "answer_593bdffd_2"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_593bdffd_4",
+                "date": "2023/05/20 (Sat) 14:38",
+                "role": "user",
+                "content": "I'm looking for some tips on photo-etching for my new 1/72 scale B-29 bomber model kit. I've never tried it before, but I've seen some amazing results online. By the way, I just got this kit and a 1/24 scale '69 Camaro at a model show last weekend.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_593bdffd_4",
+                "date": "2023/05/20 (Sat) 14:38",
+                "role": "user",
+                "content": "I've been thinking about adding some wire details to my 1/24 scale '69 Camaro model as well. Do you have any tips on how to solder wire details together, especially for things like engine wiring or fuel lines?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_593bdffd_1",
+                "date": "2023/05/27 (Sat) 14:40",
+                "role": "user",
+                "content": "I'm looking for some tips on weathering techniques for my model kits. I've been getting back into model building and I recently finished a simple Revell F-15 Eagle kit that I picked up on a whim during a trip to the hobby store in late April.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_593bdffd_1",
+                "date": "2023/05/27 (Sat) 14:40",
+                "role": "user",
+                "content": "I'm still trying to figure out the best way to approach the weathering on my B-29 bomber. I started with a simple Revell F-15 Eagle kit that I picked up on a whim during a trip to the hobby store in late April, and now I'm feeling more confident in my skills, but I want to take it to the next level. Can you recommend any specific weathering techniques or products that would work well on a 1/72 scale model like this?",
+                "why_relevant": "supports rejected claim (contradicted)"
+              },
+              {
+                "session_id": "answer_593bdffd_3",
+                "date": "2023/05/29 (Mon) 18:19",
+                "role": "user",
+                "content": "I'm looking for some tips on weathering techniques for my model tanks. I've been using AK Interactive products, but I'm interested in trying out some new methods. By the way, I also started working on a diorama featuring a 1/16 scale German Tiger I tank, and I'm trying to get the terrain to look as realistic as possible.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_593bdffd_2",
+                "date": "2023/05/30 (Tue) 03:22",
+                "role": "user",
+                "content": "I'm looking for some advice on painting metal surfaces for a model kit. I recently finished a Tamiya 1/48 scale Spitfire Mk.V and had to learn some new techniques, but I'm still not entirely happy with the results. Do you have any tips or recommended products that could help me achieve a more realistic finish?",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "model_kit_worked_on_or_bought",
+                "value": "1/72 scale B-29 bomber model kit",
+                "support_session_ids": [
+                  "answer_593bdffd_4"
+                ]
+              },
+              {
+                "name": "model_kit_worked_on_or_bought",
+                "value": "1/24 scale '69 Camaro model kit",
+                "support_session_ids": [
+                  "answer_593bdffd_4"
+                ]
+              },
+              {
+                "name": "model_kit_worked_on_or_bought",
+                "value": "Revell F-15 Eagle model kit",
+                "support_session_ids": [
+                  "answer_593bdffd_1"
+                ]
+              },
+              {
+                "name": "model_kit_worked_on_or_bought",
+                "value": "1/16 scale German Tiger I tank model kit",
+                "support_session_ids": [
+                  "answer_593bdffd_3"
+                ]
+              },
+              {
+                "name": "model_kit_worked_on_or_bought",
+                "value": "Tamiya 1/48 scale Spitfire Mk.V model kit",
+                "support_session_ids": [
+                  "answer_593bdffd_2"
+                ]
+              }
+            ],
+            "rejected_claims": [
+              {
+                "claim": "User bought a Revell F-15 Eagle model kit in late April.",
+                "reason": "contradicted",
+                "support_session_ids": [
+                  "answer_593bdffd_1"
+                ]
+              }
+            ],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\gpt4_59c863d7.graph.json"
+        },
+        {
+          "question_id": "b5ef892d",
+          "question_type": "multi-session",
+          "task_adapter": "Multi-session synthesis",
+          "is_abstention": false,
+          "question": "How many days did I spend on camping trips in the United States this year?",
+          "gold_answer": "8 days.",
+          "hypothesis": "8 days",
+          "candidate_session_ids": [
+            "answer_a8b4290f_3",
+            "ultrachat_565056",
+            "sharegpt_XWqXdom_0",
+            "answer_a8b4290f_2",
+            "ultrachat_375427",
+            "ultrachat_53385",
+            "35dcacdc_2",
+            "ultrachat_367439",
+            "f2ccf83b",
+            "answer_a8b4290f_1",
+            "ultrachat_491007",
+            "e552e1f9_2",
+            "ultrachat_313109",
+            "12cff183_1",
+            "sharegpt_hfWd2FK_0",
+            "dc968254_1",
+            "6685e6cd",
+            "ultrachat_509285",
+            "7294438c",
+            "32a203b4_1"
+          ],
+          "evidence_session_ids": [
+            "answer_a8b4290f_1",
+            "answer_a8b4290f_2"
+          ],
+          "answer_session_ids": [
+            "answer_a8b4290f_3",
+            "answer_a8b4290f_1",
+            "answer_a8b4290f_2"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.15,
+          "evidence_session_recall": 0.6666666666666666,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "yes"
+          },
+          "state_facets": [
+            {
+              "name": "big_sur_camping_trip_in_early_april_2023",
+              "value": "3 days",
+              "support_session_ids": [
+                "answer_a8b4290f_2"
+              ]
+            },
+            {
+              "name": "yellowstone_camping_trip_in_march_2023",
+              "value": "5 days",
+              "support_session_ids": [
+                "answer_a8b4290f_1"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The total number of days spent on camping trips in the United States this year is the sum of 5 days from Yellowstone National Park and 3 days from Big Sur, totaling 8 days.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_a8b4290f_1",
+              "answer_a8b4290f_2"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_a8b4290f_1",
+                "date": "2023/04/29 (Sat) 15:49",
+                "role": "user",
+                "content": "I'm planning a trip to the Rocky Mountains in Colorado and I was wondering if you could recommend some good hiking trails and camping spots in the area. By the way, I just got back from an amazing 5-day camping trip to Yellowstone National Park last month, and I'm still buzzing from the experience.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_a8b4290f_2",
+                "date": "2023/04/29 (Sat) 20:02",
+                "role": "user",
+                "content": "I'm looking for some new hiking boots. Do you have any recommendations for waterproof boots that are good for multi-day backpacking trips? By the way, I just got back from a 3-day solo camping trip to Big Sur in early April and my current boots did okay, but I think I need something better.",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "big_sur_camping_trip_in_early_april_2023",
+                "value": "3 days",
+                "support_session_ids": [
+                  "answer_a8b4290f_2"
+                ]
+              },
+              {
+                "name": "yellowstone_camping_trip_in_march_2023",
+                "value": "5 days",
+                "support_session_ids": [
+                  "answer_a8b4290f_1"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\b5ef892d.graph.json"
+        },
+        {
+          "question_id": "e831120c",
+          "question_type": "multi-session",
+          "task_adapter": "Multi-session synthesis",
+          "is_abstention": false,
+          "question": "How many weeks did it take me to watch all the Marvel Cinematic Universe movies and the main Star Wars films?",
+          "gold_answer": "3.5 weeks",
+          "hypothesis": "It took approximately 3.5 weeks to watch all the Marvel Cinematic Universe movies and the main Star Wars films.",
+          "candidate_session_ids": [
+            "answer_86c505e7_2",
+            "answer_86c505e7_1",
+            "a63ad8e3_2",
+            "sharegpt_sDfu38Q_0",
+            "7c82a6c3",
+            "8fb3fe3a_1",
+            "sharegpt_CK9naiz_63",
+            "ultrachat_30928",
+            "a110c4dc_2",
+            "63388005",
+            "db6ab13b_1",
+            "9274be90_2",
+            "273f91b0_1",
+            "f192beb0_2",
+            "ultrachat_310037",
+            "bfb6c9f0_2",
+            "773aebbd_4",
+            "ultrachat_173326",
+            "ultrachat_388607",
+            "8a4850d0"
+          ],
+          "evidence_session_ids": [
+            "answer_86c505e7_2"
+          ],
+          "answer_session_ids": [
+            "answer_86c505e7_1",
+            "answer_86c505e7_2"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.1,
+          "evidence_session_recall": 0.5,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "mcu_watch_duration",
+              "value": "about two weeks",
+              "support_session_ids": [
+                "answer_86c505e7_2"
+              ]
+            },
+            {
+              "name": "star_wars_watch_duration",
+              "value": "a week and a half",
+              "support_session_ids": [
+                "answer_86c505e7_2"
+              ]
+            },
+            {
+              "name": "total_watch_duration",
+              "value": "approximately 3.5 weeks",
+              "support_session_ids": [
+                "answer_86c505e7_2"
+              ]
+            }
+          ],
+          "rejected_claims": [
+            {
+              "claim": "I watched all 22 Marvel Cinematic Universe movies in two weeks.",
+              "reason": "stale",
+              "support_session_ids": [
+                "answer_86c505e7_1",
+                "answer_86c505e7_2"
+              ]
+            },
+            {
+              "claim": "The user has watched 23 Marvel Cinematic Universe movies.",
+              "reason": "contradicted",
+              "support_session_ids": [
+                "answer_86c505e7_2"
+              ]
+            }
+          ],
+          "answer_rationale": "The total watch duration combines the time taken for both the MCU and Star Wars films, as stated in the evidence.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_86c505e7_1",
+              "answer_86c505e7_2"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_86c505e7_1",
+                "date": "2023/05/23 (Tue) 23:17",
+                "role": "user",
+                "content": "I'm trying to organize my movie watching history, can you help me create a list or something? By the way, I've had some crazy movie binges lately, like when I watched all 22 Marvel Cinematic Universe movies in two weeks.",
+                "why_relevant": "supports rejected claim (stale)"
+              },
+              {
+                "session_id": "answer_86c505e7_2",
+                "date": "2023/05/25 (Thu) 21:00",
+                "role": "assistant",
+                "content": "Wow, you've been watching a wide range of movies! I'll add them to your list:\n\n**Movie List**\n\n1. Star Wars: Episode IX - The Rise of Skywalker (2019)\n2. Star Wars: Episode VIII - The Last Jedi (2017)\n3. Star Wars: Episode VII - The Force Awakens (2015)\n4. Star Wars: Episode VI - Return of the Jedi (1983)\n5. Star Wars: Episode V - The Empire Strikes Back (1980)\n6. Star Wars: Episode IV - A New Hope (1977)\n7. Star Wars: Episode III - Revenge of the Sith (2005)\n8. Star Wars: Episode II - Attack of the Clones (2002)\n9. Star Wars: Episode I - The Phantom Menace (1999)\n10. Rogue One: A Star Wars Story (2016)\n11. Solo: A Star Wars Story (2018)\n12. Iron Man (2008)\n13. The Incredible Hulk (2008)\n14. Iron Man 2 (2010)\n15. Thor (2011)\n16. Captain America: The First Avenger (2011)\n17. The Avengers (2012)\n18. Iron Man 3 (2013)\n19. Thor: The Dark World (2013)\n20. Captain America: The Winter Soldier (2014)\n21. Guardians of the Galaxy (2014)\n22. Avengers: Age of Ultron (2015)\n23. Ant-Man (2015)\n24. Captain America: Civil War (2016)\n25. Doctor Strange (2016)\n26. Guardians of the Galaxy Vol. 2 (2017)\n27. Spider-Man: Homecoming (2017)\n28. Thor: Ragnarok (2017)\n29. Black Panther (2018)\n30. Avengers: Infinity War (2018)\n31. Ant-Man and the Wasp (2018)\n32. Captain Marvel (2019)\n33. Avengers: Endgame (2019)\n34. Spider-Man: Far From Home (2019)\n35. Us (2019)\n36. Shazam! (2019)\n37. A Quiet Place (2018)\n38. Spider-Man: Into the Spider-Verse (2018)\n39. Crazy Rich Asians (2018)\n40. 2001: A Space Odyssey (1968)\n41. The Shawshank Redemption (1994)\n42. Jurassic Park (1993)\n43. Toy Story 4 (2019)\n44. Midsommar (2019)\n45. The Lion King (2019)\n\nYou've got a great mix of classic films, Marvel movies, and recent releases! Do you have any other movies you'd like to add to the list?",
+                "why_relevant": "supports rejected claim (contradicted)"
+              },
+              {
+                "session_id": "answer_86c505e7_2",
+                "date": "2023/05/25 (Thu) 21:00",
+                "role": "user",
+                "content": "I watched all the MCU movies, all 22 of them. I did it in about two weeks, it was a lot but worth it.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_86c505e7_2",
+                "date": "2023/05/25 (Thu) 21:00",
+                "role": "user",
+                "content": "I'm trying to keep track of all the movies I've watched recently. Can you help me organize them in a list or something? By the way, I just finished a Star Wars marathon, watched all the main films in a week and a half, it was a wild ride!",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "mcu_watch_duration",
+                "value": "about two weeks",
+                "support_session_ids": [
+                  "answer_86c505e7_2"
+                ]
+              },
+              {
+                "name": "star_wars_watch_duration",
+                "value": "a week and a half",
+                "support_session_ids": [
+                  "answer_86c505e7_2"
+                ]
+              },
+              {
+                "name": "total_watch_duration",
+                "value": "approximately 3.5 weeks",
+                "support_session_ids": [
+                  "answer_86c505e7_2"
+                ]
+              }
+            ],
+            "rejected_claims": [
+              {
+                "claim": "I watched all 22 Marvel Cinematic Universe movies in two weeks.",
+                "reason": "stale",
+                "support_session_ids": [
+                  "answer_86c505e7_1",
+                  "answer_86c505e7_2"
+                ]
+              },
+              {
+                "claim": "The user has watched 23 Marvel Cinematic Universe movies.",
+                "reason": "contradicted",
+                "support_session_ids": [
+                  "answer_86c505e7_2"
+                ]
+              }
+            ],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\e831120c.graph.json"
+        },
+        {
+          "question_id": "3a704032",
+          "question_type": "multi-session",
+          "task_adapter": "Multi-session synthesis",
+          "is_abstention": false,
+          "question": "How many plants did I acquire in the last month?",
+          "gold_answer": "3",
+          "hypothesis": "2 plants",
+          "candidate_session_ids": [
+            "answer_c2204106_1",
+            "answer_c2204106_2",
+            "answer_c2204106_3",
+            "014a5d36",
+            "78764b10_2",
+            "86e830d2_3",
+            "38e81260_5",
+            "7712aded",
+            "4e13f85f_2",
+            "sharegpt_MRCLhIj_0",
+            "sharegpt_HrxBbBK_0",
+            "f62bfe2b_2",
+            "ultrachat_472658",
+            "d729b790_2",
+            "ultrachat_357807",
+            "ultrachat_501733",
+            "aa41ac47",
+            "0babf5b6_2",
+            "sharegpt_jlDfWk7_17",
+            "sharegpt_RrdCPkt_0"
+          ],
+          "evidence_session_ids": [
+            "answer_c2204106_2"
+          ],
+          "answer_session_ids": [
+            "answer_c2204106_2",
+            "answer_c2204106_3",
+            "answer_c2204106_1"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.15,
+          "evidence_session_recall": 0.3333333333333333,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": false,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": false,
+            "response": "No"
+          },
+          "state_facets": [
+            {
+              "name": "plants_acquired_last_month",
+              "value": "2",
+              "support_session_ids": [
+                "answer_c2204106_2"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence indicates that the user acquired 2 plants in the last month, specifically a peace lily and a succulent.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_c2204106_2"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_c2204106_2",
+                "date": "2023/05/20 (Sat) 20:05",
+                "role": "user",
+                "content": "I'm trying to figure out the best way to care for my peace lily, which I got from the nursery two weeks ago along with a succulent. It's been losing some leaves, but I've read that's normal. Do you have any general tips for keeping it healthy?",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "plants_acquired_last_month",
+                "value": "2",
+                "support_session_ids": [
+                  "answer_c2204106_2"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\3a704032.graph.json"
+        },
+        {
+          "question_id": "gpt4_d84a3211",
+          "question_type": "multi-session",
+          "task_adapter": "Multi-session synthesis",
+          "is_abstention": false,
+          "question": "How much total money have I spent on bike-related expenses since the start of the year?",
+          "gold_answer": "$185",
+          "hypothesis": "You have spent a total of $185 on bike-related expenses since the start of the year.",
+          "candidate_session_ids": [
+            "sharegpt_OHd1RQ7_37",
+            "answer_2880eb6c_4",
+            "ultrachat_83526",
+            "sharegpt_TY5Si51_17",
+            "18d68208_1",
+            "4a32d58c_2",
+            "answer_2880eb6c_2",
+            "answer_2880eb6c_3",
+            "answer_2880eb6c_1",
+            "d1b9993e_2",
+            "4889cd54_1",
+            "fd29aa98_1",
+            "sharegpt_Rz6qxHY_0",
+            "8dd540f8_1",
+            "e2b5e2cc_1",
+            "700cc131_2",
+            "ultrachat_234895",
+            "ultrachat_29858",
+            "sharegpt_qHNCIfF_0",
+            "13c55c69_1"
+          ],
+          "evidence_session_ids": [
+            "answer_2880eb6c_2",
+            "answer_2880eb6c_1",
+            "answer_2880eb6c_3"
+          ],
+          "answer_session_ids": [
+            "answer_2880eb6c_2",
+            "answer_2880eb6c_4",
+            "answer_2880eb6c_1",
+            "answer_2880eb6c_3"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.2,
+          "evidence_session_recall": 0.75,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "total_bike_related_expenses_since_start_of_year",
+              "value": "185",
+              "support_session_ids": [
+                "answer_2880eb6c_2",
+                "answer_2880eb6c_3",
+                "answer_2880eb6c_1"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The total bike-related expenses are supported by the state facet indicating a total of $185, corroborated by multiple evidence snippets.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_2880eb6c_2",
+              "answer_2880eb6c_4",
+              "answer_2880eb6c_1",
+              "answer_2880eb6c_3"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_2880eb6c_2",
+                "date": "2023/05/05 (Fri) 00:33",
+                "role": "user",
+                "content": "Actually, I remember taking my bike in for a tune-up on April 20th because the gears were getting stuck. The mechanic told me I needed to replace the chain, which I did, and it cost me $25. While I was there, I also got a new set of bike lights installed, which were $40. Can you help me create a bike maintenance schedule to ensure I don't miss anything important?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_2880eb6c_4",
+                "date": "2023/05/05 (Fri) 05:38",
+                "role": "user",
+                "content": "That's great information about bike insurance. I'll definitely look into it. Speaking of my bike, I recently got a new set of bike lights installed, which were $40. They're really bright and make me feel a lot safer on the roads, especially since I've been doing some early morning rides. Do you have any tips on how to stay safe while cycling in low-light conditions?",
+                "why_relevant": "supports rejected claim (stale)"
+              },
+              {
+                "session_id": "answer_2880eb6c_1",
+                "date": "2023/05/05 (Fri) 06:24",
+                "role": "user",
+                "content": "I've had good experiences with the local bike shop downtown where I bought my Bell Zephyr helmet for $120. They did a great job with the tune-up last time, and the mechanic was knowledgeable and friendly. I might just go back there for my next tune-up.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_2880eb6c_3",
+                "date": "2023/05/05 (Fri) 23:05",
+                "role": "user",
+                "content": "That's a great list of tips! I'd like to add that I recently got a new set of bike lights installed, which were $40, and it's made a huge difference for my early morning rides. It's something to consider if you'll be riding in low-light conditions during your trip.",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "total_bike_related_expenses_since_start_of_year",
+                "value": "185",
+                "support_session_ids": [
+                  "answer_2880eb6c_2",
+                  "answer_2880eb6c_3",
+                  "answer_2880eb6c_1"
+                ]
+              }
+            ],
+            "rejected_claims": [
+              {
+                "claim": "User spent $40 on a new set of bike lights installed on April 20, 2023.",
+                "reason": "stale",
+                "support_session_ids": [
+                  "answer_2880eb6c_2",
+                  "answer_2880eb6c_3"
+                ]
+              },
+              {
+                "claim": "User spent $40 on a new set of bike lights installed recently.",
+                "reason": "stale",
+                "support_session_ids": [
+                  "answer_2880eb6c_4",
+                  "answer_2880eb6c_3"
+                ]
+              }
+            ],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\gpt4_d84a3211.graph.json"
+        },
+        {
+          "question_id": "aae3761f",
+          "question_type": "multi-session",
+          "task_adapter": "Multi-session synthesis",
+          "is_abstention": false,
+          "question": "How many hours in total did I spend driving to my three road trip destinations combined?",
+          "gold_answer": "15 hours for getting to the three destinations (or 30 hours for the round trip)",
+          "hypothesis": "15 hours",
+          "candidate_session_ids": [
+            "answer_526354c8_2",
+            "answer_526354c8_1",
+            "b192ae00_2",
+            "ultrachat_266173",
+            "sharegpt_8I9vH7n_7",
+            "sharegpt_ynLoh9N_0",
+            "2a86d0da_2",
+            "072b4f50_1",
+            "answer_526354c8_3",
+            "0e193841_10",
+            "f2ce866d_3",
+            "b0da5097_1",
+            "6155addd_1",
+            "41e778e4_1",
+            "ultrachat_437429",
+            "3d85d91e_2",
+            "38e81260_7",
+            "e08bf81f_4",
+            "ultrachat_361568",
+            "d576152e_2"
+          ],
+          "evidence_session_ids": [
+            "answer_526354c8_1",
+            "answer_526354c8_3",
+            "answer_526354c8_2"
+          ],
+          "answer_session_ids": [
+            "answer_526354c8_1",
+            "answer_526354c8_3",
+            "answer_526354c8_2"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.15,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "total_hours_driven_to_three_road_trip_destinations",
+              "value": "15 hours",
+              "support_session_ids": [
+                "answer_526354c8_1",
+                "answer_526354c8_3",
+                "answer_526354c8_2"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The total driving time to the three road trip destinations is supported by the evidence snippets, which detail the driving times to each location.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_526354c8_1",
+              "answer_526354c8_3",
+              "answer_526354c8_2"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_526354c8_1",
+                "date": "2023/05/21 (Sun) 16:32",
+                "role": "user",
+                "content": "I'm planning another road trip and I'm thinking of going to a coastal town. Do you have any recommendations? By the way, I've had some great experiences with coastal trips, like my recent trip to Outer Banks in North Carolina - it only took me four hours to drive there from my place.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_526354c8_3",
+                "date": "2023/05/21 (Sun) 18:02",
+                "role": "user",
+                "content": "I'm planning a camping trip and need some advice on what gear to bring. I've had some experience with camping, like on my recent trip to the mountains in Tennessee - I drove for five hours to get there and it was totally worth it. What are some must-haves for a comfortable camping trip?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_526354c8_2",
+                "date": "2023/05/26 (Fri) 16:58",
+                "role": "user",
+                "content": "I'm planning a new road trip and need some help with route planning. I've had some great experiences with my GPS device, like when I drove for six hours to Washington D.C. recently, but I'm not sure about the best route to take for my next trip. Can you suggest some options for me?",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "total_hours_driven_to_three_road_trip_destinations",
+                "value": "15 hours",
+                "support_session_ids": [
+                  "answer_526354c8_1",
+                  "answer_526354c8_3",
+                  "answer_526354c8_2"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\aae3761f.graph.json"
+        },
+        {
+          "question_id": "gpt4_f2262a51",
+          "question_type": "multi-session",
+          "task_adapter": "Multi-session synthesis",
+          "is_abstention": false,
+          "question": "How many different doctors did I visit?",
+          "gold_answer": "I visited three different doctors: a primary care physician, an ENT specialist, and a dermatologist.",
+          "hypothesis": "3",
+          "candidate_session_ids": [
+            "sharegpt_BWMyoNr_0",
+            "answer_55a6940c_2",
+            "answer_55a6940c_1",
+            "ultrachat_268434",
+            "c0d6fa6f_2",
+            "0984a772",
+            "sharegpt_eoEbthf_0",
+            "sharegpt_hChsWOp_128",
+            "dd81b163_1",
+            "answer_55a6940c_3",
+            "f2ffaf25",
+            "c34b6a1c_2",
+            "94de539a_1",
+            "2aeb1268",
+            "ultrachat_109996",
+            "6f46ba40_1",
+            "sharegpt_1Vdj119_61",
+            "sharegpt_ab6IEma_0",
+            "956ce238",
+            "ultrachat_421897"
+          ],
+          "evidence_session_ids": [
+            "answer_55a6940c_3",
+            "answer_55a6940c_1",
+            "answer_55a6940c_2"
+          ],
+          "answer_session_ids": [
+            "answer_55a6940c_3",
+            "answer_55a6940c_1",
+            "answer_55a6940c_2"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.15,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": false,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": false,
+            "response": "No"
+          },
+          "state_facets": [
+            {
+              "name": "number_of_distinct_doctors_visited",
+              "value": "3",
+              "support_session_ids": [
+                "answer_55a6940c_3",
+                "answer_55a6940c_1",
+                "answer_55a6940c_2"
+              ]
+            }
+          ],
+          "rejected_claims": [
+            {
+              "claim": "User had a follow-up appointment with Dr. Lee (dermatologist).",
+              "reason": "stale",
+              "support_session_ids": [
+                "answer_55a6940c_3"
+              ]
+            },
+            {
+              "claim": "User visited an ENT specialist for diagnosis of chronic sinusitis.",
+              "reason": "stale",
+              "support_session_ids": [
+                "answer_55a6940c_1",
+                "answer_55a6940c_2"
+              ]
+            }
+          ],
+          "answer_rationale": "The user visited three distinct doctors: Dr. Lee (dermatologist), Dr. Smith (primary care physician), and Dr. Patel (ENT specialist).",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_55a6940c_3",
+              "answer_55a6940c_1",
+              "answer_55a6940c_2"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_55a6940c_3",
+                "date": "2023/05/20 (Sat) 14:29",
+                "role": "user",
+                "content": "That's really helpful, thanks! Speaking of scheduling medical appointments, I recently had to take care of some other health issues, like the follow-up with Dr. Lee for the biopsy on that suspicious mole on my back. Anyway, back to the colonoscopy - what are some things I should ask my doctor during the consultation before the procedure?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_55a6940c_3",
+                "date": "2023/05/20 (Sat) 14:29",
+                "role": "user",
+                "content": "I'm having some issues with my nasal spray prescription from Dr. Patel. Can you help me with some tips on how to use it more effectively? By the way, I just got back from a follow-up appointment with my dermatologist, Dr. Lee, to get a biopsy on a suspicious mole on my back, and thankfully it was benign.",
+                "why_relevant": "supports rejected claim (stale)"
+              },
+              {
+                "session_id": "answer_55a6940c_1",
+                "date": "2023/05/21 (Sun) 02:02",
+                "role": "user",
+                "content": "I've been feeling really exhausted lately and was wondering if you could help me find some tips on how to boost my energy levels. By the way, I recently had a UTI and was prescribed antibiotics by my primary care physician, Dr. Smith, so I'm not sure if that's still affecting me.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_55a6940c_1",
+                "date": "2023/05/21 (Sun) 02:02",
+                "role": "user",
+                "content": "I was thinking, could you help me find some information on how to manage chronic sinusitis? I've recently been diagnosed with it by an ENT specialist, but I haven't really had a chance to research it yet. By the way, my primary care physician, Dr. Smith, had diagnosed me with a UTI and prescribed antibiotics a few weeks ago, and I'm still recovering from that.",
+                "why_relevant": "supports rejected claim (stale)"
+              },
+              {
+                "session_id": "answer_55a6940c_2",
+                "date": "2023/05/22 (Mon) 02:06",
+                "role": "user",
+                "content": "I just got diagnosed with chronic sinusitis by an ENT specialist, Dr. Patel, and she prescribed a nasal spray. I'm trying to learn more about managing my symptoms and was wondering if you could recommend any specific nasal sprays or humidifiers that are effective?",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "number_of_distinct_doctors_visited",
+                "value": "3",
+                "support_session_ids": [
+                  "answer_55a6940c_3",
+                  "answer_55a6940c_1",
+                  "answer_55a6940c_2"
+                ]
+              }
+            ],
+            "rejected_claims": [
+              {
+                "claim": "User had a follow-up appointment with Dr. Lee (dermatologist).",
+                "reason": "stale",
+                "support_session_ids": [
+                  "answer_55a6940c_3"
+                ]
+              },
+              {
+                "claim": "User visited an ENT specialist for diagnosis of chronic sinusitis.",
+                "reason": "stale",
+                "support_session_ids": [
+                  "answer_55a6940c_1",
+                  "answer_55a6940c_2"
+                ]
+              }
+            ],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\gpt4_f2262a51.graph.json"
+        },
+        {
+          "question_id": "dd2973ad",
+          "question_type": "multi-session",
+          "task_adapter": "Multi-session synthesis",
+          "is_abstention": false,
+          "question": "What time did I go to bed on the day before I had a doctor's appointment?",
+          "gold_answer": "2 AM",
+          "hypothesis": "You went to bed at 2 AM on Wednesday, May 24, 2023, the day before your doctor's appointment on Thursday, May 25, 2023.",
+          "candidate_session_ids": [
+            "answer_f9de4602_2",
+            "sharegpt_O6NO7Vo_9",
+            "e5f08e40",
+            "0f73eee7_2",
+            "e720dbe2",
+            "41743aae_1",
+            "answer_f9de4602_1",
+            "32c0dae1_3",
+            "ultrachat_478199",
+            "b192ae00_2",
+            "072fac63_1",
+            "ultrachat_327040",
+            "sharegpt_ADHo6Ob_0",
+            "f2ce92b2_2",
+            "56266c38_1",
+            "ultrachat_203871",
+            "98c198fb",
+            "1a70d1f3_2",
+            "sharegpt_MjIo9KY_91",
+            "ultrachat_259057"
+          ],
+          "evidence_session_ids": [
+            "answer_f9de4602_1",
+            "answer_f9de4602_2"
+          ],
+          "answer_session_ids": [
+            "answer_f9de4602_2",
+            "answer_f9de4602_1"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.1,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "temporal_event",
+              "value": "I went to bed at 2 AM on Wednesday, May 24, 2023.",
+              "support_session_ids": [
+                "answer_f9de4602_1"
+              ]
+            },
+            {
+              "name": "temporal_event",
+              "value": "The doctor's appointment was on Thursday, May 25, 2023.",
+              "support_session_ids": [
+                "answer_f9de4602_2"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence clearly states the time you went to bed and the date of your doctor's appointment.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_f9de4602_2",
+              "32c0dae1_3",
+              "e720dbe2",
+              "answer_f9de4602_1"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_f9de4602_2",
+                "date": "2023/05/24 (Wed) 08:18",
+                "role": "assistant",
+                "content": "I'm happy to help you plan your day on Tuesday!\n\nFirst, let's prioritize your tasks. What do you need to accomplish on Tuesday? Do you have any work or school commitments, errands to run, or personal tasks you want to tackle?\n\nPlease share your tasks with me, and I'll help you create a schedule that fits your needs and ensures you have enough time for your yoga class in the evening.\n\nIt's great to hear that you were proactive about researching healthy recipes and making a meal plan for the week after your doctor's appointment on Thursday! That's a fantastic step towards taking control of your health.\n\nRemember to pace yourself and not overexert yourself, especially if you're still feeling exhausted from Thursday. Make sure to leave some buffer time in your schedule for rest and self-care.\n\nLet's get started on planning your day!",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_f9de4602_2",
+                "date": "2023/05/24 (Wed) 08:18",
+                "role": "user",
+                "content": "I need some help with planning my day on Tuesday. I have a yoga class in the evening, and I want to make sure I get everything done before that. Can you help me prioritize my tasks and create a schedule for the day? I was pretty exhausted after my doctor's appointment, so I spent the rest of the day researching healthy recipes and making a meal plan for the week.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_f9de4602_2",
+                "date": "2023/05/24 (Wed) 08:18",
+                "role": "user",
+                "content": "I need help with meal planning. I just got my blood test results back and my cholesterol levels are a bit high, so I want to make some changes to my diet. By the way, I had a doctor's appointment at 10 AM last Thursday, and that's when I got the results. Can you give me some healthy recipe ideas or suggest a meal planning app?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "32c0dae1_3",
+                "date": "2023/05/25 (Thu) 09:03",
+                "role": "user",
+                "content": "The music box is a beautiful, intricately carved wooden piece with a soft, golden tone. It's about 6 inches wide and 4 inches tall. I got it from my grandmother, who said it belonged to my great-grandmother. I'm not sure of the exact date, but it's definitely an antique. The music box is in good condition, considering its age, and still plays a lovely melody when wound up. I don't have an estimated value, but I'm guessing it's quite valuable due to its history and craftsmanship.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "e720dbe2",
+                "date": "2023/05/28 (Sun) 17:15",
+                "role": "user",
+                "content": "I actually got a clear case with a built-in screen protector from Amazon recently, it's been working great so far!",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_f9de4602_1",
+                "date": "2023/05/29 (Mon) 15:16",
+                "role": "user",
+                "content": "I'm feeling a bit sluggish today and I think it's because I didn't get to bed until 2 AM last Wednesday, which made Thursday morning a struggle. Can you suggest some healthy breakfast recipes to help me boost my energy levels?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_f9de4602_1",
+                "date": "2023/05/29 (Mon) 15:16",
+                "role": "user",
+                "content": "I think I'll try the Avocado Toast with Poached Eggs. Do you have any suggestions for a quick and easy lunch that I can prepare in advance, something that will keep me full until my yoga class on Tuesday evening?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_f9de4602_1",
+                "date": "2023/05/29 (Mon) 15:16",
+                "role": "user",
+                "content": "I think I'll try the Quinoa and Black Bean Bowl. Can you suggest some healthy drink options that I can have throughout the day to stay hydrated?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_f9de4602_1",
+                "date": "2023/05/29 (Mon) 15:16",
+                "role": "user",
+                "content": "I'm thinking of trying to meal prep for the rest of the week, especially since I have a busy Monday ahead. Do you have any suggestions for healthy dinner recipes that can be reheated and are easy to portion out?",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "age",
+                "value": "The exact date of the music box is unknown.",
+                "support_session_ids": [
+                  "32c0dae1_3"
+                ]
+              },
+              {
+                "name": "health_constraint",
+                "value": "I was pretty exhausted after my doctor's appointment.",
+                "support_session_ids": [
+                  "answer_f9de4602_2"
+                ]
+              },
+              {
+                "name": "health_constraint",
+                "value": "I felt sluggish on Monday, May 29, 2023.",
+                "support_session_ids": [
+                  "answer_f9de4602_1"
+                ]
+              },
+              {
+                "name": "knowledge_update",
+                "value": "I purchased a clear phone case with a built-in screen protector from Amazon recently, and it has been working great.",
+                "support_session_ids": [
+                  "e720dbe2"
+                ]
+              },
+              {
+                "name": "preference",
+                "value": "I intend to try the Avocado Toast with Poached Eggs.",
+                "support_session_ids": [
+                  "answer_f9de4602_1"
+                ]
+              },
+              {
+                "name": "task",
+                "value": "I will try the Quinoa and Black Bean Bowl.",
+                "support_session_ids": [
+                  "answer_f9de4602_1"
+                ]
+              },
+              {
+                "name": "task",
+                "value": "I plan to meal prep for the rest of the week.",
+                "support_session_ids": [
+                  "answer_f9de4602_1"
+                ]
+              },
+              {
+                "name": "temporal_event",
+                "value": "The doctor's appointment was on Thursday.",
+                "support_session_ids": [
+                  "answer_f9de4602_2"
+                ]
+              },
+              {
+                "name": "temporal_event",
+                "value": "I had a doctor's appointment at 10 AM on Thursday, May 18, 2023.",
+                "support_session_ids": [
+                  "answer_f9de4602_2"
+                ]
+              },
+              {
+                "name": "temporal_event",
+                "value": "I went to bed at 2 AM on Wednesday, May 24, 2023.",
+                "support_session_ids": [
+                  "answer_f9de4602_1"
+                ]
+              },
+              {
+                "name": "temporal_event",
+                "value": "I have a busy Monday on May 29, 2023.",
+                "support_session_ids": [
+                  "answer_f9de4602_1"
+                ]
+              },
+              {
+                "name": "temporal_event",
+                "value": "I have a yoga class on Tuesday, May 30, 2023, in the evening.",
+                "support_session_ids": [
+                  "answer_f9de4602_1"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\dd2973ad.graph.json"
+        }
+      ]
+    }
+  ]
+}

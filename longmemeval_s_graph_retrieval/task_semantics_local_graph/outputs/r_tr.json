@@ -1,0 +1,1309 @@
+{
+  "method": "task_semantics_local_graph",
+  "model": "gpt-4o-mini",
+  "judge_model": "gpt-4o-2024-08-06",
+  "n_cases": 10,
+  "macro_acc": 0.1,
+  "micro_acc": 0.1,
+  "by_type": {
+    "temporal-reasoning": {
+      "n": 10,
+      "acc": 0.1
+    }
+  },
+  "rows": [
+    {
+      "question_id": "gpt4_59149c77",
+      "question_type": "temporal-reasoning",
+      "question": "How many days passed between my visit to the Museum of Modern Art (MoMA) and the 'Ancient Civilizations' exhibit at the Metropolitan Museum of Art?",
+      "gold_answer": "7 days. 8 days (including the last day) is also acceptable.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/02/01 (Wed) 10:20",
+      "answer_session_ids": [
+        "answer_d00ba6d0_1",
+        "answer_d00ba6d0_2"
+      ],
+      "evidence_session_ids": [
+        "f04fae0a",
+        "31829c1b_1",
+        "8d952ece_2",
+        "answer_d00ba6d0_1",
+        "6e672b84_1",
+        "ultrachat_510339",
+        "ultrachat_280434",
+        "7966888b_3",
+        "ultrachat_237018",
+        "answer_d00ba6d0_2",
+        "a7403b3d_4",
+        "64c2b3c8",
+        "9e2c2a6c_2",
+        "ab520c81_1",
+        "c07ae000_2",
+        "9242fbe3_1",
+        "54a05e72_2",
+        "0f5b1f8d"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "I'd like to know more about the language documentation process and what kind of tasks I can expect to be involved in.",
+          "support_session_ids": [
+            "0f5b1f8d"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "I'd like to know more about the language documentation project and how I can contribute to it.",
+          "support_session_ids": [
+            "0f5b1f8d"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "I'd like to know more about the Language Conservancy's projects in Mexico, Guatemala, and Ecuador.",
+          "support_session_ids": [
+            "0f5b1f8d"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "I'd like to know more about language documentation projects in Central or South America.",
+          "support_session_ids": [
+            "0f5b1f8d"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Do you know of any events or groups that focus on Spanish, Russian, or French?",
+          "support_session_ids": [
+            "0f5b1f8d"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Can you walk me through the process and highlight some of the key tasks that need to be done?",
+          "support_session_ids": [
+            "0f5b1f8d"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "What's your next question or topic you'd like to explore?",
+          "reason": "stale",
+          "support_session_ids": [
+            "9242fbe3_1",
+            "0f5b1f8d"
+          ]
+        },
+        {
+          "claim": "Would you like more book recommendations or perhaps discuss a specific aspect of musical theater or Broadway?",
+          "reason": "stale",
+          "support_session_ids": [
+            "9242fbe3_1",
+            "0f5b1f8d"
+          ]
+        },
+        {
+          "claim": "I'm here to help!",
+          "reason": "stale",
+          "support_session_ids": [
+            "9242fbe3_1",
+            "0f5b1f8d"
+          ]
+        },
+        {
+          "claim": "Thank you for offering!",
+          "reason": "stale",
+          "support_session_ids": [
+            "9242fbe3_1",
+            "0f5b1f8d"
+          ]
+        },
+        {
+          "claim": "I think I'd like to explore more book recommendations, specifically ones that focus on the creative process and the art of musical theater.",
+          "reason": "stale",
+          "support_session_ids": [
+            "9242fbe3_1",
+            "0f5b1f8d"
+          ]
+        },
+        {
+          "claim": "I'm fascinated by the behind-the-scenes stories of how musicals are developed, the collaboration between writers, composers, directors, and actors, and the challenges they face in bringing a show to life.",
+          "reason": "stale",
+          "support_session_ids": [
+            "9242fbe3_1",
+            "0f5b1f8d"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "gpt4_f49edff3",
+      "question_type": "temporal-reasoning",
+      "question": "Which three events happened in the order from first to last: the day I helped my friend prepare the nursery, the day I helped my cousin pick out stuff for her baby shower, and the day I ordered a customized phone case for my friend's birthday?",
+      "gold_answer": "First, I helped my friend prepare the nursery, then I helped my cousin pick out stuff for her baby shower, and lastly, I ordered a customized phone case for my friend's birthday.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/03/22 (Wed) 21:49",
+      "answer_session_ids": [
+        "answer_3e9fce53_1",
+        "answer_3e9fce53_2",
+        "answer_3e9fce53_3"
+      ],
+      "evidence_session_ids": [
+        "76703db4_3",
+        "9f091256_2",
+        "answer_3e9fce53_1",
+        "bb27df5e_3",
+        "4798296c_2",
+        "20fa75e8_4",
+        "ultrachat_369361",
+        "acfdbdcb",
+        "1b3e086b",
+        "7d33fcb4_1",
+        "answer_3e9fce53_2",
+        "9f8fa5e4_2",
+        "answer_3e9fce53_3",
+        "dc7c53fa_4"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "I think my sister would really like a trendy accessory, like a new handbag.",
+          "support_session_ids": [
+            "answer_3e9fce53_3"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "**Clothing Item She's Been Eyeing**: If you know she's been wanting a specific item, like a designer dress or a pair of boots, consider getting it for her.",
+          "support_session_ids": [
+            "answer_3e9fce53_3"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Now, let's get to some gift ideas for your siblings!",
+          "support_session_ids": [
+            "answer_3e9fce53_3"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "That's great to hear that your friend loved the customized phone case!",
+          "support_session_ids": [
+            "answer_3e9fce53_3"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "**Budgeting and cost tracking**: By tracking prices, you can monitor your spending on groceries and stay within your budget.",
+          "support_session_ids": [
+            "dc7c53fa_4"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Here are some benefits to consider: **Benefits of tracking prices in a pantry inventory app:** 1.",
+          "support_session_ids": [
+            "dc7c53fa_4"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "What a thoughtful colleague you are!",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_3e9fce53_2",
+            "answer_3e9fce53_3"
+          ]
+        },
+        {
+          "claim": "It's great that you helped your cousin with her baby shower shopping, and you've already got some essential items covered, like diapers, wipes, and a baby monitor.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_3e9fce53_2",
+            "answer_3e9fce53_3"
+          ]
+        },
+        {
+          "claim": "Here are some other ideas for essential items that new parents usually appreciate: 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_3e9fce53_2",
+            "answer_3e9fce53_3"
+          ]
+        },
+        {
+          "claim": "I was thinking of getting a gift basket with a few of those essentials you mentioned.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_3e9fce53_2",
+            "answer_3e9fce53_3"
+          ]
+        },
+        {
+          "claim": "Do you think a baby carrier or sling would be a good addition to the basket, or is that something that's more of a personal preference for the parents?",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_3e9fce53_2",
+            "answer_3e9fce53_3"
+          ]
+        },
+        {
+          "claim": "A gift basket with a few essentials is a wonderful idea!",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_3e9fce53_2",
+            "answer_3e9fce53_3"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "71017276",
+      "question_type": "temporal-reasoning",
+      "question": "How many weeks ago did I meet up with my aunt and receive the crystal chandelier?",
+      "gold_answer": "4",
+      "hypothesis": "I don't know",
+      "question_date": "2023/04/01 (Sat) 08:09",
+      "answer_session_ids": [
+        "answer_0b4a8adc_1"
+      ],
+      "evidence_session_ids": [
+        "ultrachat_230339",
+        "sharegpt_11WxPMZ_0",
+        "e5bb084c",
+        "ae1343ee",
+        "683c8358_1",
+        "sharegpt_tmFunkX_20",
+        "sharegpt_XWqXdom_19",
+        "4d6927c2_2",
+        "10889cf0_1",
+        "ultrachat_431324",
+        "58ec258f_2",
+        "4fe27c66_1",
+        "sharegpt_tCLMKZY_0",
+        "398f23e7",
+        "answer_0b4a8adc_1"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Do you know of any online resources or databases where I can find information about antique crystal chandeliers and their makers?",
+          "support_session_ids": [
+            "answer_0b4a8adc_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "By bringing photos of the armchair and asking if they recognize the dealer or auction house, you're taking a proactive approach to uncovering the history of your new treasure.",
+          "support_session_ids": [
+            "answer_0b4a8adc_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Antique dealers often have extensive knowledge about the local antique market, estate sales, and collectors.",
+          "support_session_ids": [
+            "answer_0b4a8adc_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Do you know of any online resources or archives where I can find information about estate sales or antique dealers in my area?",
+          "support_session_ids": [
+            "answer_0b4a8adc_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Do you know of any online resources or archives where I can find information about historic mansions or estates in my area?",
+          "support_session_ids": [
+            "answer_0b4a8adc_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Researching the history of your great-grandmother's crystal chandelier can be a fascinating and rewarding experience.",
+          "support_session_ids": [
+            "answer_0b4a8adc_1"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "You definitely have a strong understanding of the differences between mammals and reptiles.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_tCLMKZY_0",
+            "answer_0b4a8adc_1"
+          ]
+        },
+        {
+          "claim": "Keep up the good work and keep challenging yourself in your learning!",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_tCLMKZY_0",
+            "answer_0b4a8adc_1"
+          ]
+        },
+        {
+          "claim": "alicia: give me a math problem that the level is 4th grade",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_tCLMKZY_0",
+            "answer_0b4a8adc_1"
+          ]
+        },
+        {
+          "claim": "Murdo: Sure thing, Alicia.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_tCLMKZY_0",
+            "answer_0b4a8adc_1"
+          ]
+        },
+        {
+          "claim": "Here's a math problem for you: If a store has 28 pencils in one pack and sells them in packs of 4, how many packs of pencils will the store sell if it has 112 pencils in stock?",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_tCLMKZY_0",
+            "answer_0b4a8adc_1"
+          ]
+        },
+        {
+          "claim": "alicia: now give me a turkish question which only 4th graders know",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_tCLMKZY_0",
+            "answer_0b4a8adc_1"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "b46e15ed",
+      "question_type": "temporal-reasoning",
+      "question": "How many months have passed since I participated in two charity events in a row, on consecutive days?",
+      "gold_answer": "2",
+      "hypothesis": "I don't know",
+      "question_date": "2023/04/18 (Tue) 03:31",
+      "answer_session_ids": [
+        "answer_4bfcc250_4",
+        "answer_4bfcc250_3",
+        "answer_4bfcc250_2",
+        "answer_4bfcc250_1"
+      ],
+      "evidence_session_ids": [
+        "53949711_2",
+        "4bf66c38_2",
+        "answer_4bfcc250_4",
+        "443dea75",
+        "sharegpt_KCGdZJP_0",
+        "sharegpt_cXkL3cR_28",
+        "b2542345_2",
+        "ultrachat_265690",
+        "ultrachat_507989",
+        "47311a4c_1",
+        "9d754f54",
+        "answer_4bfcc250_3",
+        "940629b2_2",
+        "a410bab2_3",
+        "ultrachat_396986",
+        "ultrachat_520419",
+        "f598d30f_1",
+        "aeab3296",
+        "answer_4bfcc250_2",
+        "answer_4bfcc250_1"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Do you know if they usually have any rules or restrictions for events like this?",
+          "support_session_ids": [
+            "b2542345_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Create a master calendar**: Keep a calendar specifically for your charity events and volunteer work.",
+          "support_session_ids": [
+            "answer_4bfcc250_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Staying organized and managing your time effectively is crucial when volunteering for multiple charity events.",
+          "support_session_ids": [
+            "answer_4bfcc250_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Now, let's get you refueled with some healthy and easy-to-prepare snack ideas!",
+          "support_session_ids": [
+            "answer_4bfcc250_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "That sounds like a really great way to celebrate our family and make some new memories.",
+          "support_session_ids": [
+            "b2542345_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Now, about outdoor activities...",
+          "support_session_ids": [
+            "b2542345_2"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "**Data analysis**: AI algorithms can analyze large amounts of data, including genomic data, medical images, and clinical records, to identify patterns and correlations that may lead to new cancer therapies.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_4bfcc250_4",
+            "b2542345_2"
+          ]
+        },
+        {
+          "claim": "**Pattern recognition**: AI can recognize patterns in data that may not be apparent to humans, such as complex relationships between genetic mutations and cancer development.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_4bfcc250_4",
+            "b2542345_2"
+          ]
+        },
+        {
+          "claim": "Can you tell me more about how AI is being used to analyze medical images, such as MRIs and CT scans, to improve cancer diagnosis and treatment?",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_4bfcc250_4",
+            "b2542345_2"
+          ]
+        },
+        {
+          "claim": "The use of AI in medical imaging is a rapidly growing field, and it has the potential to revolutionize cancer diagnosis and treatment.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_4bfcc250_4",
+            "b2542345_2"
+          ]
+        },
+        {
+          "claim": "Here's an overview: **AI in Medical Imaging:** 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_4bfcc250_4",
+            "b2542345_2"
+          ]
+        },
+        {
+          "claim": "**Image Analysis**: AI algorithms can be trained to analyze medical images such as MRIs, CT scans, and X-rays to identify abnormalities and detect cancer.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_4bfcc250_4",
+            "b2542345_2"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "gpt4_fa19884c",
+      "question_type": "temporal-reasoning",
+      "question": "How many days passed between the day I started playing along to my favorite songs on my old keyboard and the day I discovered a bluegrass band?",
+      "gold_answer": "6 days. 7 days (including the last day) is also acceptable.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/04/05 (Wed) 09:11",
+      "answer_session_ids": [
+        "answer_ff201786_1",
+        "answer_ff201786_2"
+      ],
+      "evidence_session_ids": [
+        "f3745025_1",
+        "6414f676_2",
+        "bb2180e9_3",
+        "ultrachat_423544",
+        "f4f4b504_2",
+        "630b2de2_1",
+        "8e895867",
+        "7ea7741b_2",
+        "answer_ff201786_2",
+        "87a02ddc_3",
+        "fee8e72a_5"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Speaking of which, I should mention that Delta is also known for its excellent customer service.",
+          "support_session_ids": [
+            "fee8e72a_5"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "On their flights from New York to Los Angeles, you can expect the following breakfast options: * **Delta Comfort+ and First Class**: On morning flights, Delta offers a hot breakfast option, such as a breakfast sandwich or an omelette, accompanied by fresh fruit and yogurt.",
+          "support_session_ids": [
+            "fee8e72a_5"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Delta and Virgin America are both known for their excellent in-flight meal services.",
+          "support_session_ids": [
+            "fee8e72a_5"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "Here are some airlines that operate flights from New York to Los Angeles with reliable in-flight entertainment systems: 1.",
+          "support_session_ids": [
+            "fee8e72a_5"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "Sorry to hear that you had a bad experience with American Airlines' entertainment system!",
+          "support_session_ids": [
+            "fee8e72a_5"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "However, it's still a popular time to travel, especially during Labor Day weekend and the surrounding weeks.",
+          "support_session_ids": [
+            "fee8e72a_5"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "I'm also considering buying a ukulele after trying one out at a music workshop, do you know if there's any difference in terms of fingerpicking style between ukulele and guitar?",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_ff201786_2",
+            "fee8e72a_5"
+          ]
+        },
+        {
+          "claim": "That's great that you're considering getting a ukulele!",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_ff201786_2",
+            "fee8e72a_5"
+          ]
+        },
+        {
+          "claim": "While both ukulele and guitar are stringed instruments, there are some differences in terms of fingerpicking style due to their distinct characteristics.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_ff201786_2",
+            "fee8e72a_5"
+          ]
+        },
+        {
+          "claim": "Here are some key differences to keep in mind: **1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_ff201786_2",
+            "fee8e72a_5"
+          ]
+        },
+        {
+          "claim": "String spacing and width:** Ukulele strings are closer together and narrower than guitar strings, which affects fingerpicking technique.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_ff201786_2",
+            "fee8e72a_5"
+          ]
+        },
+        {
+          "claim": "I'm also thinking of buying a banjo, but I'm not sure if I'm ready for that yet.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_ff201786_2",
+            "fee8e72a_5"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "0bc8ad92",
+      "question_type": "temporal-reasoning",
+      "question": "How many months have passed since I last visited a museum with a friend?",
+      "gold_answer": "5",
+      "hypothesis": "I don't know",
+      "question_date": "2023/03/25 (Sat) 17:18",
+      "answer_session_ids": [
+        "answer_f4ea84fb_3",
+        "answer_f4ea84fb_2",
+        "answer_f4ea84fb_1"
+      ],
+      "evidence_session_ids": [
+        "answer_f4ea84fb_2",
+        "ultrachat_276712",
+        "fccc9400",
+        "f58c36b8_1",
+        "89c1cdfa_2",
+        "f87fb137_1",
+        "ultrachat_349938",
+        "answer_f4ea84fb_1",
+        "sharegpt_Le7CqkS_0",
+        "86e218e3_2",
+        "sharegpt_vClQxDr_21",
+        "sharegpt_scMKXPh_9",
+        "881acf41_1",
+        "sharegpt_ntu1Cds_0"
+      ],
+      "state_facets": [
+        {
+          "name": "preference",
+          "value": "– resulting in $9.4M of whole life insurance policies sold ($4.6M premiums), $6.2M of indexed annuities sold to date.",
+          "support_session_ids": [
+            "sharegpt_ntu1Cds_0"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": " Developed, implemented, and managed all “inbound” and “outbound” strategic marketing efforts for Advanced Pension Programs, Inc.",
+          "support_session_ids": [
+            "sharegpt_ntu1Cds_0"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "PROFESSIONAL EXPERIENCE Senior Marketing Director / Vice President April 2017 - Present Advanced Pension Programs, Inc.",
+          "support_session_ids": [
+            "sharegpt_ntu1Cds_0"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "write me a good cover letter based on the following resume: COURTNEY HARRIS Email: courtney@pensionprograms.com LinkedIn: www.linkedin.com/in/courtneyrharris OBJECTIVE Improving sales of a company’s products / services through extremely customer centric strategic planning, data driven analysis, diligent campaign execution, and highly efficient project management.",
+          "support_session_ids": [
+            "sharegpt_ntu1Cds_0"
+          ]
+        },
+        {
+          "name": "question_many_months_passed_since",
+          "value": "I have also successfully launched new divisions and products for various companies through careful planning and execution of marketing campaigns, resulting in significant increases in sales and positive response rates.",
+          "support_session_ids": [
+            "sharegpt_ntu1Cds_0"
+          ]
+        },
+        {
+          "name": "question_many_months_passed_since",
+          "value": "My professional experience includes developing and managing strategic marketing efforts for Advanced Pension Programs, Inc., resulting in $9.4M of whole life insurance policies sold and $6.2M of indexed annuities sold.",
+          "support_session_ids": [
+            "sharegpt_ntu1Cds_0"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "He also helped her prioritizing her expenses, asking herself what she really wants to spend money on and what she can live without.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "sharegpt_vClQxDr_21",
+            "sharegpt_ntu1Cds_0"
+          ]
+        },
+        {
+          "claim": "However, the author recognizes that this may not be achievable for everyone, and suggests setting a Kickoff emergency fund, which is a small amount that can be saved within one or two months.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "sharegpt_vClQxDr_21",
+            "sharegpt_ntu1Cds_0"
+          ]
+        },
+        {
+          "claim": "Sure, here are some additional real-world applications and the implementation mechanism of a convolutional bidirectional LSTM (convBILSTM) network: | Application | Description | Implementation | | --- | --- | --- | | Machine Translation | Translating text from one language to another.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "sharegpt_scMKXPh_9",
+            "sharegpt_ntu1Cds_0"
+          ]
+        },
+        {
+          "claim": "This allows the model to make more robust predictions, as it's not limited to a single label.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "sharegpt_scMKXPh_9",
+            "sharegpt_ntu1Cds_0"
+          ]
+        },
+        {
+          "claim": "The distribution learning component of MUSDL allows the model to learn the probability distribution of the different labels, which can be useful for tasks such as depression estimation where the labels are not always clear-cut.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "sharegpt_scMKXPh_9",
+            "sharegpt_ntu1Cds_0"
+          ]
+        },
+        {
+          "claim": "(A hundred thousand welcomes!) to the world of traditional Irish music and dance!",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "86e218e3_2",
+            "sharegpt_ntu1Cds_0"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "af082822",
+      "question_type": "temporal-reasoning",
+      "question": "How many weeks ago did I attend the friends and family sale at Nordstrom?",
+      "gold_answer": "2",
+      "hypothesis": "I don't know",
+      "question_date": "2022/12/01 (Thu) 21:26",
+      "answer_session_ids": [
+        "answer_b51b6115_1"
+      ],
+      "evidence_session_ids": [
+        "d048ae4b_2",
+        "1dfef591_2",
+        "1a920713_2",
+        "b28990c8_7",
+        "6cf1848e_3",
+        "answer_b51b6115_1",
+        "51ec01a4",
+        "09c3d921",
+        "bc5827b5",
+        "sharegpt_mJ7MnQS_9",
+        "1040e24b_1",
+        "cae65795_2"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "**Absolutely!** A screen protector is a great addition to your phone's protection arsenal, especially when you're getting a new phone wallet.",
+          "support_session_ids": [
+            "cae65795_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Now, about the screen protector...",
+          "support_session_ids": [
+            "cae65795_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "**Peace of mind**: You'll have a fresh backup of your data, including those 500+ photos, in case anything goes wrong during the transition to the new wallet case.",
+          "support_session_ids": [
+            "cae65795_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "I'd recommend backing up your phone data before getting the new phone wallet.",
+          "support_session_ids": [
+            "cae65795_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Getting a new phone wallet can be a great way to upgrade your mobile experience!",
+          "support_session_ids": [
+            "cae65795_2"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "**Smooth feel**: Tempered glass screen protectors often have a smooth, glass-like finish that feels premium.",
+          "support_session_ids": [
+            "cae65795_2"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "Can I talk to you about something?",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_mJ7MnQS_9",
+            "cae65795_2"
+          ]
+        },
+        {
+          "claim": "Jonathan: (curious) Sure, what's up?",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_mJ7MnQS_9",
+            "cae65795_2"
+          ]
+        },
+        {
+          "claim": "Damian: (hesitant) I've been feeling really bad about some of the things I've done in the past.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_mJ7MnQS_9",
+            "cae65795_2"
+          ]
+        },
+        {
+          "claim": "I'm looking for some advice on how to style my new statement handbag from Zara.",
+          "reason": "stale",
+          "support_session_ids": [
+            "1040e24b_1",
+            "cae65795_2"
+          ]
+        },
+        {
+          "claim": "I just got it last week and want to make the most out of it.",
+          "reason": "stale",
+          "support_session_ids": [
+            "1040e24b_1",
+            "cae65795_2"
+          ]
+        },
+        {
+          "claim": "By the way, I had an amazing time at the outlet mall with my friends a while back, scoring some great deals on shoes - it was definitely a fun day out!",
+          "reason": "stale",
+          "support_session_ids": [
+            "1040e24b_1",
+            "cae65795_2"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "gpt4_4929293a",
+      "question_type": "temporal-reasoning",
+      "question": "Which event happened first, my cousin's wedding or Michael's engagement party?",
+      "gold_answer": "Michael's engagement party",
+      "hypothesis": "I don't know",
+      "question_date": "2023/10/01 (Sun) 07:41",
+      "answer_session_ids": [
+        "answer_add9b012_2",
+        "answer_add9b012_1"
+      ],
+      "evidence_session_ids": [
+        "b8bc1464_4",
+        "7c1eb248_1",
+        "27d378b2_3",
+        "sharegpt_VUBjUDH_0",
+        "e2304e5e_1",
+        "6172cc72_2",
+        "answer_add9b012_1",
+        "ultrachat_127833",
+        "b73a4d04_1",
+        "d76030af_2",
+        "ultrachat_512282",
+        "ultrachat_139245",
+        "78e40ca2_3"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "I think I understand the difference between 401(k) and IRA a bit better now.",
+          "support_session_ids": [
+            "78e40ca2_3"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "Congratulations on taking the first step towards planning for your retirement.",
+          "support_session_ids": [
+            "78e40ca2_3"
+          ]
+        },
+        {
+          "name": "question_event_happened_first_cousin_s",
+          "value": "I'm thrilled to have been able to assist you in taking the first steps towards managing your finances and planning for your future.",
+          "support_session_ids": [
+            "78e40ca2_3"
+          ]
+        },
+        {
+          "name": "question_event_happened_first_cousin_s",
+          "value": "Remember, financial planning is a marathon, not a sprint.",
+          "support_session_ids": [
+            "78e40ca2_3"
+          ]
+        },
+        {
+          "name": "question_event_happened_first_cousin_s",
+          "value": "You've got a solid foundation to build upon, and I'm confident that you'll make great progress.",
+          "support_session_ids": [
+            "78e40ca2_3"
+          ]
+        },
+        {
+          "name": "question_event_happened_first_cousin_s",
+          "value": "It was a pleasure chatting with you and helping you get started on your financial journey.",
+          "support_session_ids": [
+            "78e40ca2_3"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "What a fantastic experience!",
+          "reason": "stale",
+          "support_session_ids": [
+            "d76030af_2",
+            "78e40ca2_3"
+          ]
+        },
+        {
+          "claim": "Meeting the artist and learning about their inspiration can be a truly enriching experience.",
+          "reason": "stale",
+          "support_session_ids": [
+            "d76030af_2",
+            "78e40ca2_3"
+          ]
+        },
+        {
+          "claim": "Abstract Expressionism, Pop Art, and Street Art are all fascinating movements that have shaped the modern and contemporary art landscape.",
+          "reason": "stale",
+          "support_session_ids": [
+            "d76030af_2",
+            "78e40ca2_3"
+          ]
+        },
+        {
+          "claim": "Here are some key points to get you started: **Abstract Expressionism:** * Emerged in the 1940s and 1950s in the United States * Characterized by non-representational, non-figurative artworks that emphasize emotional expression and spontaneous gesture * Artists like Jackson Pollock, Willem de Kooning, and Mark Rothko created works that explored the subconscious, the emotional, and the spiritual * Techniques included dripping, pouring, and splashing paint, as well as using unconventional material...",
+          "reason": "stale",
+          "support_session_ids": [
+            "d76030af_2",
+            "78e40ca2_3"
+          ]
+        },
+        {
+          "claim": "What role did aviation play in the wars in Iraq and Afghanistan?",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_512282",
+            "78e40ca2_3"
+          ]
+        },
+        {
+          "claim": "Aviation played a significant role in the wars in Iraq and Afghanistan, with the United States and other coalition forces relying heavily on air support for both ground operations and logistical support.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_512282",
+            "78e40ca2_3"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "gpt4_b5700ca9",
+      "question_type": "temporal-reasoning",
+      "question": "How many days ago did I attend the Maundy Thursday service at the Episcopal Church?",
+      "gold_answer": "4 days.",
+      "hypothesis": "You attended the Maundy Thursday service at the Episcopal Church on 2023/04/06, which was 4 days ago.",
+      "question_date": "2023/04/10 (Mon) 10:28",
+      "answer_session_ids": [
+        "answer_a17423e7_1"
+      ],
+      "evidence_session_ids": [
+        "sharegpt_bp51PRm_4",
+        "ultrachat_46958",
+        "31829c1b_1",
+        "46a7f71a",
+        "33bdd89a_1",
+        "ultrachat_346810",
+        "sharegpt_FqOC5e9_169",
+        "555e1a02",
+        "sharegpt_6sDqw6L_0",
+        "ultrachat_366301",
+        "12b34e79_1",
+        "a53c7542_1",
+        "answer_a17423e7_1"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "By the way, I've been enjoying the warmer days so much that it's hard to believe I had to shovel snow from my driveway at least four times between January and February!",
+          "support_session_ids": [
+            "a53c7542_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "There are many organizations that focus on community service and helping the underprivileged that could use your time and energy.",
+          "support_session_ids": [
+            "answer_a17423e7_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "As you know, road conditions and weather can be unpredictable, so it's essential to be prepared.",
+          "support_session_ids": [
+            "a53c7542_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Now, let's talk about preparing for your road trip!",
+          "support_session_ids": [
+            "a53c7542_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "As you know, spring and summer weather can be unpredictable, and road conditions can vary greatly.",
+          "support_session_ids": [
+            "a53c7542_1"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Now, let's talk about preparing for your cycling trip!",
+          "support_session_ids": [
+            "a53c7542_1"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "Under the DHCP server i have on\\off",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_6sDqw6L_0",
+            "a53c7542_1"
+          ]
+        },
+        {
+          "claim": "If you are using a Technicolor MediaAccess TG789vac v2 router, under the DHCP server settings you have only On/Off option, it means that the DHCP server is enabled or disabled.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_6sDqw6L_0",
+            "a53c7542_1"
+          ]
+        },
+        {
+          "claim": "However, it appears that you are unable to configure the primary and secondary DNS server in the DHCP settings.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_6sDqw6L_0",
+            "a53c7542_1"
+          ]
+        },
+        {
+          "claim": "In this case, you can try to configure the DNS settings on the device that you want to use Pi-hole on.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_6sDqw6L_0",
+            "a53c7542_1"
+          ]
+        },
+        {
+          "claim": "You can also try to use a different router that allows you to configure the primary and secondary DNS servers.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_6sDqw6L_0",
+            "a53c7542_1"
+          ]
+        },
+        {
+          "claim": "What are some ways that students can build their resumes before graduation?",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_366301",
+            "a53c7542_1"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": true,
+        "response": "Yes"
+      },
+      "local_answer_match": true
+    },
+    {
+      "question_id": "9a707b81",
+      "question_type": "temporal-reasoning",
+      "question": "How many days ago did I attend a baking class at a local culinary school when I made my friend's birthday cake?",
+      "gold_answer": "21 days. 22 days (including the last day) is also acceptable.",
+      "hypothesis": "I don't know",
+      "question_date": "2022/04/15 (Fri) 18:46",
+      "answer_session_ids": [
+        "answer_dba89487_2",
+        "answer_dba89487_1"
+      ],
+      "evidence_session_ids": [
+        "answer_dba89487_2",
+        "e1d11615_1",
+        "ultrachat_243091",
+        "318048af_1",
+        "3fcbb58c_4",
+        "ultrachat_257240",
+        "ultrachat_233519",
+        "ultrachat_206990",
+        "a8e24e22",
+        "4abbeb2a_2",
+        "answer_dba89487_1",
+        "6862e478_2"
+      ],
+      "state_facets": [
+        {
+          "name": "preference",
+          "value": "Congratulations on getting a new furry family member, Max!",
+          "support_session_ids": [
+            "6862e478_2"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "Here are two quick and easy recipes for sweet potato chews and carrot and apple biscuits that can be made in under 30 minutes: **Quick Sweet Potato Chews (15 minutes)** Ingredients: * 2-3 large sweet potatoes * 1 tablespoon coconut oil * 1 teaspoon honey (optional) Instructions: 1.",
+          "support_session_ids": [
+            "6862e478_2"
+          ]
+        },
+        {
+          "name": "question_many_days_ago_attend",
+          "value": "I was thinking of using the new interactive toy, a treat-dispensing Kong toy, to keep Max occupied during the day.",
+          "support_session_ids": [
+            "6862e478_2"
+          ]
+        },
+        {
+          "name": "question_many_days_ago_attend",
+          "value": "Do you have any recommendations for dog treats that are suitable for puppies and can be used with his new interactive toy, a treat-dispensing Kong toy?",
+          "support_session_ids": [
+            "6862e478_2"
+          ]
+        },
+        {
+          "name": "question_many_days_ago_attend",
+          "value": "To determine how many treats Max can have per day, we'll need to consider his age, weight, breed, and activity level.",
+          "support_session_ids": [
+            "6862e478_2"
+          ]
+        },
+        {
+          "name": "question_many_days_ago_attend",
+          "value": "I want to make sure I'm not overfeeding Max with these treats, can you help me figure out how many treats I should give him per day?",
+          "support_session_ids": [
+            "6862e478_2"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "We've been going to a lot of brunch places lately, but I want to mix it up.",
+          "reason": "stale",
+          "support_session_ids": [
+            "4abbeb2a_2",
+            "6862e478_2"
+          ]
+        },
+        {
+          "claim": "Do you have any recommendations for good dinner spots?",
+          "reason": "stale",
+          "support_session_ids": [
+            "4abbeb2a_2",
+            "6862e478_2"
+          ]
+        },
+        {
+          "claim": "By the way, I just got back from a birthday party for my friend Jack today and we had an amazing time, we even went to a karaoke bar afterwards and sang our hearts out.",
+          "reason": "stale",
+          "support_session_ids": [
+            "4abbeb2a_2",
+            "6862e478_2"
+          ]
+        },
+        {
+          "claim": "Sounds like you had an epic celebration for Jack's birthday!",
+          "reason": "stale",
+          "support_session_ids": [
+            "4abbeb2a_2",
+            "6862e478_2"
+          ]
+        },
+        {
+          "claim": "Karaoke is always a blast, isn't it?",
+          "reason": "stale",
+          "support_session_ids": [
+            "4abbeb2a_2",
+            "6862e478_2"
+          ]
+        },
+        {
+          "claim": "Now, let's get to dinner recommendations!",
+          "reason": "stale",
+          "support_session_ids": [
+            "4abbeb2a_2",
+            "6862e478_2"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    }
+  ]
+}

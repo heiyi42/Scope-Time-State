@@ -1,0 +1,357 @@
+{
+  "cb07a7684374387d0792a613c08a719848d82cbdc0e086b144265a3120ca4e19": {
+    "answer": "27:12",
+    "evidence_session_ids": [
+      "answer_a25d4a91_1"
+    ],
+    "state_facets": [
+      {
+        "name": "personal_best_time",
+        "value": "27:12",
+        "support_session_ids": [
+          "answer_a25d4a91_1"
+        ]
+      }
+    ],
+    "rejected_claims": [],
+    "answer_rationale": "The evidence directly states the personal best time in the charity 5K run."
+  },
+  "e8f7a9f775dfd2ff66b2764b51a0c279868c94b892635835fe2d5f72817ea5e2": {
+    "answer": "4",
+    "evidence_session_ids": [
+      "answer_3f9693b7_2"
+    ],
+    "state_facets": [
+      {
+        "name": "korean_restaurants_tried",
+        "value": "4",
+        "support_session_ids": [
+          "answer_3f9693b7_2"
+        ]
+      }
+    ],
+    "rejected_claims": [
+      {
+        "claim": "User has tried three different Korean restaurants recently.",
+        "reason": "stale",
+        "support_session_ids": [
+          "answer_3f9693b7_1",
+          "answer_3f9693b7_2"
+        ]
+      }
+    ],
+    "answer_rationale": "The latest evidence indicates that the user has tried four different Korean restaurants, which supersedes the earlier claim of three."
+  },
+  "ae76fbbce87321965661759158b08c2e133e0ed46e7134c49658faf31099b06e": {
+    "answer": "Rachel moved to Chicago.",
+    "evidence_session_ids": [
+      "answer_0b1a0942_1",
+      "sharegpt_DJ1HtcY_0",
+      "d1e7d11c_2",
+      "ultrachat_193901"
+    ],
+    "state_facets": [
+      {
+        "name": "rachel_s_current_location",
+        "value": "Chicago",
+        "support_session_ids": [
+          "answer_0b1a0942_1",
+          "sharegpt_DJ1HtcY_0",
+          "d1e7d11c_2",
+          "ultrachat_193901"
+        ]
+      }
+    ],
+    "rejected_claims": [
+      {
+        "claim": "Rachel moved back to the suburbs again.",
+        "reason": "contradicted",
+        "support_session_ids": [
+          "answer_0b1a0942_2",
+          "answer_0b1a0942_1"
+        ]
+      }
+    ],
+    "answer_rationale": "The latest evidence confirms that Rachel's current location is Chicago, with earlier claims about her moving back to the suburbs being contradicted."
+  },
+  "95d0d3a79bdb61690d0e9e94c4028ea5772c3e47fec5689f57567344c3a9dd00": {
+    "answer": "$400,000",
+    "evidence_session_ids": [
+      "1e32d50a",
+      "answer_3a6f1e82_2"
+    ],
+    "state_facets": [
+      {
+        "name": "pre_approval_amount",
+        "value": "$400,000",
+        "support_session_ids": [
+          "1e32d50a",
+          "answer_3a6f1e82_2"
+        ]
+      }
+    ],
+    "rejected_claims": [
+      {
+        "claim": "User got pre-approved for $350,000 from Wells Fargo.",
+        "reason": "stale",
+        "support_session_ids": [
+          "answer_3a6f1e82_1",
+          "1e32d50a"
+        ]
+      },
+      {
+        "claim": "User got pre-approved for $350,000 from Wells Fargo.",
+        "reason": "stale",
+        "support_session_ids": [
+          "answer_3a6f1e82_1",
+          "1e32d50a"
+        ]
+      },
+      {
+        "claim": "User got pre-approved for $350,000 from Wells Fargo.",
+        "reason": "stale",
+        "support_session_ids": [
+          "answer_3a6f1e82_1",
+          "1e32d50a"
+        ]
+      },
+      {
+        "claim": "User got pre-approved for $350,000 from Wells Fargo.",
+        "reason": "stale",
+        "support_session_ids": [
+          "sharegpt_FYhsZ0Q_0",
+          "1e32d50a"
+        ]
+      },
+      {
+        "claim": "User got pre-approved for $350,000 from Wells Fargo.",
+        "reason": "stale",
+        "support_session_ids": [
+          "sharegpt_uiECyCD_66",
+          "1e32d50a"
+        ]
+      },
+      {
+        "claim": "User got pre-approved for $350,000 from Wells Fargo.",
+        "reason": "stale",
+        "support_session_ids": [
+          "aaf22693",
+          "1e32d50a"
+        ]
+      },
+      {
+        "claim": "User got pre-approved for $350,000 from Wells Fargo.",
+        "reason": "stale",
+        "support_session_ids": [
+          "010a28ab_3",
+          "1e32d50a"
+        ]
+      }
+    ],
+    "answer_rationale": "The latest evidence indicates that the user was pre-approved for a mortgage amount of $400,000, superseding the earlier claim of $350,000."
+  },
+  "c35bb3c5868891d437e38188e19f6d22e423713eb5c4cdd84e7db7178d741cfa": {
+    "answer": "three times a week",
+    "evidence_session_ids": [
+      "answer_6a4f8626_2"
+    ],
+    "state_facets": [
+      {
+        "name": "yoga_class_attendance_frequency",
+        "value": "three times a week",
+        "support_session_ids": [
+          "answer_6a4f8626_2",
+          "ef0341d4_2",
+          "c2c11c8c_1",
+          "ultrachat_224909"
+        ]
+      },
+      {
+        "name": "yoga_class_effect_on_focus",
+        "value": "User feels more focused on days when they attend yoga classes.",
+        "support_session_ids": [
+          "answer_6a4f8626_2",
+          "c2c11c8c_1",
+          "ultrachat_224909"
+        ]
+      }
+    ],
+    "rejected_claims": [],
+    "answer_rationale": "The latest evidence indicates that the user attends yoga classes three times a week, which helps with their focus."
+  },
+  "6773ba6959234883ad94855268adc4e7113c206ea1d567936285ac3daef05956": {
+    "answer": "User's mom is using the same grocery list app as the user.",
+    "evidence_session_ids": [
+      "b2243528_1"
+    ],
+    "state_facets": [
+      {
+        "name": "user_s_grocery_list_method",
+        "value": "User's mom is using the same grocery list app as the user.",
+        "support_session_ids": [
+          "b2243528_1"
+        ]
+      }
+    ],
+    "rejected_claims": [
+      {
+        "claim": "User's mom is still using an old paper list.",
+        "reason": "contradicted",
+        "support_session_ids": [
+          "b2243528_1"
+        ]
+      }
+    ],
+    "answer_rationale": "The evidence confirms that the user's mom is using the same grocery list app as the user, contradicting the previous claim about using an old paper list."
+  },
+  "30ae6fc9e88b8bfa39926d40ee2439010a6e81fa1e5976bd779767ee1d06429a": {
+    "answer": "10-12 hours",
+    "evidence_session_ids": [
+      "answer_c44b9df4_2",
+      "d1d3fd12_1"
+    ],
+    "state_facets": [
+      {
+        "name": "time_spent_on_abstract_ocean_sculpture",
+        "value": "10-12 hours",
+        "support_session_ids": [
+          "answer_c44b9df4_2",
+          "d1d3fd12_1"
+        ]
+      }
+    ],
+    "rejected_claims": [
+      {
+        "claim": "User has spent around 5-6 hours on their abstract ocean sculpture.",
+        "reason": "stale",
+        "support_session_ids": [
+          "4ad82121_2",
+          "answer_c44b9df4_2"
+        ]
+      },
+      {
+        "claim": "User has spent around 5-6 hours on their abstract ocean sculpture.",
+        "reason": "stale",
+        "support_session_ids": [
+          "a08fbe88_1",
+          "answer_c44b9df4_2"
+        ]
+      },
+      {
+        "claim": "User has spent around 5-6 hours on their abstract ocean sculpture.",
+        "reason": "stale",
+        "support_session_ids": [
+          "8cfa91c3_1",
+          "answer_c44b9df4_2"
+        ]
+      },
+      {
+        "claim": "User has spent around 5-6 hours on their abstract ocean sculpture.",
+        "reason": "stale",
+        "support_session_ids": [
+          "bcd5c30f_1",
+          "answer_c44b9df4_2"
+        ]
+      },
+      {
+        "claim": "User has spent around 5-6 hours on their abstract ocean sculpture.",
+        "reason": "stale",
+        "support_session_ids": [
+          "b5e94516_2",
+          "answer_c44b9df4_2"
+        ]
+      },
+      {
+        "claim": "User has spent around 5-6 hours on their abstract ocean sculpture.",
+        "reason": "stale",
+        "support_session_ids": [
+          "3d82ba51_3",
+          "answer_c44b9df4_2"
+        ]
+      }
+    ],
+    "answer_rationale": "The user stated they have spent 10-12 hours on their abstract ocean sculpture, which is supported by the latest evidence."
+  },
+  "8c51d1fddc8c6aef2c3fe4dd3cfeccfb62292cbac00e18cc73869c56aed26f40": {
+    "answer": "4",
+    "evidence_session_ids": [
+      "44202c74_1"
+    ],
+    "state_facets": [
+      {
+        "name": "current_bike_count",
+        "value": "4",
+        "support_session_ids": [
+          "44202c74_1"
+        ]
+      }
+    ],
+    "rejected_claims": [
+      {
+        "claim": "User currently has three bikes.",
+        "reason": "stale",
+        "support_session_ids": [
+          "answer_e1403127_1",
+          "286aa281_1",
+          "ultrachat_400703",
+          "6ce1ea1b",
+          "5b44a462",
+          "ultrachat_352196"
+        ]
+      }
+    ],
+    "answer_rationale": "The latest evidence indicates that the user currently owns 4 bikes, which supersedes the earlier claim of owning three bikes."
+  },
+  "d09e119a38343f66be2bd1377acabadbb4e67c6923c4a8477ce5f583a9508d83": {
+    "answer": "You take a cocktail-making class on Thursday.",
+    "evidence_session_ids": [
+      "answer_73540165_1"
+    ],
+    "state_facets": [
+      {
+        "name": "cocktail_making_class_day",
+        "value": "Thursday",
+        "support_session_ids": [
+          "answer_73540165_1",
+          "sharegpt_jZOf9E5_61",
+          "c9dfeaea_1",
+          "sharegpt_W7oHBWD_0",
+          "4f5880c6_5",
+          "0e250059_1",
+          "9f6bec4f",
+          "109e07e8_1",
+          "4da24fe5_2",
+          "a46d10a2_1"
+        ]
+      }
+    ],
+    "rejected_claims": [
+      {
+        "claim": "User has a cocktail-making class on Fridays.",
+        "reason": "contradicted",
+        "support_session_ids": [
+          "answer_73540165_2",
+          "answer_73540165_1"
+        ]
+      }
+    ],
+    "answer_rationale": "The evidence clearly states that the user has a cocktail-making class on Thursday, which is supported by multiple session IDs."
+  },
+  "dcd650ab39f90c74d2a3bcd3b3df362246c217465fd3ab48f7dfafffde31540a": {
+    "answer": "Paris",
+    "evidence_session_ids": [
+      "answer_02e66dec_2"
+    ],
+    "state_facets": [
+      {
+        "name": "most_recent_family_trip",
+        "value": "Paris",
+        "support_session_ids": [
+          "answer_02e66dec_2"
+        ]
+      }
+    ],
+    "rejected_claims": [],
+    "answer_rationale": "The evidence clearly states that the most recent family trip was to Paris."
+  }
+}

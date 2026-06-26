@@ -1,0 +1,27 @@
+{
+  "808d9ebf278b3c86c484f4a497a509efcaa07c75e7eccb54fc45de02732d7d4c": {
+    "answer": "25 minutes and 50 seconds",
+    "evidence_session_ids": [
+      "answer_a25d4a91_2"
+    ],
+    "state_facets": [
+      {
+        "name": "knowledge_update",
+        "value": "User's personal best time in a charity 5K run is 25 minutes and 50 seconds.",
+        "support_session_ids": [
+          "answer_a25d4a91_2"
+        ]
+      }
+    ],
+    "rejected_claims": [
+      {
+        "claim": "27:12",
+        "reason": "Superseded by later update to 25:50.",
+        "support_session_ids": [
+          "answer_a25d4a91_1"
+        ]
+      }
+    ],
+    "answer_rationale": "The user initially stated a personal best of 27:12 on 2023/05/23, but later (2023/05/30) expressed a goal to beat a personal best of 25:50, indicating an update. The assistant also referenced the 25:50 time. Per the knowledge-update instruction, the latest valid value is 25:50."
+  }
+}

@@ -1,0 +1,1341 @@
+{
+  "method": "task_semantics_local_graph",
+  "model": "gpt-4o-mini",
+  "judge_model": "gpt-4o-2024-08-06",
+  "n_cases": 10,
+  "macro_acc": 0.0,
+  "micro_acc": 0.0,
+  "by_type": {
+    "multi-session": {
+      "n": 10,
+      "acc": 0.0
+    }
+  },
+  "rows": [
+    {
+      "question_id": "0a995998",
+      "question_type": "multi-session",
+      "question": "How many items of clothing do I need to pick up or return from a store?",
+      "gold_answer": "3",
+      "hypothesis": "I don't know",
+      "question_date": "2023/02/15 (Wed) 23:50",
+      "answer_session_ids": [
+        "answer_afa9873b_2",
+        "answer_afa9873b_3",
+        "answer_afa9873b_1"
+      ],
+      "evidence_session_ids": [
+        "b10c041b_2",
+        "afbd7193_2",
+        "ultrachat_158784",
+        "3f05c474",
+        "answer_afa9873b_3",
+        "25091584_1",
+        "85846900_2",
+        "sharegpt_ZzArUrr_0",
+        "439f9ed8_3",
+        "answer_afa9873b_1",
+        "64b847a7_1",
+        "ultrachat_428050",
+        "fa46a10e",
+        "sharegpt_U3S02iq_0"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Your grandmother's memory of trying on the vintage diamond necklace is a wonderful story, and it's possible that she may know something about the clocks as well.",
+          "support_session_ids": [
+            "fa46a10e"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "I wonder if she knows anything about the clocks.",
+          "support_session_ids": [
+            "fa46a10e"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "I'll ask my family members if they know anything about the clocks or have any photos or documents related to them.",
+          "support_session_ids": [
+            "fa46a10e"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Reaching out to local clock dealers and collectors in the area where your great-grandfather lived is a great idea, as they may have knowledge about the clocks or have come across similar pieces in their inventory.",
+          "support_session_ids": [
+            "fa46a10e"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "By utilizing the National Association of Watch and Clock Collectors website and the Clock Collectors Forum, you'll have access to a wealth of knowledge and resources from experts and enthusiasts in the field.",
+          "support_session_ids": [
+            "fa46a10e"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Additionally, I'll ask my family members if they know anything about the clocks or have any photos or documents related to them.",
+          "support_session_ids": [
+            "fa46a10e"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "Adding some extra flavor and texture can elevate it to a whole new level.",
+          "reason": "stale",
+          "support_session_ids": [
+            "64b847a7_1",
+            "fa46a10e"
+          ]
+        },
+        {
+          "claim": "Here are some ideas to get you started: **Add a Citrus Twist:** * Squeeze some fresh lime or orange juice over the fruit salad for a burst of citrus flavor.",
+          "reason": "stale",
+          "support_session_ids": [
+            "64b847a7_1",
+            "fa46a10e"
+          ]
+        },
+        {
+          "claim": "* Zest some citrus fruits like oranges, lemons, or limes over the salad for added aroma and flavor.",
+          "reason": "stale",
+          "support_session_ids": [
+            "64b847a7_1",
+            "fa46a10e"
+          ]
+        },
+        {
+          "claim": "What were some of the unique practices and customs of Anabaptist communities during the Reformation?",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_428050",
+            "fa46a10e"
+          ]
+        },
+        {
+          "claim": "Some of the unique practices and customs of Anabaptist communities during the Reformation include the following: 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_428050",
+            "fa46a10e"
+          ]
+        },
+        {
+          "claim": "Adult baptism: Anabaptists believed in the importance of adult baptism, as opposed to infant baptism, which was practiced by other Christian denominations.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_428050",
+            "fa46a10e"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "6d550036",
+      "question_type": "multi-session",
+      "question": "How many projects have I led or am currently leading?",
+      "gold_answer": "2",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 23:32",
+      "answer_session_ids": [
+        "answer_ec904b3c_1",
+        "answer_ec904b3c_4",
+        "answer_ec904b3c_3",
+        "answer_ec904b3c_2"
+      ],
+      "evidence_session_ids": [
+        "a9981dc6_3",
+        "answer_ec904b3c_4",
+        "dae3906e_2",
+        "sharegpt_UbMVpdp_93",
+        "a245a0df_2",
+        "sharegpt_yzR1YLf_0",
+        "sharegpt_zciCXP1_12",
+        "b37a44e4_5",
+        "2e4430d8_2",
+        "ultrachat_184799",
+        "answer_ec904b3c_2",
+        "eb682e52_2",
+        "878271ae_2"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "I'm thinking of getting a new shampoo, as I've been liking the sulfate-free one I've been using lately.",
+          "support_session_ids": [
+            "878271ae_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "**Microfiber Bath Mats**: Microfiber bath mats are known for their exceptional grip and softness.",
+          "support_session_ids": [
+            "878271ae_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "A new bath mat can make a big difference in the safety and comfort of your bathroom.",
+          "support_session_ids": [
+            "878271ae_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "I'm also considering buying a new bath mat this weekend, as the one I have now is getting a bit worn out and doesn't provide as much traction as I'd like.",
+          "support_session_ids": [
+            "878271ae_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "**Glad Trash Bags**: Glad is a well-known brand that offers a range of trash can liners, including scented and odor-fighting options.",
+          "support_session_ids": [
+            "878271ae_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "I've been using a new moisturizer that's been working well, but I think I might need to switch to a lighter one for the warmer months.",
+          "support_session_ids": [
+            "878271ae_2"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "I think I've covered everything I wanted to discuss.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_ec904b3c_2",
+            "878271ae_2"
+          ]
+        },
+        {
+          "claim": "Thanks for the chat, it was really helpful to bounce ideas and get feedback on my project.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_ec904b3c_2",
+            "878271ae_2"
+          ]
+        },
+        {
+          "claim": "I feel more confident now about presenting my findings to my professor and classmates.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_ec904b3c_2",
+            "878271ae_2"
+          ]
+        },
+        {
+          "claim": "It was my pleasure!",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_ec904b3c_2",
+            "878271ae_2"
+          ]
+        },
+        {
+          "claim": "I'm glad I could help you clarify your ideas and provide feedback on your project.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_ec904b3c_2",
+            "878271ae_2"
+          ]
+        },
+        {
+          "claim": "It's great to hear that you feel more confident about presenting your findings.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_ec904b3c_2",
+            "878271ae_2"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "gpt4_59c863d7",
+      "question_type": "multi-session",
+      "question": "How many model kits have I worked on or bought?",
+      "gold_answer": "I have worked on or bought five model kits. The scales of the models are: Revell F-15 Eagle (scale not mentioned), Tamiya 1/48 scale Spitfire Mk.V, 1/16 scale German Tiger I tank, 1/72 scale B-29 bomber, and 1/24 scale '69 Camaro.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 20:57",
+      "answer_session_ids": [
+        "answer_593bdffd_4",
+        "answer_593bdffd_1",
+        "answer_593bdffd_3",
+        "answer_593bdffd_2"
+      ],
+      "evidence_session_ids": [
+        "a7d014e4_1",
+        "ultrachat_307895",
+        "ultrachat_34319",
+        "sharegpt_AhS7uI8_351",
+        "5b9c49f7",
+        "eb47739f_2",
+        "ultrachat_59708",
+        "b70358bc_1",
+        "c263f1c0",
+        "ultrachat_233858",
+        "answer_593bdffd_1",
+        "2f09d4c8",
+        "9ef698bc_2",
+        "answer_593bdffd_3",
+        "answer_593bdffd_2",
+        "sharegpt_MNdE67E_17"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "He was born in what is now modern-day Mauritania, West Africa, and was the son of a king of the Fula people.",
+          "support_session_ids": [
+            "sharegpt_MNdE67E_17"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "The most notable of these is Abd al-Rahman, also known as \"Abdul Rahman\" or \"Abd al-Rahman Ibrahima,\" who was an enslaved African prince who was brought to America in the late 18th century.",
+          "support_session_ids": [
+            "sharegpt_MNdE67E_17"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Here are some key points to know about the warranty: * The warranty is valid for one year from the date of purchase.",
+          "support_session_ids": [
+            "eb47739f_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "He was captured in a raid and sold into the transatlantic slave trade.",
+          "support_session_ids": [
+            "sharegpt_MNdE67E_17"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "The Prince of Slaves is a term that has been used to refer to a few different individuals throughout history.",
+          "support_session_ids": [
+            "sharegpt_MNdE67E_17"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "I'm also considering getting a laptop stand to elevate my new laptop.",
+          "support_session_ids": [
+            "eb47739f_2"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "By the way, I also started working on a diorama featuring a 1/16 scale German Tiger I tank, and I'm trying to get the terrain to look as realistic as possible.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_593bdffd_3",
+            "sharegpt_MNdE67E_17"
+          ]
+        },
+        {
+          "claim": "Weathering and terrain making are two of the most exciting aspects of scale modeling!",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_593bdffd_3",
+            "sharegpt_MNdE67E_17"
+          ]
+        },
+        {
+          "claim": "I'd be happy to share some tips and techniques to help you take your model tanks and diorama to the next level.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_593bdffd_3",
+            "sharegpt_MNdE67E_17"
+          ]
+        },
+        {
+          "claim": "**Weathering Techniques:** 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_593bdffd_3",
+            "sharegpt_MNdE67E_17"
+          ]
+        },
+        {
+          "claim": "**Pigment powders:** In addition to AK Interactive, you might want to try out other brands like Vallejo, Mig Productions, or Forge World.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_593bdffd_3",
+            "sharegpt_MNdE67E_17"
+          ]
+        },
+        {
+          "claim": "That's really helpful, thanks for the tips.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_593bdffd_3",
+            "sharegpt_MNdE67E_17"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "b5ef892d",
+      "question_type": "multi-session",
+      "question": "How many days did I spend on camping trips in the United States this year?",
+      "gold_answer": "8 days.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/04/29 (Sat) 23:45",
+      "answer_session_ids": [
+        "answer_a8b4290f_3",
+        "answer_a8b4290f_1",
+        "answer_a8b4290f_2"
+      ],
+      "evidence_session_ids": [
+        "sharegpt_hfWd2FK_0",
+        "ultrachat_367439",
+        "answer_a8b4290f_1",
+        "sharegpt_XWqXdom_0",
+        "f2ccf83b",
+        "35dcacdc_2",
+        "answer_a8b4290f_2",
+        "ultrachat_509285",
+        "ultrachat_565056",
+        "12cff183_1",
+        "7294438c",
+        "32a203b4_1"
+      ],
+      "state_facets": [
+        {
+          "name": "multi_session_synthesis",
+          "value": "I'm actually looking for something sweet, can you recommend some healthy desserts that I can make at home?",
+          "support_session_ids": [
+            "32a203b4_1"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "I've been meaning to try out some new recipes, and those no-bake energy bites sound perfect for a quick snack on the go.",
+          "support_session_ids": [
+            "32a203b4_1"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "They're also rich in antioxidants and have been shown to have numerous health benefits, including improving heart health, reducing inflammation, and supporting weight management.",
+          "support_session_ids": [
+            "32a203b4_1"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "Avocados are an excellent source of healthy fats, fiber, and various essential vitamins and minerals.",
+          "support_session_ids": [
+            "32a203b4_1"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "And yes, you can definitely add spinach to this recipe to give it an extra nutritional boost!",
+          "support_session_ids": [
+            "32a203b4_1"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "The Banana-Avocado Boost smoothie is a delicious and nutritious choice.",
+          "support_session_ids": [
+            "32a203b4_1"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "Supporters of the filibuster argue that it is an important tool for maintaining the Senate's tradition of protecting minority rights and encouraging greater compromise and debate.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_565056",
+            "32a203b4_1"
+          ]
+        },
+        {
+          "claim": "Some also argue that eliminating the filibuster would lead to greater partisanship and less bipartisanship.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_565056",
+            "32a203b4_1"
+          ]
+        },
+        {
+          "claim": "Opponents of the filibuster argue that it is an outdated rule that has been abused in recent years, leading to political gridlock and a lack of legislative progress on important issues.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_565056",
+            "32a203b4_1"
+          ]
+        },
+        {
+          "claim": "I'm trying to organize my online shopping expenses and I was wondering if you could help me with that.",
+          "reason": "stale",
+          "support_session_ids": [
+            "12cff183_1",
+            "32a203b4_1"
+          ]
+        },
+        {
+          "claim": "By the way, I just got a great deal on a pair of sneakers from Amazon during their spring sale today, so I'll need to add that to my expenses.",
+          "reason": "stale",
+          "support_session_ids": [
+            "12cff183_1",
+            "32a203b4_1"
+          ]
+        },
+        {
+          "claim": "Congratulations on scoring a great deal on those sneakers!",
+          "reason": "stale",
+          "support_session_ids": [
+            "12cff183_1",
+            "32a203b4_1"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "e831120c",
+      "question_type": "multi-session",
+      "question": "How many weeks did it take me to watch all the Marvel Cinematic Universe movies and the main Star Wars films?",
+      "gold_answer": "3.5 weeks",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 18:41",
+      "answer_session_ids": [
+        "answer_86c505e7_1",
+        "answer_86c505e7_2"
+      ],
+      "evidence_session_ids": [
+        "a63ad8e3_2",
+        "273f91b0_1",
+        "8fb3fe3a_1",
+        "db6ab13b_1",
+        "answer_86c505e7_1",
+        "ultrachat_310037",
+        "a110c4dc_2",
+        "7c82a6c3",
+        "sharegpt_sDfu38Q_0",
+        "answer_86c505e7_2",
+        "bfb6c9f0_2",
+        "8a4850d0",
+        "63388005",
+        "ultrachat_173326",
+        "ultrachat_388607",
+        "ultrachat_30928",
+        "773aebbd_4",
+        "9274be90_2",
+        "f192beb0_2",
+        "sharegpt_CK9naiz_63"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "The approach involves developers frequently pushing their changes to the main branch or trunk, instead of creating and working on feature branches, and relying on continuous integration (CI) and automated testing to ensure the quality of the codebase.",
+          "support_session_ids": [
+            "sharegpt_CK9naiz_63"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "I've actually been ordering takeout from a new Korean place downtown three times this month, and each time I've gotten the same dish - Bibimbap with extra kimchi.",
+          "support_session_ids": [
+            "bfb6c9f0_2"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "When developers want to start working on something—no matter how large or small—they create a new branch.",
+          "support_session_ids": [
+            "sharegpt_CK9naiz_63"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "In this approach, developers work on isolated branches for specific features or fixes and merge them back into the trunk as soon as possible to ensure that the main branch always contains production-quality code.",
+          "support_session_ids": [
+            "sharegpt_CK9naiz_63"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "Git LFS helps keep Git repositories small and fast by reducing the size of the repository, improving cloning and checkout performance, and making collaboration more efficient.",
+          "support_session_ids": [
+            "sharegpt_CK9naiz_63"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "This reference is stored in Git, while the actual binary file is stored in an external LFS server.",
+          "support_session_ids": [
+            "sharegpt_CK9naiz_63"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "I think I'll also ask her about the current challenges she's facing in terms of project management, since her company is working on AI-powered project management tools.",
+          "reason": "stale",
+          "support_session_ids": [
+            "9274be90_2",
+            "sharegpt_CK9naiz_63"
+          ]
+        },
+        {
+          "claim": "This could give me a better understanding of her needs and how our companies could potentially collaborate to address those challenges.",
+          "reason": "stale",
+          "support_session_ids": [
+            "9274be90_2",
+            "sharegpt_CK9naiz_63"
+          ]
+        },
+        {
+          "claim": "That's a fantastic idea!",
+          "reason": "stale",
+          "support_session_ids": [
+            "9274be90_2",
+            "sharegpt_CK9naiz_63"
+          ]
+        },
+        {
+          "claim": "By asking about her current challenges in project management, you're showing that you're interested in understanding the specific pain points she's facing, and that you're willing to listen and help address those challenges.",
+          "reason": "stale",
+          "support_session_ids": [
+            "9274be90_2",
+            "sharegpt_CK9naiz_63"
+          ]
+        },
+        {
+          "claim": "This can help you build rapport and establish a connection with her.",
+          "reason": "stale",
+          "support_session_ids": [
+            "9274be90_2",
+            "sharegpt_CK9naiz_63"
+          ]
+        },
+        {
+          "claim": "Asking about her challenges in project management can also give you valuable insights into her company's specific needs and requirements.",
+          "reason": "stale",
+          "support_session_ids": [
+            "9274be90_2",
+            "sharegpt_CK9naiz_63"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "3a704032",
+      "question_type": "multi-session",
+      "question": "How many plants did I acquire in the last month?",
+      "gold_answer": "3",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 21:51",
+      "answer_session_ids": [
+        "answer_c2204106_2",
+        "answer_c2204106_3",
+        "answer_c2204106_1"
+      ],
+      "evidence_session_ids": [
+        "ultrachat_472658",
+        "answer_c2204106_2",
+        "sharegpt_RrdCPkt_0",
+        "f62bfe2b_2",
+        "0babf5b6_2",
+        "78764b10_2",
+        "answer_c2204106_3",
+        "38e81260_5",
+        "answer_c2204106_1",
+        "7712aded",
+        "sharegpt_MRCLhIj_0",
+        "sharegpt_HrxBbBK_0",
+        "sharegpt_jlDfWk7_17",
+        "4e13f85f_2",
+        "ultrachat_357807",
+        "d729b790_2",
+        "aa41ac47",
+        "014a5d36",
+        "ultrachat_501733",
+        "86e830d2_3"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Do you know what kind of power outlets are available on the N'EX train?",
+          "support_session_ids": [
+            "86e830d2_3"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "That's helpful to know.",
+          "support_session_ids": [
+            "86e830d2_3"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Do you know if I'll need to declare anything at customs when I arrive back in the US?",
+          "support_session_ids": [
+            "86e830d2_3"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "I'm thinking of getting new fencing for my property.",
+          "support_session_ids": [
+            "7712aded"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "I think we've covered everything, but if you do have any more questions or need further assistance, don't hesitate to reach out.",
+          "support_session_ids": [
+            "86e830d2_3"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "It was my pleasure to assist you.",
+          "support_session_ids": [
+            "86e830d2_3"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "Do you have any tips on how to save money on groceries without sacrificing quality?",
+          "reason": "stale",
+          "support_session_ids": [
+            "014a5d36",
+            "86e830d2_3"
+          ]
+        },
+        {
+          "claim": "Grocery shopping can be a challenge, especially when you're torn between budget-friendly options and luxury treats.",
+          "reason": "stale",
+          "support_session_ids": [
+            "014a5d36",
+            "86e830d2_3"
+          ]
+        },
+        {
+          "claim": "Here are some tips to help you save money on groceries without sacrificing quality: 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "014a5d36",
+            "86e830d2_3"
+          ]
+        },
+        {
+          "claim": "**Meal planning and prep**: Plan your meals for the week, and make a list of the ingredients you need.",
+          "reason": "stale",
+          "support_session_ids": [
+            "014a5d36",
+            "86e830d2_3"
+          ]
+        },
+        {
+          "claim": "This will help you avoid buying unnecessary items and reduce food waste.",
+          "reason": "stale",
+          "support_session_ids": [
+            "014a5d36",
+            "86e830d2_3"
+          ]
+        },
+        {
+          "claim": "I like the idea of meal planning and prep.",
+          "reason": "stale",
+          "support_session_ids": [
+            "014a5d36",
+            "86e830d2_3"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "gpt4_d84a3211",
+      "question_type": "multi-session",
+      "question": "How much total money have I spent on bike-related expenses since the start of the year?",
+      "gold_answer": "$185",
+      "hypothesis": "You have spent a total of $65 on bike-related expenses since the start of the year, which includes $25 for a chain replacement and $40 for new bike lights.",
+      "question_date": "2023/05/05 (Fri) 23:56",
+      "answer_session_ids": [
+        "answer_2880eb6c_2",
+        "answer_2880eb6c_4",
+        "answer_2880eb6c_1",
+        "answer_2880eb6c_3"
+      ],
+      "evidence_session_ids": [
+        "answer_2880eb6c_2",
+        "700cc131_2",
+        "18d68208_1",
+        "sharegpt_OHd1RQ7_37",
+        "answer_2880eb6c_4",
+        "answer_2880eb6c_1",
+        "ultrachat_234895",
+        "ultrachat_83526",
+        "ultrachat_29858",
+        "8dd540f8_1",
+        "4a32d58c_2",
+        "e2b5e2cc_1",
+        "sharegpt_Rz6qxHY_0",
+        "sharegpt_TY5Si51_17",
+        "fd29aa98_1",
+        "d1b9993e_2",
+        "sharegpt_qHNCIfF_0",
+        "4889cd54_1",
+        "answer_2880eb6c_3",
+        "13c55c69_1"
+      ],
+      "state_facets": [
+        {
+          "name": "multi_session_synthesis",
+          "value": "We actually discussed it during brunch at a restaurant on Oak Street a few weeks ago.",
+          "support_session_ids": [
+            "13c55c69_1"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "Lunges: Instead of reaching out with one leg while cleaning, incorporate lunges by taking a step forward and lowering your body.",
+          "support_session_ids": [
+            "ultrachat_29858"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "I was thinking of getting them a spice blend set, since they both love trying out new recipes and flavors.",
+          "support_session_ids": [
+            "13c55c69_1"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "Speaking of experiences, I was thinking of getting my friend Rachel a fun activity or class for her birthday, since she recently got married and might enjoy something new with her partner.",
+          "support_session_ids": [
+            "13c55c69_1"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "A good spice blend set can elevate their cooking and add a new dimension to their dishes.",
+          "support_session_ids": [
+            "13c55c69_1"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "It's a thoughtful gift that will encourage Rachel and Mike to experiment with new flavors and recipes.",
+          "support_session_ids": [
+            "13c55c69_1"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "BS-3 engines are designed to emit fewer pollutants than BS-2 engines.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_qHNCIfF_0",
+            "13c55c69_1"
+          ]
+        },
+        {
+          "claim": "(a) Explain De-Dion drive (b) What is double de-cluctching and what is the necessity of free play in the operation of clutch padel?",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_qHNCIfF_0",
+            "13c55c69_1"
+          ]
+        },
+        {
+          "claim": "a) De-Dion Drive De-Dion drive is a type of rear suspension system that is commonly used in automobiles.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_qHNCIfF_0",
+            "13c55c69_1"
+          ]
+        },
+        {
+          "claim": "It was first developed by the French engineer, Charles-Armand Trépardoux, in the 1890s.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_qHNCIfF_0",
+            "13c55c69_1"
+          ]
+        },
+        {
+          "claim": "The De-Dion drive system is used to connect the rear wheels of a vehicle to the chassis or frame.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_qHNCIfF_0",
+            "13c55c69_1"
+          ]
+        },
+        {
+          "claim": "In a De-Dion drive system, a solid beam or tube is used to connect the two rear wheels to each other.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_qHNCIfF_0",
+            "13c55c69_1"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "aae3761f",
+      "question_type": "multi-session",
+      "question": "How many hours in total did I spend driving to my three road trip destinations combined?",
+      "gold_answer": "15 hours for getting to the three destinations (or 30 hours for the round trip)",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 19:37",
+      "answer_session_ids": [
+        "answer_526354c8_1",
+        "answer_526354c8_3",
+        "answer_526354c8_2"
+      ],
+      "evidence_session_ids": [
+        "6155addd_1",
+        "072b4f50_1",
+        "2a86d0da_2",
+        "38e81260_7",
+        "3d85d91e_2",
+        "0e193841_10",
+        "b0da5097_1",
+        "answer_526354c8_2",
+        "e08bf81f_4",
+        "b192ae00_2",
+        "sharegpt_ynLoh9N_0",
+        "d576152e_2",
+        "ultrachat_266173",
+        "41e778e4_1",
+        "sharegpt_8I9vH7n_7",
+        "f2ce866d_3"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "We hold these truths to be self-evident, that all men are created equal, that they are endowed by their Creator with certain unalienable Rights, that among these are Life, Liberty and the pursuit of Happiness.--That to secure these rights, Governments are instituted among Men, deriving their just powers from the consent of the governed,--That whenever any Form of Government becomes destructive of these ends, it is the Right of the People to alter or to abolish it, and to institute new Government...",
+          "support_session_ids": [
+            "sharegpt_ynLoh9N_0"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Certainly, here's my attempt at describing the Apollo 11 launch and mission from the perspective of the three astronauts: Neil Armstrong: \"As we sat there in the cockpit of the Saturn V rocket, waiting for liftoff, I couldn't help but feel a sense of awe and wonder.",
+          "support_session_ids": [
+            "sharegpt_ynLoh9N_0"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "I looked over at Buzz and Mike, and I could see the same excitement and anticipation in their eyes that I felt in my own heart.",
+          "support_session_ids": [
+            "sharegpt_ynLoh9N_0"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "I actually started experimenting with making my own BBQ sauce from scratch a while back, and I've tried out a few different recipes.",
+          "support_session_ids": [
+            "f2ce866d_3"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "There were three astronauts, Neil Armstrong, Glenn, and Aldrin, Let us experience the launch as they did, from their perspective, their emotions, their words, their style, their personalities, let them narrate our trip in the way they experienced it In their voice tone, etc.",
+          "support_session_ids": [
+            "sharegpt_ynLoh9N_0"
+          ]
+        },
+        {
+          "name": "multi_session_synthesis",
+          "value": "When it comes to applying the finishing sauce, you can definitely brush it on or use a mop sauce.",
+          "support_session_ids": [
+            "f2ce866d_3"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "Here are a few suggestions: **Appetizers** 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "e08bf81f_4",
+            "sharegpt_ynLoh9N_0"
+          ]
+        },
+        {
+          "claim": "**Spinach and Artichoke Dip**: A classic party favorite that's easy to make and always a hit.",
+          "reason": "stale",
+          "support_session_ids": [
+            "e08bf81f_4",
+            "sharegpt_ynLoh9N_0"
+          ]
+        },
+        {
+          "claim": "I love the idea of the Spinach and Artichoke Dip.",
+          "reason": "stale",
+          "support_session_ids": [
+            "e08bf81f_4",
+            "sharegpt_ynLoh9N_0"
+          ]
+        },
+        {
+          "claim": "Can you tell me what kind of cheese I should use?",
+          "reason": "stale",
+          "support_session_ids": [
+            "e08bf81f_4",
+            "sharegpt_ynLoh9N_0"
+          ]
+        },
+        {
+          "claim": "Spinach and Artichoke Dip is a party favorite, and the type of cheese you use can make a big difference in the flavor and texture.",
+          "reason": "stale",
+          "support_session_ids": [
+            "e08bf81f_4",
+            "sharegpt_ynLoh9N_0"
+          ]
+        },
+        {
+          "claim": "Here are a few options you can consider: 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "e08bf81f_4",
+            "sharegpt_ynLoh9N_0"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "gpt4_f2262a51",
+      "question_type": "multi-session",
+      "question": "How many different doctors did I visit?",
+      "gold_answer": "I visited three different doctors: a primary care physician, an ENT specialist, and a dermatologist.",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 21:43",
+      "answer_session_ids": [
+        "answer_55a6940c_3",
+        "answer_55a6940c_1",
+        "answer_55a6940c_2"
+      ],
+      "evidence_session_ids": [
+        "0984a772",
+        "answer_55a6940c_3",
+        "94de539a_1",
+        "answer_55a6940c_1",
+        "ultrachat_109996",
+        "6f46ba40_1",
+        "sharegpt_BWMyoNr_0",
+        "answer_55a6940c_2",
+        "sharegpt_hChsWOp_128",
+        "ultrachat_268434",
+        "c34b6a1c_2",
+        "956ce238",
+        "sharegpt_1Vdj119_61",
+        "f2ffaf25",
+        "c0d6fa6f_2",
+        "dd81b163_1",
+        "sharegpt_eoEbthf_0",
+        "ultrachat_421897",
+        "sharegpt_ab6IEma_0",
+        "2aeb1268"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "I'm planning a trip to visit my family for the holidays and I need to get my passport renewed.",
+          "support_session_ids": [
+            "0984a772"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "**Pelican Cases**: Known for their rugged and waterproof designs, Pelican offers a range of cases suitable for storing camera accessories like filters, remotes, and batteries.",
+          "support_session_ids": [
+            "2aeb1268"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Do you know of any good storage cases or cabinets that can keep my filters, remotes, and extra batteries tidy and easily accessible?",
+          "support_session_ids": [
+            "2aeb1268"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Congratulations on your new Sony FE 24-70mm f/2.8 GM lens!",
+          "support_session_ids": [
+            "2aeb1268"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Do you have any info on it or know where I can find reviews?",
+          "support_session_ids": [
+            "2aeb1268"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "I'm looking for a new camera backpack, specifically the F-Stop Loka UL 40L.",
+          "support_session_ids": [
+            "2aeb1268"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "Hidden Valley Nature Trail: This one-mile loop trail is a great option for families and beginners.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_eoEbthf_0",
+            "2aeb1268"
+          ]
+        },
+        {
+          "claim": "The trail takes you through a picturesque valley surrounded by giant rock formations, and there are informational signs along the way to help you learn about the park's history and geology.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_eoEbthf_0",
+            "2aeb1268"
+          ]
+        },
+        {
+          "claim": "And any scenic drives or lookouts in particular we should be sure to visit?",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_eoEbthf_0",
+            "2aeb1268"
+          ]
+        },
+        {
+          "claim": "Yes, Joshua Tree National Park has many scenic drives and lookout points that offer stunning views of the park's unique landscape.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_eoEbthf_0",
+            "2aeb1268"
+          ]
+        },
+        {
+          "claim": "Here are some of the most popular options: 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_eoEbthf_0",
+            "2aeb1268"
+          ]
+        },
+        {
+          "claim": "Keys View: This viewpoint offers panoramic views of the Coachella Valley and the San Andreas Fault.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_eoEbthf_0",
+            "2aeb1268"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "dd2973ad",
+      "question_type": "multi-session",
+      "question": "What time did I go to bed on the day before I had a doctor's appointment?",
+      "gold_answer": "2 AM",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 21:28",
+      "answer_session_ids": [
+        "answer_f9de4602_2",
+        "answer_f9de4602_1"
+      ],
+      "evidence_session_ids": [
+        "41743aae_1",
+        "ultrachat_203871",
+        "98c198fb",
+        "sharegpt_MjIo9KY_91",
+        "answer_f9de4602_2",
+        "ultrachat_478199",
+        "32c0dae1_3",
+        "1a70d1f3_2",
+        "sharegpt_O6NO7Vo_9",
+        "b192ae00_2",
+        "e720dbe2",
+        "answer_f9de4602_1",
+        "f2ce92b2_2"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "I'm actually thinking of doing a longer hike, something around 7-10 miles.",
+          "support_session_ids": [
+            "f2ce92b2_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Do you know if there are any water sources or restrooms along the trail?",
+          "support_session_ids": [
+            "f2ce92b2_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Do you know if the Dipsea Trail or Stevens Creek Trail would be a good fit?",
+          "support_session_ids": [
+            "f2ce92b2_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Here are a few suggestions to consider: * **Add a side trip to the West Point Inn:** From the summit, you can take a short spur trail to the West Point Inn, which offers stunning views of the Bay Area and the ocean.",
+          "support_session_ids": [
+            "f2ce92b2_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Then, descending via the Steep Ravine Trail will provide a nice change of scenery and a more gradual descent.",
+          "support_session_ids": [
+            "f2ce92b2_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Starting at the Steep Ravine Trailhead and taking the Dipsea Trail to the summit of Mount Tamalpais is a classic route.",
+          "support_session_ids": [
+            "f2ce92b2_2"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "Phone cases with built-in screen protectors are a fantastic way to provide comprehensive protection for your device.",
+          "reason": "stale",
+          "support_session_ids": [
+            "e720dbe2",
+            "f2ce92b2_2"
+          ]
+        },
+        {
+          "claim": "Here are some popular options: 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "e720dbe2",
+            "f2ce92b2_2"
+          ]
+        },
+        {
+          "claim": "**OtterBox Defender Series**: OtterBox is a well-known brand in the phone case industry, and their Defender Series cases offer a built-in screen protector that provides excellent protection against scratches and drops.",
+          "reason": "stale",
+          "support_session_ids": [
+            "e720dbe2",
+            "f2ce92b2_2"
+          ]
+        },
+        {
+          "claim": "**Tech21 Evo Check**: Tech21's Evo Check case features a built-in screen protector with a unique checkered design.",
+          "reason": "stale",
+          "support_session_ids": [
+            "e720dbe2",
+            "f2ce92b2_2"
+          ]
+        },
+        {
+          "claim": "I actually got a clear case with a built-in screen protector from Amazon recently, it's been working great so far!",
+          "reason": "stale",
+          "support_session_ids": [
+            "e720dbe2",
+            "f2ce92b2_2"
+          ]
+        },
+        {
+          "claim": "That's awesome!",
+          "reason": "stale",
+          "support_session_ids": [
+            "e720dbe2",
+            "f2ce92b2_2"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    }
+  ]
+}

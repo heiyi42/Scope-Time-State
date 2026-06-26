@@ -1,0 +1,1061 @@
+{
+  "benchmark": "LongMemEval-S",
+  "method": "prebuilt_llm_kg_graph",
+  "data_path": "C:\\Users\\93232\\Desktop\\SCIENCE\\AAAI2027_2\\Experiment\\Other_BenchMark\\LongMemEval-S\\LongMemEval-S_data\\data\\longmemeval_s_cleaned.json",
+  "graph_dir": "graph_retrieval_methods\\prebuilt_llm_kg_graph\\artifacts\\graphs_su_dsv4pro",
+  "answer_provider": "openai",
+  "answer_model": "gpt-4o-mini",
+  "judge_provider": "openai",
+  "judge_model": "gpt-4o",
+  "variants": [
+    "prebuilt_llm_kg_graph"
+  ],
+  "limit_cases": 0,
+  "limit_per_type": 10,
+  "question_types": {
+    "single-session-user": 10
+  },
+  "results": [
+    {
+      "variant": "prebuilt_llm_kg_graph",
+      "summary": {
+        "n_cases": 10,
+        "local_answer_match": 0.7,
+        "official_answer_accuracy": 0.8,
+        "candidate_session_recall": 1.0,
+        "candidate_session_precision": 0.05,
+        "evidence_session_recall": 1.0,
+        "evidence_session_precision": 1.0,
+        "abstention_accuracy": null,
+        "task_averaged_official_answer_accuracy": 0.8,
+        "by_question_type": {
+          "single-session-user": {
+            "n_cases": 10,
+            "local_answer_match": 0.7,
+            "official_answer_accuracy": 0.8,
+            "candidate_session_recall": 1.0,
+            "candidate_session_precision": 0.05,
+            "evidence_session_recall": 1.0,
+            "evidence_session_precision": 1.0
+          }
+        }
+      },
+      "rows": [
+        {
+          "question_id": "e47becba",
+          "question_type": "single-session-user",
+          "task_adapter": "Single-session user fact recall",
+          "is_abstention": false,
+          "question": "What degree did I graduate with?",
+          "gold_answer": "Business Administration",
+          "hypothesis": "I graduated with a degree in Business Administration.",
+          "candidate_session_ids": [
+            "02bd2b90_3",
+            "answer_280352e9",
+            "f6859b48_2",
+            "sharegpt_Cr2tc1f_0",
+            "ultrachat_214101",
+            "5dac7cc2_1",
+            "41abc171_4",
+            "2ae4f277_2",
+            "7045db85_1",
+            "e27891d3_2",
+            "4fd76316",
+            "d94b721b",
+            "ec6ca9ef",
+            "3b3a77d9",
+            "ultrachat_486410",
+            "ultrachat_359984",
+            "a041cdd4_3",
+            "ultrachat_422229",
+            "ultrachat_574556",
+            "84503ce4_1"
+          ],
+          "evidence_session_ids": [
+            "answer_280352e9"
+          ],
+          "answer_session_ids": [
+            "answer_280352e9"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "degree",
+              "value": "Business Administration",
+              "support_session_ids": [
+                "answer_280352e9"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence directly states the degree obtained by the user.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_280352e9"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_280352e9",
+                "date": "2023/05/30 (Tue) 17:27",
+                "role": "user",
+                "content": "I graduated with a degree in Business Administration, which has definitely helped me in my new role. Do you have any advice on how to stay organized when it comes to paperwork and documentation, especially when it comes to tracking expenses and reimbursements?",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "degree",
+                "value": "Business Administration",
+                "support_session_ids": [
+                  "answer_280352e9"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph\\artifacts\\graphs_su_dsv4pro\\e47becba.graph.json"
+        },
+        {
+          "question_id": "118b2229",
+          "question_type": "single-session-user",
+          "task_adapter": "Single-session user fact recall",
+          "is_abstention": false,
+          "question": "How long is my daily commute to work?",
+          "gold_answer": "45 minutes each way",
+          "hypothesis": "1 hour each way",
+          "candidate_session_ids": [
+            "answer_40a90d51",
+            "db73b7e4_4",
+            "afe04238_1",
+            "ultrachat_392094",
+            "5dce60dd",
+            "db50c0f6",
+            "628c958c_7",
+            "ultrachat_498215",
+            "5209e813_2",
+            "a0b8b0ad_6",
+            "7d8b5834_1",
+            "728deb4d_5",
+            "d600c646",
+            "ultrachat_246088",
+            "sharegpt_i1iuP70_0",
+            "ultrachat_387144",
+            "b5f561f5_2",
+            "65698aa9_4",
+            "9ee69ca6_2",
+            "1f88b2b3"
+          ],
+          "evidence_session_ids": [
+            "answer_40a90d51"
+          ],
+          "answer_session_ids": [
+            "answer_40a90d51"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": false,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": false,
+            "response": "No"
+          },
+          "state_facets": [
+            {
+              "name": "daily_commute_duration",
+              "value": "1 hour each way",
+              "support_session_ids": [
+                "answer_40a90d51"
+              ]
+            }
+          ],
+          "rejected_claims": [
+            {
+              "claim": "The user's daily commute takes 45 minutes each way.",
+              "reason": "contradicted",
+              "support_session_ids": [
+                "answer_40a90d51"
+              ]
+            },
+            {
+              "claim": "The user's daily commute takes an hour each way.",
+              "reason": "contradicted",
+              "support_session_ids": [
+                "answer_40a90d51"
+              ]
+            }
+          ],
+          "answer_rationale": "The user's daily commute is confirmed to be 1 hour each way based on the evidence.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_40a90d51"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_40a90d51",
+                "date": "2023/05/22 (Mon) 21:18",
+                "role": "assistant",
+                "content": "That's a great way to make the most of your commute time! An hour each way is a significant amount of time that can be utilized for personal development, entertainment, or relaxation. Audiobooks are an excellent choice for commutes, as they allow you to multitask while still enjoying a good story or learning something new.\n\nWith an hour of commute time each way, you can easily get through a significant portion of an audiobook. You might even find yourself looking forward to your commute, knowing that you'll have some dedicated time to immerse yourself in a good story or learn something new.\n\nHave you noticed any benefits from listening to audiobooks during your commute? For example, do you feel more relaxed, energized, or inspired after listening to a particular book?\n\nAlso, are there any specific genres or topics you prefer to listen to during your commute? Do you find that certain types of books help you relax, while others keep you more engaged and awake?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_40a90d51",
+                "date": "2023/05/22 (Mon) 21:18",
+                "role": "user",
+                "content": "I've been listening to audiobooks during my daily commute, which takes 45 minutes each way.",
+                "why_relevant": "supports rejected claim (contradicted)"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "daily_commute_duration",
+                "value": "1 hour each way",
+                "support_session_ids": [
+                  "answer_40a90d51"
+                ]
+              }
+            ],
+            "rejected_claims": [
+              {
+                "claim": "The user's daily commute takes 45 minutes each way.",
+                "reason": "contradicted",
+                "support_session_ids": [
+                  "answer_40a90d51"
+                ]
+              },
+              {
+                "claim": "The user's daily commute takes an hour each way.",
+                "reason": "contradicted",
+                "support_session_ids": [
+                  "answer_40a90d51"
+                ]
+              }
+            ],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph\\artifacts\\graphs_su_dsv4pro\\118b2229.graph.json"
+        },
+        {
+          "question_id": "51a45a95",
+          "question_type": "single-session-user",
+          "task_adapter": "Single-session user fact recall",
+          "is_abstention": false,
+          "question": "Where did I redeem a $5 coupon on coffee creamer?",
+          "gold_answer": "Target",
+          "hypothesis": "I redeemed a $5 coupon on coffee creamer last Sunday, which was a nice surprise since I didn't know I had it in my email inbox.",
+          "candidate_session_ids": [
+            "answer_d61669c7",
+            "98c198fb",
+            "217debf7",
+            "5c44d9fe_1",
+            "07ba9acd_2",
+            "sharegpt_hChsWOp_128",
+            "8fa64936_1",
+            "sharegpt_3vxz2Zr_0",
+            "ultrachat_282235",
+            "sharegpt_CyJ3dal_0",
+            "b35610f4_3",
+            "ultrachat_54710",
+            "dfe646a7_1",
+            "c133623d",
+            "55e0c6db_2",
+            "ultrachat_261438",
+            "f32d1ccf_1",
+            "127fd1c9",
+            "3fe98db6_1",
+            "ultrachat_407934"
+          ],
+          "evidence_session_ids": [
+            "answer_d61669c7"
+          ],
+          "answer_session_ids": [
+            "answer_d61669c7"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": false,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": false,
+            "response": "No"
+          },
+          "state_facets": [
+            {
+              "name": "coupon_redemption_location",
+              "value": "email inbox",
+              "support_session_ids": [
+                "answer_d61669c7"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The user explicitly stated where they redeemed the coupon.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_d61669c7"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_d61669c7",
+                "date": "2023/05/29 (Mon) 13:28",
+                "role": "user",
+                "content": "I actually redeemed a $5 coupon on coffee creamer last Sunday, which was a nice surprise since I didn't know I had it in my email inbox.",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "coupon_redemption_location",
+                "value": "email inbox",
+                "support_session_ids": [
+                  "answer_d61669c7"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph\\artifacts\\graphs_su_dsv4pro\\51a45a95.graph.json"
+        },
+        {
+          "question_id": "58bf7951",
+          "question_type": "single-session-user",
+          "task_adapter": "Single-session user fact recall",
+          "is_abstention": false,
+          "question": "What play did I attend at the local community theater?",
+          "gold_answer": "The Glass Menagerie",
+          "hypothesis": "The Glass Menagerie",
+          "candidate_session_ids": [
+            "answer_355c48bb",
+            "ultrachat_268434",
+            "sharegpt_M84blrA_53",
+            "sharegpt_gmLF3PE_17",
+            "ultrachat_304942",
+            "ultrachat_365156",
+            "7e17ae56_5",
+            "sharegpt_CvVLg2J_18",
+            "1587bd78_1",
+            "08469b58",
+            "sharegpt_DGiqvVv_270",
+            "5b83c26e_1",
+            "sharegpt_RkFlOeC_19",
+            "ultrachat_221066",
+            "ultrachat_155546",
+            "ultrachat_132201",
+            "ultrachat_71618",
+            "sharegpt_PancT1q_0",
+            "sharegpt_OFiElWf_37",
+            "ultrachat_377566"
+          ],
+          "evidence_session_ids": [
+            "answer_355c48bb"
+          ],
+          "answer_session_ids": [
+            "answer_355c48bb"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "play_attended",
+              "value": "The Glass Menagerie",
+              "support_session_ids": [
+                "answer_355c48bb"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence directly states that the user attended a production of The Glass Menagerie.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_355c48bb"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_355c48bb",
+                "date": "2023/05/26 (Fri) 07:31",
+                "role": "user",
+                "content": "I was thinking of getting Emily to audition for a role, I'll definitely encourage her to give it a shot. The play I attended was actually a production of The Glass Menagerie, have you heard of it?",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "play_attended",
+                "value": "The Glass Menagerie",
+                "support_session_ids": [
+                  "answer_355c48bb"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph\\artifacts\\graphs_su_dsv4pro\\58bf7951.graph.json"
+        },
+        {
+          "question_id": "1e043500",
+          "question_type": "single-session-user",
+          "task_adapter": "Single-session user fact recall",
+          "is_abstention": false,
+          "question": "What is the name of the playlist I created on Spotify?",
+          "gold_answer": "Summer Vibes",
+          "hypothesis": "Summer Vibes",
+          "candidate_session_ids": [
+            "answer_3e012175",
+            "01bd9def",
+            "7b1d1f43_1",
+            "ultrachat_266656",
+            "8020d945_2",
+            "sharegpt_bph7DTk_7",
+            "ultrachat_271928",
+            "sharegpt_Clr6oyu_0",
+            "4d0d7984",
+            "b28990c8_1",
+            "e132259f",
+            "0363e91f",
+            "ultrachat_43823",
+            "ultrachat_149462",
+            "3548cae3",
+            "a5959675_2",
+            "sharegpt_85Y0l0J_365",
+            "a450dfaf",
+            "c3991c02_2",
+            "be324b2e_1"
+          ],
+          "evidence_session_ids": [
+            "answer_3e012175"
+          ],
+          "answer_session_ids": [
+            "answer_3e012175"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "spotify_playlist_name",
+              "value": "Summer Vibes",
+              "support_session_ids": [
+                "answer_3e012175"
+              ]
+            }
+          ],
+          "rejected_claims": [
+            {
+              "claim": "User created a Spotify playlist called 'Summer Vibes'.",
+              "reason": "stale",
+              "support_session_ids": [
+                "answer_3e012175"
+              ]
+            }
+          ],
+          "answer_rationale": "The user mentioned a playlist they created on Spotify called 'Summer Vibes'.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_3e012175"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_3e012175",
+                "date": "2023/05/21 (Sun) 13:13",
+                "role": "assistant",
+                "content": "Music discovery is a great topic!\n\nFor ambient and lo-fi music, I'd recommend the following music streaming services:\n\n1. **Bandcamp**: While not a traditional streaming service, Bandcamp is a fantastic platform for discovering new artists and labels in the ambient and lo-fi genres. You can browse through tags, genres, and labels to find hidden gems. They also offer a \"Discover\" feature that suggests music based on your listening history.\n2. **Apple Music**: Apple Music has a vast collection of ambient and lo-fi music, and their \"Browse\" tab features a \"Moods\" section that's perfect for discovering relaxing music. They also have a \"New Music Mix\" playlist that updates regularly, showcasing new artists and tracks.\n3. **Tidal**: Tidal's \"Discover\" feature is powered by human curators, which means you'll get recommendations based on your listening habits and preferences. They also have a \"Rising\" section that highlights emerging artists.\n4. **Deezer**: Deezer's \"Discover\" feature uses AI to recommend music based on your listening history, and they have a \"Mood\" section that's perfect for finding relaxing music.\n\nAs for your Summer Vibes playlist, it sounds like you've got a great mix of chill tracks! If you're looking for more music to add, you might enjoy the following playlists on Spotify:\n\n1. **Lo-Fi Girl**: A popular playlist with over 2 million followers, featuring a constant stream of lo-fi hip-hop and chillhop tracks.\n2. **Ambient Universe**: A playlist with a focus on ambient, drone, and experimental music.\n3. **Chillhop Music**: A playlist featuring a mix of lo-fi hip-hop, chillhop, and instrumental tracks.\n4. **Coffee Shop Jazz**: A playlist with a relaxing atmosphere, perfect for working or studying.\n\nYou can also try exploring Spotify's \"Discover Weekly\" and \"Release Radar\" playlists, which are tailored to your listening habits and preferences.\n\nLastly, if you're interested in discovering new music and artists, I'd recommend checking out online music communities like Reddit's \"WeAreTheMusicMakers\" and \"Music\" subreddits, as well as online forums dedicated to ambient and lo-fi music. These communities are great resources for discovering new music and connecting with like-minded listeners.",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_3e012175",
+                "date": "2023/05/21 (Sun) 13:13",
+                "role": "user",
+                "content": "What's a good music streaming service that can help me discover new music and artists, especially in the ambient and lo-fi genres? Also, by the way, I've been listening to this one playlist on Spotify that I created, called Summer Vibes, and it's got all these chill tracks that are perfect for relaxing or working out.",
+                "why_relevant": "supports rejected claim (stale)"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "spotify_playlist_name",
+                "value": "Summer Vibes",
+                "support_session_ids": [
+                  "answer_3e012175"
+                ]
+              }
+            ],
+            "rejected_claims": [
+              {
+                "claim": "User created a Spotify playlist called 'Summer Vibes'.",
+                "reason": "stale",
+                "support_session_ids": [
+                  "answer_3e012175"
+                ]
+              }
+            ],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph\\artifacts\\graphs_su_dsv4pro\\1e043500.graph.json"
+        },
+        {
+          "question_id": "c5e8278d",
+          "question_type": "single-session-user",
+          "task_adapter": "Single-session user fact recall",
+          "is_abstention": false,
+          "question": "What was my last name before I changed it?",
+          "gold_answer": "Johnson",
+          "hypothesis": "Johnson",
+          "candidate_session_ids": [
+            "answer_f6168136",
+            "aaf71ce2_2",
+            "64767b7f",
+            "sharegpt_WPGrlAK_0",
+            "89b1028d_1",
+            "f58317c6",
+            "193c23bd_2",
+            "sharegpt_DB8U4oH_9",
+            "b1265fd7_1",
+            "d777e7da_1",
+            "e4881cbd_4",
+            "ultrachat_246365",
+            "bdf735de_2",
+            "sharegpt_EXJAjmw_0",
+            "dc832f73",
+            "ultrachat_474903",
+            "fc6549b2",
+            "0fe848c5_3",
+            "ultrachat_22146",
+            "03362ec8_2"
+          ],
+          "evidence_session_ids": [
+            "answer_f6168136"
+          ],
+          "answer_session_ids": [
+            "answer_f6168136"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "previous_last_name",
+              "value": "Johnson",
+              "support_session_ids": [
+                "answer_f6168136"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The user stated their old name was Johnson before changing it to Winters.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_f6168136"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_f6168136",
+                "date": "2023/05/28 (Sun) 20:27",
+                "role": "user",
+                "content": "I need to update my address with my health insurance provider. Can you walk me through the process or give me a phone number to call? By the way, I just recently changed my last name, and I'm still getting used to it - it's funny, my old name was Johnson, but now it's Winters.",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "previous_last_name",
+                "value": "Johnson",
+                "support_session_ids": [
+                  "answer_f6168136"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph\\artifacts\\graphs_su_dsv4pro\\c5e8278d.graph.json"
+        },
+        {
+          "question_id": "6ade9755",
+          "question_type": "single-session-user",
+          "task_adapter": "Single-session user fact recall",
+          "is_abstention": false,
+          "question": "Where do I take yoga classes?",
+          "gold_answer": "Serenity Yoga",
+          "hypothesis": "You take yoga classes at Serenity Yoga.",
+          "candidate_session_ids": [
+            "answer_9398da02",
+            "ec8fa65d_2",
+            "7c5ab02a_2",
+            "ultrachat_393203",
+            "ultrachat_217527",
+            "ultrachat_270925",
+            "ultrachat_462",
+            "sharegpt_mJ7MnQS_31",
+            "a200b713_4",
+            "ultrachat_84599",
+            "ultrachat_112120",
+            "ultrachat_565482",
+            "ultrachat_556745",
+            "e49a0b52_1",
+            "ultrachat_329610",
+            "sharegpt_eGVTJri_33",
+            "27c10839_2",
+            "4bc2cef9_1",
+            "28621d6a_2",
+            "910ed479_3"
+          ],
+          "evidence_session_ids": [
+            "answer_9398da02"
+          ],
+          "answer_session_ids": [
+            "answer_9398da02"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "yes"
+          },
+          "state_facets": [
+            {
+              "name": "yoga_class_location",
+              "value": "Serenity Yoga",
+              "support_session_ids": [
+                "answer_9398da02"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence clearly states that the user has a connection to Serenity Yoga for their yoga classes.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_9398da02"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_9398da02",
+                "date": "2023/05/30 (Tue) 15:30",
+                "role": "assistant",
+                "content": "That's great to hear! Down Dog is an excellent app, and it's awesome that you've found it helpful for your home practice. It's always wonderful to have a reliable and convenient way to practice yoga, especially on days when you can't make it to a studio.\n\nDown Dog's customization options, variety of classes, and calming atmosphere make it a popular choice among yogis. The fact that you can practice at your own pace, in the comfort of your own home, is a huge bonus.\n\nIt's also fantastic that you have a connection to Serenity Yoga, and that you're able to supplement your studio practice with home practice using Down Dog. Having a consistent practice, whether at home or in a studio, can make a huge difference in your overall well-being.\n\nHow do you like to use Down Dog? Do you have a favorite type of class or instructor on the app?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_9398da02",
+                "date": "2023/05/30 (Tue) 15:30",
+                "role": "user",
+                "content": "I've actually been using Down Dog for my home practice and I really like it. It's been super helpful for me, especially on days when I can't make it to Serenity Yoga.",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "yoga_class_location",
+                "value": "Serenity Yoga",
+                "support_session_ids": [
+                  "answer_9398da02"
+                ]
+              },
+              {
+                "name": "yoga_class_location",
+                "value": "home using Down Dog app",
+                "support_session_ids": [
+                  "answer_9398da02"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph\\artifacts\\graphs_su_dsv4pro\\6ade9755.graph.json"
+        },
+        {
+          "question_id": "6f9b354f",
+          "question_type": "single-session-user",
+          "task_adapter": "Single-session user fact recall",
+          "is_abstention": false,
+          "question": "What color did I repaint my bedroom walls?",
+          "gold_answer": "a lighter shade of gray",
+          "hypothesis": "a lighter shade of gray",
+          "candidate_session_ids": [
+            "answer_feb5200f",
+            "a79f1a04_1",
+            "sharegpt_VAELSB3_0",
+            "sharegpt_kRjBUsA_79",
+            "ultrachat_549317",
+            "0c0f2449_2",
+            "36828c66_2",
+            "ultrachat_224845",
+            "68d4de04_2",
+            "40643340_2",
+            "54d06eeb",
+            "sharegpt_BYHT3Xz_0",
+            "de877349",
+            "f2d7486b",
+            "0e3d8491_1",
+            "331197d5_3",
+            "c22eca8c_1",
+            "5e87a43d_1",
+            "380503a2",
+            "8bc305e4_1"
+          ],
+          "evidence_session_ids": [
+            "answer_feb5200f"
+          ],
+          "answer_session_ids": [
+            "answer_feb5200f"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "bedroom_walls_color",
+              "value": "lighter shade of gray",
+              "support_session_ids": [
+                "answer_feb5200f"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The user stated they repainted their bedroom walls a lighter shade of gray, which directly answers the question.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_feb5200f"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_feb5200f",
+                "date": "2023/05/27 (Sat) 19:51",
+                "role": "user",
+                "content": "I've heard great things about Snake Plants, but I'm also curious about the ZZ Plant. Can you tell me more about its watering schedule and how often it needs to be fertilized? By the way, I've been doing some redecorating and recently repainted my bedroom walls a lighter shade of gray - it's made the room feel so much brighter!",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "bedroom_walls_color",
+                "value": "lighter shade of gray",
+                "support_session_ids": [
+                  "answer_feb5200f"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph\\artifacts\\graphs_su_dsv4pro\\6f9b354f.graph.json"
+        },
+        {
+          "question_id": "58ef2f1c",
+          "question_type": "single-session-user",
+          "task_adapter": "Single-session user fact recall",
+          "is_abstention": false,
+          "question": "When did I volunteer at the local animal shelter's fundraising dinner?",
+          "gold_answer": "February 14th",
+          "hypothesis": "I volunteered at the 'Love is in the Air' fundraising dinner on Valentine's Day.",
+          "candidate_session_ids": [
+            "answer_59547700",
+            "e6ab6a7b_2",
+            "ultrachat_5212",
+            "13f3da23_3",
+            "ultrachat_477344",
+            "e82ce7cd_1",
+            "403ee298_1",
+            "ultrachat_246324",
+            "sharegpt_eHZgwR0_9",
+            "sharegpt_RFw4j0W_0",
+            "b17c7f18",
+            "sharegpt_m0NmfPN_0",
+            "2eceeb9d_1",
+            "dbcfab21",
+            "f1fe6512_3",
+            "ultrachat_243813",
+            "ultrachat_151027",
+            "ultrachat_152126",
+            "ultrachat_13835",
+            "6d13e73a_2"
+          ],
+          "evidence_session_ids": [
+            "answer_59547700"
+          ],
+          "answer_session_ids": [
+            "answer_59547700"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": false,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "past_volunteer_experience",
+              "value": "I volunteered at the 'Love is in the Air' fundraising dinner on Valentine's Day.",
+              "support_session_ids": [
+                "answer_59547700"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence clearly states the date of the volunteering event as Valentine's Day, which is in February.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "ultrachat_5212",
+              "e6ab6a7b_2",
+              "answer_59547700"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "ultrachat_5212",
+                "date": "2023/04/02 (Sun) 17:29",
+                "role": "user",
+                "content": "I'm excited to get more involved in supporting community health programs. Do you have any advice for how to encourage others to join in too?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "e6ab6a7b_2",
+                "date": "2023/04/02 (Sun) 19:39",
+                "role": "user",
+                "content": "I think the training and orientation program sounds really comprehensive and helpful. I'm excited to get started and make a difference in my community. Can you tell me more about the volunteer scheduling process and how I can choose my volunteer opportunities?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "e6ab6a7b_2",
+                "date": "2023/04/02 (Sun) 19:39",
+                "role": "user",
+                "content": "I'm interested in helping out at a local food bank. Can you tell me more about what kind of tasks I'd be doing if I volunteered there?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "e6ab6a7b_2",
+                "date": "2023/04/02 (Sun) 19:39",
+                "role": "user",
+                "content": "Since I've had experience serving breakfast to people in need during my volunteer work, I'm interested in helping out with food distribution. Can you tell me more about the food distribution process and what I can expect during a typical shift?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "e6ab6a7b_2",
+                "date": "2023/04/02 (Sun) 19:39",
+                "role": "user",
+                "content": "I'm interested in helping out with food distribution, especially since I've had experience serving breakfast to people in need during my volunteer work. Can you tell me more about the clients that food banks usually serve?",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_59547700",
+                "date": "2023/04/02 (Sun) 22:15",
+                "role": "user",
+                "content": "I'm really looking forward to the silent auction and raffles at \"Strut Your Mutt\". I've had a great experience with similar events in the past, like the \"Love is in the Air\" fundraising dinner I volunteered at back on Valentine's Day. The energy and excitement of bidding on amazing prizes while supporting a good cause is just fantastic!",
+                "why_relevant": "supports active state facet"
+              },
+              {
+                "session_id": "answer_59547700",
+                "date": "2023/04/02 (Sun) 22:15",
+                "role": "user",
+                "content": "I'm most passionate about animal welfare and children's health, so anything related to those causes would be great. I'm open to attending different types of events, but I did really enjoy the \"Love is in the Air\" fundraising dinner I volunteered at back in February - it was a great way to meet new people.",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "emotional_state",
+                "value": "I am excited to get started and make a difference in my community as a food bank volunteer.",
+                "support_session_ids": [
+                  "e6ab6a7b_2"
+                ]
+              },
+              {
+                "name": "emotional_state",
+                "value": "I am excited to get more involved in supporting community health programs.",
+                "support_session_ids": [
+                  "ultrachat_5212"
+                ]
+              },
+              {
+                "name": "interest",
+                "value": "I am interested in volunteering at a local food bank.",
+                "support_session_ids": [
+                  "e6ab6a7b_2"
+                ]
+              },
+              {
+                "name": "interest",
+                "value": "I am interested in helping out with food distribution at a food bank.",
+                "support_session_ids": [
+                  "e6ab6a7b_2"
+                ]
+              },
+              {
+                "name": "interest",
+                "value": "I am interested in helping out with food distribution at a food bank.",
+                "support_session_ids": [
+                  "e6ab6a7b_2"
+                ]
+              },
+              {
+                "name": "past_volunteer_experience",
+                "value": "I volunteered at the 'Love is in the Air' fundraising dinner on Valentine's Day.",
+                "support_session_ids": [
+                  "answer_59547700"
+                ]
+              },
+              {
+                "name": "past_volunteer_experience",
+                "value": "I volunteered at the 'Love is in the Air' fundraising dinner in February.",
+                "support_session_ids": [
+                  "answer_59547700"
+                ]
+              },
+              {
+                "name": "past_volunteer_experience",
+                "value": "I have experience serving breakfast to people in need during my volunteer work.",
+                "support_session_ids": [
+                  "e6ab6a7b_2"
+                ]
+              },
+              {
+                "name": "past_volunteer_experience",
+                "value": "I have volunteered serving breakfast to people in need.",
+                "support_session_ids": [
+                  "e6ab6a7b_2"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph\\artifacts\\graphs_su_dsv4pro\\58ef2f1c.graph.json"
+        },
+        {
+          "question_id": "f8c5f88b",
+          "question_type": "single-session-user",
+          "task_adapter": "Single-session user fact recall",
+          "is_abstention": false,
+          "question": "Where did I buy my new tennis racket from?",
+          "gold_answer": "the sports store downtown",
+          "hypothesis": "I bought my new tennis racket from a sports store downtown.",
+          "candidate_session_ids": [
+            "answer_c3567066",
+            "sharegpt_TKj3yO8_0",
+            "15232887_1",
+            "68ace657_1",
+            "3b5205b6_1",
+            "ultrachat_412973",
+            "91880423",
+            "7ff89315_3",
+            "ultrachat_360085",
+            "58de8f9b",
+            "54e9197a",
+            "394f846b",
+            "sharegpt_JSljtOI_0",
+            "46575f0d",
+            "ultrachat_451692",
+            "e5bb44ef",
+            "sharegpt_n2aGNgW_9",
+            "ad17b46e_1",
+            "ultrachat_90878",
+            "eccc6e84_2"
+          ],
+          "evidence_session_ids": [
+            "answer_c3567066"
+          ],
+          "answer_session_ids": [
+            "answer_c3567066"
+          ],
+          "candidate_session_recall": 1.0,
+          "candidate_session_precision": 0.05,
+          "evidence_session_recall": 1.0,
+          "evidence_session_precision": 1.0,
+          "local_answer_match": true,
+          "autoeval_label": {
+            "model": "gpt-4o",
+            "label": true,
+            "response": "Yes"
+          },
+          "state_facets": [
+            {
+              "name": "purchase_location",
+              "value": "sports store downtown",
+              "support_session_ids": [
+                "answer_c3567066"
+              ]
+            }
+          ],
+          "rejected_claims": [],
+          "answer_rationale": "The evidence directly states the location where the tennis racket was purchased.",
+          "graph_state_packet": {
+            "relevant_session_ids": [
+              "answer_c3567066"
+            ],
+            "evidence_snippets": [
+              {
+                "session_id": "answer_c3567066",
+                "date": "2023/05/25 (Thu) 21:29",
+                "role": "user",
+                "content": "I'll definitely do those exercises before playing tennis. By the way, I'm really happy with my new tennis racket, which I got from a sports store downtown. It's been performing really well, and I feel like it's improved my game. Do you have any tips on how to maintain and clean my racket?",
+                "why_relevant": "supports active state facet"
+              }
+            ],
+            "state_facets": [
+              {
+                "name": "purchase_location",
+                "value": "sports store downtown",
+                "support_session_ids": [
+                  "answer_c3567066"
+                ]
+              }
+            ],
+            "rejected_claims": [],
+            "enough_evidence": true
+          },
+          "graph_artifact": "graph_retrieval_methods\\prebuilt_llm_kg_graph\\artifacts\\graphs_su_dsv4pro\\f8c5f88b.graph.json"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,213 @@
+{
+  "b24cd43d3d289005ebaa61b506488e24b8f1bcc683917cd5f0cfd8baa8e5ab2f": {
+    "answer": "Admon is scheduled to work the 8 am - 4 pm shift on Sunday.",
+    "evidence_session_ids": [
+      "answer_sharegpt_5Lzox6N_0"
+    ],
+    "state_facets": [
+      {
+        "name": "shift_rotation_for_sunday",
+        "value": "Admon working the 8 am - 4 pm shift",
+        "support_session_ids": [
+          "answer_sharegpt_5Lzox6N_0"
+        ]
+      }
+    ],
+    "rejected_claims": [],
+    "answer_rationale": "The evidence clearly states Admon's shift for Sunday in the shift rotation sheet."
+  },
+  "168745bdca183beaa9be27ee909d71a8e1244aab0a8fd57bcc34cadc47c71e9f": {
+    "answer": "The restaurant in Cihampelas Walk that serves a great Nasi Goreng is Miss Bee Providore.",
+    "evidence_session_ids": [
+      "answer_ultrachat_234453"
+    ],
+    "state_facets": [
+      {
+        "name": "dish_name",
+        "value": "Nasi Goreng",
+        "support_session_ids": [
+          "answer_ultrachat_234453"
+        ]
+      },
+      {
+        "name": "restaurant_name",
+        "value": "Miss Bee Providore",
+        "support_session_ids": [
+          "answer_ultrachat_234453"
+        ]
+      }
+    ],
+    "rejected_claims": [],
+    "answer_rationale": "The evidence directly states that Miss Bee Providore offers a must-try Nasi Goreng."
+  },
+  "845e87a8280f4231d012854194a651481d54a456350d41b4ac5d3ce2763ff691": {
+    "answer": "The scaly body of the Plesiosaur in the image was blue.",
+    "evidence_session_ids": [
+      "bcdb3847"
+    ],
+    "state_facets": [
+      {
+        "name": "plesiosaur_color",
+        "value": "blue scaly body",
+        "support_session_ids": [
+          "bcdb3847"
+        ]
+      }
+    ],
+    "rejected_claims": [],
+    "answer_rationale": "The answer is directly supported by the state facet indicating the color of the Plesiosaur."
+  },
+  "2d47c7d569098451b6abc679b2c73ea057846d2c3d68e81143b641a1320dacd4": {
+    "answer": "The unique dessert shop with the giant milkshakes we talked about is The Sugar Factory.",
+    "evidence_session_ids": [
+      "ultrachat_95525",
+      "sharegpt_6dPUCcK_13"
+    ],
+    "state_facets": [
+      {
+        "name": "unique_dessert_shop_with_giant_milkshakes",
+        "value": "The Sugar Factory",
+        "support_session_ids": [
+          "ultrachat_95525",
+          "sharegpt_6dPUCcK_13"
+        ]
+      }
+    ],
+    "rejected_claims": [],
+    "answer_rationale": "The evidence clearly identifies The Sugar Factory as the unique dessert shop with giant milkshakes."
+  },
+  "4680ec0f3ed0b0875b5f97f688bedeb6b1be26533e56d17daf2e141a8ca4d845": {
+    "answer": "Trattoria Da Enzo al 29, Roscioli, and La Pergola are recommended for a romantic dinner in Rome.",
+    "evidence_session_ids": [
+      "answer_ultrachat_448704"
+    ],
+    "state_facets": [
+      {
+        "name": "recommended_restaurants",
+        "value": "['Trattoria Da Enzo al 29', 'Roscioli', 'La Pergola']",
+        "support_session_ids": [
+          "answer_ultrachat_448704"
+        ]
+      },
+      {
+        "name": "user_intent",
+        "value": "The user is looking for the best restaurant for a romantic dinner in Rome.",
+        "support_session_ids": [
+          "answer_ultrachat_448704"
+        ]
+      }
+    ],
+    "rejected_claims": [],
+    "answer_rationale": "The answer is based on the assistant's previous recommendations for romantic dining options in Rome."
+  },
+  "c48a2c59faaba4b4b0b259feb6a70e03d6f7d14ec4444828defa672275e914cf": {
+    "answer": "The refining processes used at the Lake Charles Refinery include: atmospheric distillation, fluid catalytic cracking (FCC), alkylation, and hydrotreating.",
+    "evidence_session_ids": [
+      "answer_sharegpt_IUWQYGQ_0"
+    ],
+    "state_facets": [
+      {
+        "name": "refining_processes_at_lake_charles_refinery",
+        "value": "['atmospheric distillation', 'fluid catalytic cracking (FCC)', 'alkylation', 'hydrotreating']",
+        "support_session_ids": [
+          "answer_sharegpt_IUWQYGQ_0",
+          "61a91bc9_2",
+          "31cde680"
+        ]
+      }
+    ],
+    "rejected_claims": [],
+    "answer_rationale": "The answer is directly supported by the evidence provided in the relevant session."
+  },
+  "dc8fb539d253e342bf7ac45b0cc3af4668c34b601254c6a1832bed93f5987ec5": {
+    "answer": "The name of the hostel near the Red Light District that I recommended last time is the International Budget Hostel.",
+    "evidence_session_ids": [
+      "answer_ultrachat_370515"
+    ],
+    "state_facets": [
+      {
+        "name": "hostel_name",
+        "value": "International Budget Hostel",
+        "support_session_ids": [
+          "answer_ultrachat_370515"
+        ]
+      },
+      {
+        "name": "location",
+        "value": "near the Red Light District in Amsterdam",
+        "support_session_ids": [
+          "answer_ultrachat_370515"
+        ]
+      }
+    ],
+    "rejected_claims": [],
+    "answer_rationale": "The answer is directly supported by the evidence provided in the session where the hostel was mentioned."
+  },
+  "2c43840b6b302cb81a8fcb594f1ff829e2f5935ac576ddd0944396d7bc091b6f": {
+    "answer": "The 7th job in the list I provided for work from home jobs for seniors is \"Transcriptionist.\"",
+    "evidence_session_ids": [
+      "answer_sharegpt_hA7AkP3_0"
+    ],
+    "state_facets": [
+      {
+        "name": "7th_job_in_the_list_for_work_from_home_jobs_for_seniors",
+        "value": "Transcriptionist",
+        "support_session_ids": [
+          "answer_sharegpt_hA7AkP3_0"
+        ]
+      }
+    ],
+    "rejected_claims": [],
+    "answer_rationale": "The answer is directly supported by the content provided in the relevant session."
+  },
+  "889e44e92a8cf7175f20af519b9732a818a6059946c6e1e7ac3f7bf48913139d": {
+    "answer": "The other four options suggested were: 1. Sexual fixations, 2. Problematic sexual behaviors, 3. Sexual impulsivity, 4. Compulsive sexuality.",
+    "evidence_session_ids": [
+      "answer_sharegpt_cGdjmYo_0"
+    ],
+    "state_facets": [
+      {
+        "name": "alternative_terms_for_behaviors",
+        "value": "['Sexual fixations', 'Problematic sexual behaviors', 'Sexual impulsivity', 'Compulsive sexuality']",
+        "support_session_ids": [
+          "answer_sharegpt_cGdjmYo_0",
+          "ultrachat_238565",
+          "44202c74_2"
+        ]
+      }
+    ],
+    "rejected_claims": [],
+    "answer_rationale": "The answer is directly supported by the content provided in the evidence snippet from session 'answer_sharegpt_cGdjmYo_0'."
+  },
+  "749c73bc9b7e78e1e36e80329900fc6fecc11aba29f474677745cb0d821c9d7f": {
+    "answer": "The user mentioned wanting to access all seasons of old shows on Netflix, but did not specify the name of the show that only had the last season available.",
+    "evidence_session_ids": [
+      "b1de645e"
+    ],
+    "state_facets": [
+      {
+        "name": "access_to_old_shows",
+        "value": "The user mentioned wanting to access all seasons of old shows on Netflix.",
+        "support_session_ids": [
+          "b1de645e"
+        ]
+      },
+      {
+        "name": "previous_conversation",
+        "value": "The user wanted to check back on their previous conversation about Netflix.",
+        "support_session_ids": [
+          "b1de645e"
+        ]
+      },
+      {
+        "name": "specific_show_inquiry",
+        "value": "The user asked about a specific show that only had the last season available.",
+        "support_session_ids": [
+          "b1de645e"
+        ]
+      }
+    ],
+    "rejected_claims": [],
+    "answer_rationale": "The evidence confirms the user's interest in accessing all seasons of old shows but does not provide the specific name of the show."
+  }
+}

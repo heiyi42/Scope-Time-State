@@ -1,0 +1,1424 @@
+{
+  "a6c82aa20ce52e7b63fe769655080f524843116a9faeb0e800556ba823d1ff3a": {
+    "claims": [],
+    "relations": []
+  },
+  "7d0a4733af98e73ba182be42dd7daaa65bc27e4ea9242d5e02cc471038625194": {
+    "claims": [],
+    "relations": []
+  },
+  "a7c5698c3e222a4e6439f18b83823c36178e8fca76367190c7aae90c1a5a7ad9": {
+    "claims": [],
+    "relations": []
+  },
+  "1b72a44f1085b3a401057a44d882a7143f6f8d21ce944f8bd51a5b70bd93ac98": {
+    "claims": [],
+    "relations": []
+  },
+  "9a855ec4b985cc688281f9e91d5a62fd25966d778639044de5b38b17d771365e": {
+    "claims": [],
+    "relations": []
+  },
+  "3f8ff458c36128cc552e7ff1f321ec0713f85c4bc4436e2485d72812f93d18c8": {
+    "claims": [],
+    "relations": []
+  },
+  "aaa5d4968025edc3fe6fa3109be091679fc05ecf5f766a7b5c93e7cda1f6341a": {
+    "claims": [],
+    "relations": []
+  },
+  "a52f894065ee878bbb54d310351181bd169814848ce4656d5745b0895bab3ab9": {
+    "claims": [],
+    "relations": []
+  },
+  "010d53a4d0f58568eed44374e5772e8a5f6f26c83ec0c803603c1b5f967b752e": {
+    "claims": [],
+    "relations": []
+  },
+  "9c36407e4957936c260c7279b5aed018ac0e80bfe545c8f4d1771f3ac5c74a97": {
+    "claims": [],
+    "relations": []
+  },
+  "2908a2b2884952ba7e131f850c5e0edd40512ba5dc19f4e3eabc43bb999c7d62": {
+    "claims": [],
+    "relations": []
+  },
+  "52d284f61f8b85e3956661c21d110f6f8dddf30e27036550c9418d63ad1d49d6": {
+    "claims": [],
+    "relations": []
+  },
+  "2bf271e31d17a8ab25e15638026f0dd6d827d19aefc82f837f747f9ce98dc78b": {
+    "claims": [],
+    "relations": []
+  },
+  "debd40cb9cfc5de6a26d1c0de11d14c75e51c8ec02e4db46acf5928fab849f1c": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:answer_afa9873b_2:0",
+        "claim": "User needs to pick up dry cleaning for a navy blue blazer.",
+        "entity_labels": [
+          "user",
+          "navy blue blazer",
+          "dry cleaning"
+        ],
+        "scope_labels": [
+          "task",
+          "errand"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "count",
+          "value": "1"
+        }
+      }
+    ],
+    "relations": []
+  },
+  "ba071f895d1a445d0dfd2884b7946f6f99fe2eb982e099590f9dd4df3e5afb7f": {
+    "claims": [],
+    "relations": []
+  },
+  "10155a41f8cb8b9c85f9e2369995700745a36d41f8069602ceb8769cc6e82a19": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:answer_afa9873b_2:10",
+        "claim": "User needs to pick up dry cleaning for a navy blue blazer.",
+        "entity_labels": [
+          "user",
+          "navy_blue_blazer",
+          "dry_cleaning"
+        ],
+        "scope_labels": [
+          "task",
+          "errand"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "action",
+          "value": "pick up"
+        }
+      }
+    ],
+    "relations": []
+  },
+  "df9ba40861df2c77e8561b9c294c060b90af72c0ddcfdffc36eb0aefdd79fc07": {
+    "claims": [],
+    "relations": []
+  },
+  "292d054cc53eb4a639373d82c5994c32817ca65d3ce0cd7d747a17f8f82638c3": {
+    "claims": [],
+    "relations": []
+  },
+  "c5ba7c46e20ff9ee7afd324442a2d101a0d4ae2f9a9693e8e1cc38de7be40d6c": {
+    "claims": [],
+    "relations": []
+  },
+  "db871d21f07e93461e95a982a113be8866cda66878f1cd3c4d77ace059d7da78": {
+    "claims": [],
+    "relations": []
+  },
+  "895e48ea7cfc683d545ff6a4372acd74d757b7783fe193a14f8bd721840ba677": {
+    "claims": [],
+    "relations": []
+  },
+  "aa881e5acdda6276ecd0de6258b5a8e3bff2308eef62d66ef855930be1f2d6bd": {
+    "claims": [],
+    "relations": []
+  },
+  "81ab59c1a01831e4244b7a9da19de6ebaf3c5e0f8b7c25d3da9d86b1e29dbcc1": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:answer_afa9873b_3:2",
+        "claim": "User lent green sweater to sister and does not know when it will be returned.",
+        "entity_labels": [
+          "user",
+          "sister",
+          "green_sweater"
+        ],
+        "scope_labels": [
+          "temporal_event",
+          "item_loan"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:answer_afa9873b_3:4",
+        "claim": "User is considering wearing a yellow sundress to an outdoor concert this weekend.",
+        "entity_labels": [
+          "user",
+          "yellow_sundress",
+          "outdoor_concert"
+        ],
+        "scope_labels": [
+          "preference",
+          "temporal_event"
+        ],
+        "is_current": false,
+        "state_facet": null
+      }
+    ],
+    "relations": []
+  },
+  "75c72fda2cc6f1569c6ee2f17d3ad74992f1410bd31512cec628af8a119c59a5": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:answer_afa9873b_3:6",
+        "claim": "User needs to return boots to Zara.",
+        "entity_labels": [
+          "user",
+          "boots",
+          "Zara"
+        ],
+        "scope_labels": [
+          "task",
+          "errand"
+        ],
+        "is_current": true
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:answer_afa9873b_3:6",
+        "claim": "User needs to pick up larger size boots from Zara.",
+        "entity_labels": [
+          "user",
+          "boots",
+          "Zara",
+          "larger_size"
+        ],
+        "scope_labels": [
+          "task",
+          "errand"
+        ],
+        "is_current": true
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:answer_afa9873b_3:8",
+        "claim": "User plans to do laundry this weekend.",
+        "entity_labels": [
+          "user",
+          "laundry"
+        ],
+        "scope_labels": [
+          "plan",
+          "temporal_event"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "c2eac2eea85a04d9e8804b03efefb150382d2ce65359404cfb92f94ca0c66f1a": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:answer_afa9873b_3:10",
+        "claim": "User needs to wash favourite yoga pants.",
+        "entity_labels": [
+          "user",
+          "yoga_pants"
+        ],
+        "scope_labels": [
+          "task",
+          "temporal_event"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:25091584_1:0",
+        "claim": "User received DMC floss ordered online today.",
+        "entity_labels": [
+          "user",
+          "DMC_floss"
+        ],
+        "scope_labels": [
+          "temporal_event",
+          "knowledge_update"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:25091584_1:2",
+        "claim": "User has sorted embroidery floss and beads into containers.",
+        "entity_labels": [
+          "user",
+          "embroidery_floss",
+          "beads"
+        ],
+        "scope_labels": [
+          "task",
+          "organization"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:25091584_1:2",
+        "claim": "User plans to use fabric scraps for a quilt.",
+        "entity_labels": [
+          "user",
+          "fabric_scraps",
+          "quilt"
+        ],
+        "scope_labels": [
+          "plan",
+          "project"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "0e463a7363ac195857263419f8886c35167497a958733c1b644ae3feccc6a7f8": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:25091584_1:4",
+        "claim": "User prefers sorting fabrics by color, type, and value.",
+        "entity_labels": [
+          "user",
+          "fabrics"
+        ],
+        "scope_labels": [
+          "preference",
+          "organization"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:25091584_1:4",
+        "claim": "User plans to set up a scrap bin with separate compartments for different colors.",
+        "entity_labels": [
+          "user",
+          "scrap_bin",
+          "compartments"
+        ],
+        "scope_labels": [
+          "plan",
+          "organization"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:25091584_1:4",
+        "claim": "User needs to organize sewing book collection, including an old sewing book from aunt.",
+        "entity_labels": [
+          "user",
+          "sewing_books",
+          "aunt"
+        ],
+        "scope_labels": [
+          "task",
+          "organization"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:25091584_1:6",
+        "claim": "User is thinking of organizing sewing patterns by type.",
+        "entity_labels": [
+          "user",
+          "sewing_patterns"
+        ],
+        "scope_labels": [
+          "plan",
+          "organization"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:25091584_1:6",
+        "claim": "User has a lot of garment patterns.",
+        "entity_labels": [
+          "user",
+          "garment_patterns"
+        ],
+        "scope_labels": [
+          "state",
+          "knowledge_update"
+        ],
+        "is_current": false,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:25091584_1:6",
+        "claim": "User might sort garment patterns by size or skill level.",
+        "entity_labels": [
+          "user",
+          "garment_patterns"
+        ],
+        "scope_labels": [
+          "plan",
+          "organization"
+        ],
+        "is_current": false,
+        "state_facet": null
+      }
+    ],
+    "relations": []
+  },
+  "89ec0f0aef5233c63c9600d87c99e3ba7c649337669343811e10b1a4e1589c9a": {
+    "claims": [],
+    "relations": []
+  },
+  "d92179f90811ff2f25826ddacf19f289b1eed6829ce3ac9131b5ab76564b9a07": {
+    "claims": [],
+    "relations": []
+  },
+  "71ab500786ef41a5ce12cc47c9e77a07b62fafb4f508c3d3766afa41b8c6cd43": {
+    "claims": [],
+    "relations": []
+  },
+  "1031bb0058a253b09fabef6282ad64c9373b0eafc4a6d51e28dccc26f12add59": {
+    "claims": [],
+    "relations": []
+  },
+  "18f84cb9928735699310380057aa0a551ddec327e4861d0a0b30792efb692a37": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:sharegpt_ZzArUrr_0:4",
+        "claim": "Bob went to his mistress' apartment.",
+        "entity_labels": [
+          "Bob",
+          "mistress_apartment"
+        ],
+        "scope_labels": [
+          "location",
+          "action"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:sharegpt_ZzArUrr_0:4",
+        "claim": "Bob had sex with his mistress.",
+        "entity_labels": [
+          "Bob",
+          "mistress"
+        ],
+        "scope_labels": [
+          "action"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:sharegpt_ZzArUrr_0:4",
+        "claim": "Bob went to Safeway.",
+        "entity_labels": [
+          "Bob",
+          "Safeway"
+        ],
+        "scope_labels": [
+          "location",
+          "action"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "3705e32eedcd263f3fa19baab0fa44ca38ab8abbc45ce7d4c2cadd0a811c2524": {
+    "claims": [],
+    "relations": []
+  },
+  "0cb1d6feb10d6638bd0769d997d90f5798387d1639a4f20bea6cfa0dc3ed15fc": {
+    "claims": [],
+    "relations": []
+  },
+  "27248fda08e4663504f1d37e95d342bff1b9cc39302ff160fc5a2968cd117571": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:439f9ed8_3:6",
+        "claim": "User prefers collecting and displaying physical comics.",
+        "entity_labels": [
+          "user",
+          "physical_comics"
+        ],
+        "scope_labels": [
+          "preference",
+          "collecting"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:439f9ed8_3:6",
+        "claim": "User decided to stick with single issues and trade paperbacks.",
+        "entity_labels": [
+          "user",
+          "single_issues",
+          "trade_paperbacks"
+        ],
+        "scope_labels": [
+          "decision"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:439f9ed8_3:6",
+        "claim": "User recently acquired a signed jersey from a garage sale.",
+        "entity_labels": [
+          "user",
+          "signed_jersey",
+          "garage_sale"
+        ],
+        "scope_labels": [
+          "acquisition",
+          "temporal_event"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:439f9ed8_3:8",
+        "claim": "User is planning a display shelf for vintage sports memorabilia.",
+        "entity_labels": [
+          "user",
+          "display_shelf",
+          "vintage_sports_memorabilia"
+        ],
+        "scope_labels": [
+          "plan",
+          "organization"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:439f9ed8_3:8",
+        "claim": "User is considering adding decorative items like vintage baseballs or sports-themed posters.",
+        "entity_labels": [
+          "user",
+          "decorative_items",
+          "vintage_baseballs",
+          "vintage_sports_poster"
+        ],
+        "scope_labels": [
+          "plan"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "74597f2f1059da0590f6822b6d288058446f3e0a5fa81550a5c9216ac6dc22ed": {
+    "claims": [],
+    "relations": []
+  },
+  "cc12732cec9b34cdbc4723b85db634a0ebb39a0eeb86b34c7c696e3eb46a47e3": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:answer_afa9873b_1:4",
+        "claim": "User needs to pick up new pair of boots from Zara.",
+        "entity_labels": [
+          "user",
+          "boots",
+          "zara"
+        ],
+        "scope_labels": [
+          "task",
+          "errand"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "pickup_item",
+          "value": "boots"
+        }
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:answer_afa9873b_1:4",
+        "claim": "User has returned the original pair of boots to Zara.",
+        "entity_labels": [
+          "user",
+          "boots",
+          "zara"
+        ],
+        "scope_labels": [
+          "temporal_event",
+          "task"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "return_status",
+          "value": "completed"
+        }
+      }
+    ],
+    "relations": [
+      {
+        "source_claim_ref": "c2",
+        "target_claim_id": "86534d220adce9d6",
+        "type": "supersedes",
+        "reason": "User returned the boots as part of exchange."
+      },
+      {
+        "source_claim_ref": "c1",
+        "target_claim_id": "edd0f079dbab4d63",
+        "type": "supersedes",
+        "reason": "Pickup updated to new pair after exchange."
+      }
+    ]
+  },
+  "f34580a67eb2bdbcb231f3e3b30d056a7ed7f1291e597463f5fa7d27b045f0d0": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:answer_afa9873b_1:8",
+        "claim": "User needs to clean gym bag.",
+        "entity_labels": [
+          "user",
+          "gym_bag"
+        ],
+        "scope_labels": [
+          "task"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:answer_afa9873b_1:8",
+        "claim": "User needs to wash favourite yoga pants.",
+        "entity_labels": [
+          "user",
+          "yoga_pants"
+        ],
+        "scope_labels": [
+          "task"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:answer_afa9873b_1:8",
+        "claim": "User wore yoga pants to gym last Thursday.",
+        "entity_labels": [
+          "user",
+          "yoga_pants",
+          "gym"
+        ],
+        "scope_labels": [
+          "temporal_event"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:answer_afa9873b_1:8",
+        "claim": "User is planning to dedicate a specific day each week to laundry and cleaning gym gear.",
+        "entity_labels": [
+          "user",
+          "day",
+          "week",
+          "laundry",
+          "gym_gear"
+        ],
+        "scope_labels": [
+          "plan"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c5",
+        "event_id": "event:64b847a7_1:0",
+        "claim": "User is planning a meal for this week.",
+        "entity_labels": [
+          "user",
+          "meal"
+        ],
+        "scope_labels": [
+          "plan"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c6",
+        "event_id": "event:64b847a7_1:0",
+        "claim": "User makes effort to have dinner with family at least three times a week.",
+        "entity_labels": [
+          "user",
+          "dinner",
+          "family"
+        ],
+        "scope_labels": [
+          "habit"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c7",
+        "event_id": "event:64b847a7_1:2",
+        "claim": "User likes Quinoa and Black Bean Chili.",
+        "entity_labels": [
+          "user",
+          "quinoa_black_bean_chili"
+        ],
+        "scope_labels": [
+          "preference"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": [
+      {
+        "source_claim_ref": "c4",
+        "target_claim_id": "claim:ce97d0d4d63edd93",
+        "type": "supersedes",
+        "reason": "New plan to dedicate a specific day each week replaces the previous plan to do laundry this weekend."
+      }
+    ]
+  },
+  "a96b3e60ce7fa69bd45e9dc9c347e445a75fedfec64ee5f1b16db03e061ea86b": {
+    "claims": [],
+    "relations": []
+  },
+  "0883d38991b89909a1eab9b0cd63ff17154ffb9b5bdfb59af96300965d5aeab2": {
+    "claims": [],
+    "relations": []
+  },
+  "29b58f47b118429007dafa6451e243a7df8373fbc262781bb19412a1cbe3f3b5": {
+    "claims": [],
+    "relations": []
+  },
+  "1ace68238a0558f47ebea7be18b436c4cbaf8050b531a2b7dd04442382dce9a2": {
+    "claims": [],
+    "relations": []
+  },
+  "2479de8b49cad3c691c90dd9d8028df313392c9d6f5282467516fa4949504144": {
+    "claims": [],
+    "relations": []
+  },
+  "71afc07f539be6b3fc9529b1df079ca36865494ba7cfd3822e409c55d361d529": {
+    "claims": [],
+    "relations": []
+  },
+  "c7d9dba4defdc0da2aac643b430a2cfe139c689f50db3663a6fc589bc1f8b899": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:fa46a10e:8",
+        "claim": "User plans to research great-grandfather's antique clock collection using online resources and forums.",
+        "entity_labels": [
+          "user",
+          "great-grandfather's antique clock collection",
+          "online resources"
+        ],
+        "scope_labels": [
+          "plan",
+          "project"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:fa46a10e:8",
+        "claim": "User plans to ask family members about the clocks.",
+        "entity_labels": [
+          "user",
+          "family members"
+        ],
+        "scope_labels": [
+          "plan"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:fa46a10e:10",
+        "claim": "Grandmother remembers trying on a vintage diamond necklace when she was a kid.",
+        "entity_labels": [
+          "grandmother",
+          "vintage diamond necklace"
+        ],
+        "scope_labels": [
+          "memory",
+          "temporal_event"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "a94e9388fe6ee25c43358e8df16b7e193f67669ceeeed16a450c1eed1fb521eb": {
+    "claims": [],
+    "relations": []
+  },
+  "444861e89cf42f1f8317821a32ec576df98c111a159228e77c216a5fefb07989": {
+    "state_facets": [
+      {
+        "name": "pick_up_items",
+        "value": [
+          "navy blue blazer from dry cleaning",
+          "new pair of boots from Zara"
+        ],
+        "support_claim_ids": [
+          "claim:a8a8dccdbb21bf95",
+          "claim:4cd50005db2f5945"
+        ]
+      },
+      {
+        "name": "return_items",
+        "value": [],
+        "support_claim_ids": []
+      },
+      {
+        "name": "total_items_to_pick_up_or_return",
+        "value": 2,
+        "support_claim_ids": [
+          "claim:a8a8dccdbb21bf95",
+          "claim:4cd50005db2f5945"
+        ]
+      }
+    ],
+    "rejected_claims": [
+      {
+        "claim_id": "claim:db330700a4716e36",
+        "rejected_by_claim_id": "claim:a8a8dccdbb21bf95",
+        "reason": "duplicate"
+      },
+      {
+        "claim_id": "claim:edd0f079dbab4d63",
+        "rejected_by_claim_id": "claim:4cd50005db2f5945",
+        "reason": "stale"
+      },
+      {
+        "claim_id": "claim:86534d220adce9d6",
+        "rejected_by_claim_id": "claim:37b35747fa6b797b",
+        "reason": "contradicted"
+      }
+    ],
+    "relations": [
+      {
+        "source_claim_id": "claim:a8a8dccdbb21bf95",
+        "target_claim_id": "claim:db330700a4716e36",
+        "type": "supersedes",
+        "reason": "duplicate claim"
+      },
+      {
+        "source_claim_id": "claim:4cd50005db2f5945",
+        "target_claim_id": "claim:edd0f079dbab4d63",
+        "type": "supersedes",
+        "reason": "later claim about new pair replaces earlier specific size"
+      },
+      {
+        "source_claim_id": "claim:37b35747fa6b797b",
+        "target_claim_id": "claim:86534d220adce9d6",
+        "type": "supersedes",
+        "reason": "return already completed"
+      }
+    ],
+    "enough_evidence": true
+  },
+  "d2498959702d4dd0c1e2d41f72d05137632088b7ccec5e1e4e969d975bbfd547": {
+    "claims": [],
+    "relations": []
+  },
+  "3b0b0af1c15120d6eff32a5a877267c4a20b4bba8e8539427a7cc9dce0377cc7": {
+    "claims": [],
+    "relations": []
+  },
+  "604d02d83debcaa4b377fc7b30b4df7a8abb5d34b3c7a5fc2076e4139bbe9829": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:sharegpt_J7ZAFLd_0:0",
+        "claim": "User is planning a project in Nigeria that connects 100 rural villages to running water.",
+        "entity_labels": [
+          "user",
+          "Nigeria",
+          "100 rural villages",
+          "running water",
+          "project"
+        ],
+        "scope_labels": [
+          "project_planning",
+          "leadership"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "project_status",
+          "value": "planning"
+        }
+      }
+    ],
+    "relations": []
+  },
+  "c1c370854f872704fe296e211ea166f9ac68cc9d0e1c4df7a944ea655d71498d": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:sharegpt_J7ZAFLd_0:3",
+        "claim": "User is leading a project to connect 100 rural villages to running water in Nigeria.",
+        "entity_labels": [
+          "user",
+          "nigeria",
+          "100_rural_villages",
+          "running_water",
+          "project"
+        ],
+        "scope_labels": [
+          "leadership",
+          "project_planning"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "status",
+          "value": "leading"
+        }
+      }
+    ],
+    "relations": [
+      {
+        "source_claim_ref": "c1",
+        "target_claim_id": "claim:95ecb35e42badcf3",
+        "type": "supersedes",
+        "reason": "Updated from planning to leading."
+      }
+    ]
+  },
+  "3f243b6c24ad92ffd29502023742671abdb8a6474ea5de45a728d02601929624": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:answer_ec904b3c_1:0",
+        "claim": "User is currently working on a project that involves analyzing customer data to identify trends and patterns.",
+        "entity_labels": [
+          "user",
+          "customer_data",
+          "project"
+        ],
+        "scope_labels": [
+          "project",
+          "data_analysis"
+        ],
+        "is_current": true
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:answer_ec904b3c_1:0",
+        "claim": "User led the data analysis team for a Marketing Research class project that conducted a comprehensive market analysis for a new product launch.",
+        "entity_labels": [
+          "user",
+          "data_analysis_team",
+          "marketing_research_class_project",
+          "new_product_launch"
+        ],
+        "scope_labels": [
+          "project",
+          "leadership"
+        ],
+        "is_current": true
+      }
+    ],
+    "relations": []
+  },
+  "e5e4907b2c8cdbb56c236fe28d9fc861db6bd73ee74e72ef714c7e933ee9639a": {
+    "claims": [],
+    "relations": []
+  },
+  "4da4853f08cee162f0879e72f5fb0929010774a33bf18b31592c7e1e32e79e8f": {
+    "claims": [],
+    "relations": []
+  },
+  "25b00b0af9b4461dd203db7083332e32dcddbf2aa63f593871eaaa133ae8881d": {
+    "claims": [],
+    "relations": []
+  },
+  "e0113e0ba162e6331a66ef95ac7f441eb01ad4fbd8c35c3247c3efa3225817fd": {
+    "claims": [],
+    "relations": []
+  },
+  "4c53b36b3e3ff9834d86ed3761303d7b7843ca2f547cd7e09b9fd854a6c72836": {
+    "claims": [],
+    "relations": []
+  },
+  "661664086be250b4ab07e22cc4f9e82ded636ac12a100d0be3300c42153277cc": {
+    "claims": [],
+    "relations": []
+  },
+  "7fab564414263a18978265b09805a077e8b8a53ad377fcb089ac4c2935fc7bdb": {
+    "claims": [],
+    "relations": []
+  },
+  "500dff3709e9be68bb9ae28254af40758bfa72282f0fe8c221872794763dfb2b": {
+    "claims": [],
+    "relations": []
+  },
+  "015f9133e7271723fe287cf909a2ebc4aef7bfc9f6aa83c79e16e0708f025566": {
+    "claims": [],
+    "relations": []
+  },
+  "f5dd1ef1f7f235f83afb1b704e8fd08cf3d26ed2c185dfe5cbaee7f64534f699": {
+    "claims": [],
+    "relations": []
+  },
+  "71b197a876623a093e260c1c960ee9f3dacbf68f347585a497a0d6a17c12314b": {
+    "claims": [],
+    "relations": []
+  },
+  "315f6ec7f3fccde135ea4f8c46ff4f6b31eb4a9470259bf56a2e94e9e96d5fcf": {
+    "claims": [],
+    "relations": []
+  },
+  "f545babdb8d3722d219f2934b469185af50078be4263d4ea9b1bba4b21671cba": {
+    "claims": [],
+    "relations": []
+  },
+  "46dd8eae29623d04a2891b782c37c149f56568c169a88b955673d9f58b325412": {
+    "claims": [],
+    "relations": []
+  },
+  "b74dc263f4004cba1318e5b21c29effed9027b77da0d1f1df4b49bed769869d6": {
+    "claims": [],
+    "relations": []
+  },
+  "df1e6fcb9486fa389eb454b5c6c1737dada1ece45a44452b99367f7909cdb4ab": {
+    "claims": [],
+    "relations": []
+  },
+  "8ec490829f4c848c5784c2ed34b8eb4e3e42e9d70f6624b157f2a08741605c87": {
+    "claims": [],
+    "relations": []
+  },
+  "216fbeb9bbe29436468c93d27b2db81804d7d238a06a5384a8f7d635ff0fcc90": {
+    "claims": [],
+    "relations": []
+  },
+  "16c5f335319a9545796990f9ef8083a57a4aa77054d3d2b29f0000fe6a2df799": {
+    "claims": [],
+    "relations": []
+  },
+  "7457154bb4198a27b4e50601806b2b2b1c1fdcd04888d740eed31fdd7ea3a9ab": {
+    "claims": [],
+    "relations": []
+  },
+  "5ff82f03ed3f8682b4becae2f415193903af66b8fb82e90ac3d4a1d0e2dbb5a9": {
+    "claims": [],
+    "relations": []
+  },
+  "600561c3ba85fe116ba0ddd43f78ffa33c1e77c8b8a14c37326266fcee6f0a2e": {
+    "claims": [],
+    "relations": []
+  },
+  "cad761e18ad62461452c40e73f455082d9a46e5a204d88dd113d3839497c46b0": {
+    "claims": [],
+    "relations": []
+  },
+  "51ce7c74734c8a16cbf30bbf0a77383f0502cbef721145da754488a735e8f12f": {
+    "claims": [],
+    "relations": []
+  },
+  "080520697835e91fd7e10061ad1e6523c293d017087fe210bb9c6200d66b60e4": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:sharegpt_zciCXP1_12:0",
+        "claim": "User, as part of Ethereum Mexico Community Team, is planning a community-driven Web3 event in Mexico.",
+        "entity_labels": [
+          "user",
+          "ethereum_mexico_community_team",
+          "web3_event",
+          "mexico"
+        ],
+        "scope_labels": [
+          "project_planning",
+          "community_organization"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "status",
+          "value": "planning"
+        }
+      }
+    ],
+    "relations": []
+  },
+  "7416a86bcfdbdd7e0db5b3c58fb5819e719213c8f0ab08a302d91f182914b181": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:sharegpt_zciCXP1_12:4",
+        "claim": "User organizes small community events across Mexico.",
+        "entity_labels": [
+          "user",
+          "mexico",
+          "small_community_events"
+        ],
+        "scope_labels": [
+          "community_organization",
+          "event_planning"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "ongoing",
+          "value": "true"
+        }
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:sharegpt_zciCXP1_12:6",
+        "claim": "User previously hosted 3 events during The Merge in 3 different cities, each with 80-100 attendees.",
+        "entity_labels": [
+          "user",
+          "the_merge_events",
+          "three_cities",
+          "80-100_attendees"
+        ],
+        "scope_labels": [
+          "past_event_organization"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:sharegpt_zciCXP1_12:6",
+        "claim": "User is applying for a large IRL event (Ethereum Mexico) for the first time.",
+        "entity_labels": [
+          "user",
+          "ethereum_mexico_event",
+          "IRL_event_application"
+        ],
+        "scope_labels": [
+          "project_application",
+          "current_project"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "status",
+          "value": "applying"
+        }
+      }
+    ],
+    "relations": []
+  },
+  "fe3c98ddaf19607a2b8318846098c2ddae01e48fe95a7c015d4fca230590d535": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:sharegpt_zciCXP1_12:9",
+        "claim": "User's team is requesting a 20k USD grant from Ethereum Foundation for Ethereum Mexico event.",
+        "entity_labels": [
+          "user",
+          "ethereum_foundation",
+          "ethereum_mexico_event",
+          "20k_usd_grant"
+        ],
+        "scope_labels": [
+          "grant_application",
+          "current_action"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:b37a44e4_5:0",
+        "claim": "User is thinking of starting a blog about antique collection.",
+        "entity_labels": [
+          "user",
+          "antique_collection",
+          "blog"
+        ],
+        "scope_labels": [
+          "project_planning"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:b37a44e4_5:0",
+        "claim": "User discovered a wooden rocking chair from early 20th century in parents' attic.",
+        "entity_labels": [
+          "user",
+          "wooden_rocking_chair",
+          "early_20th_century",
+          "parents'_attic"
+        ],
+        "scope_labels": [
+          "discovery"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c4",
+        "event_id": "event:b37a44e4_5:0",
+        "claim": "User discovered a set of antique silverware from 1700s in parents' attic.",
+        "entity_labels": [
+          "user",
+          "antique_silverware",
+          "1700s",
+          "parents'_attic"
+        ],
+        "scope_labels": [
+          "discovery"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "38dbad9b664246224eb7f565e1fc68c564ad7ebc488d035084436f98edc2dd4e": {
+    "claims": [],
+    "relations": []
+  },
+  "d9a86c868310a2a532b39c7fab5827d3053899bac18c8f2a87d2d956f79ec937": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:b37a44e4_5:10",
+        "claim": "User is planning to write a blog post about the discovery and history of a wooden rocking chair.",
+        "entity_labels": [
+          "user",
+          "wooden_rocking_chair",
+          "blog_post"
+        ],
+        "scope_labels": [
+          "project_planning"
+        ],
+        "is_current": true
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:2e4430d8_2:0",
+        "claim": "User is planning to launch a new product feature in June.",
+        "entity_labels": [
+          "user",
+          "new_product_feature",
+          "june"
+        ],
+        "scope_labels": [
+          "project_planning"
+        ],
+        "is_current": true
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:2e4430d8_2:0",
+        "claim": "User was promoted to senior software engineer three months ago and has been leading a team of five engineers.",
+        "entity_labels": [
+          "user",
+          "senior_software_engineer",
+          "team_of_five_engineers"
+        ],
+        "scope_labels": [
+          "leadership",
+          "career"
+        ],
+        "is_current": true
+      }
+    ],
+    "relations": []
+  },
+  "7882779c3362e84add445b22ae68991230438d17901ff4c62ec4d992237df861": {
+    "claims": [
+      {
+        "claim_ref": "c4",
+        "event_id": "event:2e4430d8_2:2",
+        "claim": "User completed a high-priority project two months ahead of schedule, which led to a significant increase in company revenue.",
+        "entity_labels": [
+          "user",
+          "high_priority_project",
+          "company_revenue"
+        ],
+        "scope_labels": [
+          "project",
+          "leadership",
+          "past_project",
+          "completion"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "a8c64ed6d55f185741275a5bb900db4528594fc794afc218f718313e4f1941a3": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:2e4430d8_2:6",
+        "claim": "User is planning to organize a meeting with their team to discuss a project plan and assign tasks.",
+        "entity_labels": [
+          "user",
+          "team",
+          "project"
+        ],
+        "scope_labels": [
+          "project_planning",
+          "leadership"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "plan_status",
+          "value": "planning"
+        }
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:2e4430d8_2:6",
+        "claim": "User has a junior engineer named Alex under their guidance.",
+        "entity_labels": [
+          "user",
+          "alex",
+          "junior_engineer"
+        ],
+        "scope_labels": [
+          "leadership"
+        ],
+        "is_current": true,
+        "state_facet": null
+      },
+      {
+        "claim_ref": "c3",
+        "event_id": "event:2e4430d8_2:8",
+        "claim": "User will prepare Alex for the meeting and assign him a specific role.",
+        "entity_labels": [
+          "user",
+          "alex"
+        ],
+        "scope_labels": [
+          "project_planning"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "preparation_status",
+          "value": "planned"
+        }
+      }
+    ],
+    "relations": []
+  },
+  "9c4ff55746c0adf176006ba2045897e6d642d38939b463701f90e875b208d314": {
+    "claims": [],
+    "relations": []
+  },
+  "29a2c1b26cc540d438875c24e4d5b554f004bc16b8ac0ffa036ea64e7e7a6fad": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:answer_ec904b3c_2:2",
+        "claim": "User is working on a solo project for their Data Mining class.",
+        "entity_labels": [
+          "user",
+          "data_mining_class_project",
+          "solo_project"
+        ],
+        "scope_labels": [
+          "project",
+          "current_project"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "leadership",
+          "value": "self-directed"
+        }
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:answer_ec904b3c_2:2",
+        "claim": "User is analyzing customer purchase data to identify patterns and trends.",
+        "entity_labels": [
+          "user",
+          "customer_purchase_data",
+          "patterns_and_trends"
+        ],
+        "scope_labels": [
+          "project",
+          "data_analysis"
+        ],
+        "is_current": true,
+        "state_facet": {
+          "name": "project_type",
+          "value": "data_analysis"
+        }
+      }
+    ],
+    "relations": [
+      {
+        "source_claim_ref": "c2",
+        "target_claim_id": "claim:8a7a81d04ccbd649",
+        "type": "supersedes",
+        "reason": "New claim specifies 'customer purchase data' instead of general 'customer data'."
+      }
+    ]
+  },
+  "7f44ad8bb1535c0582952bc14534669ef94a305fa33cc31af90be65a29245450": {
+    "claims": [],
+    "relations": []
+  },
+  "603e82a797d0ec41ef964f76b07f4fca3fa9ae7a824f66ecc877178a66ea25f9": {
+    "claims": [],
+    "relations": []
+  },
+  "d98f9de608d47196b0a8495d1cb584f862e3f358d2f4434ec811e032514a85bd": {
+    "claims": [
+      {
+        "claim_ref": "c1",
+        "event_id": "event:eb682e52_2:2",
+        "claim": "User is still getting used to focal length and aperture settings for portrait photography.",
+        "entity_labels": [
+          "user",
+          "focal_length",
+          "aperture_settings"
+        ],
+        "scope_labels": [
+          "learning",
+          "photography_skill"
+        ],
+        "is_current": false
+      },
+      {
+        "claim_ref": "c2",
+        "event_id": "event:eb682e52_2:2",
+        "claim": "User used burst mode at cousin's birthday party two weeks ago.",
+        "entity_labels": [
+          "user",
+          "burst_mode",
+          "cousin's_birthday_party",
+          "two_weeks_ago"
+        ],
+        "scope_labels": [
+          "past_event"
+        ],
+        "is_current": false
+      }
+    ],
+    "relations": []
+  },
+  "a98e06f46437325f212747f6aad56b410381812aad96eb610f12d41f510b581e": {
+    "claims": [],
+    "relations": []
+  },
+  "60a141ca1734f4953008a38e8463021042e51f06694a4aa94fd5a65d368dd9cf": {
+    "claims": [],
+    "relations": []
+  },
+  "0f99c7cc2d7f356c494ffabf9877a085f26b448c1e5bc9eeedbf01e1c28b99d9": {
+    "claims": [],
+    "relations": []
+  },
+  "d25005ae8e8956bd46f44acdf42419c3091b6a05347ff6b50d1eb5c821ab328c": {
+    "claims": [],
+    "relations": []
+  }
+}

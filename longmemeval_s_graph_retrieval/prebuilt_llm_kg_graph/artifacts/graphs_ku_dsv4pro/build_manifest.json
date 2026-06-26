@@ -1,0 +1,15 @@
+{
+  "method": "prebuilt_llm_kg_graph",
+  "data_path": "C:\\Users\\93232\\Desktop\\SCIENCE\\AAAI2027_2\\Experiment\\Other_BenchMark\\LongMemEval-S\\LongMemEval-S_data\\data\\longmemeval_s_cleaned.json",
+  "n_rows": 10,
+  "built": 10,
+  "skipped": 0,
+  "question_types": {
+    "knowledge-update": 10
+  },
+  "construction_provider": "deepseek",
+  "construction_model": "deepseek-v4-pro",
+  "task_candidate_k": 20,
+  "graph_batch_size": 5,
+  "max_facets": 12
+}

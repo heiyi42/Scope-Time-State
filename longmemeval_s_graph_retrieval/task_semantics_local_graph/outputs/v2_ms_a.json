@@ -1,0 +1,254 @@
+{
+  "f15bdb790437780b89132ef45cbdd88b7ad35f9a8ea31eb0fabca4679f288e01": {
+    "answer": "You need to pick up 1 item of clothing, which is a new pair of boots.",
+    "evidence_session_ids": [
+      "answer_afa9873b_1",
+      "fa46a10e"
+    ],
+    "state_facets": [
+      {
+        "name": "items_to_pick_up",
+        "value": "new pair of boots",
+        "support_session_ids": [
+          "answer_afa9873b_1",
+          "fa46a10e"
+        ]
+      }
+    ],
+    "rejected_claims": [],
+    "answer_rationale": "The evidence indicates that you have a pending pickup for a new pair of boots."
+  },
+  "d4d0f765c5936d569551220b2339c1368920f17fe5b4df740d08f3b759a1585a": {
+    "answer": "1",
+    "evidence_session_ids": [
+      "2e4430d8_2",
+      "answer_ec904b3c_2"
+    ],
+    "state_facets": [
+      {
+        "name": "projects_led_or_leading",
+        "value": "1",
+        "support_session_ids": [
+          "2e4430d8_2",
+          "answer_ec904b3c_2"
+        ]
+      }
+    ],
+    "rejected_claims": [],
+    "answer_rationale": "The evidence indicates that you are currently leading a team of five engineers, which counts as one project led."
+  },
+  "3be36c1c51baabfe3b78e48af39bf11c8059498ce7d1548f02ee57969c624759": {
+    "answer": "You have worked on or bought 3 model kits.",
+    "evidence_session_ids": [
+      "answer_593bdffd_4",
+      "ultrachat_126967",
+      "a7d014e4_1"
+    ],
+    "state_facets": [
+      {
+        "name": "model_kits_worked_on_or_bought",
+        "value": "3",
+        "support_session_ids": [
+          "answer_593bdffd_4",
+          "ultrachat_126967",
+          "a7d014e4_1"
+        ]
+      }
+    ],
+    "rejected_claims": [
+      {
+        "claim": "User has worked on or bought a 1/24 scale '69 Camaro model kit.",
+        "reason": "stale",
+        "support_session_ids": [
+          "a7d014e4_1"
+        ]
+      },
+      {
+        "claim": "User has worked on or bought a 1/72 scale B-29 bomber model kit.",
+        "reason": "stale",
+        "support_session_ids": [
+          "a7d014e4_1"
+        ]
+      }
+    ],
+    "answer_rationale": "The evidence indicates that you have acquired a total of 3 model kits, including a 1/72 scale B-29 bomber and a 1/24 scale '69 Camaro."
+  },
+  "06b00df2b74d8d6d564a839b43f541611071189bb5311f9b35974ad25b8be94b": {
+    "answer": "8 days",
+    "evidence_session_ids": [
+      "answer_a8b4290f_1",
+      "answer_a8b4290f_2"
+    ],
+    "state_facets": [
+      {
+        "name": "total_days_spent_on_camping_trips_in_the_united_states_this_year",
+        "value": "8",
+        "support_session_ids": [
+          "answer_a8b4290f_1",
+          "answer_a8b4290f_2"
+        ]
+      }
+    ],
+    "rejected_claims": [],
+    "answer_rationale": "The total days spent on camping trips in the United States this year is supported by evidence from both sessions, totaling 8 days."
+  },
+  "710cb33d2780d52c84db78df8216a81a7469c15ce67891cc4312efd1d4baeac3": {
+    "answer": "It took you a total of three and a half weeks to watch all the Marvel Cinematic Universe movies and the main Star Wars films, with two weeks for the Marvel movies and a week and a half for the Star Wars films.",
+    "evidence_session_ids": [
+      "answer_86c505e7_1",
+      "answer_86c505e7_2",
+      "63388005"
+    ],
+    "state_facets": [
+      {
+        "name": "marvel_cinematic_universe_movies_watched_duration",
+        "value": "two weeks",
+        "support_session_ids": [
+          "answer_86c505e7_1",
+          "answer_86c505e7_2"
+        ]
+      },
+      {
+        "name": "star_wars_films_watched_duration",
+        "value": "a week and a half",
+        "support_session_ids": [
+          "answer_86c505e7_2",
+          "63388005"
+        ]
+      }
+    ],
+    "rejected_claims": [],
+    "answer_rationale": "The durations for watching the Marvel Cinematic Universe movies and the Star Wars films were combined to arrive at the total time taken."
+  },
+  "69db8f23d28ada56a70e2bbbdc1f8e6a7f45fbd73ba5304d091d5b98523da137": {
+    "answer": "You acquired 2 plants in the last month: a peace lily on May 20, 2023, and a spider plant on May 24, 2023.",
+    "evidence_session_ids": [
+      "answer_c2204106_2",
+      "answer_c2204106_3"
+    ],
+    "state_facets": [
+      {
+        "name": "health_constraint",
+        "value": "Losing a few leaves is normal for a peace lily, especially when adjusting to a new environment.",
+        "support_session_ids": [
+          "answer_c2204106_3"
+        ]
+      },
+      {
+        "name": "knowledge_update",
+        "value": "Spider plants prefer a well-draining potting mix that's rich in organic matter.",
+        "support_session_ids": [
+          "answer_c2204106_3"
+        ]
+      }
+    ],
+    "rejected_claims": [
+      {
+        "claim": "User is having issues with their peace lily, which has been losing leaves since they brought it home.",
+        "reason": "stale",
+        "support_session_ids": [
+          "answer_c2204106_3"
+        ]
+      }
+    ],
+    "answer_rationale": "The evidence indicates the acquisition of a peace lily and a spider plant within the specified timeframe."
+  },
+  "b557a51dadc6379bd2b54a30719bb18c9c7536f7b39cf22ea21c94adb3d9b84a": {
+    "answer": "0",
+    "evidence_session_ids": [],
+    "state_facets": [],
+    "rejected_claims": [],
+    "answer_rationale": "There is no evidence provided regarding any bike-related expenses."
+  },
+  "7787e19b4d868884bb4e3e83a03654f81964d9bd12ff8255fa8ed4ce1381c5eb": {
+    "answer": "You spent a total of 15 hours driving to your three road trip destinations combined.",
+    "evidence_session_ids": [
+      "answer_526354c8_1",
+      "sharegpt_ynLoh9N_0"
+    ],
+    "state_facets": [
+      {
+        "name": "total_driving_hours_to_road_trip_destinations",
+        "value": "15",
+        "support_session_ids": [
+          "answer_526354c8_1",
+          "sharegpt_ynLoh9N_0"
+        ]
+      }
+    ],
+    "rejected_claims": [],
+    "answer_rationale": "The evidence clearly states the total driving hours to the road trip destinations."
+  },
+  "aefaf24cb05723efa7be0a1a1dd33a335bd6941df3cb59fbd709250009660d71": {
+    "answer": "3",
+    "evidence_session_ids": [
+      "ultrachat_268434"
+    ],
+    "state_facets": [
+      {
+        "name": "doctors_visited",
+        "value": "3",
+        "support_session_ids": [
+          "ultrachat_268434"
+        ]
+      }
+    ],
+    "rejected_claims": [
+      {
+        "claim": "User visited Dr. Smith.",
+        "reason": "contradicted",
+        "support_session_ids": [
+          "ultrachat_268434"
+        ]
+      },
+      {
+        "claim": "User visited an ENT specialist, Dr. Patel.",
+        "reason": "contradicted",
+        "support_session_ids": [
+          "ultrachat_268434"
+        ]
+      }
+    ],
+    "answer_rationale": "The evidence indicates that the user visited a total of 3 different doctors."
+  },
+  "487dbc65652c1f51129a67f4c724a10fe5e6bb999fe976b33448410607470f72": {
+    "answer": "You went to bed at 2 AM on the day before your doctor's appointment, which was last Thursday.",
+    "evidence_session_ids": [
+      "e720dbe2",
+      "answer_f9de4602_1"
+    ],
+    "state_facets": [
+      {
+        "name": "bed_time",
+        "value": "2 AM",
+        "support_session_ids": [
+          "answer_f9de4602_1"
+        ]
+      },
+      {
+        "name": "doctor_appointment_date",
+        "value": "last Thursday",
+        "support_session_ids": [
+          "e720dbe2"
+        ]
+      },
+      {
+        "name": "doctor_appointment_time",
+        "value": "10 AM",
+        "support_session_ids": [
+          "e720dbe2"
+        ]
+      }
+    ],
+    "rejected_claims": [
+      {
+        "claim": "User had a doctor's appointment at 10 AM last Thursday.",
+        "reason": "stale",
+        "support_session_ids": [
+          "answer_f9de4602_1"
+        ]
+      }
+    ],
+    "answer_rationale": "The evidence indicates that you went to bed at 2 AM on the day before your doctor's appointment, which was last Thursday."
+  }
+}

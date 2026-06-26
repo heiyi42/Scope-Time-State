@@ -1,0 +1,88 @@
+{
+  "ad06de64223e73d47375aff67f0506c44c36ea6ebcebe693d44a48d8edf1c676": {
+    "answer": "Your personal best time in the charity 5K run is 27:12.",
+    "evidence_session_ids": [
+      "answer_a25d4a91_1",
+      "9f80607d",
+      "4aaf678f_3",
+      "86b8dc6e"
+    ],
+    "state_facets": [
+      {
+        "name": "personal_best_time",
+        "value": "27:12",
+        "support_session_ids": [
+          "answer_a25d4a91_1",
+          "9f80607d",
+          "4aaf678f_3",
+          "86b8dc6e"
+        ]
+      }
+    ],
+    "rejected_claims": [
+      {
+        "claim": "The user is hoping to beat their personal best time of 25:50 in a charity 5K run.",
+        "reason": "contradicted",
+        "support_session_ids": [
+          "answer_a25d4a91_2",
+          "answer_a25d4a91_1"
+        ]
+      }
+    ],
+    "answer_rationale": "The latest evidence indicates that your personal best time is 27:12, which supersedes any earlier claims of a different time."
+  },
+  "bf687d7d92c7d1a4631fc05fa0ab8fbbcf9a269fa28e61543a0d56767c0fbfc8": {
+    "answer": "4",
+    "evidence_session_ids": [
+      "answer_3f9693b7_2"
+    ],
+    "state_facets": [
+      {
+        "name": "korean_restaurants_tried",
+        "value": "4",
+        "support_session_ids": [
+          "answer_3f9693b7_2"
+        ]
+      }
+    ],
+    "rejected_claims": [
+      {
+        "claim": "The user has tried three different Korean restaurants recently.",
+        "reason": "stale",
+        "support_session_ids": [
+          "answer_3f9693b7_1",
+          "answer_3f9693b7_2"
+        ]
+      }
+    ],
+    "answer_rationale": "The user updated their count of Korean restaurants tried to four in the latest evidence."
+  },
+  "2f9a082e160aa2baf32257336905944d2f5d9bc95083b54cf1e5fec3b27b9884": {
+    "answer": "Rachel moved to Chicago.",
+    "evidence_session_ids": [
+      "answer_0b1a0942_1",
+      "sharegpt_hLkmbBL_0"
+    ],
+    "state_facets": [
+      {
+        "name": "rachel_s_current_location",
+        "value": "Chicago",
+        "support_session_ids": [
+          "answer_0b1a0942_1",
+          "sharegpt_hLkmbBL_0"
+        ]
+      }
+    ],
+    "rejected_claims": [
+      {
+        "claim": "Rachel moved back to the suburbs again.",
+        "reason": "contradicted",
+        "support_session_ids": [
+          "answer_0b1a0942_2",
+          "answer_0b1a0942_1"
+        ]
+      }
+    ],
+    "answer_rationale": "The latest evidence indicates that Rachel's current location is Chicago, as stated in session 'answer_0b1a0942_1'."
+  }
+}

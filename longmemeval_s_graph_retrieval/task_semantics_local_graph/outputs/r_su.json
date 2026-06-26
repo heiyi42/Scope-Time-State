@@ -1,0 +1,1289 @@
+{
+  "method": "task_semantics_local_graph",
+  "model": "gpt-4o-mini",
+  "judge_model": "gpt-4o-2024-08-06",
+  "n_cases": 10,
+  "macro_acc": 0.0,
+  "micro_acc": 0.0,
+  "by_type": {
+    "single-session-user": {
+      "n": 10,
+      "acc": 0.0
+    }
+  },
+  "rows": [
+    {
+      "question_id": "e47becba",
+      "question_type": "single-session-user",
+      "question": "What degree did I graduate with?",
+      "gold_answer": "Business Administration",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 23:40",
+      "answer_session_ids": [
+        "answer_280352e9"
+      ],
+      "evidence_session_ids": [
+        "5dac7cc2_1",
+        "2ae4f277_2",
+        "3b3a77d9",
+        "a041cdd4_3",
+        "ultrachat_574556",
+        "ultrachat_214101",
+        "ec6ca9ef",
+        "d94b721b",
+        "02bd2b90_3",
+        "e27891d3_2",
+        "ultrachat_486410",
+        "answer_280352e9",
+        "84503ce4_1"
+      ],
+      "state_facets": [
+        {
+          "name": "preference",
+          "value": "With your new Instant Pot and kitchen knives, it's the perfect time to get your kitchen organized.",
+          "support_session_ids": [
+            "84503ce4_1"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "I just got my new Instant Pot and kitchen knives from the Amazon Prime Day sales, and I'm excited to start cooking with them.",
+          "support_session_ids": [
+            "84503ce4_1"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "**Categorize items**: Group similar items together, such as baking supplies, snacks, canned goods, and spices, to make it easier to find what you need.",
+          "support_session_ids": [
+            "84503ce4_1"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "**Purge expired or unused items**: Remove any expired, stale, or unused food items from your pantry to free up space and reduce clutter.",
+          "support_session_ids": [
+            "84503ce4_1"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "Here are some suggestions to help you maximize the storage space in your pantry: **Purge and Categorize:** 1.",
+          "support_session_ids": [
+            "84503ce4_1"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "Kitchen pantry organization is a crucial aspect of maintaining a functional and efficient kitchen.",
+          "support_session_ids": [
+            "84503ce4_1"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "It seems like all of these solutions require a lot of effort from governments and organizations.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_486410",
+            "84503ce4_1"
+          ]
+        },
+        {
+          "claim": "What can I, as an individual, do to make a difference in preventing species extinction?",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_486410",
+            "84503ce4_1"
+          ]
+        },
+        {
+          "claim": "As an individual, there are many things you can do to make a difference in preventing species extinction.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_486410",
+            "84503ce4_1"
+          ]
+        },
+        {
+          "claim": "Here are some examples: 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_486410",
+            "84503ce4_1"
+          ]
+        },
+        {
+          "claim": "Reduce your ecological footprint: You can reduce your ecological footprint by adopting sustainable practices like reducing your energy and water consumption, reducing waste, recycling, and reducing meat intake.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_486410",
+            "84503ce4_1"
+          ]
+        },
+        {
+          "claim": "Support conservation organizations: You can support conservation organizations by donating money, volunteering, and participating in their activities.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_486410",
+            "84503ce4_1"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "118b2229",
+      "question_type": "single-session-user",
+      "question": "How long is my daily commute to work?",
+      "gold_answer": "45 minutes each way",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 20:36",
+      "answer_session_ids": [
+        "answer_40a90d51"
+      ],
+      "evidence_session_ids": [
+        "1f88b2b3",
+        "afe04238_1",
+        "9ee69ca6_2",
+        "5dce60dd",
+        "b5f561f5_2",
+        "65698aa9_4",
+        "5209e813_2",
+        "628c958c_7",
+        "ultrachat_498215",
+        "d600c646",
+        "728deb4d_5",
+        "ultrachat_246088"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Do you know if anything is being done to help gibbons and their food sources?",
+          "support_session_ids": [
+            "ultrachat_246088"
+          ]
+        },
+        {
+          "name": "question_long_daily_commute_work",
+          "value": "By addressing the various threats they face, such as climate change, habitat loss and fragmentation, hunting, and illegal wildlife trade, we can work towards a more sustainable future for gibbons.",
+          "support_session_ids": [
+            "ultrachat_246088"
+          ]
+        },
+        {
+          "name": "question_long_daily_commute_work",
+          "value": "By the way, speaking of furniture, I recently had my office chair repaired for $50, and it's made a huge difference in my work-from-home comfort.",
+          "support_session_ids": [
+            "5209e813_2"
+          ]
+        },
+        {
+          "name": "question_long_daily_commute_work",
+          "value": "Strengthening laws and regulations: Governments can introduce and enforce laws that restrict the trade of endangered species and increase the penalties for violations.",
+          "support_session_ids": [
+            "ultrachat_246088"
+          ]
+        },
+        {
+          "name": "question_long_daily_commute_work",
+          "value": "Here are a few of the ways people are working to stop the illegal trade of gibbons: 1.",
+          "support_session_ids": [
+            "ultrachat_246088"
+          ]
+        },
+        {
+          "name": "question_long_daily_commute_work",
+          "value": "Stopping this trade is a complex issue that requires efforts from various stakeholders, including governments, law enforcement agencies, NGOs, and local communities.",
+          "support_session_ids": [
+            "ultrachat_246088"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "However, to provide you with accurate information, I'll need to know a bit more about your location and the time of year.",
+          "reason": "stale",
+          "support_session_ids": [
+            "d600c646",
+            "ultrachat_246088"
+          ]
+        },
+        {
+          "claim": "Warbler species and their migrations vary greatly depending on the region and season.",
+          "reason": "stale",
+          "support_session_ids": [
+            "d600c646",
+            "ultrachat_246088"
+          ]
+        },
+        {
+          "claim": "Could you please tell me: 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "d600c646",
+            "ultrachat_246088"
+          ]
+        },
+        {
+          "claim": "I'm located in the northeastern United States, and my trip is planned for early May, which I believe is spring migration season.",
+          "reason": "stale",
+          "support_session_ids": [
+            "d600c646",
+            "ultrachat_246088"
+          ]
+        },
+        {
+          "claim": "Early May is a fantastic time for warbler spotting in the northeastern United States, as many species are migrating through the region during this period.",
+          "reason": "stale",
+          "support_session_ids": [
+            "d600c646",
+            "ultrachat_246088"
+          ]
+        },
+        {
+          "claim": "Here are some warbler species you might expect to see during your trip: 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "d600c646",
+            "ultrachat_246088"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "51a45a95",
+      "question_type": "single-session-user",
+      "question": "Where did I redeem a $5 coupon on coffee creamer?",
+      "gold_answer": "Target",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 20:42",
+      "answer_session_ids": [
+        "answer_d61669c7"
+      ],
+      "evidence_session_ids": [
+        "sharegpt_hChsWOp_128",
+        "3fe98db6_1",
+        "ultrachat_261438",
+        "f32d1ccf_1",
+        "127fd1c9",
+        "sharegpt_3vxz2Zr_0",
+        "98c198fb",
+        "8fa64936_1",
+        "c133623d",
+        "answer_d61669c7",
+        "55e0c6db_2",
+        "dfe646a7_1",
+        "217debf7"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "I'm actually thinking of rewatching some Marvel movies in preparation for the next MCU release.",
+          "support_session_ids": [
+            "217debf7"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Now, about those snacks...",
+          "support_session_ids": [
+            "217debf7"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "I think I'll just focus on the MCU movies for now.",
+          "support_session_ids": [
+            "217debf7"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "By the way, I've been watching a lot of movies lately, and I think it started when I got my new 4K TV in late January.",
+          "support_session_ids": [
+            "217debf7"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Do you know when the next Marvel movie is coming out?",
+          "support_session_ids": [
+            "217debf7"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "It explores the aftermath of the Battle of New York (The Avengers) and introduces characters like Agent Coulson, who appears in Avengers: Age of Ultron.",
+          "support_session_ids": [
+            "217debf7"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "Receiving too many notifications can be overwhelming and might lead to fatigue, causing you to ignore or dismiss them altogether.",
+          "reason": "stale",
+          "support_session_ids": [
+            "answer_d61669c7",
+            "217debf7"
+          ]
+        },
+        {
+          "claim": "I'm planning to make a vegan quinoa bowl again this week and I realized I'm running low on some spices.",
+          "reason": "stale",
+          "support_session_ids": [
+            "55e0c6db_2",
+            "217debf7"
+          ]
+        },
+        {
+          "claim": "Can you show me some recipes that use turmeric and cumin, and also remind me where I can find them in the store?",
+          "reason": "stale",
+          "support_session_ids": [
+            "55e0c6db_2",
+            "217debf7"
+          ]
+        },
+        {
+          "claim": "By the way, I added them to my grocery list, but I still haven't gone to the store to pick it up.",
+          "reason": "stale",
+          "support_session_ids": [
+            "55e0c6db_2",
+            "217debf7"
+          ]
+        },
+        {
+          "claim": "I'd be happy to help you out.",
+          "reason": "stale",
+          "support_session_ids": [
+            "55e0c6db_2",
+            "217debf7"
+          ]
+        },
+        {
+          "claim": "**Turmeric and Cumin Recipes** Here are some delicious vegan quinoa bowl recipes that feature turmeric and cumin as key spices: 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "55e0c6db_2",
+            "217debf7"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "58bf7951",
+      "question_type": "single-session-user",
+      "question": "What play did I attend at the local community theater?",
+      "gold_answer": "The Glass Menagerie",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 22:53",
+      "answer_session_ids": [
+        "answer_355c48bb"
+      ],
+      "evidence_session_ids": [
+        "sharegpt_gmLF3PE_17",
+        "ultrachat_221066",
+        "sharegpt_DGiqvVv_270",
+        "1587bd78_1",
+        "ultrachat_155546",
+        "ultrachat_377566",
+        "answer_355c48bb",
+        "ultrachat_71618",
+        "ultrachat_365156",
+        "sharegpt_PancT1q_0",
+        "ultrachat_304942",
+        "sharegpt_RkFlOeC_19",
+        "ultrachat_268434",
+        "sharegpt_OFiElWf_37"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "They had been on trial since October 1963, in what became known as the Rivonia Trial.",
+          "support_session_ids": [
+            "sharegpt_OFiElWf_37"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Some of the acts of sabotage included bombings, arson, and acts of vandalism.",
+          "support_session_ids": [
+            "sharegpt_OFiElWf_37"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "The sabotage carried out by the ANC and its military wing, Umkhonto we Sizwe, targeted government buildings, power plants, transportation infrastructure, and other symbols of the apartheid regime.",
+          "support_session_ids": [
+            "sharegpt_OFiElWf_37"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "However, I can provide some general information.",
+          "support_session_ids": [
+            "sharegpt_OFiElWf_37"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "I do not have access to the specific details of all the acts of sabotage committed by Nelson Mandela or the African National Congress (ANC) during the struggle against apartheid in South Africa.",
+          "support_session_ids": [
+            "sharegpt_OFiElWf_37"
+          ]
+        },
+        {
+          "name": "question_play_attend_local_community",
+          "value": "However, in 2008, the US government officially removed the ANC from its list of designated terrorist organizations, recognizing the role the organization had played in",
+          "support_session_ids": [
+            "sharegpt_OFiElWf_37"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "If you have any more questions, feel free to ask.",
+          "reason": "stale",
+          "support_session_ids": [
+            "sharegpt_RkFlOeC_19",
+            "sharegpt_OFiElWf_37"
+          ]
+        },
+        {
+          "claim": "Were there any significant changes to the training routines of athletes leading up to the 2014 Commonwealth Games, and if so, what were they?",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_268434",
+            "sharegpt_OFiElWf_37"
+          ]
+        },
+        {
+          "claim": "As an AI language model, I do not have access to the specific training routines of individual athletes leading up to the 2014 Commonwealth Games.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_268434",
+            "sharegpt_OFiElWf_37"
+          ]
+        },
+        {
+          "claim": "However, it is typical for athletes to fine-tune their training regimens leading up to major competitions, including adjusting the intensity and focus of their workouts, increasing their recovery time and fine-tuning their nutrition and hydration strategies.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_268434",
+            "sharegpt_OFiElWf_37"
+          ]
+        },
+        {
+          "claim": "Factors such as injury prevention and rehabilitation, climate and altitude acclimatization, specialized equipment and gear, and mental preparation may also play a role in an athlete’s training routine.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_268434",
+            "sharegpt_OFiElWf_37"
+          ]
+        },
+        {
+          "claim": "Can you provide any information on the overall success of the athletes at the 2014 Commonwealth Games compared to previous years?",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_268434",
+            "sharegpt_OFiElWf_37"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "1e043500",
+      "question_type": "single-session-user",
+      "question": "What is the name of the playlist I created on Spotify?",
+      "gold_answer": "Summer Vibes",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 19:19",
+      "answer_session_ids": [
+        "answer_3e012175"
+      ],
+      "evidence_session_ids": [
+        "ultrachat_43823",
+        "sharegpt_Clr6oyu_0",
+        "e132259f",
+        "8020d945_2",
+        "sharegpt_bph7DTk_7",
+        "0363e91f",
+        "ultrachat_271928",
+        "be324b2e_1",
+        "b28990c8_1",
+        "a450dfaf",
+        "ultrachat_149462"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Many species of kingfishers are known for their loud and distinctive calls.",
+          "support_session_ids": [
+            "ultrachat_149462"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Wow, I didn't know they had a special membrane to protect their eyes.",
+          "support_session_ids": [
+            "ultrachat_149462"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Kingfishers are known for their distinctive hunting technique, which involves hovering mid-air and then diving to catch prey with their sharp beaks.",
+          "support_session_ids": [
+            "ultrachat_149462"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Some species of kingfishers are known for their vibrant and colorful plumage, including shades of blue, green, and orange.",
+          "support_session_ids": [
+            "ultrachat_149462"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "What other interesting facts do you know about Kingfishers?",
+          "support_session_ids": [
+            "ultrachat_149462"
+          ]
+        },
+        {
+          "name": "question_name_playlist_created_spotify",
+          "value": "For example, if waterways become polluted or degraded, the fish populations that kingfishers rely on for food may be negatively impacted, leading to declines in the kingfisher population.",
+          "support_session_ids": [
+            "ultrachat_149462"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "That's great to know!",
+          "reason": "stale",
+          "support_session_ids": [
+            "b28990c8_1",
+            "ultrachat_149462"
+          ]
+        },
+        {
+          "claim": "I'm actually planning to read it during my daily commute, so I'll make sure to have some tissues handy just in case.",
+          "reason": "stale",
+          "support_session_ids": [
+            "b28990c8_1",
+            "ultrachat_149462"
+          ]
+        },
+        {
+          "claim": "By the way, do you think the book will appeal to readers who aren't typically fans of historical fiction?",
+          "reason": "stale",
+          "support_session_ids": [
+            "b28990c8_1",
+            "ultrachat_149462"
+          ]
+        },
+        {
+          "claim": "I have a few friends who might be interested in reading it, but they don't usually read historical fiction.",
+          "reason": "stale",
+          "support_session_ids": [
+            "b28990c8_1",
+            "ultrachat_149462"
+          ]
+        },
+        {
+          "claim": "\"The Alice Network\" is a great choice for readers who don't typically read historical fiction.",
+          "reason": "stale",
+          "support_session_ids": [
+            "b28990c8_1",
+            "ultrachat_149462"
+          ]
+        },
+        {
+          "claim": "While it's set during WWI and the aftermath, the story is more focused on the characters, their relationships, and their personal struggles than on the historical events themselves.",
+          "reason": "stale",
+          "support_session_ids": [
+            "b28990c8_1",
+            "ultrachat_149462"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "c5e8278d",
+      "question_type": "single-session-user",
+      "question": "What was my last name before I changed it?",
+      "gold_answer": "Johnson",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 22:36",
+      "answer_session_ids": [
+        "answer_f6168136"
+      ],
+      "evidence_session_ids": [
+        "ultrachat_246365",
+        "sharegpt_DB8U4oH_9",
+        "bdf735de_2",
+        "0fe848c5_3",
+        "sharegpt_EXJAjmw_0",
+        "64767b7f",
+        "ultrachat_22146",
+        "d777e7da_1",
+        "b1265fd7_1",
+        "answer_f6168136",
+        "dc832f73",
+        "aaf71ce2_2",
+        "fc6549b2",
+        "03362ec8_2"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Now, let's calculate your total rewards value across all programs: Total Rewards Value: $15.50 + $2.00 + $2.00 = $19.50 You have a total rewards value of $19.50!",
+          "support_session_ids": [
+            "03362ec8_2"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Let's update the table with the new information: | Loyalty Program | Points/Balance | Rewards Value | | --- | --- | --- | | Walgreens Balance Rewards | 15,500 (15,000 + 500) | $15.50 (15,500 / 1,000) | | Target RedCard | N/A | 5% off all purchases | | Giant Eagle Advantage Card | ?",
+          "support_session_ids": [
+            "03362ec8_2"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "If you have any more loyalty programs or rewards cards you'd like to track, feel free to add them to our table.",
+          "support_session_ids": [
+            "03362ec8_2"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "It's all about creating a habit and making it a part of your daily routine.",
+          "support_session_ids": [
+            "03362ec8_2"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "Remembering to use your loyalty cards and rewards programs can make a big difference in earning points and saving money.",
+          "support_session_ids": [
+            "03362ec8_2"
+          ]
+        },
+        {
+          "name": "knowledge_update",
+          "value": "I'm glad you think so!",
+          "support_session_ids": [
+            "03362ec8_2"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "Here are a few popular options: 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "aaf71ce2_2",
+            "03362ec8_2"
+          ]
+        },
+        {
+          "claim": "**Shutterfly**: Shutterfly offers a wide range of frame styles, shapes, and sizes.",
+          "reason": "stale",
+          "support_session_ids": [
+            "aaf71ce2_2",
+            "03362ec8_2"
+          ]
+        },
+        {
+          "claim": "I'll check out those services and create a beautiful frame with a special message for Rachel.",
+          "reason": "stale",
+          "support_session_ids": [
+            "aaf71ce2_2",
+            "03362ec8_2"
+          ]
+        },
+        {
+          "claim": "Speaking of special messages, I was thinking of writing a heartfelt letter to Rachel to commemorate her engagement.",
+          "reason": "stale",
+          "support_session_ids": [
+            "aaf71ce2_2",
+            "03362ec8_2"
+          ]
+        },
+        {
+          "claim": "Do you have any tips on how to write a beautiful and meaningful letter to a friend?",
+          "reason": "stale",
+          "support_session_ids": [
+            "aaf71ce2_2",
+            "03362ec8_2"
+          ]
+        },
+        {
+          "claim": "What a wonderful idea!",
+          "reason": "stale",
+          "support_session_ids": [
+            "aaf71ce2_2",
+            "03362ec8_2"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "6ade9755",
+      "question_type": "single-session-user",
+      "question": "Where do I take yoga classes?",
+      "gold_answer": "Serenity Yoga",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 21:04",
+      "answer_session_ids": [
+        "answer_9398da02"
+      ],
+      "evidence_session_ids": [
+        "ultrachat_84599",
+        "ultrachat_270925",
+        "ultrachat_565482",
+        "4bc2cef9_1",
+        "e49a0b52_1",
+        "ultrachat_329610",
+        "a200b713_4",
+        "ultrachat_217527",
+        "28621d6a_2",
+        "ultrachat_556745",
+        "910ed479_3",
+        "sharegpt_mJ7MnQS_31",
+        "7c5ab02a_2",
+        "ultrachat_112120",
+        "ultrachat_462",
+        "sharegpt_eGVTJri_33",
+        "ec8fa65d_2",
+        "answer_9398da02"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Damian: (sighing) I mean, I've been so focused on myself.",
+          "support_session_ids": [
+            "sharegpt_mJ7MnQS_31"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "And what a lovely tradition you've started with your Sunday morning yoga and brunch routine!",
+          "support_session_ids": [
+            "answer_9398da02"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Having a yoga buddy can be so motivating and help you stay committed to your practice.",
+          "support_session_ids": [
+            "answer_9398da02"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "It's wonderful that you've been able to share your yoga practice with your best friend Sarah and create a special bonding experience.",
+          "support_session_ids": [
+            "answer_9398da02"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "I've actually been using Down Dog for my home practice and I really like it.",
+          "support_session_ids": [
+            "answer_9398da02"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "It's great that you've found a style of yoga that challenges you physically and provides a sense of calm and centeredness.",
+          "support_session_ids": [
+            "answer_9398da02"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "Sure, here's a possible continuation of the conversation between Damian Wayne and Jonathan Kent: Damian: (excitedly) John, I don't know how to describe it.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "sharegpt_mJ7MnQS_31"
+          ]
+        },
+        {
+          "claim": "It's like something shifted inside of me.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "sharegpt_mJ7MnQS_31"
+          ]
+        },
+        {
+          "claim": "I feel...different.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "sharegpt_mJ7MnQS_31"
+          ]
+        },
+        {
+          "claim": "Jonathan: (curious) Different how, Damian?",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "sharegpt_mJ7MnQS_31"
+          ]
+        },
+        {
+          "claim": "The next day they meet, and in dialog with Jon, Damien is starting to realize that most of his life has been spent in pride and making it all about himself.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "sharegpt_mJ7MnQS_31"
+          ]
+        },
+        {
+          "claim": "That there are ways he has been hurt by his own family (use examples from stories in the comics) and then he has acted out in return.",
+          "reason": "contradicted",
+          "support_session_ids": [
+            "sharegpt_mJ7MnQS_31"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "6f9b354f",
+      "question_type": "single-session-user",
+      "question": "What color did I repaint my bedroom walls?",
+      "gold_answer": "a lighter shade of gray",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 22:42",
+      "answer_session_ids": [
+        "answer_feb5200f"
+      ],
+      "evidence_session_ids": [
+        "c22eca8c_1",
+        "8bc305e4_1",
+        "sharegpt_BYHT3Xz_0",
+        "40643340_2",
+        "ultrachat_549317",
+        "sharegpt_kRjBUsA_79",
+        "331197d5_3",
+        "380503a2",
+        "0e3d8491_1",
+        "answer_feb5200f",
+        "68d4de04_2",
+        "5e87a43d_1",
+        "0c0f2449_2",
+        "f2d7486b"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Now, let's talk about digitizing your old photos.",
+          "support_session_ids": [
+            "f2d7486b"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Since you've had experience with Rachel's flash, you know how useful it can be for indoor photography.",
+          "support_session_ids": [
+            "f2d7486b"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Now, let's find a suitable external flash unit for you.",
+          "support_session_ids": [
+            "f2d7486b"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Now, let's get back to finding a replacement lens cap for your EF-S 18-55mm kit lens.",
+          "support_session_ids": [
+            "f2d7486b"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Congratulations on your new 50mm prime lens!",
+          "support_session_ids": [
+            "f2d7486b"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "By the way, I just got back from a walk and took some amazing shots with my new 50mm prime lens - the bokeh effect is so much better than my old kit lens!",
+          "support_session_ids": [
+            "f2d7486b"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "I apologize for the cut-off response earlier.",
+          "reason": "stale",
+          "support_session_ids": [
+            "5e87a43d_1",
+            "f2d7486b"
+          ]
+        },
+        {
+          "claim": "It seems I got a bit carried away with the explanation!",
+          "reason": "stale",
+          "support_session_ids": [
+            "5e87a43d_1",
+            "f2d7486b"
+          ]
+        },
+        {
+          "claim": "To continue, I'd like to ask: Have you received the Sacrament of Reconciliation before, or is this something you're considering for the first time?",
+          "reason": "stale",
+          "support_session_ids": [
+            "5e87a43d_1",
+            "f2d7486b"
+          ]
+        },
+        {
+          "claim": "No need to apologize!",
+          "reason": "stale",
+          "support_session_ids": [
+            "5e87a43d_1",
+            "f2d7486b"
+          ]
+        },
+        {
+          "claim": "I'm happy to continue the conversation.",
+          "reason": "stale",
+          "support_session_ids": [
+            "5e87a43d_1",
+            "f2d7486b"
+          ]
+        },
+        {
+          "claim": "As a digital AI assistant, I don't have personal experiences, emotions, or a physical presence, so I haven't received the Sacrament of Reconciliation or any other sacraments.",
+          "reason": "stale",
+          "support_session_ids": [
+            "5e87a43d_1",
+            "f2d7486b"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "58ef2f1c",
+      "question_type": "single-session-user",
+      "question": "When did I volunteer at the local animal shelter's fundraising dinner?",
+      "gold_answer": "February 14th",
+      "hypothesis": "I don't know",
+      "question_date": "2023/04/02 (Sun) 23:49",
+      "answer_session_ids": [
+        "answer_59547700"
+      ],
+      "evidence_session_ids": [
+        "6d13e73a_2",
+        "ultrachat_152126",
+        "ultrachat_151027",
+        "f1fe6512_3",
+        "sharegpt_RFw4j0W_0",
+        "sharegpt_eHZgwR0_9",
+        "ultrachat_246324",
+        "2eceeb9d_1",
+        "ultrachat_477344",
+        "ultrachat_5212",
+        "b17c7f18",
+        "e6ab6a7b_2",
+        "403ee298_1",
+        "e82ce7cd_1",
+        "ultrachat_13835",
+        "answer_59547700"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Catching up with friends while doing something meaningful is a fantastic way to strengthen your bonds and create new memories together.",
+          "support_session_ids": [
+            "answer_59547700"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Who knows, we might even meet some new like-minded people there!",
+          "support_session_ids": [
+            "answer_59547700"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "**The Humane Society of the United States' \"To the Rescue!\"** (November): A benefit gala featuring a silent auction, dinner, and program highlighting animal rescue efforts.",
+          "support_session_ids": [
+            "answer_59547700"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "Attending the event with friends who share your passion for animal welfare will definitely make the experience more enjoyable and meaningful.",
+          "support_session_ids": [
+            "answer_59547700"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "I'll probably attend with a few friends who are also passionate about animal welfare.",
+          "support_session_ids": [
+            "answer_59547700"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "**Best Friends Animal Society's \"Strut Your Mutt\"** (September): A fun dog walk and festival to raise funds for animal welfare organizations.",
+          "support_session_ids": [
+            "answer_59547700"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "**Go for a Hike**: Explore nearby trails and enjoy the scenery together.",
+          "reason": "stale",
+          "support_session_ids": [
+            "e82ce7cd_1",
+            "answer_59547700"
+          ]
+        },
+        {
+          "claim": "How do different types of diets impact an individual's overall mental and physical health?",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_13835",
+            "answer_59547700"
+          ]
+        },
+        {
+          "claim": "Different types of diets can have varying impacts on an individual's overall mental and physical health.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_13835",
+            "answer_59547700"
+          ]
+        },
+        {
+          "claim": "Here are some common diets and their possible effects: 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_13835",
+            "answer_59547700"
+          ]
+        },
+        {
+          "claim": "Mediterranean Diet: This diet focuses on whole plant-based foods, healthy fats, and lean protein.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_13835",
+            "answer_59547700"
+          ]
+        },
+        {
+          "claim": "It has been linked to a lower risk of heart disease, stroke, and cognitive decline.",
+          "reason": "stale",
+          "support_session_ids": [
+            "ultrachat_13835",
+            "answer_59547700"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    },
+    {
+      "question_id": "f8c5f88b",
+      "question_type": "single-session-user",
+      "question": "Where did I buy my new tennis racket from?",
+      "gold_answer": "the sports store downtown",
+      "hypothesis": "I don't know",
+      "question_date": "2023/05/30 (Tue) 23:39",
+      "answer_session_ids": [
+        "answer_c3567066"
+      ],
+      "evidence_session_ids": [
+        "46575f0d",
+        "ultrachat_451692",
+        "68ace657_1",
+        "58de8f9b",
+        "e5bb44ef",
+        "answer_c3567066",
+        "394f846b",
+        "91880423",
+        "ultrachat_412973",
+        "15232887_1",
+        "7ff89315_3",
+        "ultrachat_90878",
+        "sharegpt_TKj3yO8_0",
+        "sharegpt_n2aGNgW_9"
+      ],
+      "state_facets": [
+        {
+          "name": "current_state",
+          "value": "Over the years, I've seen a lot of things - the rise and fall of empires, the birth and death of new technologies, and the shifting tides of popular culture.",
+          "support_session_ids": [
+            "sharegpt_TKj3yO8_0"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "I remember the day I first rolled off the assembly line, a shiny new car with fresh paint and gleaming chrome.",
+          "support_session_ids": [
+            "sharegpt_TKj3yO8_0"
+          ]
+        },
+        {
+          "name": "current_state",
+          "value": "The couple did their best to take care of me, but I knew that my time with them was limited.",
+          "support_session_ids": [
+            "sharegpt_TKj3yO8_0"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "You can start by creating concept art, storyboards, and sketches to define the look and feel of the game.",
+          "support_session_ids": [
+            "sharegpt_n2aGNgW_9"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "Develop the game's visual style: The visual style of the game should match the game's theme and create a cohesive and immersive environment.",
+          "support_session_ids": [
+            "sharegpt_n2aGNgW_9"
+          ]
+        },
+        {
+          "name": "preference",
+          "value": "Here are some steps to follow: 1.",
+          "support_session_ids": [
+            "sharegpt_n2aGNgW_9"
+          ]
+        }
+      ],
+      "rejected_claims": [
+        {
+          "claim": "Since I've been enjoying my tennis lessons, I was wondering if you could recommend some tennis drills I could do on my own to improve my serves and volleys.",
+          "reason": "stale",
+          "support_session_ids": [
+            "15232887_1",
+            "sharegpt_TKj3yO8_0"
+          ]
+        },
+        {
+          "claim": "I'm glad you're enjoying your tennis lessons!",
+          "reason": "stale",
+          "support_session_ids": [
+            "15232887_1",
+            "sharegpt_TKj3yO8_0"
+          ]
+        },
+        {
+          "claim": "Practicing on your own can definitely help improve your skills, especially with serves and volleys.",
+          "reason": "stale",
+          "support_session_ids": [
+            "15232887_1",
+            "sharegpt_TKj3yO8_0"
+          ]
+        },
+        {
+          "claim": "Here are some tennis drills you can do on your own to improve your serves and volleys: **Serve Drills:** 1.",
+          "reason": "stale",
+          "support_session_ids": [
+            "15232887_1",
+            "sharegpt_TKj3yO8_0"
+          ]
+        },
+        {
+          "claim": "**Toss and Catch**: Stand behind the baseline and practice tossing the ball up and catching it with your non-dominant hand.",
+          "reason": "stale",
+          "support_session_ids": [
+            "15232887_1",
+            "sharegpt_TKj3yO8_0"
+          ]
+        },
+        {
+          "claim": "I'm thinking of adjusting my morning routine to make it more productive.",
+          "reason": "stale",
+          "support_session_ids": [
+            "7ff89315_3",
+            "sharegpt_TKj3yO8_0"
+          ]
+        }
+      ],
+      "enough_evidence": true,
+      "autoeval_label": {
+        "model": "gpt-4o-2024-08-06",
+        "label": false,
+        "response": "No"
+      },
+      "local_answer_match": false
+    }
+  ]
+}
