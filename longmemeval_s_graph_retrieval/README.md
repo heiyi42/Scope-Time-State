@@ -1,82 +1,87 @@
-# LongMemEval-S Graph Retrieval
+# Graph Retrieval Methods for LongMemEval-S
 
-Candidate-session → local Scope-Time-State graph → State_packet → answer.
-
-The main pipeline (`stamb_state_benchmark/`) is not modified. Each subdirectory is
-a standalone method variant.
-
----
+Question-independent graph construction with scope-first retrieval for the LongMemEval-S benchmark.
 
 ## Architecture
 
 ```
-Candidate session retrieval
-  → LLM graph extraction (Claims / State Facets / relations)
-  → in-memory networkx.MultiDiGraph
-  → topology-driven State_packet retrieval
-  → answer model reads State_packet
+Haystack sessions (all, no BM25 pre-filter)
+    ↓
+LLM extraction (question-independent) → Checkpointed graph builder
+    ↓
+artifacts/graphs/<type>/<id>.graph.json   (95 graphs, 5 node types, 8 edge types)
+    ↓
+Scope selection → Expand → State packet → 4o-mini answer → gpt-4o judge
 ```
 
-Graph schema: Episode/Event, Claim, State Facet, Entity/Scope, Time nodes;
-supersedes / corrects / conflicts / supports edges.
+Graph construction never sees the benchmark question.
 
----
+## Version History
 
-## Iterations
+| Version | Scope Selection | LLM Cost/Answer | Status |
+|---|---|---|---|
+| v7 | Lexical label matching + type priors | 1 call (answer) | Baseline |
+| v7.1 | TF-IDF scope profile (broken) | 1 call | Abandoned |
+| v7.2 | Scope → Time → Facet → Claim (over-filtered) | 1 call | Abandoned |
+| v7.3 | Hybrid pool (ms/tr skip Facet) | 1 call | Abandoned |
+| v7.4 | BM25 content profile | 1 call | Best recall |
+| v7.5 | LLM semantic scope (4o-mini) | 2 calls | Best accuracy |
+| v9  | LLM semantic scope (packaged) | 2 calls | Clean version |
+| v10 | BM25 E4 scope (tuned) | 1 call | Zero-cost retrieval |
 
-### v1: `task_semantics_local_graph`
+## Key Finding: BM25 E4 Parameters
 
-Runtime graph construction. LLM extracts claims per batch of sessions, builds
-graph in-process, retrieves State_packet. One-model setting (same LLM constructs
-graph and answers).
+After 12-configuration grid search on 95 graphs:
 
-### v2: `prebuilt_llm_kg_graph`
+| | events | claims | lw | ew | ev_r (95 case) |
+|---|---|---|---|---|---|
+| Baseline | 120 | 160 | 3 | 2 | 0.814 |
+| **E4** | **5** | **10** | **3** | **2** | **0.887** |
+| E1 | 5 | 10 | 1 | 1 | 0.884 |
 
-Offline construction + online retrieval. Strong LLM prebuilds graph artifacts
-(one `.graph.json` per question_id). Benchmark loads artifacts, gpt-4o-mini
-reads State_packet. Two-model setting.
+Small scope profiles prevent large generic scopes from dominating.
 
-### v3 (final): `prebuilt_llm_kg_graph_v2_stability_first`
+## Benchmark Results
 
-Same two-model architecture as v2, plus:
+### Question-independent graph (all versions use same 95 graphs)
 
-- `StableRequestsJsonClient` with `reasoning_content` fallback — handles
-  reasoning-model empty-content failures.
-- `max_tokens=8192` default.
-- Scheduler (`build_all.py`) with isolated per-case workers, heartbeat,
-  auto-resume, stuck detection.
-- Graphs organized by question type under `artifacts/graphs/<type>/`.
-- 60 prebuilt graphs included.
+| Type | v7.5 (LLM) ans_j | v10 (BM25) ans_j | v10 ev_r | TSM |
+|---|---|---|---|---|
+| ku | 0.700 (n=10) | — | — | 0.808 |
+| ms | 0.500 (n=43) | 0.273 (n=55) | 0.613 | 0.692 |
+| sp | 0.500 (n=20) | — | — | 0.400 |
+| tr | 0.800 (n=10) | — | — | 0.699 |
+| **Weighted** | **~0.72** | — | — | **0.748** |
 
-**Benchmark (60 cases, gpt-4o-mini reader, gpt-4o judge):**
+### Evidence recall by method
 
-| Question Type | Graph | BM25-only |
+| Method | ms ev_r | ku ev_r | sp ev_r | tr ev_r | Overall ev_r |
+|---|---|---|---|---|---|
+| V7 (lexical) | 0.558 | 0.500 | — | 0.858 | 0.698 |
+| V7.4 (BM25 baseline) | 0.775 | 1.000 | 0.750 | 0.975 | 0.814 |
+| V10 (BM25 E4) | **0.860** | **1.000** | **0.850** | **1.000** | **0.887** |
+
+BM25 E4 achieves dramatically higher evidence recall than lexical or LLM-based scope selection, but evidence quality (claim noise) limits answer accuracy.
+
+## Current Bottleneck
+
+**4o-mini cannot count across sessions.** Even with perfect evidence recall (ev_r=1.0), the model misses 5 hours or counts 2 items instead of 3. The claims are atomic facts ("30h Last of Us", "25h Hades"), not aggregated summaries ("total 140 hours"). The model must perform arithmetic on fragmented evidence.
+
+## Graph Inventory
+
+| Type | Count | Location |
 |---|---|---|
-| knowledge-update | **1.000** | 0.500 |
-| multi-session | **0.700** | 0.400 |
-| single-session-assistant | **1.000** | 0.900 |
-| single-session-preference | **0.600** | 0.200 |
-| single-session-user | **0.800** | 0.800 |
-| temporal-reasoning | **0.900** | 0.500 |
-| **Total** | **0.833** | **0.550** |
+| knowledge-update | 10 | v6/v10 |
+| multi-session | 55 | v9/v10 |
+| single-session-preference | 20 | v6/v10 |
+| temporal-reasoning | 10 | v6/v10 |
+| **Total** | **95** | |
 
----
+Missing: single-session-assistant (56), single-session-user (70).
 
-## Quick Start (final version)
+## Next Steps
 
-```bash
-cd longmemeval_s_graph_retrieval/prebuilt_llm_kg_graph_v2_stability_first
-
-# Run benchmark using prebuilt graphs
-python -m longmemeval_s_graph_retrieval.prebuilt_llm_kg_graph_v2_stability_first.run_longmemeval \
-  --limit-per-type 10 \
-  --graph-dir longmemeval_s_graph_retrieval/prebuilt_llm_kg_graph_v2_stability_first/artifacts/graphs \
-  --answer-provider openai \
-  --answer-model gpt-4o-mini \
-  --judge \
-  --judge-provider openai \
-  --judge-model gpt-4o-2024-08-06 \
-  --output outputs/results.json
-```
-
-See `prebuilt_llm_kg_graph_v2_stability_first/README.md` for full documentation.
+1. **BM25 → LLM two-stage scope selection** (BM25 top-15 → LLM top-8)
+2. **Claim denoising** (scope-internal BM25 on claims)
+3. **Evidence formatting for arithmetic** (session-grouped + numeric hints)
+4. **Build remaining types** (sa/su, 126 graphs)

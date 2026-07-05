@@ -1,0 +1,750 @@
+{
+  "method": "longmemeval_s_graph_retrieval_v2",
+  "graph_dir": "longmemeval_s_graph_retrieval/prebuilt_llm_kg_graph_v3_neo4j_backend/prebuilt_llm_kg_graph_v2_stability_first/artifacts/graphs",
+  "imported": [
+    {
+      "question_id": "6a1eabeb",
+      "question_type": "knowledge-update",
+      "nodes": 292,
+      "edges": 107,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\knowledge-update\\6a1eabeb.graph.json"
+    },
+    {
+      "question_id": "6aeb4375",
+      "question_type": "knowledge-update",
+      "nodes": 237,
+      "edges": 25,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\knowledge-update\\6aeb4375.graph.json"
+    },
+    {
+      "question_id": "71315a70",
+      "question_type": "knowledge-update",
+      "nodes": 291,
+      "edges": 106,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\knowledge-update\\71315a70.graph.json"
+    },
+    {
+      "question_id": "830ce83f",
+      "question_type": "knowledge-update",
+      "nodes": 256,
+      "edges": 46,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\knowledge-update\\830ce83f.graph.json"
+    },
+    {
+      "question_id": "852ce960",
+      "question_type": "knowledge-update",
+      "nodes": 240,
+      "edges": 28,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\knowledge-update\\852ce960.graph.json"
+    },
+    {
+      "question_id": "89941a93",
+      "question_type": "knowledge-update",
+      "nodes": 237,
+      "edges": 43,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\knowledge-update\\89941a93.graph.json"
+    },
+    {
+      "question_id": "945e3d21",
+      "question_type": "knowledge-update",
+      "nodes": 240,
+      "edges": 23,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\knowledge-update\\945e3d21.graph.json"
+    },
+    {
+      "question_id": "9ea5eabc",
+      "question_type": "knowledge-update",
+      "nodes": 360,
+      "edges": 236,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\knowledge-update\\9ea5eabc.graph.json"
+    },
+    {
+      "question_id": "ce6d2d27",
+      "question_type": "knowledge-update",
+      "nodes": 300,
+      "edges": 144,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\knowledge-update\\ce6d2d27.graph.json"
+    },
+    {
+      "question_id": "d7c942c3",
+      "question_type": "knowledge-update",
+      "nodes": 217,
+      "edges": 30,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\knowledge-update\\d7c942c3.graph.json"
+    },
+    {
+      "question_id": "0a995998",
+      "question_type": "multi-session",
+      "nodes": 235,
+      "edges": 24,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\0a995998.graph.json"
+    },
+    {
+      "question_id": "10d9b85a",
+      "question_type": "multi-session",
+      "nodes": 252,
+      "edges": 17,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\10d9b85a.graph.json"
+    },
+    {
+      "question_id": "1192316e",
+      "question_type": "multi-session",
+      "nodes": 282,
+      "edges": 57,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\1192316e.graph.json"
+    },
+    {
+      "question_id": "2318644b",
+      "question_type": "multi-session",
+      "nodes": 316,
+      "edges": 28,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\2318644b.graph.json"
+    },
+    {
+      "question_id": "2788b940",
+      "question_type": "multi-session",
+      "nodes": 252,
+      "edges": 57,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\2788b940.graph.json"
+    },
+    {
+      "question_id": "28dc39ac",
+      "question_type": "multi-session",
+      "nodes": 255,
+      "edges": 36,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\28dc39ac.graph.json"
+    },
+    {
+      "question_id": "2ce6a0f2",
+      "question_type": "multi-session",
+      "nodes": 256,
+      "edges": 35,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\2ce6a0f2.graph.json"
+    },
+    {
+      "question_id": "2e6d26dc",
+      "question_type": "multi-session",
+      "nodes": 229,
+      "edges": 56,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\2e6d26dc.graph.json"
+    },
+    {
+      "question_id": "36b9f61e",
+      "question_type": "multi-session",
+      "nodes": 259,
+      "edges": 43,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\36b9f61e.graph.json"
+    },
+    {
+      "question_id": "3a704032",
+      "question_type": "multi-session",
+      "nodes": 224,
+      "edges": 25,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\3a704032.graph.json"
+    },
+    {
+      "question_id": "46a3abf7",
+      "question_type": "multi-session",
+      "nodes": 269,
+      "edges": 50,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\46a3abf7.graph.json"
+    },
+    {
+      "question_id": "5025383b",
+      "question_type": "multi-session",
+      "nodes": 593,
+      "edges": 490,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\5025383b.graph.json"
+    },
+    {
+      "question_id": "60159905",
+      "question_type": "multi-session",
+      "nodes": 257,
+      "edges": 71,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\60159905.graph.json"
+    },
+    {
+      "question_id": "6cb6f249",
+      "question_type": "multi-session",
+      "nodes": 244,
+      "edges": 20,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\6cb6f249.graph.json"
+    },
+    {
+      "question_id": "6d550036",
+      "question_type": "multi-session",
+      "nodes": 373,
+      "edges": 260,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\6d550036.graph.json"
+    },
+    {
+      "question_id": "7024f17c",
+      "question_type": "multi-session",
+      "nodes": 238,
+      "edges": 17,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\7024f17c.graph.json"
+    },
+    {
+      "question_id": "80ec1f4f",
+      "question_type": "multi-session",
+      "nodes": 265,
+      "edges": 96,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\80ec1f4f.graph.json"
+    },
+    {
+      "question_id": "88432d0a",
+      "question_type": "multi-session",
+      "nodes": 230,
+      "edges": 28,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\88432d0a.graph.json"
+    },
+    {
+      "question_id": "a08a253f",
+      "question_type": "multi-session",
+      "nodes": 262,
+      "edges": 100,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\a08a253f.graph.json"
+    },
+    {
+      "question_id": "a11281a2",
+      "question_type": "multi-session",
+      "nodes": 232,
+      "edges": 34,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\a11281a2.graph.json"
+    },
+    {
+      "question_id": "aae3761f",
+      "question_type": "multi-session",
+      "nodes": 259,
+      "edges": 53,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\aae3761f.graph.json"
+    },
+    {
+      "question_id": "b5ef892d",
+      "question_type": "multi-session",
+      "nodes": 240,
+      "edges": 31,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\b5ef892d.graph.json"
+    },
+    {
+      "question_id": "c4a1ceb8",
+      "question_type": "multi-session",
+      "nodes": 244,
+      "edges": 48,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\c4a1ceb8.graph.json"
+    },
+    {
+      "question_id": "d23cf73b",
+      "question_type": "multi-session",
+      "nodes": 250,
+      "edges": 60,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\d23cf73b.graph.json"
+    },
+    {
+      "question_id": "d6062bb9",
+      "question_type": "multi-session",
+      "nodes": 310,
+      "edges": 131,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\d6062bb9.graph.json"
+    },
+    {
+      "question_id": "d682f1a2",
+      "question_type": "multi-session",
+      "nodes": 230,
+      "edges": 15,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\d682f1a2.graph.json"
+    },
+    {
+      "question_id": "d851d5ba",
+      "question_type": "multi-session",
+      "nodes": 260,
+      "edges": 61,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\d851d5ba.graph.json"
+    },
+    {
+      "question_id": "dd2973ad",
+      "question_type": "multi-session",
+      "nodes": 295,
+      "edges": 127,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\dd2973ad.graph.json"
+    },
+    {
+      "question_id": "e56a43b9",
+      "question_type": "multi-session",
+      "nodes": 255,
+      "edges": 27,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\e56a43b9.graph.json"
+    },
+    {
+      "question_id": "e831120c",
+      "question_type": "multi-session",
+      "nodes": 252,
+      "edges": 51,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\e831120c.graph.json"
+    },
+    {
+      "question_id": "eeda8a6d",
+      "question_type": "multi-session",
+      "nodes": 255,
+      "edges": 37,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\eeda8a6d.graph.json"
+    },
+    {
+      "question_id": "eeda8a6d_abs",
+      "question_type": "multi-session",
+      "nodes": 269,
+      "edges": 90,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\eeda8a6d_abs.graph.json"
+    },
+    {
+      "question_id": "gpt4_15e38248",
+      "question_type": "multi-session",
+      "nodes": 243,
+      "edges": 27,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\gpt4_15e38248.graph.json"
+    },
+    {
+      "question_id": "gpt4_2ba83207",
+      "question_type": "multi-session",
+      "nodes": 257,
+      "edges": 51,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\gpt4_2ba83207.graph.json"
+    },
+    {
+      "question_id": "gpt4_2f8be40d",
+      "question_type": "multi-session",
+      "nodes": 247,
+      "edges": 58,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\gpt4_2f8be40d.graph.json"
+    },
+    {
+      "question_id": "gpt4_372c3eed_abs",
+      "question_type": "multi-session",
+      "nodes": 262,
+      "edges": 39,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\gpt4_372c3eed_abs.graph.json"
+    },
+    {
+      "question_id": "gpt4_5501fe77",
+      "question_type": "multi-session",
+      "nodes": 334,
+      "edges": 129,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\gpt4_5501fe77.graph.json"
+    },
+    {
+      "question_id": "gpt4_59c863d7",
+      "question_type": "multi-session",
+      "nodes": 247,
+      "edges": 72,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\gpt4_59c863d7.graph.json"
+    },
+    {
+      "question_id": "gpt4_7fce9456",
+      "question_type": "multi-session",
+      "nodes": 395,
+      "edges": 281,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\gpt4_7fce9456.graph.json"
+    },
+    {
+      "question_id": "gpt4_a56e767c",
+      "question_type": "multi-session",
+      "nodes": 233,
+      "edges": 19,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\gpt4_a56e767c.graph.json"
+    },
+    {
+      "question_id": "gpt4_ab202e7f",
+      "question_type": "multi-session",
+      "nodes": 243,
+      "edges": 64,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\gpt4_ab202e7f.graph.json"
+    },
+    {
+      "question_id": "gpt4_d12ceb0e",
+      "question_type": "multi-session",
+      "nodes": 248,
+      "edges": 40,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\gpt4_d12ceb0e.graph.json"
+    },
+    {
+      "question_id": "gpt4_d84a3211",
+      "question_type": "multi-session",
+      "nodes": 239,
+      "edges": 43,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\gpt4_d84a3211.graph.json"
+    },
+    {
+      "question_id": "gpt4_e05b82a6",
+      "question_type": "multi-session",
+      "nodes": 252,
+      "edges": 43,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\gpt4_e05b82a6.graph.json"
+    },
+    {
+      "question_id": "gpt4_f2262a51",
+      "question_type": "multi-session",
+      "nodes": 292,
+      "edges": 80,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\multi-session\\gpt4_f2262a51.graph.json"
+    },
+    {
+      "question_id": "1903aded",
+      "question_type": "single-session-assistant",
+      "nodes": 591,
+      "edges": 648,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-assistant\\1903aded.graph.json"
+    },
+    {
+      "question_id": "4c36ccef",
+      "question_type": "single-session-assistant",
+      "nodes": 963,
+      "edges": 1179,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-assistant\\4c36ccef.graph.json"
+    },
+    {
+      "question_id": "6ae235be",
+      "question_type": "single-session-assistant",
+      "nodes": 357,
+      "edges": 281,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-assistant\\6ae235be.graph.json"
+    },
+    {
+      "question_id": "7161e7e2",
+      "question_type": "single-session-assistant",
+      "nodes": 917,
+      "edges": 1221,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-assistant\\7161e7e2.graph.json"
+    },
+    {
+      "question_id": "7e00a6cb",
+      "question_type": "single-session-assistant",
+      "nodes": 441,
+      "edges": 418,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-assistant\\7e00a6cb.graph.json"
+    },
+    {
+      "question_id": "89527b6b",
+      "question_type": "single-session-assistant",
+      "nodes": 444,
+      "edges": 407,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-assistant\\89527b6b.graph.json"
+    },
+    {
+      "question_id": "c4f10528",
+      "question_type": "single-session-assistant",
+      "nodes": 740,
+      "edges": 864,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-assistant\\c4f10528.graph.json"
+    },
+    {
+      "question_id": "ceb54acb",
+      "question_type": "single-session-assistant",
+      "nodes": 823,
+      "edges": 1135,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-assistant\\ceb54acb.graph.json"
+    },
+    {
+      "question_id": "e9327a54",
+      "question_type": "single-session-assistant",
+      "nodes": 590,
+      "edges": 766,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-assistant\\e9327a54.graph.json"
+    },
+    {
+      "question_id": "f523d9fe",
+      "question_type": "single-session-assistant",
+      "nodes": 888,
+      "edges": 1196,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-assistant\\f523d9fe.graph.json"
+    },
+    {
+      "question_id": "06878be2",
+      "question_type": "single-session-preference",
+      "nodes": 534,
+      "edges": 531,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-preference\\06878be2.graph.json"
+    },
+    {
+      "question_id": "06f04340",
+      "question_type": "single-session-preference",
+      "nodes": 351,
+      "edges": 198,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-preference\\06f04340.graph.json"
+    },
+    {
+      "question_id": "09d032c9",
+      "question_type": "single-session-preference",
+      "nodes": 1219,
+      "edges": 1524,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-preference\\09d032c9.graph.json"
+    },
+    {
+      "question_id": "0edc2aef",
+      "question_type": "single-session-preference",
+      "nodes": 477,
+      "edges": 450,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-preference\\0edc2aef.graph.json"
+    },
+    {
+      "question_id": "195a1a1b",
+      "question_type": "single-session-preference",
+      "nodes": 1079,
+      "edges": 1657,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-preference\\195a1a1b.graph.json"
+    },
+    {
+      "question_id": "1a1907b4",
+      "question_type": "single-session-preference",
+      "nodes": 278,
+      "edges": 63,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-preference\\1a1907b4.graph.json"
+    },
+    {
+      "question_id": "32260d93",
+      "question_type": "single-session-preference",
+      "nodes": 584,
+      "edges": 652,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-preference\\32260d93.graph.json"
+    },
+    {
+      "question_id": "35a27287",
+      "question_type": "single-session-preference",
+      "nodes": 815,
+      "edges": 1081,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-preference\\35a27287.graph.json"
+    },
+    {
+      "question_id": "38146c39",
+      "question_type": "single-session-preference",
+      "nodes": 894,
+      "edges": 1075,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-preference\\38146c39.graph.json"
+    },
+    {
+      "question_id": "505af2f5",
+      "question_type": "single-session-preference",
+      "nodes": 1010,
+      "edges": 1529,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-preference\\505af2f5.graph.json"
+    },
+    {
+      "question_id": "54026fce",
+      "question_type": "single-session-preference",
+      "nodes": 533,
+      "edges": 628,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-preference\\54026fce.graph.json"
+    },
+    {
+      "question_id": "57f827a0",
+      "question_type": "single-session-preference",
+      "nodes": 966,
+      "edges": 1285,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-preference\\57f827a0.graph.json"
+    },
+    {
+      "question_id": "6b7dfb22",
+      "question_type": "single-session-preference",
+      "nodes": 1266,
+      "edges": 2243,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-preference\\6b7dfb22.graph.json"
+    },
+    {
+      "question_id": "75832dbd",
+      "question_type": "single-session-preference",
+      "nodes": 715,
+      "edges": 796,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-preference\\75832dbd.graph.json"
+    },
+    {
+      "question_id": "75f70248",
+      "question_type": "single-session-preference",
+      "nodes": 711,
+      "edges": 800,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-preference\\75f70248.graph.json"
+    },
+    {
+      "question_id": "8a2466db",
+      "question_type": "single-session-preference",
+      "nodes": 1274,
+      "edges": 1965,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-preference\\8a2466db.graph.json"
+    },
+    {
+      "question_id": "95228167",
+      "question_type": "single-session-preference",
+      "nodes": 696,
+      "edges": 810,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-preference\\95228167.graph.json"
+    },
+    {
+      "question_id": "afdc33df",
+      "question_type": "single-session-preference",
+      "nodes": 1061,
+      "edges": 1159,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-preference\\afdc33df.graph.json"
+    },
+    {
+      "question_id": "caf03d32",
+      "question_type": "single-session-preference",
+      "nodes": 729,
+      "edges": 861,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-preference\\caf03d32.graph.json"
+    },
+    {
+      "question_id": "d24813b1",
+      "question_type": "single-session-preference",
+      "nodes": 746,
+      "edges": 866,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-preference\\d24813b1.graph.json"
+    },
+    {
+      "question_id": "118b2229",
+      "question_type": "single-session-user",
+      "nodes": 243,
+      "edges": 21,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-user\\118b2229.graph.json"
+    },
+    {
+      "question_id": "1e043500",
+      "question_type": "single-session-user",
+      "nodes": 311,
+      "edges": 101,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-user\\1e043500.graph.json"
+    },
+    {
+      "question_id": "51a45a95",
+      "question_type": "single-session-user",
+      "nodes": 353,
+      "edges": 163,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-user\\51a45a95.graph.json"
+    },
+    {
+      "question_id": "58bf7951",
+      "question_type": "single-session-user",
+      "nodes": 263,
+      "edges": 19,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-user\\58bf7951.graph.json"
+    },
+    {
+      "question_id": "58ef2f1c",
+      "question_type": "single-session-user",
+      "nodes": 247,
+      "edges": 69,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-user\\58ef2f1c.graph.json"
+    },
+    {
+      "question_id": "6ade9755",
+      "question_type": "single-session-user",
+      "nodes": 221,
+      "edges": 12,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-user\\6ade9755.graph.json"
+    },
+    {
+      "question_id": "6f9b354f",
+      "question_type": "single-session-user",
+      "nodes": 338,
+      "edges": 160,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-user\\6f9b354f.graph.json"
+    },
+    {
+      "question_id": "c5e8278d",
+      "question_type": "single-session-user",
+      "nodes": 233,
+      "edges": 10,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-user\\c5e8278d.graph.json"
+    },
+    {
+      "question_id": "e47becba",
+      "question_type": "single-session-user",
+      "nodes": 234,
+      "edges": 6,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-user\\e47becba.graph.json"
+    },
+    {
+      "question_id": "f8c5f88b",
+      "question_type": "single-session-user",
+      "nodes": 270,
+      "edges": 85,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\single-session-user\\f8c5f88b.graph.json"
+    },
+    {
+      "question_id": "0bc8ad92",
+      "question_type": "temporal-reasoning",
+      "nodes": 226,
+      "edges": 28,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\temporal-reasoning\\0bc8ad92.graph.json"
+    },
+    {
+      "question_id": "71017276",
+      "question_type": "temporal-reasoning",
+      "nodes": 396,
+      "edges": 104,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\temporal-reasoning\\71017276.graph.json"
+    },
+    {
+      "question_id": "9a707b81",
+      "question_type": "temporal-reasoning",
+      "nodes": 410,
+      "edges": 236,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\temporal-reasoning\\9a707b81.graph.json"
+    },
+    {
+      "question_id": "af082822",
+      "question_type": "temporal-reasoning",
+      "nodes": 469,
+      "edges": 346,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\temporal-reasoning\\af082822.graph.json"
+    },
+    {
+      "question_id": "b46e15ed",
+      "question_type": "temporal-reasoning",
+      "nodes": 300,
+      "edges": 124,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\temporal-reasoning\\b46e15ed.graph.json"
+    },
+    {
+      "question_id": "gpt4_4929293a",
+      "question_type": "temporal-reasoning",
+      "nodes": 228,
+      "edges": 17,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\temporal-reasoning\\gpt4_4929293a.graph.json"
+    },
+    {
+      "question_id": "gpt4_59149c77",
+      "question_type": "temporal-reasoning",
+      "nodes": 252,
+      "edges": 22,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\temporal-reasoning\\gpt4_59149c77.graph.json"
+    },
+    {
+      "question_id": "gpt4_b5700ca9",
+      "question_type": "temporal-reasoning",
+      "nodes": 309,
+      "edges": 132,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\temporal-reasoning\\gpt4_b5700ca9.graph.json"
+    },
+    {
+      "question_id": "gpt4_f49edff3",
+      "question_type": "temporal-reasoning",
+      "nodes": 232,
+      "edges": 23,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\temporal-reasoning\\gpt4_f49edff3.graph.json"
+    },
+    {
+      "question_id": "gpt4_fa19884c",
+      "question_type": "temporal-reasoning",
+      "nodes": 388,
+      "edges": 192,
+      "path": "longmemeval_s_graph_retrieval\\prebuilt_llm_kg_graph_v3_neo4j_backend\\prebuilt_llm_kg_graph_v2_stability_first\\artifacts\\graphs\\temporal-reasoning\\gpt4_fa19884c.graph.json"
+    }
+  ],
+  "n_imported": 105,
+  "question_types": {
+    "knowledge-update": 10,
+    "multi-session": 45,
+    "single-session-assistant": 10,
+    "single-session-preference": 20,
+    "single-session-user": 10,
+    "temporal-reasoning": 10
+  }
+}

@@ -18,3 +18,13 @@ stamb_state_benchmark/output/*
 !stamb_state_benchmark/output/quality_report_v1_3.json
 !stamb_state_benchmark/output/semantic_duplicate_report_v1_3.json
 !stamb_state_benchmark/output/openai_embedding_duplicate_report_v1_3.json
+**/artifacts/cache/*
+**/artifacts/batches/*
+**/artifacts/logs/*
+**/artifacts/errors/*
+**/artifacts/partial_graphs/*
+**/artifacts/state/*
+**/artifacts/intermediate/*
+**/artifacts/status/*
+**/artifacts/build_manifest.*
+**/outputs/*
