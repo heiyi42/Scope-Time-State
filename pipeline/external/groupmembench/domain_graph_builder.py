@@ -137,9 +137,43 @@ CLAIM_COVERAGE_TERMS = (
     "validate",
     "validation",
 )
+STATE_OBJECT_STOPWORDS = {
+    "a",
+    "an",
+    "and",
+    "are",
+    "as",
+    "at",
+    "be",
+    "by",
+    "for",
+    "from",
+    "has",
+    "have",
+    "in",
+    "is",
+    "must",
+    "of",
+    "on",
+    "or",
+    "should",
+    "the",
+    "to",
+    "will",
+    "with",
+}
+STATE_OBJECT_PREFIX_RE = re.compile(
+    r"^(?:proposed|decision|risk|blocker|owner|deadline|status|plan|scope|current approach)\s*[:：-]\s*",
+    re.I,
+)
+STATE_OBJECT_PREDICATE_RE = re.compile(
+    r"\b(?:is|are|must|should|needs?|will|has|have|was|were|locked|confirmed|deferred|slipped|required|planned|blocked)\b",
+    re.I,
+)
 RELATION_TYPES = {"CORRECTS", "SUPERSEDES", "CONFLICTS_WITH"}
 TOKEN_RE = re.compile(r"[A-Za-z0-9_]+")
 STAGE_INPUT_HASH_VERSION = "groupmembench-domain-graph-scope-v1"
+STAGE_ARTIFACT_SCHEMA_VERSION = "groupmembench-scope-stage-v1"
 
 
 def bounded_safe_part(value: str, max_len: int = 96) -> str:
@@ -321,6 +355,26 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--provider", choices=("openai", "deepseek"), default="deepseek")
     parser.add_argument("--model", default=None, help="Optional model override for LLM graph construction.")
     parser.add_argument("--cache", default=str(OUTPUT_DIR / "llm_cache.groupmembench_domain_graph_builder.json"))
+    parser.add_argument(
+        "--claim-provider",
+        choices=("openai", "deepseek"),
+        default=None,
+        help="Provider override for claim extraction. Defaults to --provider.",
+    )
+    parser.add_argument("--claim-model", default=None, help="Model override for claim extraction. Defaults to --model.")
+    parser.add_argument("--claim-cache", default=None, help="Cache root for claim extraction. Defaults to --cache.")
+    parser.add_argument(
+        "--statefacet-provider",
+        choices=("openai", "deepseek"),
+        default=None,
+        help="Provider override for StateFacet consolidation. Defaults to --provider.",
+    )
+    parser.add_argument(
+        "--statefacet-model",
+        default=None,
+        help="Model override for StateFacet consolidation. Defaults to --model.",
+    )
+    parser.add_argument("--statefacet-cache", default=None, help="Cache root for StateFacet consolidation. Defaults to --cache.")
     parser.add_argument("--no-cache", action="store_true")
     parser.add_argument("--message-chunk-size", type=int, default=20)
     parser.add_argument(
@@ -389,18 +443,42 @@ def parse_args() -> argparse.Namespace:
         default=8,
         help="Chunk size for the no-Claim stateful event retry pass.",
     )
+    parser.add_argument(
+        "--claim-coverage-backfill",
+        choices=("off", "strong", "all"),
+        default="strong",
+        help=(
+            "Before the coverage retry LLM pass, deterministically backfill grounded sentence Claims for "
+            "no-Claim events. 'strong' backfills only events with explicit coverage terms or dates; "
+            "'all' backfills every stateful no-Claim event."
+        ),
+    )
     parser.add_argument("--consolidation-claim-limit", type=int, default=240)
     parser.add_argument("--statefacet-claim-limit-per-group", type=int, default=20)
     parser.add_argument("--statefacet-max-groups", type=int, default=8)
+    parser.add_argument("--statefacet-consolidation-mode", choices=("grouped", "bucket"), default="grouped")
+    parser.add_argument(
+        "--statefacet-bucket-max-groups",
+        type=int,
+        default=0,
+        help="Maximum statefacet buckets in bucket mode; 0 keeps all buckets.",
+    )
     parser.add_argument(
         "--statefacet-group-max-prompt-chars",
         type=int,
-        default=0,
+        default=12000,
         help=(
             "If positive, split a statefacet consolidation group when its prompt exceeds this "
             "approximate character budget."
         ),
     )
+    parser.add_argument(
+        "--no-single-claim-statefacet-short-circuit",
+        action="store_false",
+        dest="single_claim_statefacet_short_circuit",
+        help="Disable deterministic StateFacet creation for one-Claim consolidation groups.",
+    )
+    parser.set_defaults(single_claim_statefacet_short_circuit=True)
     parser.add_argument("--scope-offset", type=int, default=0, help="Debug/batch offset into sorted scopes before scope-limit.")
     parser.add_argument("--scope-limit", type=int, default=0, help="Debug limit only; 0 builds all scopes.")
     parser.add_argument("--event-limit", type=int, default=0, help="Debug limit only; 0 builds the full selected corpus.")
@@ -410,6 +488,29 @@ def parse_args() -> argparse.Namespace:
 def stable_hash(payload: Mapping[str, object]) -> str:
     text = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def text_hash(value: str) -> str:
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def json_safe_rows(rows: Sequence[Mapping[str, object]]) -> List[Dict[str, object]]:
+    return [dict(row) for row in rows if isinstance(row, Mapping)]
+
+
+def atomic_write_json(path: Path, payload: Mapping[str, object]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp_path = path.with_name(f".{path.name}.tmp")
+    tmp_path.write_text(json.dumps(dict(payload), ensure_ascii=False, indent=2) + "\n")
+    tmp_path.replace(path)
+
+
+def load_json_object(path: Path) -> Optional[Dict[str, object]]:
+    try:
+        value = json.loads(path.read_text())
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        return None
+    return value if isinstance(value, dict) else None
 
 
 def message_hash_payload(message: GroupMessage) -> Dict[str, object]:
@@ -446,10 +547,52 @@ def scope_stage_input_hash(
     scope: Mapping[str, object],
     messages: Sequence[GroupMessage],
     args: argparse.Namespace,
-    client: DomainGraphLLMClient,
+    claim_client: DomainGraphLLMClient,
+    state_client: DomainGraphLLMClient,
 ) -> str:
     payload = {
         "version": STAGE_INPUT_HASH_VERSION,
+        "domain": domain,
+        "scope": dict(scope),
+        "messages": [message_hash_payload(message) for message in messages],
+        "llm_runtime": {
+            "claim_extraction": llm_runtime_hash_payload(claim_client),
+            "state_consolidation": llm_runtime_hash_payload(state_client),
+        },
+        "claim_extraction": {
+            "message_chunk_size": args.message_chunk_size,
+            "message_chunk_max_chars": args.message_chunk_max_chars,
+            "max_claims_per_event": args.max_claims_per_event,
+            "claim_input_filter": args.claim_input_filter,
+            "compact_llm_events": args.compact_llm_events,
+            "claim_coverage_audit": args.claim_coverage_audit,
+            "claim_coverage_retry_chunk_size": args.claim_coverage_retry_chunk_size,
+            "claim_coverage_backfill": args.claim_coverage_backfill,
+        },
+        "state_consolidation": {
+            "consolidation_claim_limit": args.consolidation_claim_limit,
+            "statefacet_claim_limit_per_group": args.statefacet_claim_limit_per_group,
+            "statefacet_max_groups": args.statefacet_max_groups,
+            "statefacet_consolidation_mode": args.statefacet_consolidation_mode,
+            "statefacet_bucket_max_groups": args.statefacet_bucket_max_groups,
+            "statefacet_group_max_prompt_chars": args.statefacet_group_max_prompt_chars,
+            "single_claim_statefacet_short_circuit": args.single_claim_statefacet_short_circuit,
+            "compact_llm_events": args.compact_llm_events,
+        },
+    }
+    return stable_hash(payload)
+
+
+def claim_stage_input_hash(
+    *,
+    domain: str,
+    scope: Mapping[str, object],
+    messages: Sequence[GroupMessage],
+    args: argparse.Namespace,
+    client: DomainGraphLLMClient,
+) -> str:
+    payload = {
+        "version": f"{STAGE_INPUT_HASH_VERSION}:claim_extraction",
         "domain": domain,
         "scope": dict(scope),
         "messages": [message_hash_payload(message) for message in messages],
@@ -462,12 +605,40 @@ def scope_stage_input_hash(
             "compact_llm_events": args.compact_llm_events,
             "claim_coverage_audit": args.claim_coverage_audit,
             "claim_coverage_retry_chunk_size": args.claim_coverage_retry_chunk_size,
+            "claim_coverage_backfill": args.claim_coverage_backfill,
         },
+    }
+    return stable_hash(payload)
+
+
+def claims_hash(claims: Sequence[Mapping[str, object]]) -> str:
+    return stable_hash({"claims": json_safe_rows(claims)})
+
+
+def state_stage_input_hash(
+    *,
+    domain: str,
+    scope: Mapping[str, object],
+    messages: Sequence[GroupMessage],
+    claims: Sequence[Mapping[str, object]],
+    args: argparse.Namespace,
+    client: DomainGraphLLMClient,
+) -> str:
+    payload = {
+        "version": f"{STAGE_INPUT_HASH_VERSION}:state_consolidation",
+        "domain": domain,
+        "scope": dict(scope),
+        "messages": [message_hash_payload(message) for message in messages],
+        "claims_hash": claims_hash(claims),
+        "llm_runtime": llm_runtime_hash_payload(client),
         "state_consolidation": {
             "consolidation_claim_limit": args.consolidation_claim_limit,
             "statefacet_claim_limit_per_group": args.statefacet_claim_limit_per_group,
             "statefacet_max_groups": args.statefacet_max_groups,
+            "statefacet_consolidation_mode": args.statefacet_consolidation_mode,
+            "statefacet_bucket_max_groups": args.statefacet_bucket_max_groups,
             "statefacet_group_max_prompt_chars": args.statefacet_group_max_prompt_chars,
+            "single_claim_statefacet_short_circuit": args.single_claim_statefacet_short_circuit,
             "compact_llm_events": args.compact_llm_events,
         },
     }
@@ -528,6 +699,18 @@ def claim_coverage_reasons(message: GroupMessage) -> List[str]:
         if term in lowered:
             reasons.append(f"term:{term.replace(' ', '_')}")
     return list(dict.fromkeys(reasons))[:8]
+
+
+def has_strong_claim_coverage_signal(reasons: Sequence[str]) -> bool:
+    return any(reason != "stateful_sentence" for reason in reasons)
+
+
+def should_backfill_claim_coverage(reasons: Sequence[str], policy: str) -> bool:
+    if policy == "all":
+        return bool(reasons)
+    if policy == "strong":
+        return has_strong_claim_coverage_signal(reasons)
+    return False
 
 
 def infer_facet_type(sentence: str) -> str:
@@ -603,6 +786,26 @@ def extract_heuristic_claims(message: GroupMessage, max_claims_per_event: int) -
         if len(claims) >= max_claims_per_event:
             break
     return claims
+
+
+def coverage_backfill_claims(
+    message: GroupMessage,
+    scope_id: str,
+    max_claims_per_event: int,
+    per_event_counts: Dict[str, int],
+) -> List[Dict[str, object]]:
+    remaining = max(0, max_claims_per_event - per_event_counts.get(message.event_id, 0))
+    if remaining <= 0:
+        return []
+    backfilled: List[Dict[str, object]] = []
+    for claim in extract_heuristic_claims(message, remaining):
+        per_event_counts[message.event_id] = per_event_counts.get(message.event_id, 0) + 1
+        claim = dict(claim)
+        claim["claim_id"] = f"claim::{message.event_id}::{per_event_counts[message.event_id]}"
+        claim["scope_id"] = scope_id
+        claim["extraction_method"] = "deterministic_coverage_backfill"
+        backfilled.append(claim)
+    return backfilled
 
 
 def claims_for_messages(
@@ -872,6 +1075,7 @@ def extract_llm_claims_for_scope(
     max_claims_per_event: int,
     claim_coverage_audit: bool,
     claim_coverage_retry_chunk_size: int,
+    claim_coverage_backfill: str,
     claim_workers: int,
     claim_input_filter: str,
     compact_events: bool,
@@ -1000,6 +1204,43 @@ def extract_llm_claims_for_scope(
                 "stateful_no_claim_event_ids": [message.event_id for message in missing_messages],
             }
         )
+        if claim_coverage_backfill != "off" and missing_messages:
+            retry_messages: List[GroupMessage] = []
+            backfilled_event_ids: List[str] = []
+            backfilled_claim_count = 0
+            skipped_event_ids: List[str] = []
+            scope_id = str(scope.get("scope_id") or "")
+            for message in missing_messages:
+                reasons = claim_coverage_reasons(message)
+                if should_backfill_claim_coverage(reasons, claim_coverage_backfill):
+                    backfilled = coverage_backfill_claims(message, scope_id, max_claims_per_event, per_event_counts)
+                    if backfilled:
+                        claims.extend(backfilled)
+                        backfilled_event_ids.append(message.event_id)
+                        backfilled_claim_count += len(backfilled)
+                        continue
+                    skipped_event_ids.append(message.event_id)
+                retry_messages.append(message)
+            validations.append(
+                {
+                    "stage": "offline_claim_coverage_backfill",
+                    "policy": claim_coverage_backfill,
+                    "input_event_count": len(missing_messages),
+                    "backfilled_event_count": len(backfilled_event_ids),
+                    "backfilled_claim_count": backfilled_claim_count,
+                    "llm_retry_event_count": len(retry_messages),
+                    "skipped_event_count": len(skipped_event_ids),
+                    "backfilled_event_ids": backfilled_event_ids,
+                    "skipped_event_ids": skipped_event_ids,
+                }
+            )
+            print(
+                f"  coverage backfill policy={claim_coverage_backfill} "
+                f"events={len(backfilled_event_ids)} claims={backfilled_claim_count} "
+                f"retry_events={len(retry_messages)}",
+                flush=True,
+            )
+            missing_messages = retry_messages
         retry_chunks = chunks(missing_messages, claim_coverage_retry_chunk_size, message_chunk_max_chars)
         for retry_index, retry_chunk, raw in run_chunk_requests(
             "offline_claim_coverage_retry",
@@ -1234,6 +1475,31 @@ def normalize_scope_state(
     return relations, rejected, facets, validation
 
 
+def single_claim_statefacet(
+    scope: Mapping[str, object],
+    claim: Mapping[str, object],
+    messages: Sequence[GroupMessage],
+) -> Dict[str, object]:
+    event_id = str(claim.get("event_id") or "")
+    event_by_id = messages_by_id(messages)
+    event = event_by_id.get(event_id)
+    current_after = event.timestamp if event is not None else None
+    return {
+        "node_type": "StateFacet",
+        "facet_id": f"facet::{scope.get('scope_id')}::1",
+        "scope_id": scope.get("scope_id"),
+        "name": str(claim.get("facet_type") or "current_state"),
+        "value": str(claim.get("value") or "")[:1000],
+        "status": "active",
+        "support_claims": [str(claim.get("claim_id") or "")],
+        "support_events": [event_id] if event_id else [],
+        "current_after": current_after,
+        "time_value": claim.get("time_value") if claim.get("time_value") not in {"", "null"} else None,
+        "time_role": claim.get("time_role") if claim.get("time_role") not in {"", "null"} else None,
+        "construction_method": "deterministic_single_claim_statefacet",
+    }
+
+
 def grouped_claims_for_consolidation(
     claims: Sequence[Dict[str, object]],
     messages: Sequence[GroupMessage],
@@ -1253,6 +1519,53 @@ def grouped_claims_for_consolidation(
     ]
 
 
+def state_object_key(value: object) -> str:
+    text = clean_sentence(str(value or ""))
+    text = STATE_OBJECT_PREFIX_RE.sub("", text)
+    if not text:
+        return "state"
+    colon_parts = re.split(r"[:：]", text, maxsplit=1)
+    if len(colon_parts) > 1 and 3 <= len(colon_parts[0]) <= 80:
+        candidate = colon_parts[0]
+    else:
+        predicate_match = STATE_OBJECT_PREDICATE_RE.search(text)
+        candidate = text[: predicate_match.start()] if predicate_match and predicate_match.start() >= 3 else text
+    words = [
+        token.lower()
+        for token in TOKEN_RE.findall(candidate)
+        if len(token) > 1 and token.lower() not in STATE_OBJECT_STOPWORDS
+    ]
+    if not words:
+        words = [token.lower() for token in TOKEN_RE.findall(text) if len(token) > 1]
+    return "_".join(words[:8]) or "state"
+
+
+def bucket_group_name(facet_type: str, object_key: str) -> str:
+    return f"bucket__{bounded_safe_part(facet_type, 32)}__{bounded_safe_part(object_key, 64)}"
+
+
+def bucketed_claims_for_consolidation(
+    claims: Sequence[Dict[str, object]],
+    messages: Sequence[GroupMessage],
+    total_limit: int,
+    per_group_limit: int,
+    max_groups: int,
+) -> List[Tuple[str, List[Dict[str, object]]]]:
+    selected_claims = recent_claims_for_consolidation(claims, messages, total_limit)
+    grouped: Dict[Tuple[str, str], List[Dict[str, object]]] = {}
+    for claim in selected_claims:
+        facet_type = str(claim.get("facet_type") or "state")
+        object_key = state_object_key(claim.get("value"))
+        grouped.setdefault((facet_type, object_key), []).append(claim)
+    ranked_groups = sorted(grouped.items(), key=lambda item: (-len(item[1]), item[0][0], item[0][1]))
+    if max_groups > 0:
+        ranked_groups = ranked_groups[:max_groups]
+    return [
+        (bucket_group_name(facet_type, object_key), recent_claims_for_consolidation(group_claims, messages, per_group_limit))
+        for (facet_type, object_key), group_claims in ranked_groups
+    ]
+
+
 def consolidate_claim_group(
     client: DomainGraphLLMClient,
     domain: str,
@@ -1264,12 +1577,68 @@ def consolidate_claim_group(
     claim_limit: int,
     compact_events: bool,
     max_prompt_chars: int = 0,
+    stage_artifact_root: Optional[Path] = None,
+    state_stage_hash: Optional[str] = None,
+    stage_resume: bool = False,
+    single_claim_short_circuit: bool = True,
 ) -> Tuple[List[Dict[str, object]], List[Dict[str, object]], List[Dict[str, object]], Dict[str, object]]:
     selected_claims = recent_claims_for_consolidation(claims, messages, claim_limit)
     source_event_ids = {str(claim.get("event_id") or "") for claim in selected_claims}
     source_events = [message for message in messages if message.event_id in source_event_ids]
+    system_prompt = state_consolidation_system_prompt()
     user_prompt = state_consolidation_user_prompt(domain, scope, selected_claims, source_events, claim_limit, compact_events)
     prompt_chars = len(user_prompt)
+    group_hash = ""
+    if stage_artifact_root is not None and state_stage_hash:
+        group_hash = state_group_input_hash(
+            state_stage_hash=state_stage_hash,
+            group_name=group_name,
+            selected_claims=selected_claims,
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+        )
+        if stage_resume:
+            resumed = load_state_group_stage_artifact(
+                stage_root=stage_artifact_root,
+                scope_id=str(scope.get("scope_id") or ""),
+                group_name=group_name,
+                expected_state_stage_hash=state_stage_hash,
+                expected_group_hash=group_hash,
+            )
+            if resumed is not None:
+                print(f"  statefacet consolidation group={group_name} resumed", flush=True)
+                return resumed
+    if single_claim_short_circuit and len(selected_claims) == 1:
+        facets = [single_claim_statefacet(scope, selected_claims[0], messages)]
+        validation = {
+            "group": group_name,
+            "short_circuit": "single_claim_statefacet",
+            "input_claim_count": 1,
+            "selected_claim_count": 1,
+            "source_event_count": len(source_events),
+            "prompt_chars": prompt_chars,
+            "relation_count": 0,
+            "rejected_claim_count": 0,
+            "state_facet_count": len(facets),
+        }
+        if stage_artifact_root is not None and state_stage_hash and group_hash:
+            path = write_state_group_stage_artifact(
+                stage_root=stage_artifact_root,
+                domain=domain,
+                scope_number=scope_number,
+                scope_id=str(scope.get("scope_id") or ""),
+                group_name=group_name,
+                state_stage_hash=state_stage_hash,
+                group_hash=group_hash,
+                relations=[],
+                rejected_claims=[],
+                state_facets=facets,
+                validation=validation,
+            )
+            validation["stage_artifact_path"] = str(path)
+            validation["written"] = True
+        print(f"  statefacet consolidation group={group_name} single-claim short-circuit", flush=True)
+        return [], [], facets, validation
     if max_prompt_chars > 0 and prompt_chars > max_prompt_chars and len(selected_claims) > 1:
         midpoint = max(1, len(selected_claims) // 2)
         split_claim_groups = [selected_claims[:midpoint], selected_claims[midpoint:]]
@@ -1294,12 +1663,16 @@ def consolidate_claim_group(
                 len(split_claims),
                 compact_events,
                 max_prompt_chars,
+                stage_artifact_root,
+                state_stage_hash,
+                stage_resume,
+                single_claim_short_circuit,
             )
             combined_relations.extend(relations)
             combined_rejected.extend(rejected)
             combined_facets.extend(facets)
             split_validations.append(validation)
-        return combined_relations, combined_rejected, combined_facets, {
+        validation = {
             "group": group_name,
             "split_reason": "prompt_chars",
             "max_prompt_chars": max_prompt_chars,
@@ -1312,13 +1685,30 @@ def consolidate_claim_group(
             "state_facet_count": len(combined_facets),
             "split_validations": split_validations,
         }
+        if stage_artifact_root is not None and state_stage_hash and group_hash:
+            path = write_state_group_stage_artifact(
+                stage_root=stage_artifact_root,
+                domain=domain,
+                scope_number=scope_number,
+                scope_id=str(scope.get("scope_id") or ""),
+                group_name=group_name,
+                state_stage_hash=state_stage_hash,
+                group_hash=group_hash,
+                relations=combined_relations,
+                rejected_claims=combined_rejected,
+                state_facets=combined_facets,
+                validation=validation,
+            )
+            validation["stage_artifact_path"] = str(path)
+            validation["written"] = True
+        return combined_relations, combined_rejected, combined_facets, validation
     print(
         f"  statefacet consolidation group={group_name} claims={len(selected_claims)} "
         f"source_events={len(source_events)}",
         flush=True,
     )
     raw = client.complete_json(
-        state_consolidation_system_prompt(),
+        system_prompt,
         user_prompt,
         domain=domain,
         scope_number=scope_number,
@@ -1331,6 +1721,22 @@ def consolidate_claim_group(
     validation["selected_claim_count"] = len(selected_claims)
     validation["source_event_count"] = len(source_events)
     validation["prompt_chars"] = prompt_chars
+    if stage_artifact_root is not None and state_stage_hash and group_hash:
+        path = write_state_group_stage_artifact(
+            stage_root=stage_artifact_root,
+            domain=domain,
+            scope_number=scope_number,
+            scope_id=str(scope.get("scope_id") or ""),
+            group_name=group_name,
+            state_stage_hash=state_stage_hash,
+            group_hash=group_hash,
+            relations=relations,
+            rejected_claims=rejected,
+            state_facets=facets,
+            validation=validation,
+        )
+        validation["stage_artifact_path"] = str(path)
+        validation["written"] = True
     return relations, rejected, facets, validation
 
 
@@ -1347,12 +1753,21 @@ def consolidate_llm_state_for_scope(
     statefacet_workers: int,
     compact_events: bool,
     group_max_prompt_chars: int = 0,
+    consolidation_mode: str = "grouped",
+    bucket_max_groups: int = 0,
+    stage_artifact_root: Optional[Path] = None,
+    state_stage_hash: Optional[str] = None,
+    stage_resume: bool = False,
+    single_claim_short_circuit: bool = True,
 ) -> Tuple[List[Dict[str, object]], List[Dict[str, object]], List[Dict[str, object]], Dict[str, object]]:
     all_relations: List[Dict[str, object]] = []
     all_rejected: List[Dict[str, object]] = []
     all_facets: List[Dict[str, object]] = []
     validations: List[Dict[str, object]] = []
-    groups = grouped_claims_for_consolidation(claims, messages, claim_limit, per_group_limit, max_groups)
+    if consolidation_mode == "bucket":
+        groups = bucketed_claims_for_consolidation(claims, messages, claim_limit, per_group_limit, bucket_max_groups)
+    else:
+        groups = grouped_claims_for_consolidation(claims, messages, claim_limit, per_group_limit, max_groups)
     worker_count = min(max(1, statefacet_workers), len(groups)) if groups else 1
 
     def run_one(group_name: str, group_claims: Sequence[Dict[str, object]]):
@@ -1367,6 +1782,10 @@ def consolidate_llm_state_for_scope(
             per_group_limit,
             compact_events,
             group_max_prompt_chars,
+            stage_artifact_root,
+            state_stage_hash,
+            stage_resume,
+            single_claim_short_circuit,
         )
 
     group_results = []
@@ -1397,6 +1816,7 @@ def consolidate_llm_state_for_scope(
             all_facets.append(facet)
         validations.append(validation)
     return all_relations, all_rejected, all_facets, {
+        "consolidation_mode": consolidation_mode,
         "group_count": len(groups),
         "input_claim_count": len(claims),
         "relation_count": len(all_relations),
@@ -1541,6 +1961,14 @@ def build_manifest(
     build_config_extra: Optional[Mapping[str, object]] = None,
 ) -> Dict[str, object]:
     partial = bool(args.scope_offset or args.scope_limit or args.event_limit) if is_partial is None else is_partial
+    if args.claim_mode == "llm":
+        provider_values = {str(args.claim_provider), str(args.statefacet_provider)}
+        model_values = {str(args.claim_model), str(args.statefacet_model)}
+        graph_provider = provider_values.pop() if len(provider_values) == 1 else "mixed"
+        graph_model = model_values.pop() if len(model_values) == 1 else "mixed"
+    else:
+        graph_provider = "none"
+        graph_model = args.claim_mode
     build_config = {
         "domains": list(args.domains),
         "event_limit": args.event_limit,
@@ -1555,18 +1983,30 @@ def build_manifest(
         "write_scope_artifacts": not args.no_scope_artifacts,
         "stage_resume": args.stage_resume,
         "cache_layout": "sharded_by_domain_scope_stage_chunk",
+        "stage_checkpoint_layout": "_scope_stage_artifacts/domain/scope/stage.json",
+        "stage_checkpoint_schema": STAGE_ARTIFACT_SCHEMA_VERSION,
         "legacy_cache_fallback": True,
         "claim_input_filter": args.claim_input_filter,
         "compact_llm_events": args.compact_llm_events,
         "claim_coverage_audit": args.claim_coverage_audit,
         "claim_coverage_retry_chunk_size": args.claim_coverage_retry_chunk_size,
+        "claim_coverage_backfill": args.claim_coverage_backfill,
         "consolidation_claim_limit": args.consolidation_claim_limit,
         "statefacet_claim_limit_per_group": args.statefacet_claim_limit_per_group,
         "statefacet_max_groups": args.statefacet_max_groups,
+        "statefacet_consolidation_mode": args.statefacet_consolidation_mode,
+        "statefacet_bucket_max_groups": args.statefacet_bucket_max_groups,
         "statefacet_group_max_prompt_chars": args.statefacet_group_max_prompt_chars,
+        "single_claim_statefacet_short_circuit": args.single_claim_statefacet_short_circuit,
         "claim_mode": args.claim_mode,
         "provider": args.provider if args.claim_mode == "llm" else None,
         "model": args.model,
+        "claim_provider": args.claim_provider if args.claim_mode == "llm" else None,
+        "claim_model": args.claim_model if args.claim_mode == "llm" else None,
+        "claim_cache": args.claim_cache if args.claim_mode == "llm" else None,
+        "statefacet_provider": args.statefacet_provider if args.claim_mode == "llm" else None,
+        "statefacet_model": args.statefacet_model if args.claim_mode == "llm" else None,
+        "statefacet_cache": args.statefacet_cache if args.claim_mode == "llm" else None,
     }
     if build_config_extra:
         build_config.update(dict(build_config_extra))
@@ -1580,8 +2020,8 @@ def build_manifest(
         "question_conditioned": False,
         "question_seen": False,
         "gold_seen": False,
-        "graph_provider": args.provider if args.claim_mode == "llm" else "none",
-        "graph_model": args.model or args.claim_mode,
+        "graph_provider": graph_provider,
+        "graph_model": graph_model,
         "claim_mode": args.claim_mode,
         "is_partial": partial,
         "build_config": build_config,
@@ -1653,6 +2093,192 @@ def graph_locked_raw(
 
 def scope_artifact_dir(output_dir: Path, domain: str, scope_number: int, scope_id: str) -> Path:
     return output_dir / "_scope_artifacts" / safe_path_part(domain) / scope_dir_name(scope_number, scope_id)
+
+
+def scope_stage_artifact_dir(output_dir: Path, domain: str, scope_number: int, scope_id: str) -> Path:
+    return output_dir / "_scope_stage_artifacts" / safe_path_part(domain) / scope_dir_name(scope_number, scope_id)
+
+
+def claim_stage_artifact_path(output_dir: Path, domain: str, scope_number: int, scope_id: str) -> Path:
+    return scope_stage_artifact_dir(output_dir, domain, scope_number, scope_id) / "claim_extraction.json"
+
+
+def state_group_artifact_path(stage_root: Path, group_name: str) -> Path:
+    return stage_root / "statefacet_groups" / f"{bounded_safe_part(group_name)}.json"
+
+
+def write_claim_stage_artifact(
+    *,
+    output_dir: Path,
+    domain: str,
+    scope_number: int,
+    scope_id: str,
+    scope_stage_hash: str,
+    claim_stage_hash: str,
+    event_count: int,
+    claims: Sequence[Mapping[str, object]],
+    rejected_claims: Sequence[Mapping[str, object]],
+    validations: Sequence[Mapping[str, object]],
+) -> Path:
+    path = claim_stage_artifact_path(output_dir, domain, scope_number, scope_id)
+    atomic_write_json(
+        path,
+        {
+            "artifact_schema": STAGE_ARTIFACT_SCHEMA_VERSION,
+            "stage": "claim_extraction",
+            "domain": domain,
+            "scope_number": scope_number,
+            "scope_id": scope_id,
+            "scope_stage_input_hash": scope_stage_hash,
+            "claim_stage_input_hash": claim_stage_hash,
+            "event_count": event_count,
+            "claim_count": len(claims),
+            "rejected_claim_count": len(rejected_claims),
+            "claims": json_safe_rows(claims),
+            "rejected_claims": json_safe_rows(rejected_claims),
+            "validations": json_safe_rows(validations),
+        },
+    )
+    return path
+
+
+def load_claim_stage_artifact(
+    *,
+    output_dir: Path,
+    domain: str,
+    scope_number: int,
+    scope_id: str,
+    expected_claim_stage_hash: str,
+) -> Optional[Dict[str, object]]:
+    path = claim_stage_artifact_path(output_dir, domain, scope_number, scope_id)
+    payload = load_json_object(path)
+    if not payload:
+        return None
+    if payload.get("artifact_schema") != STAGE_ARTIFACT_SCHEMA_VERSION:
+        return None
+    if payload.get("stage") != "claim_extraction":
+        return None
+    if str(payload.get("scope_id") or "") != scope_id:
+        return None
+    if str(payload.get("claim_stage_input_hash") or "") != expected_claim_stage_hash:
+        print(f"stage resume skip / {scope_id}: claim stage hash mismatch", flush=True)
+        return None
+    claims = payload.get("claims", [])
+    rejected = payload.get("rejected_claims", [])
+    validations = payload.get("validations", [])
+    if not all(isinstance(value, list) for value in (claims, rejected, validations)):
+        return None
+    return {
+        "claims": [dict(item) for item in claims if isinstance(item, dict)],
+        "claim_rejected": [dict(item) for item in rejected if isinstance(item, dict)],
+        "claim_validations": [dict(item) for item in validations if isinstance(item, dict)],
+        "claim_stage_artifact": {
+            "artifact_path": str(path),
+            "claim_stage_input_hash": expected_claim_stage_hash,
+            "resumed": True,
+        },
+    }
+
+
+def state_group_input_hash(
+    *,
+    state_stage_hash: str,
+    group_name: str,
+    selected_claims: Sequence[Mapping[str, object]],
+    system_prompt: str,
+    user_prompt: str,
+) -> str:
+    return stable_hash(
+        {
+            "version": f"{STAGE_INPUT_HASH_VERSION}:state_group",
+            "state_stage_input_hash": state_stage_hash,
+            "group_name": group_name,
+            "selected_claims_hash": claims_hash(selected_claims),
+            "system_prompt_hash": text_hash(system_prompt),
+            "user_prompt_hash": text_hash(user_prompt),
+        }
+    )
+
+
+def write_state_group_stage_artifact(
+    *,
+    stage_root: Path,
+    domain: str,
+    scope_number: int,
+    scope_id: str,
+    group_name: str,
+    state_stage_hash: str,
+    group_hash: str,
+    relations: Sequence[Mapping[str, object]],
+    rejected_claims: Sequence[Mapping[str, object]],
+    state_facets: Sequence[Mapping[str, object]],
+    validation: Mapping[str, object],
+) -> Path:
+    path = state_group_artifact_path(stage_root, group_name)
+    atomic_write_json(
+        path,
+        {
+            "artifact_schema": STAGE_ARTIFACT_SCHEMA_VERSION,
+            "stage": "statefacet_group",
+            "domain": domain,
+            "scope_number": scope_number,
+            "scope_id": scope_id,
+            "group_name": group_name,
+            "state_stage_input_hash": state_stage_hash,
+            "group_input_hash": group_hash,
+            "relation_count": len(relations),
+            "rejected_claim_count": len(rejected_claims),
+            "state_facet_count": len(state_facets),
+            "relations": json_safe_rows(relations),
+            "rejected_claims": json_safe_rows(rejected_claims),
+            "state_facets": json_safe_rows(state_facets),
+            "validation": dict(validation),
+        },
+    )
+    return path
+
+
+def load_state_group_stage_artifact(
+    *,
+    stage_root: Path,
+    scope_id: str,
+    group_name: str,
+    expected_state_stage_hash: str,
+    expected_group_hash: str,
+) -> Optional[Tuple[List[Dict[str, object]], List[Dict[str, object]], List[Dict[str, object]], Dict[str, object]]]:
+    path = state_group_artifact_path(stage_root, group_name)
+    payload = load_json_object(path)
+    if not payload:
+        return None
+    if payload.get("artifact_schema") != STAGE_ARTIFACT_SCHEMA_VERSION:
+        return None
+    if payload.get("stage") != "statefacet_group":
+        return None
+    if str(payload.get("scope_id") or "") != scope_id:
+        return None
+    if str(payload.get("state_stage_input_hash") or "") != expected_state_stage_hash:
+        print(f"stage resume skip / {scope_id}: state group {group_name} stage hash mismatch", flush=True)
+        return None
+    if str(payload.get("group_input_hash") or "") != expected_group_hash:
+        print(f"stage resume skip / {scope_id}: state group {group_name} input hash mismatch", flush=True)
+        return None
+    relations = payload.get("relations", [])
+    rejected = payload.get("rejected_claims", [])
+    facets = payload.get("state_facets", [])
+    validation = payload.get("validation", {})
+    if not all(isinstance(value, list) for value in (relations, rejected, facets)):
+        return None
+    if not isinstance(validation, dict):
+        validation = {}
+    validation = dict(validation)
+    validation["stage_artifact_path"] = str(path)
+    validation["resumed"] = True
+    return (
+        [dict(item) for item in relations if isinstance(item, dict)],
+        [dict(item) for item in rejected if isinstance(item, dict)],
+        [dict(item) for item in facets if isinstance(item, dict)],
+        validation,
+    )
 
 
 def write_scope_artifact(
@@ -1841,7 +2467,8 @@ def load_scope_resume_artifact(
 
 
 def build_llm_graph_components(
-    client: DomainGraphLLMClient,
+    claim_client: DomainGraphLLMClient,
+    state_client: DomainGraphLLMClient,
     domain: str,
     messages: Sequence[GroupMessage],
     args: argparse.Namespace,
@@ -1868,9 +2495,23 @@ def build_llm_graph_components(
             scope=scope_dict,
             messages=scope_messages,
             args=args,
-            client=client,
+            claim_client=claim_client,
+            state_client=state_client,
         )
-        if stage_resume_enabled(args, output_dir):
+        claim_input_hash = claim_stage_input_hash(
+            domain=domain,
+            scope=scope_dict,
+            messages=scope_messages,
+            args=args,
+            client=claim_client,
+        )
+        resume_enabled = stage_resume_enabled(args, output_dir)
+        stage_artifact_root = (
+            scope_stage_artifact_dir(output_dir, domain, scope_number, scope.scope_id)
+            if resume_enabled and output_dir is not None
+            else None
+        )
+        if resume_enabled and output_dir is not None:
             resumed = load_scope_resume_artifact(
                 output_dir=output_dir,
                 domain=domain,
@@ -1896,23 +2537,76 @@ def build_llm_graph_components(
             f"events={len(scope_messages)} scope_id={scope.scope_id}",
             flush=True,
         )
-        scope_claims, scope_rejected, claim_validations = extract_llm_claims_for_scope(
-            client,
-            domain,
-            scope_dict,
-            scope_number,
-            scope_messages,
-            args.message_chunk_size,
-            args.message_chunk_max_chars,
-            args.max_claims_per_event,
-            args.claim_coverage_audit,
-            args.claim_coverage_retry_chunk_size,
-            args.claim_workers,
-            args.claim_input_filter,
-            args.compact_llm_events,
+        claim_stage_artifact = None
+        claim_stage = None
+        if resume_enabled and output_dir is not None:
+            claim_stage = load_claim_stage_artifact(
+                output_dir=output_dir,
+                domain=domain,
+                scope_number=scope_number,
+                scope_id=scope.scope_id,
+                expected_claim_stage_hash=claim_input_hash,
+            )
+        if claim_stage is not None:
+            scope_claims = claim_stage["claims"]
+            scope_rejected = claim_stage["claim_rejected"]
+            claim_validations = claim_stage["claim_validations"]
+            claim_stage_artifact = claim_stage.get("claim_stage_artifact")
+            print(
+                f"llm graph stage / {domain} scope {scope_number:03d} claim extraction resumed "
+                f"claims={len(scope_claims)} rejected={len(scope_rejected)}",
+                flush=True,
+            )
+        else:
+            scope_claims, scope_rejected, claim_validations = extract_llm_claims_for_scope(
+                claim_client,
+                domain,
+                scope_dict,
+                scope_number,
+                scope_messages,
+                args.message_chunk_size,
+                args.message_chunk_max_chars,
+                args.max_claims_per_event,
+                args.claim_coverage_audit,
+                args.claim_coverage_retry_chunk_size,
+                args.claim_coverage_backfill,
+                args.claim_workers,
+                args.claim_input_filter,
+                args.compact_llm_events,
+            )
+            if resume_enabled and output_dir is not None:
+                claim_path = write_claim_stage_artifact(
+                    output_dir=output_dir,
+                    domain=domain,
+                    scope_number=scope_number,
+                    scope_id=scope.scope_id,
+                    scope_stage_hash=stage_input_hash,
+                    claim_stage_hash=claim_input_hash,
+                    event_count=len(scope_messages),
+                    claims=scope_claims,
+                    rejected_claims=scope_rejected,
+                    validations=claim_validations,
+                )
+                claim_stage_artifact = {
+                    "artifact_path": str(claim_path),
+                    "claim_stage_input_hash": claim_input_hash,
+                    "written": True,
+                }
+                print(
+                    f"llm graph stage / {domain} scope {scope_number:03d} claim checkpoint "
+                    f"artifact={claim_path}",
+                    flush=True,
+                )
+        state_input_hash = state_stage_input_hash(
+            domain=domain,
+            scope=scope_dict,
+            messages=scope_messages,
+            claims=scope_claims,
+            args=args,
+            client=state_client,
         )
         scope_relations, state_rejected, scope_facets, state_validation = consolidate_llm_state_for_scope(
-            client,
+            state_client,
             domain,
             scope_dict,
             scope_number,
@@ -1924,6 +2618,12 @@ def build_llm_graph_components(
             args.statefacet_workers,
             args.compact_llm_events,
             args.statefacet_group_max_prompt_chars,
+            args.statefacet_consolidation_mode,
+            args.statefacet_bucket_max_groups,
+            stage_artifact_root,
+            state_input_hash,
+            resume_enabled,
+            args.single_claim_statefacet_short_circuit,
         )
         scope_artifact = None
         if output_dir is not None and not args.no_scope_artifacts:
@@ -1961,6 +2661,7 @@ def build_llm_graph_components(
             "claim_validations": claim_validations,
             "state_validation": state_validation,
             "scope_artifact": scope_artifact,
+            "claim_stage_artifact": claim_stage_artifact,
         }
 
     worker_count = min(max(1, args.scope_workers), len(scopes)) if scopes else 1
@@ -2003,6 +2704,7 @@ def build_llm_graph_components(
                 "claim_count": len(scope_claims),
                 "rejected_claim_count": len(scope_rejected),
                 "validations": result["claim_validations"],
+                "stage_artifact": result.get("claim_stage_artifact"),
             }
         )
         stage_trace["state_consolidation"].append({"scope_id": result["scope_id"], **result["state_validation"]})
@@ -2018,16 +2720,17 @@ def build_llm_graph_components(
 
 
 def build_graph_components(
-    client: Optional[DomainGraphLLMClient],
+    claim_client: Optional[DomainGraphLLMClient],
+    state_client: Optional[DomainGraphLLMClient],
     domain: str,
     messages: Sequence[GroupMessage],
     args: argparse.Namespace,
     output_dir: Optional[Path] = None,
 ) -> Tuple[List[Dict[str, object]], List[Dict[str, object]], List[Dict[str, object]], List[Dict[str, object]], Dict[str, object]]:
     if args.claim_mode == "llm":
-        if client is None:
-            raise ValueError("LLM claim_mode requires a configured LLM client")
-        return build_llm_graph_components(client, domain, messages, args, output_dir)
+        if claim_client is None or state_client is None:
+            raise ValueError("LLM claim_mode requires configured claim and StateFacet LLM clients")
+        return build_llm_graph_components(claim_client, state_client, domain, messages, args, output_dir)
     claims, stats = claims_for_messages(messages, args.claim_mode, args.max_claims_per_event)
     return claims, [], [], [], {"heuristic_claim_stats": stats}
 
@@ -2036,11 +2739,13 @@ def build_domain_artifact(
     domain: str,
     args: argparse.Namespace,
     output_dir: Path,
-    client: Optional[DomainGraphLLMClient],
+    claim_client: Optional[DomainGraphLLMClient],
+    state_client: Optional[DomainGraphLLMClient],
 ) -> Dict[str, object]:
     messages = select_messages(domain, args)
     claims, relations, rejected_claims, state_facets, stage_trace = build_graph_components(
-        client,
+        claim_client,
+        state_client,
         domain,
         messages,
         args,
@@ -2088,24 +2793,55 @@ def print_summary(summary: Dict[str, object]) -> None:
         )
 
 
+def configure_stage_client(
+    args: argparse.Namespace,
+    *,
+    stage_name: str,
+    provider_attr: str,
+    model_attr: str,
+    cache_attr: str,
+) -> DomainGraphLLMClient:
+    provider = getattr(args, provider_attr) or args.provider
+    api_key, model, api_base = provider_config(provider)
+    model_override = getattr(args, model_attr) or args.model
+    if model_override:
+        model = model_override
+    cache_path = str(getattr(args, cache_attr) or args.cache)
+    setattr(args, provider_attr, provider)
+    setattr(args, model_attr, model)
+    setattr(args, cache_attr, cache_path)
+    print(f"configured {stage_name} llm / provider={provider} model={model} cache={cache_path}", flush=True)
+    return DomainGraphLLMClient(
+        provider=provider,
+        model=model,
+        api_key=api_key,
+        api_base=api_base,
+        cache_path=Path(cache_path),
+        use_cache=not args.no_cache,
+    )
+
+
 def main() -> int:
     args = parse_args()
     output_dir = Path(args.output_dir)
-    client: Optional[DomainGraphLLMClient] = None
+    claim_client: Optional[DomainGraphLLMClient] = None
+    state_client: Optional[DomainGraphLLMClient] = None
     if args.claim_mode == "llm":
         load_dotenv()
         try:
-            api_key, model, api_base = provider_config(args.provider)
-            if args.model:
-                model = args.model
-            args.model = model
-            client = DomainGraphLLMClient(
-                provider=args.provider,
-                model=model,
-                api_key=api_key,
-                api_base=api_base,
-                cache_path=Path(args.cache),
-                use_cache=not args.no_cache,
+            claim_client = configure_stage_client(
+                args,
+                stage_name="claim_extraction",
+                provider_attr="claim_provider",
+                model_attr="claim_model",
+                cache_attr="claim_cache",
+            )
+            state_client = configure_stage_client(
+                args,
+                stage_name="statefacet_consolidation",
+                provider_attr="statefacet_provider",
+                model_attr="statefacet_model",
+                cache_attr="statefacet_cache",
             )
         except RuntimeError as exc:
             print(f"Config error: {exc}", file=sys.stderr)
@@ -2114,7 +2850,7 @@ def main() -> int:
     try:
         for domain in args.domains:
             print(f"building offline domain graph / {domain}", flush=True)
-            artifacts.append(build_domain_artifact(domain, args, output_dir, client))
+            artifacts.append(build_domain_artifact(domain, args, output_dir, claim_client, state_client))
     except LLMRequestError as exc:
         print("\nLLM request failed during domain graph build.", file=sys.stderr)
         print(f"provider: {exc.provider}", file=sys.stderr)
@@ -2124,8 +2860,10 @@ def main() -> int:
         return 1
     except ValueError as exc:
         print("\nLLM output failed domain graph JSON validation.", file=sys.stderr)
-        print(f"provider: {args.provider}", file=sys.stderr)
-        print(f"model: {args.model}", file=sys.stderr)
+        print(f"claim_provider: {args.claim_provider}", file=sys.stderr)
+        print(f"claim_model: {args.claim_model}", file=sys.stderr)
+        print(f"statefacet_provider: {args.statefacet_provider}", file=sys.stderr)
+        print(f"statefacet_model: {args.statefacet_model}", file=sys.stderr)
         print(f"error: {exc}", file=sys.stderr)
         return 1
     summary = {
