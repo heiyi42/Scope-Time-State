@@ -6,8 +6,9 @@ import json
 import os
 from pathlib import Path
 import re
+from threading import RLock
 import time
-from typing import Dict, Optional
+from typing import Dict, Optional, Tuple
 
 
 class LLMRequestError(RuntimeError):
@@ -25,6 +26,7 @@ class LLMClient:
         self.provider = provider
         self.model = model
         self.api_base = api_base
+        self.extra_body = self._request_extra_body()
         timeout_seconds = float(os.environ.get("LLM_REQUEST_TIMEOUT", "120"))
         max_retries = int(os.environ.get("LLM_MAX_RETRIES", "1"))
         self.client = OpenAI(
@@ -42,7 +44,8 @@ class LLMClient:
         self.use_json_mode = provider not in disabled_json_mode_providers
         self.cache_path = cache_path
         self.use_cache = use_cache
-        self.cache: Dict[str, Dict[str, object]] = {}
+        self.cache: Dict[str, object] = {}
+        self._cache_lock = RLock()
         if use_cache and cache_path.exists():
             self.cache = json.loads(cache_path.read_text())
 
@@ -53,6 +56,8 @@ class LLMClient:
                     "provider": self.provider,
                     "model": self.model,
                     "api_base": self.api_base,
+                    "max_tokens": self.max_tokens,
+                    "extra_body": self.extra_body,
                     "system": system_prompt,
                     "user": user_prompt,
                 },
@@ -60,8 +65,10 @@ class LLMClient:
                 sort_keys=True,
             ).encode("utf-8")
         ).hexdigest()
-        if self.use_cache and cache_key in self.cache:
-            return deepcopy(self.cache[cache_key])
+        if self.use_cache:
+            with self._cache_lock:
+                if cache_key in self.cache:
+                    return deepcopy(self.cache[cache_key])
 
         parse_retries = int(os.environ.get("LLM_PARSE_RETRIES", "2"))
         last_parse_error: Optional[Exception] = None
@@ -90,32 +97,89 @@ class LLMClient:
             break
 
         if self.use_cache:
-            next_cache = dict(self.cache)
-            next_cache[cache_key] = deepcopy(parsed)
-            cache_text = json.dumps(next_cache, ensure_ascii=False, indent=2)
-            self.cache = next_cache
-            self.cache_path.parent.mkdir(exist_ok=True)
-            self.cache_path.write_text(cache_text)
+            with self._cache_lock:
+                next_cache = dict(self.cache)
+                next_cache[cache_key] = deepcopy(parsed)
+                cache_text = json.dumps(next_cache, ensure_ascii=False, indent=2)
+                self.cache = next_cache
+                self.cache_path.parent.mkdir(parents=True, exist_ok=True)
+                self.cache_path.write_text(cache_text)
         return deepcopy(parsed)
 
+    def complete_text(self, system_prompt: str, user_prompt: str) -> str:
+        cache_key = hashlib.sha256(
+            json.dumps(
+                {
+                    "provider": self.provider,
+                    "model": self.model,
+                    "api_base": self.api_base,
+                    "max_tokens": self.max_tokens,
+                    "extra_body": self.extra_body,
+                    "response_mode": "text",
+                    "system": system_prompt,
+                    "user": user_prompt,
+                },
+                ensure_ascii=False,
+                sort_keys=True,
+            ).encode("utf-8")
+        ).hexdigest()
+        if self.use_cache:
+            with self._cache_lock:
+                cached = self.cache.get(cache_key)
+                if isinstance(cached, dict) and isinstance(cached.get("content"), str):
+                    return str(cached["content"])
+
+        content = self._call_chat(system_prompt, user_prompt, json_mode=False)
+
+        if self.use_cache:
+            with self._cache_lock:
+                next_cache = dict(self.cache)
+                next_cache[cache_key] = {"content": content}
+                cache_text = json.dumps(next_cache, ensure_ascii=False, indent=2)
+                self.cache = next_cache
+                self.cache_path.parent.mkdir(parents=True, exist_ok=True)
+                self.cache_path.write_text(cache_text)
+        return content
+
     def _call_chat(self, system_prompt: str, user_prompt: str, json_mode: bool) -> str:
+        messages = []
+        if system_prompt.strip():
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append({"role": "user", "content": user_prompt})
         request: Dict[str, object] = {
             "model": self.model,
-            "messages": [
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt},
-            ],
+            "messages": messages,
             "temperature": 0,
             "max_tokens": self.max_tokens,
         }
         if json_mode:
             request["response_format"] = {"type": "json_object"}
+        if self.extra_body:
+            request["extra_body"] = self.extra_body
         try:
             response = self.client.chat.completions.create(**request)
         except Exception as exc:
             message = f"{self.provider} API request failed; model={self.model}; base_url={self.api_base}; error={exc}"
             raise LLMRequestError(self.provider, self.model, self.api_base, message) from exc
-        return response.choices[0].message.content or ""
+        choice = response.choices[0]
+        content = choice.message.content or ""
+        if not content.strip():
+            message_payload = choice.message.model_dump()
+            reasoning_len = len(str(message_payload.get("reasoning_content") or ""))
+            raise ValueError(
+                "model returned empty message.content; "
+                f"finish_reason={choice.finish_reason}; reasoning_content_chars={reasoning_len}; "
+                "increase LLM_MAX_TOKENS or reduce the prompt/chunk size"
+            )
+        return content
+
+    def _request_extra_body(self) -> Dict[str, object]:
+        if self.provider != "deepseek":
+            return {}
+        thinking = os.environ.get("DEEPSEEK_THINKING", "").strip().lower()
+        if thinking not in {"enabled", "disabled"}:
+            return {}
+        return {"thinking": {"type": thinking}}
 
 
 def parse_json_object(text: str) -> Dict[str, object]:

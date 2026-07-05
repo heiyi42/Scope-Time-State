@@ -1,0 +1,2 @@
+"""GroupMemBench external benchmark adapter."""
+
