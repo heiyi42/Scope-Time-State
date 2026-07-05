@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import dataclass
 import hashlib
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -1566,22 +1567,35 @@ def bucketed_claims_for_consolidation(
     ]
 
 
-def consolidate_claim_group(
-    client: DomainGraphLLMClient,
+StateGroupResult = Tuple[List[Dict[str, object]], List[Dict[str, object]], List[Dict[str, object]], Dict[str, object]]
+
+
+@dataclass(frozen=True)
+class StateGroupPlan:
+    group_name: str
+    selected_claims: List[Dict[str, object]]
+    source_events: List[GroupMessage]
+    system_prompt: str
+    user_prompt: str
+    prompt_chars: int
+    group_hash: str
+    children: Tuple["StateGroupPlan", ...] = ()
+    resumed_result: Optional[StateGroupResult] = None
+
+
+def build_state_group_plan(
     domain: str,
     scope: Dict[str, object],
-    scope_number: int,
     group_name: str,
     claims: Sequence[Dict[str, object]],
     messages: Sequence[GroupMessage],
     claim_limit: int,
     compact_events: bool,
-    max_prompt_chars: int = 0,
-    stage_artifact_root: Optional[Path] = None,
-    state_stage_hash: Optional[str] = None,
-    stage_resume: bool = False,
-    single_claim_short_circuit: bool = True,
-) -> Tuple[List[Dict[str, object]], List[Dict[str, object]], List[Dict[str, object]], Dict[str, object]]:
+    max_prompt_chars: int,
+    stage_artifact_root: Optional[Path],
+    state_stage_hash: Optional[str],
+    stage_resume: bool,
+) -> StateGroupPlan:
     selected_claims = recent_claims_for_consolidation(claims, messages, claim_limit)
     source_event_ids = {str(claim.get("event_id") or "") for claim in selected_claims}
     source_events = [message for message in messages if message.event_id in source_event_ids]
@@ -1607,38 +1621,16 @@ def consolidate_claim_group(
             )
             if resumed is not None:
                 print(f"  statefacet consolidation group={group_name} resumed", flush=True)
-                return resumed
-    if single_claim_short_circuit and len(selected_claims) == 1:
-        facets = [single_claim_statefacet(scope, selected_claims[0], messages)]
-        validation = {
-            "group": group_name,
-            "short_circuit": "single_claim_statefacet",
-            "input_claim_count": 1,
-            "selected_claim_count": 1,
-            "source_event_count": len(source_events),
-            "prompt_chars": prompt_chars,
-            "relation_count": 0,
-            "rejected_claim_count": 0,
-            "state_facet_count": len(facets),
-        }
-        if stage_artifact_root is not None and state_stage_hash and group_hash:
-            path = write_state_group_stage_artifact(
-                stage_root=stage_artifact_root,
-                domain=domain,
-                scope_number=scope_number,
-                scope_id=str(scope.get("scope_id") or ""),
-                group_name=group_name,
-                state_stage_hash=state_stage_hash,
-                group_hash=group_hash,
-                relations=[],
-                rejected_claims=[],
-                state_facets=facets,
-                validation=validation,
-            )
-            validation["stage_artifact_path"] = str(path)
-            validation["written"] = True
-        print(f"  statefacet consolidation group={group_name} single-claim short-circuit", flush=True)
-        return [], [], facets, validation
+                return StateGroupPlan(
+                    group_name=group_name,
+                    selected_claims=selected_claims,
+                    source_events=source_events,
+                    system_prompt=system_prompt,
+                    user_prompt=user_prompt,
+                    prompt_chars=prompt_chars,
+                    group_hash=group_hash,
+                    resumed_result=resumed,
+                )
     if max_prompt_chars > 0 and prompt_chars > max_prompt_chars and len(selected_claims) > 1:
         midpoint = max(1, len(selected_claims) // 2)
         split_claim_groups = [selected_claims[:midpoint], selected_claims[midpoint:]]
@@ -1647,16 +1639,10 @@ def consolidate_claim_group(
             f"claims={len(selected_claims)} split_groups={len(split_claim_groups)}",
             flush=True,
         )
-        combined_relations: List[Dict[str, object]] = []
-        combined_rejected: List[Dict[str, object]] = []
-        combined_facets: List[Dict[str, object]] = []
-        split_validations: List[Dict[str, object]] = []
-        for split_index, split_claims in enumerate(split_claim_groups, start=1):
-            relations, rejected, facets, validation = consolidate_claim_group(
-                client,
+        children = tuple(
+            build_state_group_plan(
                 domain,
                 scope,
-                scope_number,
                 f"{group_name}#{split_index}",
                 split_claims,
                 messages,
@@ -1666,70 +1652,111 @@ def consolidate_claim_group(
                 stage_artifact_root,
                 state_stage_hash,
                 stage_resume,
-                single_claim_short_circuit,
             )
-            combined_relations.extend(relations)
-            combined_rejected.extend(rejected)
-            combined_facets.extend(facets)
-            split_validations.append(validation)
+            for split_index, split_claims in enumerate(split_claim_groups, start=1)
+        )
+        return StateGroupPlan(
+            group_name=group_name,
+            selected_claims=selected_claims,
+            source_events=source_events,
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            prompt_chars=prompt_chars,
+            group_hash=group_hash,
+            children=children,
+        )
+    return StateGroupPlan(
+        group_name=group_name,
+        selected_claims=selected_claims,
+        source_events=source_events,
+        system_prompt=system_prompt,
+        user_prompt=user_prompt,
+        prompt_chars=prompt_chars,
+        group_hash=group_hash,
+    )
+
+
+def leaf_state_group_plans(plan: StateGroupPlan) -> List[StateGroupPlan]:
+    if plan.resumed_result is not None:
+        return []
+    if not plan.children:
+        return [plan]
+    leaves: List[StateGroupPlan] = []
+    for child in plan.children:
+        leaves.extend(leaf_state_group_plans(child))
+    return leaves
+
+
+def run_state_group_leaf(
+    client: DomainGraphLLMClient,
+    domain: str,
+    scope: Dict[str, object],
+    scope_number: int,
+    plan: StateGroupPlan,
+    messages: Sequence[GroupMessage],
+    stage_artifact_root: Optional[Path] = None,
+    state_stage_hash: Optional[str] = None,
+    single_claim_short_circuit: bool = True,
+) -> StateGroupResult:
+    if single_claim_short_circuit and len(plan.selected_claims) == 1:
+        facets = [single_claim_statefacet(scope, plan.selected_claims[0], messages)]
         validation = {
-            "group": group_name,
-            "split_reason": "prompt_chars",
-            "max_prompt_chars": max_prompt_chars,
-            "prompt_chars": prompt_chars,
-            "split_count": len(split_validations),
-            "selected_claim_count": len(selected_claims),
-            "source_event_count": len(source_events),
-            "relation_count": len(combined_relations),
-            "rejected_claim_count": len(combined_rejected),
-            "state_facet_count": len(combined_facets),
-            "split_validations": split_validations,
+            "group": plan.group_name,
+            "short_circuit": "single_claim_statefacet",
+            "input_claim_count": 1,
+            "selected_claim_count": 1,
+            "source_event_count": len(plan.source_events),
+            "prompt_chars": plan.prompt_chars,
+            "relation_count": 0,
+            "rejected_claim_count": 0,
+            "state_facet_count": len(facets),
         }
-        if stage_artifact_root is not None and state_stage_hash and group_hash:
+        if stage_artifact_root is not None and state_stage_hash and plan.group_hash:
             path = write_state_group_stage_artifact(
                 stage_root=stage_artifact_root,
                 domain=domain,
                 scope_number=scope_number,
                 scope_id=str(scope.get("scope_id") or ""),
-                group_name=group_name,
+                group_name=plan.group_name,
                 state_stage_hash=state_stage_hash,
-                group_hash=group_hash,
-                relations=combined_relations,
-                rejected_claims=combined_rejected,
-                state_facets=combined_facets,
+                group_hash=plan.group_hash,
+                relations=[],
+                rejected_claims=[],
+                state_facets=facets,
                 validation=validation,
             )
             validation["stage_artifact_path"] = str(path)
             validation["written"] = True
-        return combined_relations, combined_rejected, combined_facets, validation
+        print(f"  statefacet consolidation group={plan.group_name} single-claim short-circuit", flush=True)
+        return [], [], facets, validation
     print(
-        f"  statefacet consolidation group={group_name} claims={len(selected_claims)} "
-        f"source_events={len(source_events)}",
+        f"  statefacet consolidation group={plan.group_name} claims={len(plan.selected_claims)} "
+        f"source_events={len(plan.source_events)}",
         flush=True,
     )
     raw = client.complete_json(
-        system_prompt,
-        user_prompt,
+        plan.system_prompt,
+        plan.user_prompt,
         domain=domain,
         scope_number=scope_number,
         scope_id=str(scope.get("scope_id") or ""),
         stage="offline_statefacet_consolidation",
-        shard_name=f"group_{group_name}",
+        shard_name=f"group_{plan.group_name}",
     )
-    relations, rejected, facets, validation = normalize_scope_state(raw, scope, selected_claims, messages)
-    validation["group"] = group_name
-    validation["selected_claim_count"] = len(selected_claims)
-    validation["source_event_count"] = len(source_events)
-    validation["prompt_chars"] = prompt_chars
-    if stage_artifact_root is not None and state_stage_hash and group_hash:
+    relations, rejected, facets, validation = normalize_scope_state(raw, scope, plan.selected_claims, messages)
+    validation["group"] = plan.group_name
+    validation["selected_claim_count"] = len(plan.selected_claims)
+    validation["source_event_count"] = len(plan.source_events)
+    validation["prompt_chars"] = plan.prompt_chars
+    if stage_artifact_root is not None and state_stage_hash and plan.group_hash:
         path = write_state_group_stage_artifact(
             stage_root=stage_artifact_root,
             domain=domain,
             scope_number=scope_number,
             scope_id=str(scope.get("scope_id") or ""),
-            group_name=group_name,
+            group_name=plan.group_name,
             state_stage_hash=state_stage_hash,
-            group_hash=group_hash,
+            group_hash=plan.group_hash,
             relations=relations,
             rejected_claims=rejected,
             state_facets=facets,
@@ -1738,6 +1765,72 @@ def consolidate_claim_group(
         validation["stage_artifact_path"] = str(path)
         validation["written"] = True
     return relations, rejected, facets, validation
+
+
+def collect_state_group_result(
+    plan: StateGroupPlan,
+    completed_leaf_results: Mapping[str, StateGroupResult],
+    *,
+    domain: str,
+    scope: Dict[str, object],
+    scope_number: int,
+    max_prompt_chars: int,
+    stage_artifact_root: Optional[Path],
+    state_stage_hash: Optional[str],
+) -> StateGroupResult:
+    if plan.resumed_result is not None:
+        return plan.resumed_result
+    if not plan.children:
+        return completed_leaf_results[plan.group_name]
+    combined_relations: List[Dict[str, object]] = []
+    combined_rejected: List[Dict[str, object]] = []
+    combined_facets: List[Dict[str, object]] = []
+    split_validations: List[Dict[str, object]] = []
+    for child in plan.children:
+        relations, rejected, facets, validation = collect_state_group_result(
+            child,
+            completed_leaf_results,
+            domain=domain,
+            scope=scope,
+            scope_number=scope_number,
+            max_prompt_chars=max_prompt_chars,
+            stage_artifact_root=stage_artifact_root,
+            state_stage_hash=state_stage_hash,
+        )
+        combined_relations.extend(relations)
+        combined_rejected.extend(rejected)
+        combined_facets.extend(facets)
+        split_validations.append(validation)
+    validation = {
+        "group": plan.group_name,
+        "split_reason": "prompt_chars",
+        "max_prompt_chars": max_prompt_chars,
+        "prompt_chars": plan.prompt_chars,
+        "split_count": len(split_validations),
+        "selected_claim_count": len(plan.selected_claims),
+        "source_event_count": len(plan.source_events),
+        "relation_count": len(combined_relations),
+        "rejected_claim_count": len(combined_rejected),
+        "state_facet_count": len(combined_facets),
+        "split_validations": split_validations,
+    }
+    if stage_artifact_root is not None and state_stage_hash and plan.group_hash:
+        path = write_state_group_stage_artifact(
+            stage_root=stage_artifact_root,
+            domain=domain,
+            scope_number=scope_number,
+            scope_id=str(scope.get("scope_id") or ""),
+            group_name=plan.group_name,
+            state_stage_hash=state_stage_hash,
+            group_hash=plan.group_hash,
+            relations=combined_relations,
+            rejected_claims=combined_rejected,
+            state_facets=combined_facets,
+            validation=validation,
+        )
+        validation["stage_artifact_path"] = str(path)
+        validation["written"] = True
+    return combined_relations, combined_rejected, combined_facets, validation
 
 
 def consolidate_llm_state_for_scope(
@@ -1768,44 +1861,80 @@ def consolidate_llm_state_for_scope(
         groups = bucketed_claims_for_consolidation(claims, messages, claim_limit, per_group_limit, bucket_max_groups)
     else:
         groups = grouped_claims_for_consolidation(claims, messages, claim_limit, per_group_limit, max_groups)
-    worker_count = min(max(1, statefacet_workers), len(groups)) if groups else 1
+    group_plans = [
+        (
+            group_name,
+            build_state_group_plan(
+                domain,
+                scope,
+                group_name,
+                group_claims,
+                messages,
+                per_group_limit,
+                compact_events,
+                group_max_prompt_chars,
+                stage_artifact_root,
+                state_stage_hash,
+                stage_resume,
+            ),
+        )
+        for group_name, group_claims in groups
+    ]
+    leaf_plans: List[StateGroupPlan] = []
+    for _group_name, plan in group_plans:
+        leaf_plans.extend(leaf_state_group_plans(plan))
+    worker_count = min(max(1, statefacet_workers), len(leaf_plans)) if leaf_plans else 1
 
-    def run_one(group_name: str, group_claims: Sequence[Dict[str, object]]):
-        return consolidate_claim_group(
+    def run_one(plan: StateGroupPlan) -> StateGroupResult:
+        return run_state_group_leaf(
             client,
             domain,
             scope,
             scope_number,
-            group_name,
-            group_claims,
+            plan,
             messages,
-            per_group_limit,
-            compact_events,
-            group_max_prompt_chars,
             stage_artifact_root,
             state_stage_hash,
-            stage_resume,
             single_claim_short_circuit,
         )
 
-    group_results = []
-    if worker_count == 1:
-        for group_name, group_claims in groups:
-            group_results.append((group_name, run_one(group_name, group_claims)))
+    completed_leaf_results: Dict[str, StateGroupResult] = {}
+    if not leaf_plans:
+        pass
+    elif worker_count == 1:
+        for plan in leaf_plans:
+            completed_leaf_results[plan.group_name] = run_one(plan)
     else:
-        print(f"  statefacet consolidation parallel workers={worker_count} groups={len(groups)}", flush=True)
+        print(
+            f"  statefacet consolidation parallel workers={worker_count} "
+            f"groups={len(groups)} leaf_groups={len(leaf_plans)}",
+            flush=True,
+        )
         with ThreadPoolExecutor(max_workers=worker_count) as executor:
             futures = {
-                executor.submit(run_one, group_name, group_claims): group_name
-                for group_name, group_claims in groups
+                executor.submit(run_one, plan): plan.group_name
+                for plan in leaf_plans
             }
-            completed = {}
             for future in as_completed(futures):
                 group_name = futures[future]
-                completed[group_name] = future.result()
+                completed_leaf_results[group_name] = future.result()
                 print(f"  statefacet consolidation group={group_name} completed", flush=True)
-            for group_name, _group_claims in groups:
-                group_results.append((group_name, completed[group_name]))
+    group_results = [
+        (
+            group_name,
+            collect_state_group_result(
+                plan,
+                completed_leaf_results,
+                domain=domain,
+                scope=scope,
+                scope_number=scope_number,
+                max_prompt_chars=group_max_prompt_chars,
+                stage_artifact_root=stage_artifact_root,
+                state_stage_hash=state_stage_hash,
+            ),
+        )
+        for group_name, plan in group_plans
+    ]
 
     for _group_name, (relations, rejected, facets, validation) in group_results:
         all_relations.extend(relations)
@@ -1818,6 +1947,7 @@ def consolidate_llm_state_for_scope(
     return all_relations, all_rejected, all_facets, {
         "consolidation_mode": consolidation_mode,
         "group_count": len(groups),
+        "leaf_group_count": len(leaf_plans),
         "input_claim_count": len(claims),
         "relation_count": len(all_relations),
         "rejected_claim_count": len(all_rejected),
