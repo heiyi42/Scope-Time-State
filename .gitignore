@@ -1,8 +1,27 @@
 .DS_Store
+.AppleDouble
+.LSOverride
+
 .env
 .env.*
+.venv/
+venv/
+
 __pycache__/
 *.py[cod]
+*$py.class
+
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+*.log
+*.tmp
+*.duckdb
+tmp/
+**/.locks/
+**/row_checkpoints/
 
 # Generated benchmark artifacts are local by default. Commit only curated,
 # reproducibility-relevant snapshots listed below.
@@ -18,3 +37,16 @@ stamb_state_benchmark/output/*
 !stamb_state_benchmark/output/quality_report_v1_3.json
 !stamb_state_benchmark/output/semantic_duplicate_report_v1_3.json
 !stamb_state_benchmark/output/openai_embedding_duplicate_report_v1_3.json
+
+# Local graph/image exports.
+Design/Graph/
+
+# Downloaded external benchmark corpora and upstream source checkouts.
+Experiment/Other_BenchMark/Episodic-Memory/data/
+Experiment/Other_BenchMark/EverMemBench/dataset/
+Experiment/Other_BenchMark/EverMemBench/source/
+Experiment/Other_BenchMark/GroupMemBench/dataset/
+Experiment/Other_BenchMark/GroupMemBench/source/
+
+# Locally collected related-work PDFs. Existing tracked PDFs remain tracked.
+Relatedwork/*.pdf
