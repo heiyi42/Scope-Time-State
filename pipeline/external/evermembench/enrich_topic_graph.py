@@ -25,7 +25,7 @@ from pipeline.external.evermembench.graph_builder import (
     validate_graph,
     write_jsonl,
 )
-from pipeline.external.evermembench.loader import DATA_DIR, OUTPUT_DIR, load_topic_events
+from pipeline.external.evermembench.loader import DATA_DIR, GRAPH_OUTPUT_DIR, load_topic_events
 
 
 DERIVED_CLAIM_FIELDS = (
@@ -59,7 +59,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output-graph-dir",
         type=Path,
-        default=OUTPUT_DIR / "evermembench_topic_graph_llm_v3_temporal_effort/01",
+        default=GRAPH_OUTPUT_DIR / "evermembench_topic_graph_llm_v3_temporal_effort/01",
     )
     return parser.parse_args()
 

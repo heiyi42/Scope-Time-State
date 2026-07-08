@@ -21,7 +21,7 @@ if str(PROJECT_DIR) not in sys.path:
 
 from Experiment.run.common.io import load_dotenv
 from Experiment.run.common.llm_client import LLMClient, LLMRequestError, provider_config
-from pipeline.external.evermembench.loader import DATA_DIR, OUTPUT_DIR, EverMemEvent, load_topic_events
+from pipeline.external.evermembench.loader import CACHE_DIR, DATA_DIR, GRAPH_OUTPUT_DIR, EverMemEvent, load_topic_events
 
 
 NODE_TYPES = ("Episode/Event", "Claim", "StateFacet", "Entity/Scope", "Time")
@@ -224,12 +224,12 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build an offline STS graph for one EverMemBench topic.")
     parser.add_argument("--data-root", default=str(DATA_DIR))
     parser.add_argument("--topic", default="01")
-    parser.add_argument("--output-dir", default=str(OUTPUT_DIR / "evermembench_topic_graph_v1"))
+    parser.add_argument("--output-dir", default=str(GRAPH_OUTPUT_DIR / "evermembench_topic_graph_v1"))
     parser.add_argument("--claim-mode", choices=("llm", "heuristic", "none"), default="heuristic")
     parser.add_argument("--resolver-mode", choices=("llm", "heuristic"), default="heuristic")
     parser.add_argument("--provider", choices=("openai", "deepseek"), default="deepseek")
     parser.add_argument("--model", default=None, help="Optional model override, e.g. deepseek-v4-pro.")
-    parser.add_argument("--cache", default=str(OUTPUT_DIR / "llm_cache.evermembench_graph_builder.json"))
+    parser.add_argument("--cache", default=str(CACHE_DIR / "llm_cache.evermembench_graph_builder.json"))
     parser.add_argument("--no-cache", action="store_true")
     parser.add_argument("--max-tokens", type=int, default=4096)
     parser.add_argument("--message-chunk-size", type=int, default=16)

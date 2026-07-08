@@ -46,9 +46,9 @@ Keep them outside `pipeline.public` because STAMB public runners depend on `Publ
 - `Experiment/Other_BenchMark/LongMemEval-S/run_longmemeval_s.py` is a thin wrapper over
   `pipeline/external/longmemeval_s/`. Current diagnostic evidence includes a 60-case judged
   `scope_time_state_task_adapter` run.
-- `Experiment/Other_BenchMark/LoCoMo-QA/run_locomo_qa.py` is a thin wrapper over
-  `pipeline/external/locomo_qa/`. Current diagnostic evidence includes a 50-case per-type
-  memory-router run; open-domain and multi-hop remain the weak categories.
+- `Experiment/Other_BenchMark/LoCoMo-QA/run_locomo_graph_builder.py` builds one persistent
+  sample-level graph under `pipeline/external/locomo_qa/`. The old text-only task-adapter
+  runner is no longer the active LoCoMo path.
 - `Experiment/Other_BenchMark/STALE/run_stale.py` is a thin wrapper over
   `pipeline/external/stale/`. Current diagnostic evidence includes 10-scenario judged runs;
   T2 propagation and false-premise resistance remain weak.

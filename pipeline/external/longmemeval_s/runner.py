@@ -19,10 +19,12 @@ from Experiment.run.common.io import load_dotenv
 from Experiment.run.common.llm_client import LLMClient, LLMRequestError, provider_config
 from pipeline.external.longmemeval_s.adapters import TASK_TYPES, get_adapter
 from pipeline.external.longmemeval_s.adapters.base import TaskAdapter
+from pipeline.external.paths import EXTERNAL_CACHE_DIR, EXTERNAL_RESULT_DIR
 
 
 DATA_PATH = PROJECT_DIR / "Experiment/Other_BenchMark/LongMemEval-S/data/longmemeval_s_cleaned.json"
-OUTPUT_DIR = PROJECT_DIR / "stamb_state_benchmark/output"
+CACHE_DIR = EXTERNAL_CACHE_DIR
+RESULT_DIR = EXTERNAL_RESULT_DIR
 SUPPORTED_VARIANTS = (
     "bm25_session",
     "recent_sessions",
@@ -77,11 +79,11 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Override the judge model. Defaults to gpt-4o-2024-08-06 for OpenAI to match LongMemEval.",
     )
-    parser.add_argument("--judge-cache", default=str(OUTPUT_DIR / "llm_cache.longmemeval_s_judge.json"))
+    parser.add_argument("--judge-cache", default=str(CACHE_DIR / "llm_cache.longmemeval_s_judge.json"))
     parser.add_argument("--dry-run", action="store_true", help="Validate data and selected cases without LLM calls.")
     parser.add_argument("--list-tasks", action="store_true", help="Print supported LongMemEval-S task adapters.")
-    parser.add_argument("--output", default=str(OUTPUT_DIR / "results_longmemeval_s_smoke.json"))
-    parser.add_argument("--cache", default=str(OUTPUT_DIR / "llm_cache.longmemeval_s.json"))
+    parser.add_argument("--output", default=str(RESULT_DIR / "results_longmemeval_s_smoke.json"))
+    parser.add_argument("--cache", default=str(CACHE_DIR / "llm_cache.longmemeval_s.json"))
     return parser.parse_args()
 
 

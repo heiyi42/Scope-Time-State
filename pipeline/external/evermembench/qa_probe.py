@@ -15,7 +15,7 @@ PROJECT_DIR = Path(__file__).resolve().parents[3]
 if str(PROJECT_DIR) not in sys.path:
     sys.path.insert(0, str(PROJECT_DIR))
 
-from pipeline.external.evermembench.loader import DATA_DIR, OUTPUT_DIR
+from pipeline.external.evermembench.loader import DATA_DIR, GRAPH_OUTPUT_DIR
 
 
 TOKEN_RE = re.compile(r"[A-Za-z0-9_]+")
@@ -34,7 +34,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--graph-dir",
         type=Path,
-        default=OUTPUT_DIR / "evermembench_topic_graph_llm_v1/01",
+        default=GRAPH_OUTPUT_DIR / "evermembench_topic_graph_llm_v1/01",
         help="Directory containing nodes.jsonl and edges.jsonl for one topic.",
     )
     parser.add_argument("--mode", choices=("event_text", "graph_context"), default="graph_context")

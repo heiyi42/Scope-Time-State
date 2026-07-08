@@ -5,11 +5,17 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+from pipeline.external.paths import EXTERNAL_CACHE_DIR, EXTERNAL_GRAPH_DIR, EXTERNAL_OUTPUT_ROOT, EXTERNAL_RESULT_DIR
+
 
 PROJECT_DIR = Path(__file__).resolve().parents[3]
 EVERMEMBENCH_DIR = PROJECT_DIR / "Experiment/Other_BenchMark/EverMemBench"
 DATA_DIR = EVERMEMBENCH_DIR / "dataset"
-OUTPUT_DIR = PROJECT_DIR / "stamb_state_benchmark/output"
+OUTPUT_ROOT = EXTERNAL_OUTPUT_ROOT
+GRAPH_OUTPUT_DIR = EXTERNAL_GRAPH_DIR
+CACHE_DIR = EXTERNAL_CACHE_DIR
+RESULT_DIR = EXTERNAL_RESULT_DIR
+OUTPUT_DIR = RESULT_DIR
 
 
 @dataclass(frozen=True)
@@ -122,4 +128,3 @@ def load_topic_events(topic_id: str, data_root: Optional[Path] = None, event_lim
         sample = ", ".join(duplicates[:5])
         raise ValueError(f"duplicate EverMemBench event ids for topic {topic_id}: {sample}")
     return events
-

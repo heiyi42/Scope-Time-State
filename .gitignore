@@ -40,6 +40,7 @@ stamb_state_benchmark/output/*
 
 # Local graph/image exports.
 Design/Graph/
+Graph/output/
 
 # Downloaded external benchmark corpora and upstream source checkouts.
 Experiment/Other_BenchMark/Episodic-Memory/data/

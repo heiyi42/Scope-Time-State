@@ -6,13 +6,19 @@ import json
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 
+from pipeline.external.paths import EXTERNAL_CACHE_DIR, EXTERNAL_GRAPH_DIR, EXTERNAL_OUTPUT_ROOT, EXTERNAL_RESULT_DIR
+
 
 PROJECT_DIR = Path(__file__).resolve().parents[3]
 GROUPMEMBENCH_DIR = PROJECT_DIR / "Experiment/Other_BenchMark/GroupMemBench"
 DATA_DIR = GROUPMEMBENCH_DIR / "dataset/data/final"
 SOURCE_DIR = GROUPMEMBENCH_DIR / "source/GroupMemBench"
 QUESTION_DIR = SOURCE_DIR / "questions"
-OUTPUT_DIR = PROJECT_DIR / "stamb_state_benchmark/output"
+OUTPUT_ROOT = EXTERNAL_OUTPUT_ROOT
+GRAPH_OUTPUT_DIR = EXTERNAL_GRAPH_DIR
+CACHE_DIR = EXTERNAL_CACHE_DIR
+RESULT_DIR = EXTERNAL_RESULT_DIR
+OUTPUT_DIR = RESULT_DIR
 
 DOMAINS: Tuple[str, ...] = ("Finance", "Technology", "Healthcare", "Manufacturing")
 

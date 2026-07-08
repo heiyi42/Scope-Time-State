@@ -11,7 +11,13 @@ PROJECT_DIR = Path(__file__).resolve().parents[3]
 if str(PROJECT_DIR) not in sys.path:
     sys.path.insert(0, str(PROJECT_DIR))
 
-from pipeline.external.groupmembench.loader import DOMAINS, build_scope_inventory, load_domain_messages  # noqa: E402
+from pipeline.external.groupmembench.loader import (  # noqa: E402
+    CACHE_DIR,
+    DOMAINS,
+    GRAPH_OUTPUT_DIR,
+    build_scope_inventory,
+    load_domain_messages,
+)
 
 
 CLAIM_WORKERS = 12
@@ -36,7 +42,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--domain", choices=DOMAINS, required=True)
     parser.add_argument(
         "--output-root",
-        default=f"stamb_state_benchmark/output/groupmembench_domain_graph_llm_alldomains_{GRAPH_RECIPE_TAG}",
+        default=str(GRAPH_OUTPUT_DIR / f"groupmembench_domain_graph_llm_alldomains_{GRAPH_RECIPE_TAG}"),
     )
     parser.add_argument("--cache", default="")
     parser.add_argument("--provider", default=DEFAULT_PROVIDER)
@@ -153,10 +159,7 @@ def builder_command(
 def cache_for_recipe(base_cache: str, safe_domain: str, artifact_tag: str) -> str:
     if base_cache:
         return str(Path(base_cache))
-    return (
-        "stamb_state_benchmark/output/"
-        f"llm_cache.groupmembench_domain_graph_builder_{safe_domain}_{artifact_tag}.json"
-    )
+    return str(CACHE_DIR / f"llm_cache.groupmembench_domain_graph_builder_{safe_domain}_{artifact_tag}.json")
 
 
 def message_chunk_size_for_domain(domain: str, override: int) -> int:
@@ -205,7 +208,7 @@ def main() -> int:
     )
     source_artifacts: List[str] = []
     for name, offset, limit, scope_workers in batches:
-        output_dir = f"stamb_state_benchmark/output/groupmembench_domain_graph_llm_{safe_domain}_{artifact_tag}_{name}"
+        output_dir = str(GRAPH_OUTPUT_DIR / f"groupmembench_domain_graph_llm_{safe_domain}_{artifact_tag}_{name}")
         cache = cache_for_recipe(args.cache, safe_domain, artifact_tag)
         source_artifacts.append(f"{output_dir}/{args.domain}")
         print()

@@ -20,7 +20,7 @@ from pipeline.external.groupmembench.graph_store import (  # noqa: E402
     graph_manifest_for_question,
     write_graph_artifact,
 )
-from pipeline.external.groupmembench.loader import DOMAINS, OUTPUT_DIR, GroupQuestion  # noqa: E402
+from pipeline.external.groupmembench.loader import CACHE_DIR, DOMAINS, GRAPH_OUTPUT_DIR, GroupQuestion  # noqa: E402
 from pipeline.external.groupmembench.runner import (  # noqa: E402
     build_case_context,
     load_messages_by_domain,
@@ -58,8 +58,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--claim-top-k", type=int, default=32)
     parser.add_argument("--dry-run", action="store_true", help="Write graph skeleton artifacts without LLM graph construction.")
     parser.add_argument("--no-cache", action="store_true")
-    parser.add_argument("--cache", default=str(OUTPUT_DIR / "llm_cache.groupmembench_graph_builder.json"))
-    parser.add_argument("--output-dir", default=str(OUTPUT_DIR / "groupmembench_graph_store_smoke"))
+    parser.add_argument("--cache", default=str(CACHE_DIR / "llm_cache.groupmembench_graph_builder.json"))
+    parser.add_argument("--output-dir", default=str(GRAPH_OUTPUT_DIR / "groupmembench_graph_store_smoke"))
     return parser.parse_args()
 
 

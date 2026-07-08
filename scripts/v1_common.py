@@ -16,7 +16,7 @@ DEFAULT_V1_DIR = BENCHMARK_DIR / "data" / "v1"
 DEFAULT_V1_1_DIR = BENCHMARK_DIR / "data" / "v1_1"
 DEFAULT_V1_2_DIR = BENCHMARK_DIR / "data" / "v1_2"
 DEFAULT_V1_3_DIR = BENCHMARK_DIR / "data" / "v1_3"
-DEFAULT_OUTPUT_DIR = BENCHMARK_DIR / "output"
+DEFAULT_OUTPUT_DIR = PROJECT_DIR / "Graph" / "output" / "result"
 
 RAW_EVENT_FIELDS = (
     "event_id",

@@ -8,7 +8,7 @@ PROJECT_DIR = Path(__file__).resolve().parents[3]
 if str(PROJECT_DIR) not in sys.path:
     sys.path.insert(0, str(PROJECT_DIR))
 
-from pipeline.external.locomo_qa.runner import main  # noqa: E402
+from pipeline.external.locomo_qa.graph_builder import main  # noqa: E402
 
 
 if __name__ == "__main__":

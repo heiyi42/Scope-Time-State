@@ -100,7 +100,9 @@ Weak spots: `single-session-preference`, `multi-session`, and answer composition
 
 ### LoCoMo-QA
 
-Runner: `Experiment/Other_BenchMark/LoCoMo-QA/run_locomo_qa.py`
+Active graph builder: `Experiment/Other_BenchMark/LoCoMo-QA/run_locomo_graph_builder.py`
+
+The table below is legacy text-adapter diagnostic evidence and is no longer the active LoCoMo path.
 
 File: `stamb_state_benchmark/output/results_locomo_qa_10_per_type_gpt4omini_memory_router_raw.json`
 

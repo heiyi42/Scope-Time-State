@@ -7,10 +7,12 @@ from pathlib import Path
 import re
 from typing import Any, DefaultDict, Dict, List, Mapping, Optional, Sequence
 
+from pipeline.external.embedding_retrieval import OpenAIEmbeddingIndex
 from pipeline.external.evermembench.qa_probe import BM25Index, qa_query_text, read_jsonl
 
 
 RELATION_EDGE_TYPES = {"SUPERSEDES", "CORRECTS", "CONFLICTS_WITH"}
+EMBEDDING_RETRIEVAL_SCORE_WEIGHT = 8.0
 TIME_SOURCE_SCORE = {
     "explicit_text_time": 12.0,
     "relative_text_time": 8.0,
@@ -417,12 +419,145 @@ class STSGraphEvidenceIndex:
         self._effort_metric_doc_ids: List[str] = []
         self._effort_metric_docs: List[str] = []
         self._effort_metric_candidates: Dict[str, Dict[str, Any]] = {}
+        self._embedding_model: Optional[str] = None
+        self._embedding_state_index: Optional[OpenAIEmbeddingIndex] = None
+        self._embedding_scope_index: Optional[OpenAIEmbeddingIndex] = None
+        self._embedding_temporal_endpoint_index: Optional[OpenAIEmbeddingIndex] = None
+        self._embedding_effort_metric_index: Optional[OpenAIEmbeddingIndex] = None
+        self._embedding_candidate_k = 32
         self._load()
         self._build_state_index()
 
     @classmethod
     def load(cls, graph_dir: Path) -> "STSGraphEvidenceIndex":
         return cls(graph_dir)
+
+    def enable_embedding_retrieval(
+        self,
+        *,
+        model: str,
+        cache_path: Path,
+        namespace: str,
+        batch_size: int = 96,
+        base_url: Optional[str] = None,
+        targets: Optional[set[str]] = None,
+        candidate_k: int = 32,
+    ) -> None:
+        enabled_targets = {"state", "scope", "temporal", "effort"} if targets is None else targets
+        self._embedding_model = model
+        self._embedding_candidate_k = max(1, int(candidate_k))
+        if "state" in enabled_targets:
+            self._embedding_state_index = OpenAIEmbeddingIndex(
+                self._state_doc_ids,
+                self._state_docs,
+                model=model,
+                cache_path=cache_path,
+                namespace=f"{namespace}:state_facets",
+                batch_size=batch_size,
+                base_url=base_url,
+            )
+        if "scope" in enabled_targets:
+            self._embedding_scope_index = OpenAIEmbeddingIndex(
+                self._scope_doc_ids,
+                self._scope_docs,
+                model=model,
+                cache_path=cache_path,
+                namespace=f"{namespace}:scopes",
+                batch_size=batch_size,
+                base_url=base_url,
+            )
+        if "temporal" in enabled_targets:
+            self._embedding_temporal_endpoint_index = OpenAIEmbeddingIndex(
+                self._temporal_endpoint_doc_ids,
+                self._temporal_endpoint_docs,
+                model=model,
+                cache_path=cache_path,
+                namespace=f"{namespace}:temporal_endpoints",
+                batch_size=batch_size,
+                base_url=base_url,
+            )
+        if "effort" in enabled_targets:
+            self._embedding_effort_metric_index = OpenAIEmbeddingIndex(
+                self._effort_metric_doc_ids,
+                self._effort_metric_docs,
+                model=model,
+                cache_path=cache_path,
+                namespace=f"{namespace}:effort_metrics",
+                batch_size=batch_size,
+                base_url=base_url,
+            )
+
+    def _rank_index(
+        self,
+        bm25_index: Optional[BM25Index],
+        embedding_index: Optional[OpenAIEmbeddingIndex],
+        query: str,
+        top_k: int,
+        *,
+        allowed_doc_ids: Optional[Sequence[str]] = None,
+    ) -> List[Dict[str, Any]]:
+        if top_k <= 0:
+            return []
+        allowed = {str(doc_id) for doc_id in allowed_doc_ids or [] if doc_id}
+        rows: Dict[str, Dict[str, Any]] = {}
+        if bm25_index is not None:
+            for rank, hit in enumerate(bm25_index.search(query, top_k), start=1):
+                doc_id = str(hit.event_id)
+                if allowed and doc_id not in allowed:
+                    continue
+                rows[doc_id] = {
+                    "doc_id": doc_id,
+                    "lexical_score": float(hit.score),
+                    "lexical_rank": rank,
+                    "embedding_score": 0.0,
+                    "embedding_rank": None,
+                }
+        embedding_candidate_ids = list(rows)[: self._embedding_candidate_k]
+        if embedding_index is not None and embedding_candidate_ids:
+            for rank, hit in enumerate(
+                embedding_index.search(
+                    query,
+                    min(top_k, len(embedding_candidate_ids)),
+                    allowed_doc_ids=embedding_candidate_ids,
+                    max_candidates=self._embedding_candidate_k,
+                ),
+                start=1,
+            ):
+                doc_id = str(hit.doc_id)
+                row = rows.setdefault(
+                    doc_id,
+                    {
+                        "doc_id": doc_id,
+                        "lexical_score": 0.0,
+                        "lexical_rank": None,
+                        "embedding_score": 0.0,
+                        "embedding_rank": None,
+                    },
+                )
+                row["embedding_score"] = max(float(hit.score), 0.0)
+                row["embedding_rank"] = rank
+        for row in rows.values():
+            row["score"] = round(
+                float(row.get("lexical_score") or 0.0)
+                + EMBEDDING_RETRIEVAL_SCORE_WEIGHT * float(row.get("embedding_score") or 0.0),
+                6,
+            )
+            if row.get("lexical_rank") is not None and row.get("embedding_rank") is not None:
+                row["retrieval_source"] = "hybrid"
+            elif row.get("embedding_rank") is not None:
+                row["retrieval_source"] = "embedding"
+            else:
+                row["retrieval_source"] = "bm25"
+        ranked = sorted(
+            rows.values(),
+            key=lambda row: (
+                -float(row.get("score") or 0.0),
+                row.get("lexical_rank") if row.get("lexical_rank") is not None else 10**9,
+                row.get("embedding_rank") if row.get("embedding_rank") is not None else 10**9,
+                str(row.get("doc_id") or ""),
+            ),
+        )
+        return ranked[:top_k]
 
     def _load(self) -> None:
         nodes_path = self.graph_dir / "nodes.jsonl"
@@ -966,11 +1101,16 @@ class STSGraphEvidenceIndex:
         allowed_scopes = {str(scope_id) for scope_id in scope_ids or [] if scope_id}
         allowed_events = self.events_for_scopes(list(allowed_scopes)) if allowed_scopes else set()
         boosted_events = {str(event_id) for event_id in boost_event_ids or [] if event_id}
-        ranked = self._effort_metric_index.search(query, max(top_k * 20, top_k))
+        ranked = self._rank_index(
+            self._effort_metric_index,
+            self._embedding_effort_metric_index,
+            query,
+            max(top_k * 20, top_k),
+        )
         candidates: List[Dict[str, Any]] = []
         seen_claims: set[str] = set()
         for ranked_candidate in ranked:
-            candidate = dict(self._effort_metric_candidates.get(ranked_candidate.event_id, {}))
+            candidate = dict(self._effort_metric_candidates.get(str(ranked_candidate["doc_id"]), {}))
             if not candidate:
                 continue
             event_id = str(candidate.get("event_id") or "")
@@ -992,12 +1132,14 @@ class STSGraphEvidenceIndex:
                 unit_score += 8.0
             if "day" in lowered_query and metric_type == "duration_days":
                 unit_score += 2.0
-            candidate["bm25_score"] = ranked_candidate.score
+            candidate["bm25_score"] = round(float(ranked_candidate.get("lexical_score") or 0.0), 4)
+            candidate["embedding_score"] = round(float(ranked_candidate.get("embedding_score") or 0.0), 6)
+            candidate["retrieval_source"] = ranked_candidate.get("retrieval_source")
             candidate["graph_expansion_boost"] = graph_boost
             candidate["content_match_score"] = content_score
             candidate["content_match_trace"] = content_trace
             candidate["unit_score"] = unit_score
-            candidate["score"] = ranked_candidate.score + content_score + graph_boost + unit_score
+            candidate["score"] = float(ranked_candidate.get("score") or 0.0) + content_score + graph_boost + unit_score
             candidates.append(candidate)
         candidates.sort(key=lambda item: (-float(item.get("score") or 0.0), str(item.get("event_id") or "")))
         return candidates[:top_k]
@@ -1021,10 +1163,15 @@ class STSGraphEvidenceIndex:
             allowed_events = self.events_for_scopes(list(allowed_scopes)) if allowed_scopes else set()
         allowed_roles = {str(role) for role in allowed_time_roles or [] if role}
         boosted_events = {str(event_id) for event_id in boost_event_ids or [] if event_id}
-        ranked = self._temporal_endpoint_index.search(query, max(top_k * 12, top_k))
+        ranked = self._rank_index(
+            self._temporal_endpoint_index,
+            self._embedding_temporal_endpoint_index,
+            query,
+            max(top_k * 12, top_k),
+        )
         candidates: List[Dict[str, Any]] = []
         for ranked_candidate in ranked:
-            candidate = dict(self._temporal_endpoint_candidates.get(ranked_candidate.event_id, {}))
+            candidate = dict(self._temporal_endpoint_candidates.get(str(ranked_candidate["doc_id"]), {}))
             if not candidate:
                 continue
             if candidate.get("endpoint_kind") != endpoint_kind:
@@ -1060,7 +1207,9 @@ class STSGraphEvidenceIndex:
             ):
                 content_score *= 0.45
                 content_trace = {**content_trace, "non_initial_content_scale": 0.45}
-            candidate["bm25_score"] = ranked_candidate.score
+            candidate["bm25_score"] = round(float(ranked_candidate.get("lexical_score") or 0.0), 4)
+            candidate["embedding_score"] = round(float(ranked_candidate.get("embedding_score") or 0.0), 6)
+            candidate["retrieval_source"] = ranked_candidate.get("retrieval_source")
             graph_boost = 8.0 if str(candidate.get("event_id") or "") in boosted_events else 0.0
             time_source_score = TIME_SOURCE_SCORE.get(str(candidate.get("time_value_source") or ""), 0.0)
             time_source_score += float(candidate.get("time_explicitness_score") or 0.0)
@@ -1137,7 +1286,7 @@ class STSGraphEvidenceIndex:
             candidate["content_match_score"] = content_score
             candidate["content_match_trace"] = content_trace
             candidate["score"] = (
-                ranked_candidate.score
+                float(ranked_candidate.get("score") or 0.0)
                 + float(candidate.get("quality_score") or 0.0)
                 + graph_boost
                 + time_source_score
@@ -1259,9 +1408,16 @@ class STSGraphEvidenceIndex:
         if self._scope_index is None or top_k <= 0:
             return []
         candidates: List[Dict[str, Any]] = []
-        ranked_scopes = self._scope_index.search(query, max(len(self._scope_doc_ids), top_k))
+        scope_search_k = max(top_k * 12, top_k, 32)
+        ranked_scopes = self._rank_index(
+            self._scope_index,
+            self._embedding_scope_index,
+            query,
+            scope_search_k,
+        )
         for ranked in ranked_scopes:
-            scope = self.scopes.get(ranked.event_id, {})
+            scope_id = str(ranked["doc_id"])
+            scope = self.scopes.get(scope_id, {})
             scope_type = str(scope.get("scope_type") or "")
             if allowed_types and scope_type not in allowed_types:
                 continue
@@ -1271,21 +1427,23 @@ class STSGraphEvidenceIndex:
                 if part not in {None, ""}
             )
             label_score, label_trace = _endpoint_content_match_score(query, label_doc)
-            doc_score, doc_trace = _endpoint_content_match_score(query, self._scope_doc_by_id.get(ranked.event_id, ""))
+            doc_score, doc_trace = _endpoint_content_match_score(query, self._scope_doc_by_id.get(scope_id, ""))
             if scope_type == "task_object":
                 content_score = (2.0 * label_score) + min(doc_score, 8.0)
             elif scope_type in {"group", "project"}:
                 content_score = label_score + min(doc_score, 12.0)
             else:
                 content_score = label_score + min(doc_score, 6.0)
-            score = float(ranked.score) + content_score
+            score = float(ranked.get("score") or 0.0) + content_score
             candidates.append(
                 {
-                    "scope_id": ranked.event_id,
+                    "scope_id": scope_id,
                     "scope_type": scope_type,
                     "label": scope.get("label"),
                     "score": score,
-                    "lexical_score": ranked.score,
+                    "lexical_score": round(float(ranked.get("lexical_score") or 0.0), 4),
+                    "embedding_score": round(float(ranked.get("embedding_score") or 0.0), 6),
+                    "retrieval_source": ranked.get("retrieval_source"),
                     "content_match_score": content_score,
                     "content_match_trace": {
                         "label": label_trace,
@@ -1293,7 +1451,7 @@ class STSGraphEvidenceIndex:
                         "label_score": round(label_score, 4),
                         "document_score": round(doc_score, 4),
                     },
-                    "event_count": len(self.events_by_scope.get(ranked.event_id, [])),
+                    "event_count": len(self.events_by_scope.get(scope_id, [])),
                 }
             )
         if not candidates:
@@ -1458,10 +1616,15 @@ class STSGraphEvidenceIndex:
             return []
         allowed_scopes = {str(scope_id) for scope_id in scope_ids or [] if scope_id}
         allowed_time_roles = {str(role) for role in time_roles or [] if role}
-        ranked_states = self._state_index.search(query, search_k or max(limit * 12, limit))
+        ranked_states = self._rank_index(
+            self._state_index,
+            self._embedding_state_index,
+            query,
+            search_k or max(limit * 12, limit),
+        )
         selected: List[Dict[str, Any]] = []
         for rank, ranked in enumerate(ranked_states, start=1):
-            state_id = ranked.event_id
+            state_id = str(ranked["doc_id"])
             state = self.state_facets.get(state_id, {})
             state_scope_ids = self._state_scope_ids(state_id)
             state_scope = str(self.current_scope_by_state.get(state_id) or state.get("scope_id") or "")
@@ -1490,7 +1653,7 @@ class STSGraphEvidenceIndex:
                     time_role_score += 1.5
                 else:
                     time_role_score -= 0.5
-            total_score = float(ranked.score) + validity_score + time_role_score
+            total_score = float(ranked.get("score") or 0.0) + validity_score + time_role_score
             selected.append(
                 {
                     "state_facet_id": state_id,
@@ -1498,7 +1661,9 @@ class STSGraphEvidenceIndex:
                     "scope_ids": state_scope_ids,
                     "rank": rank,
                     "score": round(total_score, 4),
-                    "lexical_score": round(float(ranked.score), 4),
+                    "lexical_score": round(float(ranked.get("lexical_score") or 0.0), 4),
+                    "embedding_score": round(float(ranked.get("embedding_score") or 0.0), 6),
+                    "retrieval_source": ranked.get("retrieval_source"),
                     "validity_score": round(validity_score, 4),
                     "time_role_score": round(time_role_score, 4),
                     "status": status,
@@ -1592,9 +1757,15 @@ class STSGraphEvidenceIndex:
             query = query_text or qa_query_text(qa_item, include_options=include_options_in_query)
             search_k = max(state_search_k * 12, state_search_k)
             added_states = 0
-            for rank, ranked_state in enumerate(self._state_index.search(query, search_k), start=1):
+            for rank, ranked_state in enumerate(
+                self._rank_index(self._state_index, self._embedding_state_index, query, search_k),
+                start=1,
+            ):
                 before = len(state_facet_ids)
-                add_state(ranked_state.event_id, f"statefacet_bm25_rank={rank}")
+                add_state(
+                    ranked_state["doc_id"],
+                    f"statefacet_{ranked_state.get('retrieval_source') or 'bm25'}_rank={rank}",
+                )
                 if len(state_facet_ids) > before:
                     added_states += 1
                 if added_states >= state_search_k:

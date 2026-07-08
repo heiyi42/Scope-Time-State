@@ -19,10 +19,12 @@ from Experiment.run.common.io import load_dotenv  # noqa: E402
 from Experiment.run.common.llm_client import LLMClient, LLMRequestError, provider_config  # noqa: E402
 from pipeline.external.memconflict.adapters import TASK_TYPES, get_adapter  # noqa: E402
 from pipeline.external.memconflict.adapters.base import EVIDENCE_RESPONSE_SCHEMA, TaskAdapter  # noqa: E402
+from pipeline.external.paths import EXTERNAL_CACHE_DIR, EXTERNAL_RESULT_DIR  # noqa: E402
 
 
 DATA_PATH = PROJECT_DIR / "Experiment/Other_BenchMark/MemConflict/data/Step4_4.jsonl"
-OUTPUT_DIR = PROJECT_DIR / "stamb_state_benchmark/output"
+CACHE_DIR = EXTERNAL_CACHE_DIR
+RESULT_DIR = EXTERNAL_RESULT_DIR
 SUPPORTED_VARIANTS = (
     "bm25_memory",
     "recent_memory",
@@ -122,9 +124,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dry-run", action="store_true", help="Validate data and selected cases without LLM calls.")
     parser.add_argument("--list-tasks", action="store_true", help="Print supported MemConflict conflict adapters.")
     parser.add_argument("--no-cache", action="store_true")
-    parser.add_argument("--output", default=str(OUTPUT_DIR / "results_memconflict_smoke.json"))
-    parser.add_argument("--cache", default=str(OUTPUT_DIR / "llm_cache.memconflict.json"))
-    parser.add_argument("--judge-cache", default=str(OUTPUT_DIR / "llm_cache.memconflict_judge.json"))
+    parser.add_argument("--output", default=str(RESULT_DIR / "results_memconflict_smoke.json"))
+    parser.add_argument("--cache", default=str(CACHE_DIR / "llm_cache.memconflict.json"))
+    parser.add_argument("--judge-cache", default=str(CACHE_DIR / "llm_cache.memconflict_judge.json"))
     return parser.parse_args()
 
 

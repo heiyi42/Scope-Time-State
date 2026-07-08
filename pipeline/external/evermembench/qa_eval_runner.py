@@ -17,7 +17,8 @@ if str(PROJECT_DIR) not in sys.path:
 
 from Experiment.run.common.io import load_dotenv
 from Experiment.run.common.llm_client import LLMClient, provider_config
-from pipeline.external.evermembench.loader import DATA_DIR, EVERMEMBENCH_DIR, OUTPUT_DIR
+from pipeline.external.embedding_retrieval import OpenAIEmbeddingIndex
+from pipeline.external.evermembench.loader import CACHE_DIR, DATA_DIR, EVERMEMBENCH_DIR, GRAPH_OUTPUT_DIR, RESULT_DIR
 from pipeline.external.evermembench.qa_probe import (
     BM25Index,
     gold_event_ids,
@@ -38,7 +39,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run a small EverMemBench QA evaluation over a built topic graph.")
     parser.add_argument("--topic", default="01")
     parser.add_argument("--qa-path", type=Path, default=None)
-    parser.add_argument("--graph-dir", type=Path, default=OUTPUT_DIR / "evermembench_topic_graph_llm_v1/01")
+    parser.add_argument("--graph-dir", type=Path, default=GRAPH_OUTPUT_DIR / "evermembench_topic_graph_llm_v1/01")
     parser.add_argument("--limit-per-task", type=int, default=5, help="Rows per task; 0 means all available rows.")
     parser.add_argument(
         "--task-prefixes",
@@ -64,6 +65,26 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--fmh-endpoint-selector", choices=("llm", "none"), default="none")
     parser.add_argument("--fmh-endpoint-candidates", type=int, default=160)
+    parser.add_argument("--embedding-retrieval", choices=("none", "hybrid"), default="none")
+    parser.add_argument("--embedding-model", default="text-embedding-3-small")
+    parser.add_argument(
+        "--embedding-targets",
+        default="event,state,scope",
+        help="Comma-separated hybrid targets: event,state,scope,temporal,effort.",
+    )
+    parser.add_argument(
+        "--embedding-cache",
+        type=Path,
+        default=CACHE_DIR / "embedding_cache.evermembench_qa_eval.json",
+    )
+    parser.add_argument("--embedding-batch-size", type=int, default=24)
+    parser.add_argument(
+        "--embedding-candidate-k",
+        type=int,
+        default=32,
+        help="Maximum BM25 candidates per retrieval stage to rerank with embeddings.",
+    )
+    parser.add_argument("--embedding-base-url", default=None)
     parser.add_argument(
         "--mc-resolver",
         choices=("official", "sts"),
@@ -89,18 +110,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output",
         type=Path,
-        default=OUTPUT_DIR
+        default=RESULT_DIR
         / "evermembench_topic_graph_llm_v1/qa_eval_gpt4omini_5_per_task_deepseek_v4_flash_judge.sts_scope_first_graph_expansion_top10_max40_question_query.json",
     )
     parser.add_argument(
         "--answer-cache",
         type=Path,
-        default=OUTPUT_DIR / "evermembench_topic_graph_llm_v1/llm_cache.qa_eval.answer.gpt4omini.official_prompt.json",
+        default=CACHE_DIR / "evermembench_topic_graph_llm_v1/llm_cache.qa_eval.answer.gpt4omini.official_prompt.json",
     )
     parser.add_argument(
         "--judge-cache",
         type=Path,
-        default=OUTPUT_DIR / "evermembench_topic_graph_llm_v1/llm_cache.qa_eval.judge.deepseek_v4_flash.json",
+        default=CACHE_DIR / "evermembench_topic_graph_llm_v1/llm_cache.qa_eval.judge.deepseek_v4_flash.json",
     )
     return parser.parse_args()
 
@@ -144,6 +165,15 @@ def load_answer_client(provider: str, model_override: str, cache_path: Path, use
 
 def parse_scope_types(value: str) -> List[str]:
     return [part.strip() for part in value.split(",") if part.strip()]
+
+
+def parse_embedding_targets(value: str) -> set[str]:
+    allowed = {"event", "state", "scope", "temporal", "effort"}
+    targets = {part.strip() for part in value.split(",") if part.strip()}
+    unknown = targets - allowed
+    if unknown:
+        raise ValueError(f"unknown embedding targets: {sorted(unknown)}; allowed={sorted(allowed)}")
+    return targets
 
 
 def parse_task_prefixes(value: str) -> List[str]:
@@ -437,6 +467,79 @@ def retrieval_diagnostics(item: Mapping[str, Any], top_events: Sequence[str]) ->
         "gold_recall_at_k": len(hits) / max(1, len(gold)),
         "first_gold_rank": first_rank,
         "gold_hits_at_k": hits,
+    }
+
+
+def search_seed_events(
+    bm25_index: BM25Index,
+    embedding_index: Optional[OpenAIEmbeddingIndex],
+    query: str,
+    top_k: int,
+    *,
+    allowed_event_ids: Optional[Sequence[str]] = None,
+    embedding_candidate_k: int = 32,
+) -> tuple[List[str], Dict[str, Any]]:
+    allowed = {str(event_id) for event_id in allowed_event_ids or [] if event_id}
+    rows: Dict[str, Dict[str, Any]] = {}
+    for rank, hit in enumerate(bm25_index.search(query, max(top_k, top_k * 4)), start=1):
+        event_id = str(hit.event_id)
+        if allowed and event_id not in allowed:
+            continue
+        rows[event_id] = {
+            "event_id": event_id,
+            "lexical_score": float(hit.score),
+            "lexical_rank": rank,
+            "embedding_score": 0.0,
+            "embedding_rank": None,
+        }
+        if len(rows) >= max(top_k, top_k * 2) and embedding_index is None:
+            break
+    candidate_limit = max(top_k, int(embedding_candidate_k or 0)) if embedding_candidate_k > 0 else len(rows)
+    embedding_candidate_ids = list(rows)[:candidate_limit]
+    if embedding_index is not None and embedding_candidate_ids:
+        for rank, hit in enumerate(
+            embedding_index.search(
+                query,
+                min(max(top_k * 4, top_k), len(embedding_candidate_ids)),
+                allowed_doc_ids=embedding_candidate_ids,
+                max_candidates=candidate_limit,
+            ),
+            start=1,
+        ):
+            row = rows.setdefault(
+                str(hit.doc_id),
+                {
+                    "event_id": str(hit.doc_id),
+                    "lexical_score": 0.0,
+                    "lexical_rank": None,
+                    "embedding_score": 0.0,
+                    "embedding_rank": None,
+                },
+            )
+            row["embedding_score"] = max(float(hit.score), 0.0)
+            row["embedding_rank"] = rank
+    for row in rows.values():
+        row["score"] = round(float(row["lexical_score"]) + 8.0 * float(row["embedding_score"]), 6)
+        if row.get("lexical_rank") is not None and row.get("embedding_rank") is not None:
+            row["retrieval_source"] = "hybrid"
+        elif row.get("embedding_rank") is not None:
+            row["retrieval_source"] = "embedding"
+        else:
+            row["retrieval_source"] = "bm25"
+    ranked_rows = sorted(
+        rows.values(),
+        key=lambda row: (
+            -float(row.get("score") or 0.0),
+            row.get("lexical_rank") if row.get("lexical_rank") is not None else 10**9,
+            row.get("embedding_rank") if row.get("embedding_rank") is not None else 10**9,
+            str(row.get("event_id") or ""),
+        ),
+    )[:top_k]
+    return [str(row["event_id"]) for row in ranked_rows], {
+        "method": "bm25_embedding_hybrid" if embedding_index is not None else "bm25",
+        "embedding_candidate_limit": candidate_limit if embedding_index is not None else 0,
+        "embedding_candidate_count": len(embedding_candidate_ids) if embedding_index is not None else 0,
+        "top_scores": ranked_rows[:20],
     }
 
 
@@ -2335,6 +2438,7 @@ def resolve_fmh_endpoint(
     item: Mapping[str, Any],
     endpoint: Mapping[str, Any],
     seed_index: BM25Index,
+    embedding_event_index: Optional[OpenAIEmbeddingIndex],
     doc_by_event: Mapping[str, str],
     graph_evidence: STSGraphEvidenceIndex,
     scope_top_k: int,
@@ -2342,6 +2446,7 @@ def resolve_fmh_endpoint(
     state_search_k: int,
     max_context_events: int,
     temporal_top_k: int,
+    embedding_candidate_k: int,
 ) -> Dict[str, Any]:
     scope_query = str(endpoint.get("scope_query") or "")
     evidence_query = str(endpoint.get("evidence_query") or scope_query)
@@ -2370,8 +2475,14 @@ def resolve_fmh_endpoint(
     endpoint_seed_index = seed_index
     if scoped_doc_ids:
         endpoint_seed_index = BM25Index(scoped_doc_ids, [doc_by_event[event_id] for event_id in scoped_doc_ids])
-    ranked = endpoint_seed_index.search(evidence_query, min(temporal_top_k, max_context_events))
-    seed_events = [ranked_event.event_id for ranked_event in ranked]
+    seed_events, seed_trace = search_seed_events(
+        endpoint_seed_index,
+        embedding_event_index,
+        evidence_query,
+        min(temporal_top_k, max_context_events),
+        allowed_event_ids=scoped_doc_ids or None,
+        embedding_candidate_k=embedding_candidate_k,
+    )
     expanded = graph_evidence.expand(
         item,
         seed_events,
@@ -2515,6 +2626,7 @@ def resolve_fmh_endpoint(
             "strategy": "evermembench_fmh_endpoint_time_role_rules",
         },
         "seed_event_ids": seed_events,
+        "seed_retrieval": seed_trace,
         "graph_expansion": expanded.trace(),
         "candidate_event_boost_count": len(boosted_events),
         "top_candidates": candidates[:10],
@@ -2836,6 +2948,7 @@ def validate_fmh_pair(
 def try_fmh_long_interval_answer(
     item: Mapping[str, Any],
     seed_index: BM25Index,
+    embedding_event_index: Optional[OpenAIEmbeddingIndex],
     doc_by_event: Mapping[str, str],
     graph_evidence: Optional[STSGraphEvidenceIndex],
     scope_top_k: int,
@@ -2846,6 +2959,7 @@ def try_fmh_long_interval_answer(
     answer_client: Optional[LLMClient] = None,
     endpoint_selector: str = "none",
     endpoint_candidates: int = 160,
+    embedding_candidate_k: int = 32,
 ) -> tuple[Optional[str], Dict[str, Any]]:
     if graph_evidence is None:
         return None, {"enabled": False, "reason": "missing_graph_evidence"}
@@ -2858,6 +2972,7 @@ def try_fmh_long_interval_answer(
         item,
         endpoints["antecedent"],
         seed_index,
+        embedding_event_index,
         doc_by_event,
         graph_evidence,
         scope_top_k,
@@ -2865,11 +2980,13 @@ def try_fmh_long_interval_answer(
         state_search_k,
         max_context_events,
         endpoint_top_k,
+        embedding_candidate_k,
     )
     consequent = resolve_fmh_endpoint(
         item,
         endpoints["consequent"],
         seed_index,
+        embedding_event_index,
         doc_by_event,
         graph_evidence,
         scope_top_k,
@@ -2877,6 +2994,7 @@ def try_fmh_long_interval_answer(
         state_search_k,
         max_context_events,
         endpoint_top_k,
+        embedding_candidate_k,
     )
     same_person_required = fmh_requires_same_person(str(item.get("Q") or ""))
     same_responsible_next_task = same_person_required and fmh_next_independent_task_question(str(item.get("Q") or ""))
@@ -3127,6 +3245,7 @@ def try_fmh_long_interval_answer(
 def run_answer(
     item: Mapping[str, Any],
     index: BM25Index,
+    embedding_event_index: Optional[OpenAIEmbeddingIndex],
     doc_ids: Sequence[str],
     doc_by_event: Mapping[str, str],
     graph_evidence: Optional[STSGraphEvidenceIndex],
@@ -3146,6 +3265,7 @@ def run_answer(
     time_selector: str,
     fmh_endpoint_selector: str,
     fmh_endpoint_candidates: int,
+    embedding_candidate_k: int,
     mc_resolver: str,
 ) -> Dict[str, Any]:
     is_mc_sts = question_type(item) == "multiple_choice" and mc_resolver == "sts"
@@ -3157,6 +3277,7 @@ def run_answer(
     effective_scope_types = [str(scope_type) for scope_type in scope_type_policy["effective_scope_types"]]
     routed_scopes: List[Dict[str, Any]] = []
     scoped_event_ids: set[str] = set()
+    scoped_doc_ids: List[str] = []
     seed_index = index
     if scope_routing == "sts":
         if graph_evidence is None:
@@ -3167,14 +3288,20 @@ def run_answer(
         scoped_doc_ids = [event_id for event_id in doc_ids if event_id in scoped_event_ids]
         if scoped_doc_ids:
             seed_index = BM25Index(scoped_doc_ids, [doc_by_event[event_id] for event_id in scoped_doc_ids])
+    seed_events, seed_search_trace = search_seed_events(
+        seed_index,
+        embedding_event_index,
+        query_text,
+        top_k,
+        allowed_event_ids=scoped_doc_ids or None,
+        embedding_candidate_k=embedding_candidate_k,
+    )
     seed_retrieval_trace: Dict[str, Any] = {
-        "method": "bm25",
         "query": query_text,
         "option_text_used": retrieval_include_options,
         "requested_include_options_in_query": bool(include_options_in_query),
+        **seed_search_trace,
     }
-    ranked = seed_index.search(query_text, top_k)
-    seed_events = [event.event_id for event in ranked]
     scope_trace = {
         "mode": scope_routing,
         "route_query": scope_route_query,
@@ -3306,6 +3433,7 @@ def run_answer(
         temporal_answer, temporal_trace = try_fmh_long_interval_answer(
             item,
             seed_index,
+            embedding_event_index,
             doc_by_event,
             graph_evidence,
             scope_top_k,
@@ -3316,6 +3444,7 @@ def run_answer(
             answer_client=answer_client,
             endpoint_selector=fmh_endpoint_selector,
             endpoint_candidates=fmh_endpoint_candidates,
+            embedding_candidate_k=embedding_candidate_k,
         )
         graph_trace["fmh_long_interval"] = temporal_trace
         raw_answer = temporal_answer.strip() if temporal_answer else answer_client.complete_text("", answer_prompt(item, context, answer_prompts)).strip()
@@ -3424,6 +3553,7 @@ def main() -> None:
         raise RuntimeError(f"selected {len(selected)} rows, expected {expected_total}; counts={dict(counts)}")
     answer_prompts = load_answer_prompts(args.prompts_path)
     scope_types = parse_scope_types(args.scope_types)
+    embedding_targets = parse_embedding_targets(args.embedding_targets)
 
     doc_ids, documents, _ = load_graph_documents(args.graph_dir, "graph_context")
     doc_by_event = dict(zip(doc_ids, documents))
@@ -3433,6 +3563,29 @@ def main() -> None:
         if args.graph_expansion == "sts" or args.scope_routing == "sts"
         else None
     )
+    embedding_event_index: Optional[OpenAIEmbeddingIndex] = None
+    if args.embedding_retrieval == "hybrid":
+        embedding_namespace = f"evermembench:{args.graph_dir}"
+        if "event" in embedding_targets:
+            embedding_event_index = OpenAIEmbeddingIndex(
+                doc_ids,
+                documents,
+                model=args.embedding_model,
+                cache_path=args.embedding_cache,
+                namespace=f"{embedding_namespace}:events",
+                batch_size=args.embedding_batch_size,
+                base_url=args.embedding_base_url,
+            )
+        if graph_evidence is not None:
+            graph_evidence.enable_embedding_retrieval(
+                model=args.embedding_model,
+                cache_path=args.embedding_cache,
+                namespace=f"{embedding_namespace}:graph",
+                batch_size=args.embedding_batch_size,
+                base_url=args.embedding_base_url,
+                targets=embedding_targets - {"event"},
+                candidate_k=args.embedding_candidate_k,
+            )
 
     answer_client = load_answer_client(args.answer_provider, args.answer_model, args.answer_cache, not args.no_cache)
     judge_client = load_answer_client(args.judge_provider, args.judge_model, args.judge_cache, not args.no_cache)
@@ -3449,6 +3602,9 @@ def main() -> None:
         f"time_selector={args.time_selector} "
         f"fmh_endpoint_selector={args.fmh_endpoint_selector} fmh_endpoint_candidates={args.fmh_endpoint_candidates} "
         f"graph_retriever=sts_generic_graphrag "
+        f"embedding_retrieval={args.embedding_retrieval} embedding_model={args.embedding_model if args.embedding_retrieval == 'hybrid' else 'none'} "
+        f"embedding_targets={sorted(embedding_targets) if args.embedding_retrieval == 'hybrid' else []} "
+        f"embedding_candidate_k={args.embedding_candidate_k if args.embedding_retrieval == 'hybrid' else 0} "
         f"mc_resolver={args.mc_resolver} "
         f"include_options_in_query={args.include_options_in_query}",
         flush=True,
@@ -3460,6 +3616,7 @@ def main() -> None:
         lambda item: run_answer(
             item,
             index,
+            embedding_event_index,
             doc_ids,
             doc_by_event,
             graph_evidence,
@@ -3479,6 +3636,7 @@ def main() -> None:
             args.time_selector,
             args.fmh_endpoint_selector,
             args.fmh_endpoint_candidates,
+            args.embedding_candidate_k,
             args.mc_resolver,
         ),
     )
@@ -3518,6 +3676,11 @@ def main() -> None:
             "fmh_endpoint_selector": args.fmh_endpoint_selector,
             "fmh_endpoint_candidates": args.fmh_endpoint_candidates,
             "graph_retriever": "sts_generic_graphrag",
+            "embedding_retrieval": args.embedding_retrieval,
+            "embedding_model": args.embedding_model if args.embedding_retrieval == "hybrid" else None,
+            "embedding_targets": sorted(embedding_targets) if args.embedding_retrieval == "hybrid" else [],
+            "embedding_cache": str(args.embedding_cache) if args.embedding_retrieval == "hybrid" else None,
+            "embedding_candidate_k": args.embedding_candidate_k if args.embedding_retrieval == "hybrid" else 0,
             "task_label_used_for_retrieval": False,
             "option_text_used_for_sts_retrieval": False,
             "mc_resolver": args.mc_resolver,

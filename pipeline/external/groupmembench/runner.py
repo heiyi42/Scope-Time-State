@@ -18,10 +18,11 @@ from Experiment.run.common.llm_client import LLMClient, LLMRequestError, provide
 from pipeline.external.groupmembench.adapters import TASK_TYPES, get_adapter  # noqa: E402
 from pipeline.external.groupmembench.judging import judge_answer, summarize  # noqa: E402
 from pipeline.external.groupmembench.loader import (  # noqa: E402
+    CACHE_DIR,
     DOMAINS,
-    OUTPUT_DIR,
     GroupMessage,
     GroupQuestion,
+    RESULT_DIR,
     build_scope_inventory,
     filter_messages_for_scope,
     load_domain_messages,
@@ -68,14 +69,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dry-run", action="store_true", help="Validate routing/retrieval/graph skeleton without LLM calls.")
     parser.add_argument("--list-tasks", action="store_true")
     parser.add_argument("--no-cache", action="store_true")
-    parser.add_argument("--output", default=str(OUTPUT_DIR / "results_groupmembench_smoke.json"))
-    parser.add_argument("--cache", default=str(OUTPUT_DIR / "llm_cache.groupmembench.json"))
+    parser.add_argument("--output", default=str(RESULT_DIR / "results_groupmembench_smoke.json"))
+    parser.add_argument("--cache", default=str(CACHE_DIR / "llm_cache.groupmembench.json"))
     parser.add_argument(
         "--graph-cache",
         default=None,
         help="Cache for graph construction stages. Defaults to --cache when --graph-provider is omitted.",
     )
-    parser.add_argument("--judge-cache", default=str(OUTPUT_DIR / "llm_cache.groupmembench_judge.json"))
+    parser.add_argument("--judge-cache", default=str(CACHE_DIR / "llm_cache.groupmembench_judge.json"))
     return parser.parse_args()
 
 

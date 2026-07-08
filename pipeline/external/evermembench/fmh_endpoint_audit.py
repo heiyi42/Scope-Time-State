@@ -15,13 +15,13 @@ PROJECT_DIR = Path(__file__).resolve().parents[3]
 if str(PROJECT_DIR) not in sys.path:
     sys.path.insert(0, str(PROJECT_DIR))
 
-from pipeline.external.evermembench.loader import DATA_DIR
+from pipeline.external.evermembench.loader import DATA_DIR, RESULT_DIR
 from pipeline.external.evermembench.qa_probe import expand_message_index, group_key
 
 
 DEFAULT_RESULTS = (
-    PROJECT_DIR
-    / "stamb_state_benchmark/output/evermembench_topic_graph_llm_v5_subject_task_object"
+    RESULT_DIR
+    / "evermembench_topic_graph_llm_v5_subject_task_object"
     / "qa_eval_topic02_fmh_deepseek_v4_flash_v5.json"
 )
 

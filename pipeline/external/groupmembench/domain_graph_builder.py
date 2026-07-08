@@ -37,8 +37,9 @@ from pipeline.external.groupmembench.graph_schema import (  # noqa: E402
 )
 from pipeline.external.groupmembench.graph_store import load_graph_artifact, safe_path_part, write_graph_artifact  # noqa: E402
 from pipeline.external.groupmembench.loader import (  # noqa: E402
+    CACHE_DIR,
     DOMAINS,
-    OUTPUT_DIR,
+    GRAPH_OUTPUT_DIR,
     GroupMessage,
     build_scope_inventory,
     conversation_path,
@@ -351,11 +352,11 @@ class DomainGraphLLMClient:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build one offline GroupMemBench graph artifact per domain corpus.")
     parser.add_argument("--domains", nargs="+", choices=DOMAINS, default=["Finance"])
-    parser.add_argument("--output-dir", default=str(OUTPUT_DIR / "groupmembench_domain_graph_v1"))
+    parser.add_argument("--output-dir", default=str(GRAPH_OUTPUT_DIR / "groupmembench_domain_graph_v1"))
     parser.add_argument("--claim-mode", choices=("llm", "heuristic", "none"), default="llm")
     parser.add_argument("--provider", choices=("openai", "deepseek"), default="deepseek")
     parser.add_argument("--model", default=None, help="Optional model override for LLM graph construction.")
-    parser.add_argument("--cache", default=str(OUTPUT_DIR / "llm_cache.groupmembench_domain_graph_builder.json"))
+    parser.add_argument("--cache", default=str(CACHE_DIR / "llm_cache.groupmembench_domain_graph_builder.json"))
     parser.add_argument(
         "--claim-provider",
         choices=("openai", "deepseek"),

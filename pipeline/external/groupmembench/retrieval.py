@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections import Counter
 import math
 import re
-from typing import Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 from pipeline.external.groupmembench.adapters.base import TaskAdapter
 from pipeline.external.groupmembench.loader import GroupMessage, GroupQuestion, ScopeNode, filter_messages_for_scope, scope_id_for
@@ -13,6 +13,8 @@ from pipeline.external.groupmembench.routing import ScopeRoute, score_scope, wit
 TOKEN_RE = re.compile(r"[A-Za-z0-9_]+")
 DATE_RE = re.compile(r"\b(?:20\d{2}-\d{2}-\d{2}|jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b", re.I)
 RELATIVE_TIME_RE = re.compile(r"\b(?:today|tomorrow|tonight|eod|end of day|friday|thursday|wednesday|tuesday|monday|saturday|sunday)\b", re.I)
+DEFAULT_EMBEDDING_MESSAGE_SCORE_WEIGHT = 3.0
+DEFAULT_EMBEDDING_SCOPE_SCORE_WEIGHT = 2.0
 
 
 def tokenized(text: object) -> List[str]:
@@ -333,6 +335,8 @@ def ranked_messages(
     adapter: TaskAdapter,
     source_anchor: str = "",
     routed_time_role: Optional[str] = None,
+    embedding_scores: Optional[Mapping[str, float]] = None,
+    embedding_score_weight: float = DEFAULT_EMBEDDING_MESSAGE_SCORE_WEIGHT,
 ) -> List[Tuple[float, float, float, int, GroupMessage, List[str]]]:
     query = f"{question.asking_user_id} {question.question}".strip()
     documents = [document_text(message, adapter) for message in messages]
@@ -341,7 +345,14 @@ def ranked_messages(
     for index, (message, base_score) in enumerate(zip(messages, base_scores)):
         cue_boost, reasons = task_cue_boost(message, question, adapter, routed_time_role)
         anchor_boost = source_anchor_boost(message, source_anchor)
-        total = base_score + cue_boost + anchor_boost
+        embedding_boost = 0.0
+        if embedding_scores:
+            embedding_boost = max(0.0, embedding_score_weight) * max(
+                float(embedding_scores.get(message.event_id, 0.0)), 0.0
+            )
+            if embedding_boost:
+                reasons = [*reasons, "embedding_hit"]
+        total = base_score + cue_boost + anchor_boost + embedding_boost
         ranked.append((total, base_score, cue_boost + anchor_boost, index, message, reasons))
     ranked.sort(key=lambda item: (-item[0], item[4].timestamp, item[3]))
     return ranked
@@ -362,9 +373,20 @@ def refine_scope_route_with_evidence(
     scopes: Sequence[ScopeNode],
     candidate_k: int,
     evidence_k: int,
+    message_embedding_scores: Optional[Mapping[str, float]] = None,
+    scope_embedding_scores: Optional[Mapping[str, float]] = None,
+    message_embedding_score_weight: float = DEFAULT_EMBEDDING_MESSAGE_SCORE_WEIGHT,
+    scope_embedding_score_weight: float = DEFAULT_EMBEDDING_SCOPE_SCORE_WEIGHT,
 ) -> Tuple[ScopeRoute, Dict[str, object]]:
     source_anchor = question.asking_user_id if adapter.source_anchor_required else ""
-    global_ranked = ranked_messages(messages, question, adapter, source_anchor="")
+    global_ranked = ranked_messages(
+        messages,
+        question,
+        adapter,
+        source_anchor="",
+        embedding_scores=message_embedding_scores,
+        embedding_score_weight=message_embedding_score_weight,
+    )
     top_global = global_ranked[: max(1, evidence_k)]
     evidence_by_scope: Dict[Tuple[str, str, str, str], List[Tuple[float, float, float, int, GroupMessage, List[str]]]] = {}
     for item in top_global:
@@ -375,7 +397,8 @@ def refine_scope_route_with_evidence(
     for index, scope in enumerate(scopes):
         lexical = score_scope(question, scope)
         evidence = score_messages_for_scope(evidence_by_scope.get((scope.domain, scope.channel, scope.phase_name, scope.topic), []))
-        total = lexical + (0.35 * evidence)
+        scope_embedding = max(float((scope_embedding_scores or {}).get(scope.scope_id, 0.0)), 0.0)
+        total = lexical + (0.35 * evidence) + (max(0.0, scope_embedding_score_weight) * scope_embedding)
         scored.append((total, lexical, evidence, index, scope))
     scored.sort(key=lambda item: (-item[0], -item[1], -item[2], -item[4].event_count, item[3]))
 
@@ -423,6 +446,7 @@ def refine_scope_route_with_evidence(
         payload["route_score"] = round(total, 4)
         payload["lexical_scope_score"] = round(lexical, 4)
         payload["evidence_scope_score"] = round(evidence, 4)
+        payload["embedding_scope_score"] = round(float((scope_embedding_scores or {}).get(scope.scope_id, 0.0)), 6)
         candidate_scopes.append(payload)
 
     route = ScopeRoute(
@@ -440,6 +464,10 @@ def refine_scope_route_with_evidence(
         "query_state_target_terms": list(target_scope.state_target_terms),
         "target_lexical_scope_score": round(best_lexical, 4),
         "target_evidence_scope_score": round(best_evidence, 4),
+        "target_embedding_scope_score": round(float((scope_embedding_scores or {}).get(best_scope.scope_id, 0.0)), 6),
+        "embedding_retrieval_used": bool(message_embedding_scores or scope_embedding_scores),
+        "embedding_message_score_weight": round(max(0.0, message_embedding_score_weight), 4),
+        "embedding_scope_score_weight": round(max(0.0, scope_embedding_score_weight), 4),
         "global_evidence_top_scores": [
             {
                 "event_id": item[4].event_id,
@@ -447,6 +475,7 @@ def refine_scope_route_with_evidence(
                 "score": round(item[0], 6),
                 "base_score": round(item[1], 6),
                 "boost": round(item[2], 6),
+                "embedding_score": round(float((message_embedding_scores or {}).get(item[4].event_id, 0.0)), 6),
                 "timestamp": item[4].timestamp,
                 "author": item[4].author,
                 "reasons": item[5],
@@ -464,6 +493,8 @@ def select_graph_build_messages(
     route: ScopeRoute,
     event_limit: int,
     routed_time_role: Optional[str] = None,
+    embedding_scores: Optional[Mapping[str, float]] = None,
+    embedding_score_weight: float = DEFAULT_EMBEDDING_MESSAGE_SCORE_WEIGHT,
 ) -> Tuple[List[GroupMessage], Dict[str, object]]:
     scoped = chronological(scoped_messages)
     if event_limit <= 0 or event_limit >= len(scoped):
@@ -475,7 +506,15 @@ def select_graph_build_messages(
             "selected_event_reasons": {message.event_id: ["full_scope"] for message in scoped},
             "top_scores": [],
         }
-    ranked = ranked_messages(scoped, question, adapter, route.source_anchor, routed_time_role)
+    ranked = ranked_messages(
+        scoped,
+        question,
+        adapter,
+        route.source_anchor,
+        routed_time_role,
+        embedding_scores,
+        embedding_score_weight=embedding_score_weight,
+    )
     by_original_index = {item[4].event_id: item[3] for item in ranked}
     selected_ids: List[str] = []
     selection_reasons: Dict[str, List[str]] = {}
@@ -527,6 +566,7 @@ def select_graph_build_messages(
             "score": round(item[0], 6),
             "base_score": round(item[1], 6),
             "boost": round(item[2], 6),
+            "embedding_score": round(float((embedding_scores or {}).get(item[4].event_id, 0.0)), 6),
             "timestamp": item[4].timestamp,
             "author": item[4].author,
             "reasons": item[5],
@@ -548,6 +588,7 @@ def select_graph_build_messages(
             for event_id in selected_ids
             if event_id in by_original_index
         },
+        "embedding_message_score_weight": round(max(0.0, embedding_score_weight), 4),
         "top_scores": debug_scores,
     }
 

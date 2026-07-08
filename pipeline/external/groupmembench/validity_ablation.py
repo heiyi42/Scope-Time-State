@@ -19,7 +19,7 @@ from Experiment.run.common.llm_client import LLMClient, LLMRequestError, provide
 from pipeline.external.groupmembench.adapters import TASK_TYPES, get_adapter  # noqa: E402
 from pipeline.external.groupmembench.adapters.base import TaskAdapter  # noqa: E402
 from pipeline.external.groupmembench.judging import judge_answer, mean  # noqa: E402
-from pipeline.external.groupmembench.loader import DOMAINS, OUTPUT_DIR, GroupMessage, GroupQuestion  # noqa: E402
+from pipeline.external.groupmembench.loader import CACHE_DIR, DOMAINS, GroupMessage, GroupQuestion, RESULT_DIR  # noqa: E402
 from pipeline.external.groupmembench.prompts import (  # noqa: E402
     state_selection_system_prompt,
     state_selection_user_prompt,
@@ -72,14 +72,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--claim-chunk-size", type=int, default=16)
     parser.add_argument("--claim-top-k", type=int, default=32)
     parser.add_argument("--no-cache", action="store_true")
-    parser.add_argument("--output", default=str(OUTPUT_DIR / "results_groupmembench_validity_ablation.json"))
-    parser.add_argument("--cache", default=str(OUTPUT_DIR / "llm_cache.groupmembench_validity_ablation.json"))
+    parser.add_argument("--output", default=str(RESULT_DIR / "results_groupmembench_validity_ablation.json"))
+    parser.add_argument("--cache", default=str(CACHE_DIR / "llm_cache.groupmembench_validity_ablation.json"))
     parser.add_argument(
         "--validity-cache",
         default=None,
         help="Cache for the validity-stage client. Defaults to --cache when --validity-provider is omitted.",
     )
-    parser.add_argument("--judge-cache", default=str(OUTPUT_DIR / "llm_cache.groupmembench_validity_ablation_judge.json"))
+    parser.add_argument("--judge-cache", default=str(CACHE_DIR / "llm_cache.groupmembench_validity_ablation_judge.json"))
     return parser.parse_args()
 
 
