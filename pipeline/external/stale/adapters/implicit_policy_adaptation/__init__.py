@@ -1,2 +1,0 @@
-"""Implicit Policy Adaptation adapter."""
-

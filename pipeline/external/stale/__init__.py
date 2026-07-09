@@ -1,2 +1,0 @@
-"""Official STALE benchmark adapter."""
-

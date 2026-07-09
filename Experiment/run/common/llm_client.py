@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 from threading import RLock
 import time
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Sequence, Tuple
 
 
 class LLMRequestError(RuntimeError):
@@ -141,14 +141,52 @@ class LLMClient:
                 self.cache_path.write_text(cache_text)
         return content
 
+    def complete_text_messages(self, messages: Sequence[Dict[str, str]]) -> str:
+        message_rows = [{"role": str(item["role"]), "content": str(item["content"])} for item in messages]
+        cache_key = hashlib.sha256(
+            json.dumps(
+                {
+                    "provider": self.provider,
+                    "model": self.model,
+                    "api_base": self.api_base,
+                    "max_tokens": self.max_tokens,
+                    "extra_body": self.extra_body,
+                    "response_mode": "text_messages",
+                    "messages": message_rows,
+                },
+                ensure_ascii=False,
+                sort_keys=True,
+            ).encode("utf-8")
+        ).hexdigest()
+        if self.use_cache:
+            with self._cache_lock:
+                cached = self.cache.get(cache_key)
+                if isinstance(cached, dict) and isinstance(cached.get("content"), str):
+                    return str(cached["content"])
+
+        content = self._call_chat_messages(message_rows, json_mode=False)
+
+        if self.use_cache:
+            with self._cache_lock:
+                next_cache = dict(self.cache)
+                next_cache[cache_key] = {"content": content}
+                cache_text = json.dumps(next_cache, ensure_ascii=False, indent=2)
+                self.cache = next_cache
+                self.cache_path.parent.mkdir(parents=True, exist_ok=True)
+                self.cache_path.write_text(cache_text)
+        return content
+
     def _call_chat(self, system_prompt: str, user_prompt: str, json_mode: bool) -> str:
         messages = []
         if system_prompt.strip():
             messages.append({"role": "system", "content": system_prompt})
         messages.append({"role": "user", "content": user_prompt})
+        return self._call_chat_messages(messages, json_mode=json_mode)
+
+    def _call_chat_messages(self, messages: Sequence[Dict[str, str]], json_mode: bool) -> str:
         request: Dict[str, object] = {
             "model": self.model,
-            "messages": messages,
+            "messages": list(messages),
             "temperature": 0,
             "max_tokens": self.max_tokens,
         }

@@ -90,7 +90,19 @@ def parse_args() -> argparse.Namespace:
         "--embedding-candidate-k",
         type=int,
         default=32,
-        help="Maximum lexical candidates per message/scope stage to rerank with embeddings.",
+        help="Backward-compatible maximum lexical candidates per message/scope stage to rerank with embeddings.",
+    )
+    parser.add_argument(
+        "--event-embedding-candidate-k",
+        type=int,
+        default=0,
+        help="Maximum lexical event/message candidates to rerank with embeddings. 0 uses --embedding-candidate-k.",
+    )
+    parser.add_argument(
+        "--scope-embedding-candidate-k",
+        type=int,
+        default=0,
+        help="Maximum lexical scope candidates to rerank with embeddings. 0 uses --embedding-candidate-k.",
     )
     parser.add_argument(
         "--embedding-message-weight",
@@ -213,7 +225,9 @@ def embedding_scores_for_domain_query(
     query = _embedding_query(question)
     namespace = f"groupmembench:{artifact.root}"
     targets = parse_embedding_targets(args.embedding_targets)
-    candidate_limit = max(1, int(args.embedding_candidate_k))
+    fallback_candidate_limit = max(1, int(args.embedding_candidate_k))
+    event_candidate_limit = max(1, int(args.event_embedding_candidate_k or fallback_candidate_limit))
+    scope_candidate_limit = max(1, int(args.scope_embedding_candidate_k or fallback_candidate_limit))
     message_hits = []
     scope_hits = []
     candidate_message_ids: List[str] = []
@@ -230,7 +244,7 @@ def embedding_scores_for_domain_query(
             batch_size=args.embedding_batch_size,
             base_url=args.embedding_base_url,
         )
-        candidate_message_budget = min(max(args.scope_evidence_k, args.graph_event_limit, 32), candidate_limit)
+        candidate_message_budget = min(max(args.scope_evidence_k, args.graph_event_limit, 32), event_candidate_limit)
         candidate_message_ids = [
             item[4].event_id
             for item in ranked_messages(messages, question, adapter)[: min(len(messages), candidate_message_budget)]
@@ -239,7 +253,7 @@ def embedding_scores_for_domain_query(
             query,
             len(candidate_message_ids),
             allowed_doc_ids=candidate_message_ids,
-            max_candidates=candidate_limit,
+            max_candidates=event_candidate_limit,
         )
 
     if "scope" in targets:
@@ -253,7 +267,7 @@ def embedding_scores_for_domain_query(
             batch_size=args.embedding_batch_size,
             base_url=args.embedding_base_url,
         )
-        candidate_scope_budget = min(max(args.scope_candidate_k * 4, 16), candidate_limit)
+        candidate_scope_budget = min(max(args.scope_candidate_k * 4, 16), scope_candidate_limit)
         candidate_scope_ids = [
             scope.scope_id
             for _, _, scope in sorted(
@@ -265,7 +279,7 @@ def embedding_scores_for_domain_query(
             query,
             len(candidate_scope_ids),
             allowed_doc_ids=candidate_scope_ids,
-            max_candidates=candidate_limit,
+            max_candidates=scope_candidate_limit,
         )
 
     return (
@@ -277,7 +291,9 @@ def embedding_scores_for_domain_query(
             "model": args.embedding_model,
             "targets": sorted(targets),
             "cache": str(cache_path),
-            "candidate_limit": candidate_limit,
+            "candidate_limit": fallback_candidate_limit,
+            "event_candidate_limit": event_candidate_limit,
+            "scope_candidate_limit": scope_candidate_limit,
             "message_score_weight": round(max(0.0, float(args.embedding_message_weight)), 4),
             "scope_score_weight": round(max(0.0, float(args.embedding_scope_weight)), 4),
             "message_doc_count": len(messages),
@@ -689,6 +705,12 @@ def main() -> int:
             else [],
             "cache": args.embedding_cache if args.embedding_retrieval == "hybrid" else None,
             "candidate_k": args.embedding_candidate_k if args.embedding_retrieval == "hybrid" else 0,
+            "event_candidate_k": (args.event_embedding_candidate_k or args.embedding_candidate_k)
+            if args.embedding_retrieval == "hybrid"
+            else 0,
+            "scope_candidate_k": (args.scope_embedding_candidate_k or args.embedding_candidate_k)
+            if args.embedding_retrieval == "hybrid"
+            else 0,
             "message_score_weight": round(max(0.0, float(args.embedding_message_weight)), 4)
             if args.embedding_retrieval == "hybrid"
             else 0.0,

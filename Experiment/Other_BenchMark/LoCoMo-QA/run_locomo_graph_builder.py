@@ -5,10 +5,12 @@ import sys
 
 
 PROJECT_DIR = Path(__file__).resolve().parents[3]
-if str(PROJECT_DIR) not in sys.path:
-    sys.path.insert(0, str(PROJECT_DIR))
+BASELINE_DIR = Path(__file__).resolve().parent / "Baseline"
+for import_path in (PROJECT_DIR, BASELINE_DIR):
+    if str(import_path) not in sys.path:
+        sys.path.insert(0, str(import_path))
 
-from pipeline.external.locomo_qa.graph_builder import main  # noqa: E402
+from ours_scope_time_state.graph_builder import main  # noqa: E402
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
 
 PROJECT_DIR = Path(__file__).resolve().parents[3]
@@ -10,7 +10,7 @@ for import_path in (PROJECT_DIR, BASELINE_DIR):
     if str(import_path) not in sys.path:
         sys.path.insert(0, str(import_path))
 
-from ours_scope_time_state.graph_query_runner import main  # noqa: E402
+from runner import main  # noqa: E402
 
 
 if __name__ == "__main__":

@@ -13,8 +13,8 @@ from pipeline.external.groupmembench.routing import ScopeRoute, score_scope, wit
 TOKEN_RE = re.compile(r"[A-Za-z0-9_]+")
 DATE_RE = re.compile(r"\b(?:20\d{2}-\d{2}-\d{2}|jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b", re.I)
 RELATIVE_TIME_RE = re.compile(r"\b(?:today|tomorrow|tonight|eod|end of day|friday|thursday|wednesday|tuesday|monday|saturday|sunday)\b", re.I)
-DEFAULT_EMBEDDING_MESSAGE_SCORE_WEIGHT = 3.0
-DEFAULT_EMBEDDING_SCOPE_SCORE_WEIGHT = 2.0
+DEFAULT_EMBEDDING_MESSAGE_SCORE_WEIGHT = 6.0
+DEFAULT_EMBEDDING_SCOPE_SCORE_WEIGHT = 6.0
 
 
 def tokenized(text: object) -> List[str]:

@@ -29,7 +29,7 @@
 - `Experiment/run/run_public_benchmark.py`: v1/v1.1/v1.2/v1.3 public End-to-End runner with scope-profile routing, balanced subset selection, and free-facet alignment evaluation；当前支持 `full_context_llm`、`hybrid_rag`、`tsm_global_public`、`tsm_scope_routed_public`、`validity_global_public`、`validity_scope_routed_public` 和 `ours_scope_time_state`。`tsm_global_public` 在全部 public events 上运行 TSM；`tsm_scope_routed_public` 先用 public scope profiles 路由 scope，再按 TSM 论文流程在 routed scoped history 上构建和检索。
 - `scripts/`: v0 audit、v1 build、v1 validate、public track 生成脚本、v1.3 文本重复/模板泄漏质量审计脚本、annotation packet 导出和 agreement scoring 脚本。
 - `Experiment/Other_BenchMark/LongMemEval-S/`: LongMemEval-S external benchmark wrapper；real pipeline lives in `pipeline/external/longmemeval_s/`。
-- `Experiment/Other_BenchMark/LoCoMo-QA/`: LoCoMo-QA external benchmark wrapper；real pipeline lives in `pipeline/external/locomo_qa/`。
+- `Experiment/Other_BenchMark/LoCoMo-QA/`: LoCoMo-QA external benchmark wrapper；baseline implementations live in `Experiment/Other_BenchMark/LoCoMo-QA/Baseline/`。
 - `Experiment/Other_BenchMark/STALE/`: STALE external benchmark wrapper；real pipeline lives in `pipeline/external/stale/`。
 
 ## 运行
