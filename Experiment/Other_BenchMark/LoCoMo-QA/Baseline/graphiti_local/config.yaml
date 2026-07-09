@@ -1,0 +1,46 @@
+# Graphiti local configuration for controlled Zep/Graphiti-style evaluation.
+#
+# Required LLM environment variables:
+# - GRAPHITI_LLM_API_KEY or OPENAI_API_KEY
+# - GRAPHITI_LLM_BASE_URL or OPENAI_API_BASE / OPENAI_BASE_URL
+# - GRAPHITI_LLM_MODEL or OPENAI_MODEL
+#
+# Required embedding environment variables:
+# - GRAPHITI_EMBEDDING_API_KEY or OPENAI_EMBEDDING_API_KEY or OPENAI_API_KEY
+# - GRAPHITI_EMBEDDING_BASE_URL or OPENAI_EMBEDDING_API_BASE / OPENAI_API_BASE
+# - GRAPHITI_EMBEDDING_MODEL or OPENAI_EMBEDDING_MODEL (default: text-embedding-3-small)
+# - GRAPHITI_EMBEDDING_DIM or OPENAI_EMBEDDING_DIM / EMBEDDING_DIM (default: 1536)
+#
+# Required graph store environment variables:
+# - NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD
+
+name: "graphiti_local"
+version: "1.0"
+description: "Graphiti open-source local adapter for controlled evaluation"
+
+llm:
+  api_key: "${GRAPHITI_LLM_API_KEY:}"
+  base_url: "${GRAPHITI_LLM_BASE_URL:}"
+  model: "${GRAPHITI_LLM_MODEL:}"
+  max_tokens: 8192
+  # Use "json_object" if your local OpenAI-compatible server rejects json_schema response_format.
+  structured_output_mode: "${GRAPHITI_STRUCTURED_OUTPUT_MODE:json_schema}"
+
+embedding:
+  api_key: "${GRAPHITI_EMBEDDING_API_KEY:}"
+  base_url: "${GRAPHITI_EMBEDDING_BASE_URL:}"
+  model: "${GRAPHITI_EMBEDDING_MODEL:text-embedding-3-small}"
+  dim: "${GRAPHITI_EMBEDDING_DIM:1536}"
+
+neo4j:
+  uri: "${NEO4J_URI:bolt://localhost:7687}"
+  user: "${NEO4J_USER:neo4j}"
+  password: "${NEO4J_PASSWORD:password}"
+
+batch_size: 5
+max_retries: 3
+add_interval: 0.0
+update_communities: false
+
+search:
+  top_k: 10

@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import argparse
+import asyncio
 from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 import importlib
 import importlib.util
 import json
@@ -13,11 +14,9 @@ from pathlib import Path
 import re
 import shlex
 import shutil
-import sqlite3
 import subprocess
 import sys
-import time
-from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
+from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 
 BENCHMARK_DIR = Path(__file__).resolve().parents[1]
@@ -29,6 +28,8 @@ for import_path in (PROJECT_DIR, BASELINE_DIR):
 
 from Experiment.run.common.io import load_dotenv  # noqa: E402
 from Experiment.run.common.llm_client import LLMClient, LLMRequestError, parse_json_object, provider_config  # noqa: E402
+from adapter_registry import create_adapter, supported_adapters  # noqa: E402
+from common.official_eval.data_models import Dataset, GroupChatDay, GroupChatMessage, SearchResult  # noqa: E402
 from Experiment.Main_Baseline.tsm.tsm_memory import (  # noqa: E402
     DurativeMemory,
     EntityNode,
@@ -65,15 +66,18 @@ from pipeline.external.embedding_retrieval import OpenAIEmbeddingIndex  # noqa: 
 from pipeline.external.paths import EXTERNAL_CACHE_DIR, EXTERNAL_RESULT_DIR  # noqa: E402
 
 
+LEGACY_OFFICIAL_VARIANTS = (
+    "memgpt",
+    "memory_bank",
+    "a_mem",
+)
+OFFICIAL_SERVICE_VARIANTS = supported_adapters()
 SUPPORTED_VARIANTS = (
     "full_text",
     "rag",
-    "mem0",
-    "memgpt",
-    "memory_bank",
-    "memoryos",
-    "zep",
+    *LEGACY_OFFICIAL_VARIANTS,
     "tsm",
+    *OFFICIAL_SERVICE_VARIANTS,
 )
 
 
@@ -194,155 +198,6 @@ class EmbeddingRAGCorpus:
                     }
                     for hit in hits
                 ],
-            },
-        )
-
-
-class Mem0SampleIndex:
-    def __init__(self, sample: LoCoMoSample, args: argparse.Namespace, runtime: LLMRuntimeConfig) -> None:
-        os.environ.setdefault("MEM0_TELEMETRY", "False")
-        os.environ.setdefault("ANONYMIZED_TELEMETRY", "False")
-        try:
-            from mem0 import Memory
-        except ImportError as exc:
-            raise RuntimeError("mem0 baseline requires the mem0 Python package") from exc
-        self.sample = sample
-        self.turns_by_id = {turn.dia_id: turn for turn in sample.turns}
-        collection_name = safe_collection_name(f"locomo_{sample.sample_id}_{short_hash(str(Path(args.data).resolve()))}")
-        store_dir = Path(args.baseline_store_dir) / "mem0" / sample.sample_id
-        self.store_dir = store_dir
-        self.reuse_baseline_store = args.reuse_baseline_store
-        vector_store_config = mem0_vector_store_config(args, store_dir, collection_name)
-        config = {
-            "version": "v1.1",
-            "llm": {
-                "provider": args.mem0_llm_provider or runtime.provider,
-                "config": mem0_llm_config(args, runtime),
-            },
-            "embedder": {
-                "provider": args.mem0_embedder_provider,
-                "config": mem0_embedder_config(args),
-            },
-            "vector_store": {
-                "provider": args.mem0_vector_store_provider,
-                "config": vector_store_config,
-            },
-            "history_db_path": str(store_dir / "history.db"),
-        }
-        self.memory = Memory.from_config(config)
-        if not args.reuse_baseline_store:
-            self.memory.delete_all(user_id=sample.sample_id)
-        if not args.mem0_skip_ingest:
-            ingest_turns = sample.turns[: args.mem0_ingest_limit or None]
-            start_index = max(1, args.mem0_start_index)
-            self._ingest(
-                ingest_turns[start_index - 1 :],
-                offset=start_index - 1,
-                total=len(ingest_turns),
-                add_retries=max(1, args.mem0_add_retries),
-                retry_sleep=max(1, args.mem0_retry_sleep),
-            )
-
-    def _ingest(
-        self,
-        turns: Sequence[DialogTurn],
-        *,
-        offset: int,
-        total: int,
-        add_retries: int,
-        retry_sleep: int,
-    ) -> None:
-        existing_contents = self._existing_message_contents() if self.reuse_baseline_store and self.store_dir.exists() else set()
-        for index, turn in enumerate(turns, start=1):
-            display_index = offset + index
-            content = self._turn_content(turn)
-            if content in existing_contents:
-                print(f"[mem0-ingest] {display_index}/{total} skip {turn.dia_id}", flush=True)
-                continue
-            print(f"[mem0-ingest] {display_index}/{total} add {turn.dia_id}", flush=True)
-            self._add_with_retry(turn, content, add_retries=add_retries, retry_sleep=retry_sleep)
-            existing_contents.add(content)
-
-    def _add_with_retry(self, turn: DialogTurn, content: str, *, add_retries: int, retry_sleep: int) -> None:
-        for attempt in range(1, add_retries + 1):
-            try:
-                self.memory.add(
-                    [{"role": "user", "content": content}],
-                    user_id=self.sample.sample_id,
-                    metadata={
-                        "dialog_id": turn.dia_id,
-                        "session_id": turn.session_id,
-                        "session_date_time": turn.session_date_time,
-                        "speaker": turn.speaker,
-                    },
-                    infer=True,
-                )
-                return
-            except Exception as exc:
-                if attempt >= add_retries or not is_retryable_mem0_error(exc):
-                    raise
-                wait_seconds = retry_sleep * attempt
-                print(
-                    f"[mem0-ingest] retry {turn.dia_id} attempt={attempt}/{add_retries} "
-                    f"sleep={wait_seconds}s error={exc}",
-                    flush=True,
-                )
-                time.sleep(wait_seconds)
-
-    def _existing_message_contents(self) -> set[str]:
-        db_path = self.store_dir / "history.db"
-        if not db_path.exists():
-            return set()
-        try:
-            with sqlite3.connect(str(db_path)) as conn:
-                return {str(row[0]) for row in conn.execute("select content from messages")}
-        except sqlite3.DatabaseError:
-            return set()
-
-    @staticmethod
-    def _turn_content(turn: DialogTurn) -> str:
-        content = f"{turn.speaker}: {turn.text}"
-        if turn.image_caption:
-            content += f"\nImage caption: {turn.image_caption}"
-        if turn.image_query:
-            content += f"\nImage search query: {turn.image_query}"
-        return content
-
-    def retrieve(self, question: str, top_k: int) -> BaselineContext:
-        raw = self.memory.search(question, top_k=top_k, filters={"user_id": self.sample.sample_id})
-        results = raw.get("results", raw) if isinstance(raw, Mapping) else raw
-        if not isinstance(results, list):
-            results = []
-        dialog_ids: List[str] = []
-        lines: List[str] = []
-        trace_rows: List[Dict[str, Any]] = []
-        for rank, item in enumerate(results, start=1):
-            if not isinstance(item, Mapping):
-                continue
-            memory_text = str(item.get("memory") or item.get("text") or item.get("content") or "")
-            metadata = item.get("metadata") if isinstance(item.get("metadata"), Mapping) else {}
-            dialog_id = str(metadata.get("dialog_id") or "")
-            if not dialog_id:
-                match = re.search(r"\bD\d+:\d+\b", memory_text)
-                dialog_id = match.group(0) if match else ""
-            if dialog_id:
-                dialog_ids.append(dialog_id)
-            lines.append(f'<memory rank="{rank}" dialog_id="{dialog_id}" score="{item.get("score", "")}">{memory_text}</memory>')
-            trace_rows.append(
-                {
-                    "rank": rank,
-                    "dialog_id": dialog_id,
-                    "score": item.get("score"),
-                    "memory": memory_text,
-                }
-            )
-        return BaselineContext(
-            candidate_dialog_ids=ordered_unique(dialog_ids),
-            context="\n\n".join(lines),
-            trace={
-                "retriever": "mem0",
-                "top_k": top_k,
-                "results": trace_rows,
             },
         )
 
@@ -686,257 +541,262 @@ class MemoryBankSubprocessSampleIndex:
         return {str(key): value for key, value in contexts.items() if isinstance(value, Mapping)}
 
 
-class MemoryOSOfficialSampleIndex:
+class AMemSampleIndex:
     def __init__(self, sample: LoCoMoSample, args: argparse.Namespace, runtime: LLMRuntimeConfig) -> None:
         self.sample = sample
         self.args = args
         self.runtime = runtime
-        self.user_id = safe_collection_name(args.memoryos_user_id or sample.sample_id)
-        self.assistant_id = safe_collection_name(args.memoryos_assistant_id or f"locomo_{sample.sample_id}_assistant")
-        self.store_dir = Path(args.baseline_store_dir) / "memoryos" / sample.sample_id
+        self.store_dir = Path(args.baseline_store_dir) / "a_mem" / sample.sample_id
         self.store_dir.mkdir(parents=True, exist_ok=True)
-        self.ingest_state_path = self.store_dir / "ingest_state.json"
-        self.official = load_memoryos_official_runtime(args.memoryos_official_repo)
-        embedding_kwargs = parse_json_mapping_arg(args.memoryos_embedding_kwargs, "--memoryos-embedding-kwargs")
-        self.memoryos = self.official["Memoryos"](
-            user_id=self.user_id,
-            openai_api_key=runtime.api_key,
-            openai_base_url=runtime.api_base,
-            data_storage_path=str(self.store_dir),
-            assistant_id=self.assistant_id,
-            short_term_capacity=args.memoryos_short_term_capacity,
-            mid_term_capacity=args.memoryos_mid_term_capacity,
-            long_term_knowledge_capacity=args.memoryos_long_term_knowledge_capacity,
-            retrieval_queue_capacity=args.memoryos_retrieval_queue_capacity or args.top_k,
-            mid_term_heat_threshold=args.memoryos_mid_term_heat_threshold,
-            mid_term_similarity_threshold=args.memoryos_mid_term_similarity_threshold,
-            llm_model=args.memoryos_model or runtime.model,
-            embedding_model_name=args.memoryos_embedding_model,
-            embedding_model_kwargs=embedding_kwargs,
+        self.official = load_amem_official_runtime(args.amem_repo_dir)
+        self.memory = self.official["AgenticMemorySystem"](
+            model_name=args.amem_embedding_model,
+            llm_backend=args.amem_llm_backend,
+            llm_model=args.amem_llm_model or runtime.model,
+            evo_threshold=args.amem_evo_threshold,
+            api_key=args.amem_llm_api_key or runtime.api_key,
         )
-        if args.memoryos_skip_ingest:
-            if not self.ingest_state_path.exists():
-                raise RuntimeError("--memoryos-skip-ingest requires a reusable MemoryOS ingest_state.json")
-        elif not (args.reuse_baseline_store and self._is_ingested()):
-            self._ingest()
-        else:
-            print(f"[memoryos-official] load_ingest_state {self.ingest_state_path}", flush=True)
-
-    def _is_ingested(self) -> bool:
-        try:
-            payload = json.loads(self.ingest_state_path.read_text())
-        except (OSError, json.JSONDecodeError):
-            return False
-        return bool(payload.get("ingested")) and payload.get("sample_id") == self.sample.sample_id
+        self._ingest()
 
     def _ingest(self) -> None:
-        pairs = memoryos_dialog_pairs_with_ids(self.sample.turns)
-        if not pairs:
-            raise RuntimeError(f"sample_id={self.sample.sample_id} has no dialog turns to ingest into MemoryOS")
+        turns = self.sample.turns[: self.args.amem_ingest_limit or None]
+        if not turns:
+            raise RuntimeError(f"sample_id={self.sample.sample_id} has no dialog turns to ingest into A-Mem")
         print(
-            f"[memoryos-official] ingest sample_id={self.sample.sample_id} pairs={len(pairs)} "
+            f"[a-mem-official] ingest sample_id={self.sample.sample_id} turns={len(turns)} "
             f"official_repo={self.official['repo']}",
             flush=True,
         )
         ingested_dialog_ids: List[str] = []
-        for index, pair in enumerate(pairs, start=1):
-            print(f"[memoryos-official] ingest_pair {index}/{len(pairs)}", flush=True)
-            self.memoryos.add_memory(
-                user_input=pair["user_input"],
-                agent_response=pair["agent_response"],
-                timestamp=pair["timestamp"],
-                meta_data={"dialog_ids": pair["dialog_ids"]},
+        for index, turn in enumerate(turns, start=1):
+            print(f"[a-mem-official] add_note {index}/{len(turns)} {turn.dia_id}", flush=True)
+            self.memory.add_note(
+                content=amem_turn_text(turn),
+                time=locomo_amem_timestamp(turn.session_date_time),
+                tags=[self.sample.sample_id, turn.session_id, turn.speaker],
+                category="LoCoMo QA",
             )
-            ingested_dialog_ids.extend(pair["dialog_ids"])
+            ingested_dialog_ids.append(turn.dia_id)
         state = {
-            "schema_version": "locomo-memoryos-official-ingest-v1",
+            "schema_version": "locomo-a-mem-official-ingest-v1",
             "sample_id": self.sample.sample_id,
             "official_repo": str(self.official["repo"]),
-            "official_runtime": "BAI-LAB/MemoryOS memoryos-pypi",
+            "official_runtime": "agiresearch/A-mem agentic_memory.memory_system.AgenticMemorySystem",
             "ingested": True,
-            "n_pairs": len(pairs),
-            "ingested_dialog_ids": ordered_unique(ingested_dialog_ids),
-            "llm_model": self.args.memoryos_model or self.runtime.model,
-            "embedding_model": self.args.memoryos_embedding_model,
+            "ingested_dialog_ids": ingested_dialog_ids,
+            "llm_backend": self.args.amem_llm_backend,
+            "llm_model": self.args.amem_llm_model or self.runtime.model,
+            "embedding_model": self.args.amem_embedding_model,
+            "agentic_search": self.args.amem_agentic_search,
         }
-        self.ingest_state_path.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n")
+        (self.store_dir / "ingest_state.json").write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n")
 
     def retrieve(self, row: LoCoMoQAItem) -> BaselineContext:
-        retrieval_results = self.memoryos.retriever.retrieve_context(
-            user_query=row.question,
-            user_id=self.user_id,
-            segment_similarity_threshold=self.args.memoryos_segment_similarity_threshold,
-            page_similarity_threshold=self.args.memoryos_page_similarity_threshold,
-            knowledge_threshold=self.args.memoryos_knowledge_threshold,
-            top_k_sessions=self.args.memoryos_top_k_sessions,
-            top_k_knowledge=self.args.memoryos_top_k_knowledge,
-        )
-        context_parts = self._format_context_parts(retrieval_results)
-        context_text = memoryos_context_text(context_parts)
-        candidate_dialog_ids = ordered_unique(re.findall(r"\bD\d+:\d+\b", context_text))
-        output_client = make_sharded_client(
-            self.runtime,
-            "memoryos_official_answer",
-            f"{row.question_id}_{short_hash(row.question + context_text)}",
-        )
-        output = output_client.complete_json(
-            memoryos_answer_system_prompt(self.official["prompts"], context_parts),
-            memoryos_answer_user_prompt(self.official["prompts"], row, context_parts),
-        )
-        evidence_dialog_ids = normalize_output_dialog_ids(output.get("evidence_dialog_ids"))
+        search = self.memory.search_agentic if self.args.amem_agentic_search else self.memory.search
+        results = search(row.question, k=self.args.top_k)
+        lines: List[str] = []
+        candidate_dialog_ids: List[str] = []
+        trace_rows: List[Dict[str, Any]] = []
+        for rank, item in enumerate(results or [], start=1):
+            if not isinstance(item, Mapping):
+                continue
+            content = str(item.get("content") or "")
+            dialog_ids = re.findall(r"\bD\d+:\d+\b", content)
+            candidate_dialog_ids.extend(dialog_ids)
+            lines.append(
+                f'<memory rank="{rank}" ids="{",".join(dialog_ids)}" score="{item.get("score", "")}">\n'
+                f"{content}\n"
+                f"context: {item.get('context', '')}\n"
+                f"keywords: {item.get('keywords', [])}\n"
+                "</memory>"
+            )
+            trace_rows.append(
+                {
+                    "rank": rank,
+                    "dialog_ids": dialog_ids,
+                    "score": item.get("score"),
+                    "context": item.get("context"),
+                    "keywords": item.get("keywords"),
+                    "tags": item.get("tags"),
+                    "timestamp": item.get("timestamp"),
+                }
+            )
         return BaselineContext(
-            candidate_dialog_ids=candidate_dialog_ids,
-            context=context_text,
-            direct_answer=str(output.get("answer") or "").strip(),
-            direct_evidence_dialog_ids=tuple(evidence_dialog_ids),
+            candidate_dialog_ids=ordered_unique(candidate_dialog_ids),
+            context="\n\n".join(lines),
             trace={
-                "retriever": "official_memoryos",
-                "official_runtime": "BAI-LAB/MemoryOS",
+                "retriever": "official_a_mem",
+                "official_runtime": "agiresearch/A-mem",
                 "official_repo": str(self.official["repo"]),
                 "official_components": [
-                    "memoryos-pypi.memoryos.Memoryos",
-                    "ShortTermMemory",
-                    "MidTermMemory",
-                    "LongTermMemory",
-                    "Retriever.retrieve_context",
-                    "memoryos-pypi prompts.GENERATE_SYSTEM_RESPONSE_*",
+                    "agentic_memory.memory_system.AgenticMemorySystem",
+                    "AgenticMemorySystem.add_note",
+                    "AgenticMemorySystem.search_agentic" if self.args.amem_agentic_search else "AgenticMemorySystem.search",
                 ],
-                "answer_mode": "official_generation_prompt_json_adapter",
-                "candidate_dialog_ids_source": "dialog_ids_embedded_in_official_retrieval_context",
-                "n_retrieved_pages": len(context_parts["retrieved_pages"]),
-                "n_user_knowledge": len(context_parts["retrieved_user_knowledge"]),
-                "n_assistant_knowledge": len(context_parts["retrieved_assistant_knowledge"]),
-                "embedding_model": self.args.memoryos_embedding_model,
-                "llm_model": self.args.memoryos_model or self.runtime.model,
+                "candidate_dialog_ids_source": "dialog_ids_embedded_in_official_memory_content",
+                "embedding_model": self.args.amem_embedding_model,
+                "llm_backend": self.args.amem_llm_backend,
+                "llm_model": self.args.amem_llm_model or self.runtime.model,
+                "results": trace_rows,
             },
         )
 
-    def _format_context_parts(self, retrieval_results: Mapping[str, Any]) -> Dict[str, Any]:
-        retrieved_pages = list(retrieval_results.get("retrieved_pages") or [])
-        retrieved_user_knowledge = list(retrieval_results.get("retrieved_user_knowledge") or [])
-        retrieved_assistant_knowledge = list(retrieval_results.get("retrieved_assistant_knowledge") or [])
-        short_term_history = self.memoryos.short_term_memory.get_all()
-        user_profile = self.memoryos.user_long_term_memory.get_raw_user_profile(self.user_id)
-        if not user_profile or str(user_profile).lower() == "none":
-            user_profile = "No detailed profile available yet."
-        return {
-            "retrieved_pages": retrieved_pages,
-            "retrieved_user_knowledge": retrieved_user_knowledge,
-            "retrieved_assistant_knowledge": retrieved_assistant_knowledge,
-            "short_term_history": short_term_history,
-            "user_profile": user_profile,
-            "retrieved_at": retrieval_results.get("retrieved_at"),
-        }
 
-
-class ZepGraphitiSubprocessSampleIndex:
+class OfficialServiceSampleIndex:
     def __init__(
         self,
+        system_name: str,
         sample: LoCoMoSample,
         rows: Sequence[LoCoMoQAItem],
         args: argparse.Namespace,
         runtime: LLMRuntimeConfig,
     ) -> None:
+        self.system_name = system_name
         self.sample = sample
         self.args = args
         self.runtime = runtime
-        self.store_dir = Path(args.baseline_store_dir) / "zep_graphiti" / sample.sample_id
+        self.user_id = args.official_user_id or safe_collection_name(
+            f"locomo_{system_name}_{sample.sample_id}_{short_hash(str(Path(args.data).resolve()))}"
+        )
+        self.store_dir = Path(args.baseline_store_dir) / "official_services" / system_name / sample.sample_id
+        self.state_path = self.store_dir / "ingest_state.json"
         self.store_dir.mkdir(parents=True, exist_ok=True)
-        self.contexts = self._load_or_run_worker(rows)
+        seed_official_adapter_env(system_name, runtime)
+        self.dataset = locomo_sample_to_official_dataset(sample)
+        self.contexts = asyncio.run(self._build_contexts(rows))
 
     def retrieve(self, row: LoCoMoQAItem) -> BaselineContext:
-        payload = self.contexts.get(row.question_id)
-        if not isinstance(payload, Mapping):
-            raise RuntimeError(f"zep worker did not return context for question_id={row.question_id}")
-        return BaselineContext(
-            candidate_dialog_ids=normalize_output_dialog_ids(payload.get("candidate_dialog_ids")),
-            context=str(payload.get("context") or ""),
-            direct_answer=str(payload.get("direct_answer") or "").strip(),
-            direct_evidence_dialog_ids=tuple(normalize_output_dialog_ids(payload.get("direct_evidence_dialog_ids"))),
-            trace=dict(payload.get("trace") if isinstance(payload.get("trace"), Mapping) else {}),
-        )
+        context = self.contexts.get(row.question_id)
+        if context is None:
+            raise RuntimeError(f"{self.system_name} missing context for question_id={row.question_id}")
+        return context
 
-    def _load_or_run_worker(self, rows: Sequence[LoCoMoQAItem]) -> Dict[str, Mapping[str, object]]:
-        request_payload = self._request_payload(rows)
-        request_hash = short_hash(json.dumps(request_payload, ensure_ascii=False, sort_keys=True))
-        request_path = self.store_dir / f"worker_request.{request_hash}.json"
-        response_path = self.store_dir / f"worker_response.{request_hash}.json"
-        if self.args.reuse_baseline_store and response_path.exists():
-            print(f"[zep-graphiti-official] load_worker_response {response_path}", flush=True)
-            return self._read_worker_response(response_path)
+    async def _build_contexts(self, rows: Sequence[LoCoMoQAItem]) -> Dict[str, BaselineContext]:
+        adapter = create_adapter(
+            self.system_name,
+            output_dir=self.store_dir,
+            base_url=official_base_url_for(self.args, self.system_name),
+            config_overrides=official_config_overrides(self.args, self.system_name),
+        )
+        state: Dict[str, Any] = {}
+        try:
+            should_add = self._should_add()
+            if should_add:
+                print(
+                    f"[{self.system_name}-add] sample_id={self.sample.sample_id} "
+                    f"user_id={self.user_id} messages={self.dataset.total_messages}",
+                    flush=True,
+                )
+                add_result = await adapter.add(self.dataset, self.user_id)
+                if not add_result.success:
+                    raise RuntimeError(f"{self.system_name} add failed: {add_result.errors}")
+                state = self._write_ingest_state(add_result)
+            else:
+                state = self._load_ingest_state()
+                print(
+                    f"[{self.system_name}-add] skip existing ingest state user_id={self.user_id} "
+                    f"state={self.state_path}",
+                    flush=True,
+                )
 
-        request_path.write_text(json.dumps(request_payload, ensure_ascii=False, indent=2) + "\n")
-        worker_path = BASELINE_DIR / "graphiti_zep" / "graphiti_official_worker.py"
-        command = self._worker_command(worker_path, request_path, response_path)
-        print(
-            f"[zep-graphiti-official] run_worker env={self.args.zep_conda_env or '[current]'} "
-            f"questions={len(rows)} request={request_path}",
-            flush=True,
-        )
-        proc = subprocess.run(
-            command,
-            cwd=str(PROJECT_DIR),
-            text=True,
-            capture_output=True,
-            timeout=max(30, self.args.zep_timeout_seconds),
-            check=False,
-        )
-        if proc.returncode != 0:
+            contexts: Dict[str, BaselineContext] = {}
+            semaphore = asyncio.Semaphore(max(1, int(self.args.official_search_concurrency)))
+
+            async def search_one(index: int, row: LoCoMoQAItem) -> Tuple[str, BaselineContext]:
+                async with semaphore:
+                    result = await adapter.search(
+                        row.question,
+                        self.user_id,
+                        top_k=self.args.top_k,
+                        question_id=row.question_id,
+                    )
+                    print(f"[{self.system_name}-search] {index}/{len(rows)} {row.question_id}", flush=True)
+                    return row.question_id, self._context_from_search(row, result, state)
+
+            pairs = await asyncio.gather(*(search_one(index, row) for index, row in enumerate(rows, start=1)))
+            contexts.update(pairs)
+            return contexts
+        finally:
+            await adapter.close()
+
+    def _should_add(self) -> bool:
+        if self.args.skip_official_ingest:
+            if not self.state_path.exists() and not self.args.official_user_id:
+                raise RuntimeError(
+                    "--skip-official-ingest without an ingest state requires --official-user-id "
+                    "so the service-side memory namespace is explicit."
+                )
+            return False
+        if self.args.force_official_ingest:
+            return True
+        return not (self.args.reuse_baseline_store and self.state_path.exists())
+
+    def _load_ingest_state(self) -> Dict[str, Any]:
+        if not self.state_path.exists():
+            return {
+                "schema_version": "locomo-official-service-ingest-v1",
+                "system_name": self.system_name,
+                "sample_id": self.sample.sample_id,
+                "user_id": self.user_id,
+                "ingested": False,
+                "note": "ingest skipped by explicit user request; no local state file was present",
+            }
+        payload = json.loads(self.state_path.read_text())
+        if str(payload.get("user_id") or "") != self.user_id:
             raise RuntimeError(
-                "official Zep/Graphiti worker failed; "
-                f"returncode={proc.returncode}; stdout_tail={proc.stdout[-3000:]!r}; stderr_tail={proc.stderr[-5000:]!r}"
+                f"{self.system_name} ingest state user_id mismatch: "
+                f"state={payload.get('user_id')!r} current={self.user_id!r}"
             )
-        if proc.stdout.strip():
-            print(proc.stdout[-3000:], flush=True)
-        return self._read_worker_response(response_path)
+        return dict(payload)
 
-    def _request_payload(self, rows: Sequence[LoCoMoQAItem]) -> Dict[str, object]:
-        return {
-            "schema_version": "locomo-zep-graphiti-worker-request-v1",
-            "data": str(Path(self.args.data).resolve()),
+    def _write_ingest_state(self, add_result: object) -> Dict[str, Any]:
+        state = {
+            "schema_version": "locomo-official-service-ingest-v1",
+            "system_name": self.system_name,
             "sample_id": self.sample.sample_id,
-            "questions": [{"question_id": row.question_id, "question": row.question} for row in rows],
-            "provider": self.runtime.provider,
-            "model": self.runtime.model,
-            "cache": str(self.runtime.cache_path),
-            "use_cache": self.runtime.use_cache,
-            "top_k": self.args.top_k,
-            "baseline_store_dir": str(Path(self.args.baseline_store_dir).resolve()),
-            "reuse_baseline_store": self.args.reuse_baseline_store,
-            "zep_official_repo": self.args.zep_official_repo,
-            "zep_neo4j_uri": self.args.zep_neo4j_uri,
-            "zep_neo4j_user": self.args.zep_neo4j_user,
-            "zep_neo4j_password": self.args.zep_neo4j_password,
-            "zep_neo4j_database": self.args.zep_neo4j_database,
-            "zep_group_id": self.args.zep_group_id,
-            "zep_graphiti_provider": self.args.zep_graphiti_provider or self.runtime.provider,
-            "zep_cross_encoder": self.args.zep_cross_encoder,
-            "zep_embedder": self.args.zep_embedder,
-            "zep_bge_embedding_model": self.args.zep_bge_embedding_model,
-            "zep_search_config": self.args.zep_search_config,
-            "zep_skip_ingest": self.args.zep_skip_ingest,
-            "zep_ingest_limit": self.args.zep_ingest_limit,
+            "user_id": self.user_id,
+            "data_path": str(Path(self.args.data).resolve()),
+            "ingested": True,
+            "ingested_at": datetime.now(timezone.utc).isoformat(),
+            "dataset": {
+                "name": self.dataset.name,
+                "total_days": self.dataset.total_days,
+                "total_messages": self.dataset.total_messages,
+            },
+            "add_result": sanitize_jsonable(asdict(add_result)),
         }
+        self.state_path.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n")
+        return state
 
-    def _worker_command(self, worker_path: Path, request_path: Path, response_path: Path) -> List[str]:
-        if self.args.zep_python:
-            command = [self.args.zep_python]
-        elif self.args.zep_conda_env:
-            command = ["conda", "run", "-n", self.args.zep_conda_env, "python"]
-        else:
-            command = [sys.executable]
-        command.extend([str(worker_path), "--request", str(request_path), "--response", str(response_path)])
-        return command
+    def _context_from_search(
+        self,
+        row: LoCoMoQAItem,
+        search_result: SearchResult,
+        state: Mapping[str, Any],
+    ) -> BaselineContext:
+        candidate_dialog_ids = extract_dialog_ids_from_search(search_result)
+        trace = {
+            "retriever": self.system_name,
+            "official_adapter_interface": "EverMemBench Baseline BaseAdapter.add/search",
+            "question_id": row.question_id,
+            "user_id": self.user_id,
+            "top_k": self.args.top_k,
+            "candidate_dialog_ids_source": "dialog_ids_embedded_in_adapter_context_or_metadata",
+            "search_duration_ms": search_result.search_duration_ms,
+            "retrieved_memories": search_result.retrieved_memories,
+            "search_metadata": sanitize_jsonable(search_result.metadata),
+            "ingest_state": {
+                "path": str(self.state_path),
+                "ingested": bool(state.get("ingested")),
+                "dataset": state.get("dataset"),
+            },
+        }
+        return BaselineContext(
+            candidate_dialog_ids=candidate_dialog_ids,
+            context=search_result.context,
+            trace=trace,
+        )
 
-    @staticmethod
-    def _read_worker_response(response_path: Path) -> Dict[str, Mapping[str, object]]:
-        if not response_path.exists():
-            raise RuntimeError(f"official Zep/Graphiti worker did not write response: {response_path}")
-        payload = json.loads(response_path.read_text())
-        contexts = payload.get("contexts") if isinstance(payload, Mapping) else None
-        if not isinstance(contexts, Mapping):
-            raise RuntimeError(f"official Zep/Graphiti worker response missing contexts: {response_path}")
-        return {str(key): value for key, value in contexts.items() if isinstance(value, Mapping)}
 
 
 def parse_args() -> argparse.Namespace:
@@ -963,17 +823,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--rag-embedding-base-url", default=os.environ.get("OPENAI_EMBEDDING_BASE_URL", ""))
     parser.add_argument("--rag-embedding-cache", default=str(EXTERNAL_CACHE_DIR / "embedding_cache.locomo_qa_rag.json"))
     parser.add_argument("--rag-embedding-batch-size", type=int, default=64)
-    parser.add_argument("--mem0-skip-ingest", action="store_true")
-    parser.add_argument("--mem0-ingest-limit", type=int, default=0)
-    parser.add_argument("--mem0-start-index", type=int, default=1)
-    parser.add_argument("--mem0-add-retries", type=int, default=6)
-    parser.add_argument("--mem0-retry-sleep", type=int, default=60)
-    parser.add_argument("--mem0-llm-provider", default="")
-    parser.add_argument("--mem0-embedder-provider", default="openai")
-    parser.add_argument("--mem0-embedding-model", default=os.environ.get("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small"))
-    parser.add_argument("--mem0-embedding-base-url", default=os.environ.get("OPENAI_EMBEDDING_BASE_URL", ""))
-    parser.add_argument("--mem0-embedding-dims", type=int, default=1536)
-    parser.add_argument("--mem0-vector-store-provider", choices=("qdrant",), default="qdrant")
     parser.add_argument("--letta-command", default=os.environ.get("LETTA_COMMAND", ""))
     parser.add_argument("--letta-code-repo", default=os.environ.get("LETTA_CODE_REPO", ""))
     parser.add_argument("--letta-backend", choices=("local", "api"), default=os.environ.get("LETTA_BACKEND", "local"))
@@ -997,45 +846,39 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--memory-bank-conda-env", default=os.environ.get("MEMORY_BANK_CONDA_ENV", "locomo_memorybank"))
     parser.add_argument("--memory-bank-python", default=os.environ.get("MEMORY_BANK_PYTHON", ""))
     parser.add_argument("--memory-bank-timeout-seconds", type=int, default=int(os.environ.get("MEMORY_BANK_TIMEOUT_SECONDS", "7200")))
-    parser.add_argument("--memoryos-official-repo", default=os.environ.get("MEMORYOS_OFFICIAL_REPO", "/tmp/codex-official-memoryos"))
-    parser.add_argument("--memoryos-user-id", default=os.environ.get("MEMORYOS_USER_ID", ""))
-    parser.add_argument("--memoryos-assistant-id", default=os.environ.get("MEMORYOS_ASSISTANT_ID", ""))
-    parser.add_argument("--memoryos-model", default=os.environ.get("MEMORYOS_MODEL", ""))
-    parser.add_argument("--memoryos-embedding-model", default=os.environ.get("MEMORYOS_EMBEDDING_MODEL", "all-MiniLM-L6-v2"))
-    parser.add_argument("--memoryos-embedding-kwargs", default=os.environ.get("MEMORYOS_EMBEDDING_KWARGS", ""))
-    parser.add_argument("--memoryos-short-term-capacity", type=int, default=int(os.environ.get("MEMORYOS_SHORT_TERM_CAPACITY", "7")))
-    parser.add_argument("--memoryos-mid-term-capacity", type=int, default=int(os.environ.get("MEMORYOS_MID_TERM_CAPACITY", "2000")))
-    parser.add_argument("--memoryos-long-term-knowledge-capacity", type=int, default=int(os.environ.get("MEMORYOS_LONG_TERM_KNOWLEDGE_CAPACITY", "100")))
-    parser.add_argument("--memoryos-retrieval-queue-capacity", type=int, default=int(os.environ.get("MEMORYOS_RETRIEVAL_QUEUE_CAPACITY", "0")))
-    parser.add_argument("--memoryos-mid-term-heat-threshold", type=float, default=float(os.environ.get("MEMORYOS_MID_TERM_HEAT_THRESHOLD", "5.0")))
-    parser.add_argument("--memoryos-mid-term-similarity-threshold", type=float, default=float(os.environ.get("MEMORYOS_MID_TERM_SIMILARITY_THRESHOLD", "0.6")))
-    parser.add_argument("--memoryos-segment-similarity-threshold", type=float, default=float(os.environ.get("MEMORYOS_SEGMENT_SIMILARITY_THRESHOLD", "0.1")))
-    parser.add_argument("--memoryos-page-similarity-threshold", type=float, default=float(os.environ.get("MEMORYOS_PAGE_SIMILARITY_THRESHOLD", "0.1")))
-    parser.add_argument("--memoryos-knowledge-threshold", type=float, default=float(os.environ.get("MEMORYOS_KNOWLEDGE_THRESHOLD", "0.01")))
-    parser.add_argument("--memoryos-top-k-sessions", type=int, default=int(os.environ.get("MEMORYOS_TOP_K_SESSIONS", "5")))
-    parser.add_argument("--memoryos-top-k-knowledge", type=int, default=int(os.environ.get("MEMORYOS_TOP_K_KNOWLEDGE", "20")))
-    parser.add_argument("--memoryos-skip-ingest", action="store_true")
-    parser.add_argument("--zep-official-repo", default=os.environ.get("ZEP_GRAPHITI_OFFICIAL_REPO", "/tmp/evermem_baseline_repos/graphiti"))
-    parser.add_argument("--zep-conda-env", default=os.environ.get("ZEP_CONDA_ENV", "py311"))
-    parser.add_argument("--zep-python", default=os.environ.get("ZEP_PYTHON", ""))
-    parser.add_argument("--zep-timeout-seconds", type=int, default=int(os.environ.get("ZEP_TIMEOUT_SECONDS", "7200")))
-    parser.add_argument("--zep-neo4j-uri", default=os.environ.get("NEO4J_URI", "bolt://localhost:7687"))
-    parser.add_argument("--zep-neo4j-user", default=os.environ.get("NEO4J_USER") or os.environ.get("NEO4J_USERNAME", "neo4j"))
-    parser.add_argument("--zep-neo4j-password", default=os.environ.get("NEO4J_PASSWORD", ""))
-    parser.add_argument("--zep-neo4j-database", default=os.environ.get("NEO4J_DATABASE", "neo4j"))
-    parser.add_argument("--zep-group-id", default=os.environ.get("ZEP_GROUP_ID", ""))
-    parser.add_argument("--zep-graphiti-provider", choices=("openai", "deepseek", ""), default=os.environ.get("ZEP_GRAPHITI_PROVIDER", ""))
-    parser.add_argument("--zep-cross-encoder", choices=("auto", "openai", "bge"), default=os.environ.get("ZEP_CROSS_ENCODER", "auto"))
-    parser.add_argument("--zep-embedder", choices=("auto", "openai", "bge"), default=os.environ.get("ZEP_EMBEDDER", "auto"))
-    parser.add_argument("--zep-bge-embedding-model", default=os.environ.get("ZEP_BGE_EMBEDDING_MODEL", "BAAI/bge-small-en-v1.5"))
     parser.add_argument(
-        "--zep-search-config",
-        choices=("combined_cross_encoder", "combined_rrf", "edge_rrf"),
-        default=os.environ.get("ZEP_SEARCH_CONFIG", "combined_cross_encoder"),
+        "--amem-repo-dir",
+        default=os.environ.get("AMEM_REPO_DIR", str(PROJECT_DIR / "Graph/output/service_repos/locomo_smoke/A-mem")),
     )
-    parser.add_argument("--zep-skip-ingest", action="store_true")
-    parser.add_argument("--zep-ingest-limit", type=int, default=int(os.environ.get("ZEP_INGEST_LIMIT", "0")))
+    parser.add_argument("--amem-llm-backend", choices=("openai", "ollama"), default=os.environ.get("AMEM_LLM_BACKEND", "ollama"))
+    parser.add_argument("--amem-llm-model", default=os.environ.get("AMEM_LLM_MODEL", ""))
+    parser.add_argument("--amem-llm-api-key", default=os.environ.get("AMEM_LLM_API_KEY", ""))
+    parser.add_argument("--amem-embedding-model", default=os.environ.get("AMEM_EMBEDDING_MODEL", "all-MiniLM-L6-v2"))
+    parser.add_argument("--amem-evo-threshold", type=int, default=int(os.environ.get("AMEM_EVO_THRESHOLD", "1000000")))
+    parser.add_argument("--amem-ingest-limit", type=int, default=int(os.environ.get("AMEM_INGEST_LIMIT", "0")))
+    parser.add_argument("--amem-agentic-search", action=argparse.BooleanOptionalAction, default=env_bool("AMEM_AGENTIC_SEARCH", True))
+    parser.add_argument("--official-user-id", default=os.environ.get("LOCOMO_OFFICIAL_USER_ID", ""))
+    parser.add_argument(
+        "--official-base-url",
+        default=os.environ.get("LOCOMO_OFFICIAL_BASE_URL", ""),
+        help="Optional one-off base URL override for mem0_local/memos_local/memobase.",
+    )
+    parser.add_argument(
+        "--official-config-json",
+        default=os.environ.get("LOCOMO_OFFICIAL_CONFIG_JSON", ""),
+        help="JSON object merged into every official service adapter config.",
+    )
+    parser.add_argument("--official-search-concurrency", type=int, default=int(os.environ.get("LOCOMO_OFFICIAL_SEARCH_CONCURRENCY", "1")))
+    parser.add_argument("--skip-official-ingest", action="store_true")
+    parser.add_argument("--force-official-ingest", action="store_true")
     return parser.parse_args()
+
+
+def env_bool(name: str, default: bool) -> bool:
+    raw = os.environ.get(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "y", "on"}
 
 
 def select_rows(
@@ -1078,21 +921,6 @@ def normalize_question_type(value: str) -> str:
         "false-premise": "adversarial",
     }
     return aliases.get(normalized, normalized)
-
-
-def turn_document(turn: DialogTurn) -> str:
-    return " ".join(
-        str(part or "")
-        for part in (
-            turn.dia_id,
-            turn.session_id,
-            turn.session_date_time,
-            turn.speaker,
-            turn.text,
-            turn.image_caption,
-            turn.image_query,
-        )
-    )
 
 
 def embedding_chunk_document(turns: Sequence[DialogTurn]) -> str:
@@ -1248,28 +1076,138 @@ def load_memory_bank_official_runtime(repo_path: str) -> Dict[str, Any]:
     return runtime
 
 
-def load_memoryos_official_runtime(repo_path: str) -> Dict[str, Any]:
+def load_amem_official_runtime(repo_path: str) -> Dict[str, Any]:
     if not repo_path:
-        raise RuntimeError("memoryos official variant requires --memoryos-official-repo pointing to BAI-LAB/MemoryOS")
+        raise RuntimeError("a_mem official variant requires --amem-repo-dir pointing to agiresearch/A-mem")
     repo = Path(repo_path).expanduser().resolve()
-    package_dir = repo / "memoryos-pypi"
-    memoryos_path = package_dir / "memoryos.py"
-    prompts_path = package_dir / "prompts.py"
-    if not memoryos_path.exists() or not prompts_path.exists():
-        raise RuntimeError(f"--memoryos-official-repo does not look like BAI-LAB/MemoryOS: missing {memoryos_path}")
-    if str(package_dir) not in sys.path:
-        sys.path.insert(0, str(package_dir))
-    memoryos_module = importlib.import_module("memoryos")
-    prompts_module = importlib.import_module("prompts")
-    memoryos_cls = getattr(memoryos_module, "Memoryos", None)
-    if memoryos_cls is None:
-        raise RuntimeError(f"official MemoryOS repo is missing Memoryos class at {memoryos_path}")
+    memory_system_path = repo / "agentic_memory/memory_system.py"
+    if not memory_system_path.exists():
+        raise RuntimeError(f"--amem-repo-dir does not look like agiresearch/A-mem: missing {memory_system_path}")
+    if str(repo) not in sys.path:
+        sys.path.insert(0, str(repo))
+    module = importlib.import_module("agentic_memory.memory_system")
+    memory_cls = getattr(module, "AgenticMemorySystem", None)
+    if memory_cls is None:
+        raise RuntimeError(f"official A-Mem repo is missing AgenticMemorySystem at {memory_system_path}")
     return {
         "repo": repo,
-        "package_dir": package_dir,
-        "Memoryos": memoryos_cls,
-        "prompts": prompts_module,
+        "AgenticMemorySystem": memory_cls,
     }
+
+
+def locomo_sample_to_official_dataset(sample: LoCoMoSample) -> Dataset:
+    days_by_date: Dict[str, Dict[str, List[GroupChatMessage]]] = defaultdict(lambda: defaultdict(list))
+    for session in sample.sessions:
+        session_time = parse_session_date(session.date_time)
+        if session_time is None:
+            session_time = datetime(1970, 1, 1)
+        date_key = session_time.date().isoformat()
+        for offset, turn in enumerate(session.turns):
+            timestamp = session_time + timedelta(seconds=offset)
+            days_by_date[date_key][session.session_id].append(
+                GroupChatMessage(
+                    speaker=turn.speaker,
+                    content=official_visible_message_text(sample.sample_id, turn),
+                    timestamp=timestamp,
+                    group=session.session_id,
+                    date=date_key,
+                    metadata={
+                        "benchmark": "LoCoMo QA",
+                        "sample_id": sample.sample_id,
+                        "dialog_id": turn.dia_id,
+                        "session_id": turn.session_id,
+                        "session_index": turn.session_index,
+                        "session_date_time": turn.session_date_time,
+                    },
+                )
+            )
+    days = [
+        GroupChatDay(
+            date=date_key,
+            groups={group_name: messages for group_name, messages in sorted(groups.items())},
+            metadata={"sample_id": sample.sample_id},
+        )
+        for date_key, groups in sorted(days_by_date.items())
+    ]
+    return Dataset(
+        name=f"locomo_qa_{sample.sample_id}",
+        days=days,
+        metadata={
+            "benchmark": "LoCoMo QA",
+            "sample_id": sample.sample_id,
+            "source_fields": ["sample_id", "conversation"],
+            "ignored_fields": ["qa", "answer", "evidence", "category", "question"],
+        },
+    )
+
+
+def official_visible_message_text(sample_id: str, turn: DialogTurn) -> str:
+    parts = [
+        f"[LoCoMo sample_id={sample_id}]",
+        f"[dialog_id={turn.dia_id}]",
+        f"[session_id={turn.session_id}]",
+        f"[session_time={turn.session_date_time}]",
+        f"{turn.speaker}: {turn.text}",
+    ]
+    if turn.image_caption:
+        parts.append(f"Image caption: {turn.image_caption}")
+    if turn.image_query:
+        parts.append(f"Image search query: {turn.image_query}")
+    return " ".join(parts)
+
+
+def extract_dialog_ids_from_search(search_result: SearchResult) -> List[str]:
+    text_parts = [search_result.context, *search_result.retrieved_memories]
+    try:
+        text_parts.append(json.dumps(search_result.metadata, ensure_ascii=False, default=str))
+    except TypeError:
+        text_parts.append(str(search_result.metadata))
+    return ordered_unique(re.findall(r"\bD\d+:\d+\b", "\n".join(str(part) for part in text_parts)))
+
+
+def official_config_overrides(args: argparse.Namespace, system_name: str) -> Dict[str, Any]:
+    overrides: Dict[str, Any] = {}
+    for raw, label in (
+        (args.official_config_json, "--official-config-json"),
+        (os.environ.get(f"LOCOMO_{system_name.upper()}_CONFIG_JSON", ""), f"LOCOMO_{system_name.upper()}_CONFIG_JSON"),
+    ):
+        if not raw:
+            continue
+        parsed = parse_json_mapping_arg(raw, label)
+        overrides.update(parsed)
+    return overrides
+
+
+def official_base_url_for(args: argparse.Namespace, system_name: str) -> str:
+    return args.official_base_url or os.environ.get(f"LOCOMO_{system_name.upper()}_BASE_URL", "")
+
+
+def seed_official_adapter_env(system_name: str, runtime: LLMRuntimeConfig) -> None:
+    if system_name != "graphiti_local":
+        return
+    os.environ.setdefault("GRAPHITI_LLM_API_KEY", runtime.api_key)
+    os.environ.setdefault("GRAPHITI_LLM_BASE_URL", runtime.api_base)
+    os.environ.setdefault("GRAPHITI_LLM_MODEL", runtime.model)
+    os.environ.setdefault("OPENAI_MODEL", runtime.model)
+
+
+def official_env_snapshot() -> Dict[str, str]:
+    names = [
+        "MEM0_LOCAL_BASE_URL",
+        "MEMOS_LOCAL_BASE_URL",
+        "MEMOBASE_BASE_URL",
+        "GRAPHITI_LLM_BASE_URL",
+        "GRAPHITI_LLM_MODEL",
+        "GRAPHITI_EMBEDDING_BASE_URL",
+        "GRAPHITI_EMBEDDING_MODEL",
+        "GRAPHITI_EMBEDDING_DIM",
+        "NEO4J_URI",
+        "NEO4J_USER",
+        "NEO4J_DATABASE",
+        "LOCOMO_OFFICIAL_USER_ID",
+    ]
+    return {name: os.environ.get(name, "") for name in names if os.environ.get(name, "")}
+
 
 
 def parse_json_mapping_arg(value: str, flag_name: str) -> Dict[str, Any]:
@@ -1313,49 +1251,25 @@ def official_memory_bank_dialog_pairs_with_ids(turns: Sequence[DialogTurn]) -> T
     return pairs, pair_dialog_ids
 
 
-def memoryos_dialog_pairs_with_ids(turns: Sequence[DialogTurn]) -> List[Dict[str, Any]]:
-    pairs: List[Dict[str, Any]] = []
-    index = 0
-    while index < len(turns):
-        first = turns[index]
-        second = turns[index + 1] if index + 1 < len(turns) else None
-        dialog_ids = [first.dia_id]
-        user_input = memoryos_turn_text(first)
-        if second is None:
-            agent_response = ""
-            timestamp = locomo_memoryos_timestamp(first.session_date_time)
-            index += 1
-        else:
-            dialog_ids.append(second.dia_id)
-            agent_response = memoryos_turn_text(second)
-            timestamp = locomo_memoryos_timestamp(second.session_date_time or first.session_date_time)
-            index += 2
-        pairs.append(
-            {
-                "user_input": user_input,
-                "agent_response": agent_response,
-                "timestamp": timestamp,
-                "dialog_ids": dialog_ids,
-            }
-        )
-    return pairs
-
-
-def memoryos_turn_text(turn: DialogTurn) -> str:
-    text = f"{turn.dia_id} {turn.speaker}: {turn.text}"
+def amem_turn_text(turn: DialogTurn) -> str:
+    text = (
+        f"[dialog_id={turn.dia_id}] "
+        f"[session_id={turn.session_id}] "
+        f"[session_time={turn.session_date_time}] "
+        f"{turn.speaker}: {turn.text}"
+    )
     if turn.image_caption:
         text += f"\nImage caption: {turn.image_caption}"
     if turn.image_query:
         text += f"\nImage search query: {turn.image_query}"
-    text += f"\nSession: {turn.session_id}; Time: {turn.session_date_time}"
     return text
 
 
-def locomo_memoryos_timestamp(value: str) -> str:
+def locomo_amem_timestamp(value: str) -> str:
     parsed = parse_session_date(value)
     if parsed is None:
-        return "1970-01-01 00:00:00"
-    return parsed.strftime("%Y-%m-%d %H:%M:%S")
+        return "197001010000"
+    return parsed.strftime("%Y%m%d%H%M")
 
 
 def format_official_memorybank_recall(related_memos: Sequence[str], sources: Sequence[str]) -> str:
@@ -1419,122 +1333,6 @@ def memory_bank_official_answer_user_prompt(row: LoCoMoQAItem, store: Mapping[st
         f"Question: {row.question}\n\n"
         "Do not use benchmark gold answers, gold evidence, categories, or question-type labels. "
         "Cite only dialog IDs present in recalled memories. Return JSON only:\n"
-        "{\"answer\":\"short answer\", \"evidence_dialog_ids\":[\"D1:1\"]}"
-    )
-
-
-def memoryos_context_text(parts: Mapping[str, Any]) -> str:
-    chunks: List[str] = []
-    chunks.append("Short-term history:")
-    short_history = parts.get("short_term_history") if isinstance(parts.get("short_term_history"), list) else []
-    if short_history:
-        for rank, item in enumerate(short_history, start=1):
-            if not isinstance(item, Mapping):
-                continue
-            chunks.append(
-                f"[short {rank}]\n"
-                f"User: {item.get('user_input', '')}\n"
-                f"Assistant: {item.get('agent_response', '')}\n"
-                f"Time: {item.get('timestamp', '')}"
-            )
-    else:
-        chunks.append("[none]")
-
-    chunks.append("\nRetrieved mid-term pages:")
-    pages = parts.get("retrieved_pages") if isinstance(parts.get("retrieved_pages"), list) else []
-    if pages:
-        for rank, page in enumerate(pages, start=1):
-            if not isinstance(page, Mapping):
-                continue
-            chunks.append(
-                f"[page {rank} id={page.get('page_id', '')}]\n"
-                f"User: {page.get('user_input', '')}\n"
-                f"Assistant: {page.get('agent_response', '')}\n"
-                f"Time: {page.get('timestamp', '')}\n"
-                f"Conversation chain overview: {page.get('meta_info', 'N/A')}"
-            )
-    else:
-        chunks.append("[none]")
-
-    chunks.append("\nUser profile:")
-    chunks.append(str(parts.get("user_profile") or "[none]"))
-
-    chunks.append("\nRetrieved user long-term knowledge:")
-    user_knowledge = parts.get("retrieved_user_knowledge") if isinstance(parts.get("retrieved_user_knowledge"), list) else []
-    if user_knowledge:
-        for rank, item in enumerate(user_knowledge, start=1):
-            if isinstance(item, Mapping):
-                chunks.append(f"[user knowledge {rank}] {item.get('knowledge', '')} (Recorded: {item.get('timestamp', '')})")
-    else:
-        chunks.append("[none]")
-
-    chunks.append("\nRetrieved assistant long-term knowledge:")
-    assistant_knowledge = (
-        parts.get("retrieved_assistant_knowledge") if isinstance(parts.get("retrieved_assistant_knowledge"), list) else []
-    )
-    if assistant_knowledge:
-        for rank, item in enumerate(assistant_knowledge, start=1):
-            if isinstance(item, Mapping):
-                chunks.append(f"[assistant knowledge {rank}] {item.get('knowledge', '')} (Recorded: {item.get('timestamp', '')})")
-    else:
-        chunks.append("[none]")
-    return "\n".join(chunks)
-
-
-def memoryos_answer_system_prompt(prompts_module: object, parts: Mapping[str, Any]) -> str:
-    assistant_knowledge = "【Assistant Knowledge Base】\n"
-    for item in parts.get("retrieved_assistant_knowledge") or []:
-        if isinstance(item, Mapping):
-            assistant_knowledge += f"- {item.get('knowledge', '')} (Recorded: {item.get('timestamp', '')})\n"
-    if assistant_knowledge.strip() == "【Assistant Knowledge Base】":
-        assistant_knowledge += "- No relevant assistant knowledge found for this query.\n"
-    meta_data_text = "LoCoMo QA evaluation turn. No benchmark gold answers, evidence IDs, categories, or question-type labels are available."
-    base_prompt = prompts_module.GENERATE_SYSTEM_RESPONSE_SYSTEM_PROMPT.format(
-        relationship="memory QA assistant",
-        assistant_knowledge_text=assistant_knowledge,
-        meta_data_text=meta_data_text,
-    )
-    return (
-        f"{base_prompt}\n"
-        "For this evaluation, answer the user's question using only the supplied MemoryOS context. "
-        "Return strict JSON only with keys answer and evidence_dialog_ids. "
-        "Cite only dialog IDs that appear in the MemoryOS context."
-    )
-
-
-def memoryos_answer_user_prompt(prompts_module: object, row: LoCoMoQAItem, parts: Mapping[str, Any]) -> str:
-    history_text = "\n".join(
-        f"User: {item.get('user_input', '')}\nAssistant: {item.get('agent_response', '')} (Time: {item.get('timestamp', '')})"
-        for item in (parts.get("short_term_history") or [])
-        if isinstance(item, Mapping)
-    )
-    retrieval_text = "\n".join(
-        "【Historical Memory】\n"
-        f"User: {page.get('user_input', '')}\n"
-        f"Assistant: {page.get('agent_response', '')}\n"
-        f"Time: {page.get('timestamp', '')}\n"
-        f"Conversation chain overview: {page.get('meta_info', 'N/A')}"
-        for page in (parts.get("retrieved_pages") or [])
-        if isinstance(page, Mapping)
-    )
-    user_knowledge_background = ""
-    for item in parts.get("retrieved_user_knowledge") or []:
-        if isinstance(item, Mapping):
-            user_knowledge_background += f"- {item.get('knowledge', '')} (Recorded: {item.get('timestamp', '')})\n"
-    background = f"【User Profile】\n{parts.get('user_profile') or '[none]'}\n【Relevant User Knowledge Entries】\n{user_knowledge_background or '[none]'}"
-    base_prompt = prompts_module.GENERATE_SYSTEM_RESPONSE_USER_PROMPT.format(
-        history_text=history_text or "[none]",
-        retrieval_text=retrieval_text or "[none]",
-        background=background,
-        relationship="memory QA assistant",
-        query=row.question,
-    )
-    return (
-        f"{base_prompt}\n\n"
-        f"Question ID: {row.question_id}\n"
-        f"Question: {row.question}\n\n"
-        "Do not use benchmark gold answers, gold evidence, categories, or question-type labels. "
-        "Return JSON only:\n"
         "{\"answer\":\"short answer\", \"evidence_dialog_ids\":[\"D1:1\"]}"
     )
 
@@ -1612,29 +1410,40 @@ def tsm_context_from_spec(spec: object) -> str:
 
 def save_tsm_index(index: TSMIndex, path: Path) -> None:
     payload = {
+        "construction_mode": index.construction_mode,
         "events": [asdict(event) for event in index.events],
-        "entity_nodes": {key: asdict(value) for key, value in index.entity_nodes.items()},
         "temporal_facts": [asdict(fact) for fact in index.temporal_facts],
         "durative_memories": [asdict(memory) for memory in index.durative_memories],
-        "fact_event_index": {key: list(value) for key, value in index.fact_event_index.items()},
-        "construction_mode": index.construction_mode,
+        "entity_nodes": [asdict(node) for node in index.entity_nodes.values()],
+        "fact_event_index": index.fact_event_index,
         "construction_notes": list(index.construction_notes),
     }
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
 
 
 def load_tsm_index(path: Path) -> TSMIndex:
     payload = json.loads(path.read_text())
     events = [LoCoMoTSMEvent(**item) for item in payload.get("events", [])]
+    temporal_facts = [TemporalFact(**item) for item in payload.get("temporal_facts", [])]
+    durative_memories = [DurativeMemory(**item) for item in payload.get("durative_memories", [])]
+    entity_nodes = {
+        str(node.name): node
+        for node in (EntityNode(**item) for item in payload.get("entity_nodes", []))
+    }
     return TSMIndex(
         events=events,
         events_by_id={event.event_id: event for event in events},
-        entity_nodes={key: EntityNode(**value) for key, value in payload.get("entity_nodes", {}).items()},
-        temporal_facts=[TemporalFact(**item) for item in payload.get("temporal_facts", [])],
-        durative_memories=[DurativeMemory(**item) for item in payload.get("durative_memories", [])],
-        fact_event_index={key: list(value) for key, value in payload.get("fact_event_index", {}).items()},
-        construction_mode=str(payload.get("construction_mode") or "llm"),
-        construction_notes=list(payload.get("construction_notes") or []),
+        entity_nodes=entity_nodes,
+        temporal_facts=temporal_facts,
+        durative_memories=durative_memories,
+        fact_event_index={
+            str(key): [str(item) for item in value]
+            for key, value in dict(payload.get("fact_event_index", {})).items()
+            if isinstance(value, list)
+        },
+        construction_mode=str(payload.get("construction_mode", "llm")),
+        construction_notes=[str(item) for item in payload.get("construction_notes", [])],
     )
 
 
@@ -1719,62 +1528,8 @@ def normalize_output_dialog_ids(value: object) -> List[str]:
     return ordered_unique(item for item in expanded if re.match(r"D\d+:\d+", item))
 
 
-def mem0_llm_config(args: argparse.Namespace, runtime: LLMRuntimeConfig) -> Dict[str, object]:
-    provider = args.mem0_llm_provider or runtime.provider
-    if provider == "deepseek":
-        return {
-            "model": runtime.model,
-            "api_key": runtime.api_key,
-            "deepseek_base_url": runtime.api_base,
-            "temperature": 0.0,
-            "max_tokens": int(os.environ.get("LLM_MAX_TOKENS", "2048")),
-        }
-    if provider == "openai":
-        return {
-            "model": runtime.model,
-            "api_key": runtime.api_key,
-            "openai_base_url": runtime.api_base,
-            "temperature": 0.0,
-            "max_tokens": int(os.environ.get("LLM_MAX_TOKENS", "2048")),
-        }
-    return {
-        "model": runtime.model,
-        "api_key": runtime.api_key,
-        "temperature": 0.0,
-        "max_tokens": int(os.environ.get("LLM_MAX_TOKENS", "2048")),
-    }
-
-
-def mem0_embedder_config(args: argparse.Namespace) -> Dict[str, object]:
-    if args.mem0_embedder_provider == "openai":
-        return {
-            "model": args.mem0_embedding_model,
-            "api_key": os.environ.get("OPENAI_EMBEDDING_API_KEY") or os.environ.get("OPENAI_API_KEY"),
-            "openai_base_url": args.mem0_embedding_base_url
-            or os.environ.get("OPENAI_EMBEDDING_BASE_URL")
-            or os.environ.get("OPENAI_EMBEDDING_API_BASE")
-            or os.environ.get("OPENAI_BASE_URL")
-            or os.environ.get("OPENAI_API_BASE"),
-        }
-    return {}
-
-
-def mem0_vector_store_config(args: argparse.Namespace, store_dir: Path, collection_name: str) -> Dict[str, object]:
-    return {
-        "collection_name": collection_name,
-        "path": str(store_dir / "qdrant"),
-        "embedding_model_dims": args.mem0_embedding_dims,
-        "on_disk": True,
-    }
-
-
 def safe_collection_name(value: str) -> str:
     return re.sub(r"[^A-Za-z0-9_-]+", "_", value).strip("_")[:60] or "locomo"
-
-
-def is_retryable_mem0_error(exc: Exception) -> bool:
-    text = str(exc).lower()
-    return any(pattern in text for pattern in ("rate limit", "ratelimit", "429", "timeout", "temporarily unavailable"))
 
 
 def run_variant(
@@ -1782,14 +1537,10 @@ def run_variant(
     variant: str,
     rows: Sequence[LoCoMoQAItem],
     sample: LoCoMoSample,
-    rag_corpus: EmbeddingRAGCorpus,
+    rag_corpus: Optional[EmbeddingRAGCorpus],
     answer_runtime: LLMRuntimeConfig,
     args: argparse.Namespace,
 ) -> Dict[str, object]:
-    if variant == "mem0":
-        mem0_index: Optional[Mem0SampleIndex] = Mem0SampleIndex(sample, args, answer_runtime)
-    else:
-        mem0_index = None
     if variant == "tsm":
         tsm_index: Optional[TSMSampleIndex] = TSMSampleIndex(sample, args, answer_runtime)
     else:
@@ -1802,24 +1553,28 @@ def run_variant(
         memory_bank_index: Optional[MemoryBankSubprocessSampleIndex] = MemoryBankSubprocessSampleIndex(sample, rows, args, answer_runtime)
     else:
         memory_bank_index = None
-    if variant == "memoryos":
-        memoryos_index: Optional[MemoryOSOfficialSampleIndex] = MemoryOSOfficialSampleIndex(sample, args, answer_runtime)
+    if variant == "a_mem":
+        amem_index: Optional[AMemSampleIndex] = AMemSampleIndex(sample, args, answer_runtime)
     else:
-        memoryos_index = None
-    if variant == "zep":
-        zep_index: Optional[ZepGraphitiSubprocessSampleIndex] = ZepGraphitiSubprocessSampleIndex(sample, rows, args, answer_runtime)
+        amem_index = None
+    if variant in OFFICIAL_SERVICE_VARIANTS:
+        official_index: Optional[OfficialServiceSampleIndex] = OfficialServiceSampleIndex(
+            variant,
+            sample,
+            rows,
+            args,
+            answer_runtime,
+        )
     else:
-        zep_index = None
+        official_index = None
 
     def context_for(row: LoCoMoQAItem) -> BaselineContext:
         if variant == "full_text":
             return full_text_context(sample)
         if variant == "rag":
+            if rag_corpus is None:
+                raise RuntimeError("rag corpus was not initialized")
             return rag_corpus.retrieve(row.question, args.top_k)
-        if variant == "mem0":
-            if mem0_index is None:
-                raise RuntimeError("mem0 index was not initialized")
-            return mem0_index.retrieve(row.question, args.top_k)
         if variant == "tsm":
             if tsm_index is None:
                 raise RuntimeError("tsm index was not initialized")
@@ -1832,14 +1587,14 @@ def run_variant(
             if memory_bank_index is None:
                 raise RuntimeError("memory_bank index was not initialized")
             return memory_bank_index.retrieve(row)
-        if variant == "memoryos":
-            if memoryos_index is None:
-                raise RuntimeError("memoryos index was not initialized")
-            return memoryos_index.retrieve(row)
-        if variant == "zep":
-            if zep_index is None:
-                raise RuntimeError("zep index was not initialized")
-            return zep_index.retrieve(row)
+        if variant == "a_mem":
+            if amem_index is None:
+                raise RuntimeError("a_mem index was not initialized")
+            return amem_index.retrieve(row)
+        if variant in OFFICIAL_SERVICE_VARIANTS:
+            if official_index is None:
+                raise RuntimeError(f"{variant} official adapter was not initialized")
+            return official_index.retrieve(row)
         raise ValueError(f"unsupported variant={variant}")
 
     def run_row(index: int, row: LoCoMoQAItem) -> Tuple[int, Dict[str, object]]:
@@ -1917,8 +1672,8 @@ def print_summary(provider: str, model: str, results: Sequence[Dict[str, object]
 
 
 def main() -> int:
-    args = parse_args()
     load_dotenv()
+    args = parse_args()
     sample = load_sample(Path(args.data), args.sample_id)
     rows = select_rows(
         load_sample_qa(Path(args.data), args.sample_id),
@@ -1934,6 +1689,11 @@ def main() -> int:
         print(f"sample_id={args.sample_id} rows={len(rows)} variants={','.join(args.variants)}")
         print(f"question_types={','.join(args.question_types) if args.question_types else '[all]'}")
         print(f"top_k={args.top_k} baseline_store_dir={args.baseline_store_dir}")
+        official_variants = [variant for variant in args.variants if variant in OFFICIAL_SERVICE_VARIANTS]
+        if official_variants:
+            print(f"official_service_variants={','.join(official_variants)}")
+            print(f"official_search_concurrency={args.official_search_concurrency}")
+            print(f"official_user_id={args.official_user_id or '[auto: locomo_<variant>_<sample>_<datahash>]'}")
         if "rag" in args.variants:
             print(
                 "rag="
@@ -1957,7 +1717,7 @@ def main() -> int:
         cache_path=Path(args.cache),
         use_cache=not args.no_cache,
     )
-    rag_corpus = EmbeddingRAGCorpus(sample, args)
+    rag_corpus = EmbeddingRAGCorpus(sample, args) if "rag" in args.variants else None
     try:
         results = [
             run_variant(
@@ -2002,20 +1762,6 @@ def main() -> int:
             or os.environ.get("OPENAI_API_BASE"),
             "rag_embedding_cache": args.rag_embedding_cache,
             "rag_embedding_batch_size": args.rag_embedding_batch_size,
-            "mem0_skip_ingest": args.mem0_skip_ingest,
-            "mem0_start_index": args.mem0_start_index,
-            "mem0_add_retries": args.mem0_add_retries,
-            "mem0_retry_sleep": args.mem0_retry_sleep,
-            "mem0_llm_provider": args.mem0_llm_provider or args.provider,
-            "mem0_embedder_provider": args.mem0_embedder_provider,
-            "mem0_embedding_model": args.mem0_embedding_model,
-            "mem0_embedding_base_url": args.mem0_embedding_base_url
-            or os.environ.get("OPENAI_EMBEDDING_BASE_URL")
-            or os.environ.get("OPENAI_EMBEDDING_API_BASE")
-            or os.environ.get("OPENAI_BASE_URL")
-            or os.environ.get("OPENAI_API_BASE"),
-            "mem0_embedding_dims": args.mem0_embedding_dims,
-            "mem0_vector_store_provider": args.mem0_vector_store_provider,
             "memgpt": "official_letta_runtime",
             "letta_command": args.letta_command,
             "letta_code_repo": args.letta_code_repo,
@@ -2039,28 +1785,23 @@ def main() -> int:
             "memory_bank_embedding_device": args.memory_bank_embedding_device,
             "memory_bank_conda_env": args.memory_bank_conda_env,
             "memory_bank_python": args.memory_bank_python,
-            "memoryos": "official_memoryos_source_runtime",
-            "memoryos_official_repo": args.memoryos_official_repo,
-            "memoryos_model": args.memoryos_model or model,
-            "memoryos_embedding_model": args.memoryos_embedding_model,
-            "memoryos_short_term_capacity": args.memoryos_short_term_capacity,
-            "memoryos_mid_term_heat_threshold": args.memoryos_mid_term_heat_threshold,
-            "memoryos_retrieval_queue_capacity": args.memoryos_retrieval_queue_capacity or args.top_k,
-            "memoryos_skip_ingest": args.memoryos_skip_ingest,
-            "zep": "official_graphiti_runtime",
-            "zep_official_repo": args.zep_official_repo,
-            "zep_conda_env": args.zep_conda_env,
-            "zep_python": args.zep_python,
-            "zep_neo4j_uri": args.zep_neo4j_uri,
-            "zep_neo4j_user": args.zep_neo4j_user,
-            "zep_neo4j_database": args.zep_neo4j_database,
-            "zep_group_id": args.zep_group_id,
-            "zep_graphiti_provider": args.zep_graphiti_provider or args.provider,
-            "zep_cross_encoder": args.zep_cross_encoder,
-            "zep_embedder": args.zep_embedder,
-            "zep_search_config": args.zep_search_config,
-            "zep_skip_ingest": args.zep_skip_ingest,
+            "a_mem": "official_agiresearch_a_mem_runtime",
+            "amem_repo_dir": args.amem_repo_dir,
+            "amem_llm_backend": args.amem_llm_backend,
+            "amem_llm_model": args.amem_llm_model or model,
+            "amem_embedding_model": args.amem_embedding_model,
+            "amem_evo_threshold": args.amem_evo_threshold,
+            "amem_agentic_search": args.amem_agentic_search,
+            "amem_ingest_limit": args.amem_ingest_limit,
             "tsm_construction_mode": "llm",
+            "official_service_variants": list(OFFICIAL_SERVICE_VARIANTS),
+            "official_adapter_interface": "EverMemBench Baseline BaseAdapter.add/search",
+            "official_user_id": args.official_user_id,
+            "official_base_url": args.official_base_url,
+            "official_search_concurrency": args.official_search_concurrency,
+            "skip_official_ingest": args.skip_official_ingest,
+            "force_official_ingest": args.force_official_ingest,
+            "official_env": official_env_snapshot(),
         },
         "results": results,
     }

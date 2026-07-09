@@ -94,26 +94,32 @@ answers directly from retrieved graph evidence.
 
 ## Memory Baselines
 
-The comparison table baselines are tracked separately from the graph runner:
+The comparison table baselines are tracked separately from the graph runner.
+Implementation code lives under `Experiment/Other_BenchMark/LoCoMo-QA/Baseline/`;
+the LoCoMo-QA root keeps experiment entrypoints only.
 
-Implementation code lives under `Experiment/Other_BenchMark/LoCoMo-QA/Baseline/` in baseline-shaped
-directories such as `full_context_llm/`, `rag/`, `ours_scope_time_state/`, `tsm/`,
-`memory_bank/`, `memoryos/`, and `graphiti_zep/`. The LoCoMo-QA root keeps experiment entrypoints only.
+Supported variants:
 
-- `Full Text`: direct full-conversation context, no retrieval paper required.
-- `RAG`: OpenAI-compatible embedding retrieval over raw conversation turn chunks. It uses no BM25/hybrid prefilter; retrieved chunks are mapped back to original dialog IDs for evidence accounting.
-- `Zep`: paper already stored at `RelatedWork/ZEP.pdf`; the `zep` variant runs the official `getzep/graphiti` runtime in a subprocess and reuses the local Graphiti client/driver construction from `Experiment/Main_Baseline/graphiti_zep/`.
-- `TSM`: paper already stored at `RelatedWork/TSM.pdf`; local STAMB reference implementation is under `Experiment/Main_Baseline/tsm/`.
-- `A-MEM`: paper stored at `RelatedWork/A-MEM.pdf`; official repositories are `WujiangXu/AgenticMemory` for paper reproduction and `agiresearch/A-mem` for the memory system.
-- `MemoryOS`: paper stored at `RelatedWork/MemoryOS.pdf`; the `memoryos` variant imports official source from `BAI-LAB/MemoryOS` (`memoryos-pypi.Memoryos`) and uses official short/mid/long-term memory plus `Retriever.retrieve_context`.
-- `Mem0`: paper stored at `RelatedWork/Mem0.pdf`; the LoCoMo runner has an optional official-SDK variant using qdrant vector storage and BM25 sparse support through `fastembed`. Run it from the main `py311` pydantic-2 environment.
-- `MemGPT`: paper stored at `RelatedWork/MemGPT.pdf`. The default `memgpt` variant is an official Letta adapter. It runs the official Letta Code CLI (`letta-ai/letta-code`, or an installed `@letta-ai/letta-code`) in headless JSON mode, first ingests the LoCoMo conversation into an official agent, then asks each question as a separate query.
-- `MemoryBank`: paper stored at `RelatedWork/MemoryBank.pdf`; official repository is `zhongwanjun/MemoryBank-SiliconFriend`. The `memory_bank` variant runs an isolated worker in `locomo_memorybank`, where the official legacy stack (`langchain==0.0.146`, pydantic 1) can load `memory_retrieval/forget_memory.py` `LocalMemoryRetrieval` and FAISS without breaking the main `py311` environment.
+- `full_text`: direct full-conversation context, no external memory system.
+- `rag`: OpenAI-compatible embedding retrieval over raw conversation turn chunks. It uses no BM25/hybrid prefilter; retrieved chunks are mapped back to original dialog IDs for evidence accounting.
+- `tsm`: the local STAMB TSM reference implementation under `Experiment/Main_Baseline/tsm/`.
+- `memory_bank`: official MemoryBank-SiliconFriend prompt + FAISS retrieval path. The official
+  runtime runs in an isolated worker subprocess; LangChain compatibility shims are local to that
+  worker and are not imported by the main runner.
+- `a_mem`: official `agiresearch/A-mem` `AgenticMemorySystem.add_note/search(_agentic)` path.
+- `memgpt`: official Letta Code CLI path, used as the current MemGPT/Letta implementation.
+- `mem0_local`, `memos_local`, `memobase`, `graphiti_local`: official-service baselines using the same `BaseAdapter.add/search` interface and adapter layout as `Experiment/Other_BenchMark/EverMemBench/Baseline/`.
 
 The memory baseline runner builds memory only from `sample.conversation`. It does not expose gold
 answers, gold evidence IDs, official categories, or question-type labels to retrieval/controller/answer
 prompts. Evidence metrics are computed from model-emitted `evidence_dialog_ids`; missing citations
 are not backfilled from retrieved candidates.
+
+The official-service variants convert one LoCoMo `sample_id` into an official group-chat `Dataset`
+and embed dialog IDs in visible message text before calling the adapter. The adapter writes to the
+official memory system with `add(dataset, user_id)` and retrieves with `search(question, user_id)`;
+the LoCoMo runner only handles data conversion, answer prompting, metrics, and local ingest-state
+bookkeeping.
 
 Run directly callable baselines:
 
@@ -134,8 +140,38 @@ env PYTHONDONTWRITEBYTECODE=1 LLM_PARSE_RETRIES=6 \
   --cache Graph/output/cache/llm_cache.locomo_qa_memory_baselines.conv-26.deepseek_v4_flash.json
 ```
 
-The `mem0` variant is optional because it first ingests the full sample conversation into the SDK memory
-store with LLM-based extraction. It runs from the main `py311` pydantic-2 environment:
+Official-service storage should be started from each upstream project's official local/self-host
+instructions. Docker Compose is only a launcher, not part of the benchmark logic, but the backing
+stores are required:
+
+```text
+mem0_local      -> official Mem0 server, Postgres + pgvector
+memos_local     -> official MemOS server, Neo4j + Qdrant
+memobase        -> official Memobase server, Postgres + Redis
+graphiti_local  -> graphiti-core, Neo4j
+```
+
+Set service URLs and model endpoints through environment variables or `.env`:
+
+```bash
+MEM0_LOCAL_BASE_URL=http://localhost:8888
+MEMOS_LOCAL_BASE_URL=http://localhost:8001
+MEMOBASE_BASE_URL=http://localhost:8019
+MEMOBASE_API_TOKEN=your_memobase_token
+
+GRAPHITI_LLM_API_KEY=local
+GRAPHITI_LLM_BASE_URL=http://127.0.0.1:8000/v1
+GRAPHITI_LLM_MODEL=your-30b-model-name
+GRAPHITI_EMBEDDING_API_KEY=your-openai-key
+GRAPHITI_EMBEDDING_BASE_URL=https://api.openai.com/v1
+GRAPHITI_EMBEDDING_MODEL=text-embedding-3-small
+GRAPHITI_EMBEDDING_DIM=1536
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USER=neo4j
+NEO4J_PASSWORD=your_password
+```
+
+Run official-service baselines after the services are healthy:
 
 ```bash
 env PYTHONDONTWRITEBYTECODE=1 TOKENIZERS_PARALLELISM=false LLM_PARSE_RETRIES=6 \
@@ -144,95 +180,31 @@ env PYTHONDONTWRITEBYTECODE=1 TOKENIZERS_PARALLELISM=false LLM_PARSE_RETRIES=6 \
   --sample-id conv-26 \
   --provider deepseek \
   --model deepseek-v4-flash \
-  --variants mem0 \
+  --variants mem0_local memos_local memobase graphiti_local \
   --question-types multi-hop open-domain \
   --top-k 24 \
-  --mem0-vector-store-provider qdrant \
-  --mem0-add-retries 6 \
-  --mem0-retry-sleep 60 \
+  --official-search-concurrency 1 \
   --answer-workers 2 \
-  --output Graph/output/results/results_locomo_qa_mem0_conv26_multi_open.json \
-  --cache Graph/output/cache/llm_cache.locomo_qa_mem0.conv-26.deepseek_v4_flash.json
+  --output Graph/output/results/results_locomo_qa_official_services_conv26_multi_open.json \
+  --cache Graph/output/cache/llm_cache.locomo_qa_official_services.conv-26.deepseek_v4_flash.json
 ```
 
-Prepare official repositories:
+The first run writes an ingest state under
+`Graph/output/baseline_store/locomo_qa/official_services/<variant>/<sample_id>/`.
+Use `--reuse-baseline-store` to skip repeated `add()` calls with the same local state, and use
+`--force-official-ingest` when the service store was reset or when a fresh official-service ingest is
+intended. Use `--official-user-id` only when intentionally querying an existing service-side namespace.
+
+Official-source/CLI variants need their upstream repo paths or CLI entrypoints:
 
 ```bash
-git clone --depth 1 https://github.com/letta-ai/letta-code.git /path/to/letta-code
-cd /path/to/letta-code && bun install
-
-git clone --depth 1 https://github.com/zhongwanjun/MemoryBank-SiliconFriend.git /path/to/MemoryBank-SiliconFriend
-
-git clone --depth 1 https://github.com/BAI-LAB/MemoryOS.git /path/to/MemoryOS
-
-git clone --depth 1 https://github.com/getzep/graphiti.git /path/to/graphiti
+--memory-bank-official-repo Graph/output/service_repos/locomo_smoke/MemoryBank-SiliconFriend
+--amem-repo-dir Graph/output/service_repos/locomo_smoke/A-mem
+--letta-code-repo Graph/output/service_repos/locomo_smoke/letta-code
 ```
 
-MemoryBank's official runtime should stay isolated because its upstream FAISS/langchain code pins the old
-pydantic-1 stack. This checkout uses an already-created `locomo_memorybank` worker environment
-(`pydantic==1.10.26`, `langchain==0.0.146`) and keeps `py311` on pydantic 2 for mem0, MemoryOS, and Zep.
-For a fresh machine, create the MemoryBank worker env with the official legacy deps instead of cloning the
-current pydantic-2 `py311` environment:
-
-```bash
-conda create -n locomo_memorybank python=3.11 -y
-conda run -n locomo_memorybank python -m pip install \
-  'pydantic<2' 'SQLAlchemy<2' 'tenacity<9' 'langchain==0.0.146' \
-  faiss-cpu sentence-transformers openai tiktoken unstructured
-conda run -n locomo_memorybank python -c "import sys; sys.path.insert(0, '/path/to/MemoryBank-SiliconFriend/memory_bank'); import memory_retrieval.forget_memory as fm; print(fm.LocalMemoryRetrieval)"
-```
-
-Run official-priority MemGPT, MemoryBank, and MemoryOS variants:
-
-```bash
-env PYTHONDONTWRITEBYTECODE=1 TOKENIZERS_PARALLELISM=false LLM_PARSE_RETRIES=6 \
-  conda run --no-capture-output -n py311 \
-  python Experiment/Other_BenchMark/LoCoMo-QA/run_locomo_memory_baselines.py \
-  --sample-id conv-26 \
-  --provider deepseek \
-  --model deepseek-v4-flash \
-  --variants memgpt memory_bank memoryos \
-  --question-types multi-hop open-domain \
-  --top-k 24 \
-  --letta-code-repo /path/to/letta-code \
-  --letta-backend local \
-  --letta-ingest-chunk-turns 10 \
-  --letta-toolset auto \
-  --letta-base-tools memory \
-  --memory-bank-official-repo /path/to/MemoryBank-SiliconFriend \
-  --memory-bank-conda-env locomo_memorybank \
-  --memory-bank-embedding-model minilm-l6 \
-  --memory-bank-embedding-device cpu \
-  --memoryos-official-repo /path/to/MemoryOS \
-  --memoryos-embedding-model all-MiniLM-L6-v2 \
-  --answer-workers 2 \
-  --output Graph/output/results/results_locomo_qa_memgpt_memorybank_memoryos_conv26_multi_open.json \
-  --cache Graph/output/cache/llm_cache.locomo_qa_memgpt_memorybank_memoryos.conv-26.deepseek_v4_flash.json
-```
-
-Run Zep/Graphiti after Neo4j is available and the main `py311` environment has pydantic 2:
-
-```bash
-env PYTHONDONTWRITEBYTECODE=1 TOKENIZERS_PARALLELISM=false LLM_PARSE_RETRIES=6 \
-  NEO4J_URI=bolt://localhost:7687 \
-  NEO4J_USER=neo4j \
-  NEO4J_PASSWORD=your_password \
-  conda run --no-capture-output -n py311 \
-  python Experiment/Other_BenchMark/LoCoMo-QA/run_locomo_memory_baselines.py \
-  --sample-id conv-26 \
-  --provider deepseek \
-  --model deepseek-v4-flash \
-  --variants zep \
-  --question-types multi-hop open-domain \
-  --top-k 24 \
-  --zep-official-repo /path/to/graphiti \
-  --zep-conda-env py311 \
-  --zep-graphiti-provider deepseek \
-  --zep-search-config combined_cross_encoder \
-  --answer-workers 2 \
-  --output Graph/output/results/results_locomo_qa_zep_conv26_multi_open.json \
-  --cache Graph/output/cache/llm_cache.locomo_qa_zep.conv-26.deepseek_v4_flash.json
-```
+For local Ollama smoke tests with Letta Code, pass the provider-qualified model handle, for example
+`--letta-model ollama/qwen2.5:7b`; the LoCoMo answer model can still be `--model qwen2.5:7b`.
 
 Use `--dry-run` to validate selection and CLI wiring without building memories or calling LLM/embedding APIs:
 
@@ -241,7 +213,7 @@ env PYTHONDONTWRITEBYTECODE=1 \
   conda run -n py311 \
   python Experiment/Other_BenchMark/LoCoMo-QA/run_locomo_memory_baselines.py \
   --sample-id conv-26 \
-  --variants memgpt memory_bank memoryos zep \
+  --variants memory_bank a_mem memgpt mem0_local memos_local memobase graphiti_local \
   --question-types temporal \
   --limit-cases 1 \
   --dry-run

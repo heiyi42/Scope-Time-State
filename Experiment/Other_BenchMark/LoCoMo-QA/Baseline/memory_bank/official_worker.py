@@ -2,11 +2,12 @@ from __future__ import annotations
 
 import argparse
 from collections import defaultdict
+import importlib
 import json
 from pathlib import Path
 import re
 import sys
-from types import SimpleNamespace
+from types import ModuleType, SimpleNamespace
 from typing import Any, Dict, List, Mapping, Sequence
 
 
@@ -42,6 +43,39 @@ from runner import (  # noqa: E402
 )
 
 
+def install_memorybank_langchain_compat() -> None:
+    aliases = {
+        "langchain.embeddings.huggingface": "langchain_community.embeddings.huggingface",
+        "langchain.document_loaders": "langchain_community.document_loaders",
+        "langchain.vectorstores": "langchain_community.vectorstores",
+        "langchain.text_splitter": "langchain_text_splitters",
+        "langchain.docstore.document": "langchain_core.documents",
+    }
+    for old_name, new_name in aliases.items():
+        module = importlib.import_module(new_name)
+        sys.modules[old_name] = module
+        parent_name, attr_name = old_name.rsplit(".", 1)
+        try:
+            parent = importlib.import_module(parent_name)
+        except ModuleNotFoundError:
+            parent = sys.modules.get(parent_name)
+            if parent is None:
+                parent = ModuleType(parent_name)
+                sys.modules[parent_name] = parent
+        setattr(parent, attr_name, module)
+    vectorstores = importlib.import_module("langchain_community.vectorstores")
+    faiss_cls = getattr(vectorstores, "FAISS", None)
+    if faiss_cls is not None and not getattr(faiss_cls, "_locomo_memorybank_load_patch", False):
+        original_load_local = faiss_cls.load_local
+
+        def load_local_compat(cls: object, folder_path: str, embeddings: object, index_name: str = "index", **kwargs: Any) -> Any:
+            kwargs.setdefault("allow_dangerous_deserialization", True)
+            return original_load_local(folder_path, embeddings, index_name=index_name, **kwargs)
+
+        faiss_cls.load_local = classmethod(load_local_compat)
+        faiss_cls._locomo_memorybank_load_patch = True
+
+
 class MemoryBankOfficialWorkerIndex:
     def __init__(self, sample: LoCoMoSample, config: argparse.Namespace, runtime: LLMRuntimeConfig) -> None:
         self.sample = sample
@@ -51,6 +85,7 @@ class MemoryBankOfficialWorkerIndex:
         self.boot_name = config.memory_bank_boot_name or "AI"
         self.language = config.memory_bank_language
         self.current_date = memory_bank_current_date(sample, config)
+        install_memorybank_langchain_compat()
         self.official = load_memory_bank_official_runtime(config.memory_bank_official_repo)
         self.official_prompts = self.official["prompts"]
         self.store_dir = Path(config.baseline_store_dir) / "memory_bank" / sample.sample_id
@@ -67,6 +102,7 @@ class MemoryBankOfficialWorkerIndex:
         self.memory_id_to_dialog_ids = self._memory_id_to_dialog_ids(self.store)
         self.local_memory_qa = self._new_official_retriever()
         self.vector_store = self._load_or_build_vector_store()
+        self._patch_vector_store_signature()
         if self.store_path.exists():
             self.store = json.loads(self.store_path.read_text())
             self.memory_id_to_dialog_ids = self._memory_id_to_dialog_ids(self.store)
@@ -217,6 +253,18 @@ class MemoryBankOfficialWorkerIndex:
             raise RuntimeError(f"official MemoryBank failed to build FAISS index from {self.store_path}; loaded_files={loaded_files}")
         print(f"[memory-bank-official-worker] built_faiss {built_vs_path}", flush=True)
         return self.local_memory_qa.load_memory_index(str(built_vs_path))
+
+    def _patch_vector_store_signature(self) -> None:
+        vector_store_cls = self.vector_store.__class__
+        if getattr(vector_store_cls, "_locomo_memorybank_search_patch", False):
+            return
+        original = vector_store_cls.similarity_search_with_score_by_vector
+
+        def search_with_score_by_vector_compat(self_obj: object, embedding: List[float], k: int = 4, **_: Any) -> Any:
+            return original(self_obj, embedding, k=k)
+
+        vector_store_cls.similarity_search_with_score_by_vector = search_with_score_by_vector_compat
+        vector_store_cls._locomo_memorybank_search_patch = True
 
     def _memory_id_to_dialog_ids(self, store: Mapping[str, Any]) -> Dict[str, List[str]]:
         user_store = store.get(self.user_name) if isinstance(store.get(self.user_name), Mapping) else {}
