@@ -11,12 +11,14 @@ import sys
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence
 
 
-PROJECT_DIR = Path(__file__).resolve().parents[3]
-if str(PROJECT_DIR) not in sys.path:
-    sys.path.insert(0, str(PROJECT_DIR))
+PROJECT_DIR = Path(__file__).resolve().parents[5]
+BASELINE_DIR = Path(__file__).resolve().parents[1]
+for import_path in (PROJECT_DIR, BASELINE_DIR):
+    if str(import_path) not in sys.path:
+        sys.path.insert(0, str(import_path))
 
-from pipeline.external.evermembench.loader import DATA_DIR, RESULT_DIR
-from pipeline.external.evermembench.qa_probe import expand_message_index, group_key
+from ours_scope_time_state.loader import DATA_DIR, RESULT_DIR
+from ours_scope_time_state.qa_probe import expand_message_index, group_key
 
 
 DEFAULT_RESULTS = (

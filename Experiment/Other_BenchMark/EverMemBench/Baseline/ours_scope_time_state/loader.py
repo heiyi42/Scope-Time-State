@@ -3,13 +3,19 @@ from __future__ import annotations
 from dataclasses import dataclass
 import json
 from pathlib import Path
+import sys
 from typing import Any, Dict, List, Optional, Tuple
 
-from pipeline.external.paths import EXTERNAL_CACHE_DIR, EXTERNAL_GRAPH_DIR, EXTERNAL_OUTPUT_ROOT, EXTERNAL_RESULT_DIR
 
+PROJECT_DIR = Path(__file__).resolve().parents[5]
+EVERMEMBENCH_DIR = Path(__file__).resolve().parents[2]
+BASELINE_DIR = EVERMEMBENCH_DIR / "Baseline"
+for import_path in (PROJECT_DIR, BASELINE_DIR):
+    if str(import_path) not in sys.path:
+        sys.path.insert(0, str(import_path))
 
-PROJECT_DIR = Path(__file__).resolve().parents[3]
-EVERMEMBENCH_DIR = PROJECT_DIR / "Experiment/Other_BenchMark/EverMemBench"
+from pipeline.external.paths import EXTERNAL_CACHE_DIR, EXTERNAL_GRAPH_DIR, EXTERNAL_OUTPUT_ROOT, EXTERNAL_RESULT_DIR  # noqa: E402
+
 DATA_DIR = EVERMEMBENCH_DIR / "dataset"
 OUTPUT_ROOT = EXTERNAL_OUTPUT_ROOT
 GRAPH_OUTPUT_DIR = EXTERNAL_GRAPH_DIR

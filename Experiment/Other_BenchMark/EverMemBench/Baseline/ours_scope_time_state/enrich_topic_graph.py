@@ -9,11 +9,13 @@ import sys
 from typing import Any, DefaultDict, Dict, List, Mapping, Sequence
 
 
-PROJECT_DIR = Path(__file__).resolve().parents[3]
-if str(PROJECT_DIR) not in sys.path:
-    sys.path.insert(0, str(PROJECT_DIR))
+PROJECT_DIR = Path(__file__).resolve().parents[5]
+BASELINE_DIR = Path(__file__).resolve().parents[1]
+for import_path in (PROJECT_DIR, BASELINE_DIR):
+    if str(import_path) not in sys.path:
+        sys.path.insert(0, str(import_path))
 
-from pipeline.external.evermembench.graph_builder import (
+from ours_scope_time_state.graph_builder import (
     dedupe_edges,
     enrich_claim_annotations,
     json_dump,
@@ -25,7 +27,7 @@ from pipeline.external.evermembench.graph_builder import (
     validate_graph,
     write_jsonl,
 )
-from pipeline.external.evermembench.loader import DATA_DIR, GRAPH_OUTPUT_DIR, load_topic_events
+from ours_scope_time_state.loader import DATA_DIR, GRAPH_OUTPUT_DIR, load_topic_events
 
 
 DERIVED_CLAIM_FIELDS = (

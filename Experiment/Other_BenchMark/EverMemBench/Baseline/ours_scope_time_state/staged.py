@@ -8,7 +8,7 @@ import re
 from typing import Any, DefaultDict, Dict, List, Mapping, Optional, Sequence
 
 from pipeline.external.embedding_retrieval import OpenAIEmbeddingIndex
-from pipeline.external.evermembench.qa_probe import BM25Index, qa_query_text, read_jsonl
+from ours_scope_time_state.qa_probe import BM25Index, qa_query_text, read_jsonl
 
 
 RELATION_EDGE_TYPES = {"SUPERSEDES", "CORRECTS", "CONFLICTS_WITH"}

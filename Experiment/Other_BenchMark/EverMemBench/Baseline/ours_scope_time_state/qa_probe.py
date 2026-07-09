@@ -11,11 +11,13 @@ import sys
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set, Tuple
 
 
-PROJECT_DIR = Path(__file__).resolve().parents[3]
-if str(PROJECT_DIR) not in sys.path:
-    sys.path.insert(0, str(PROJECT_DIR))
+PROJECT_DIR = Path(__file__).resolve().parents[5]
+BASELINE_DIR = Path(__file__).resolve().parents[1]
+for import_path in (PROJECT_DIR, BASELINE_DIR):
+    if str(import_path) not in sys.path:
+        sys.path.insert(0, str(import_path))
 
-from pipeline.external.evermembench.loader import DATA_DIR, GRAPH_OUTPUT_DIR
+from ours_scope_time_state.loader import DATA_DIR, GRAPH_OUTPUT_DIR
 
 
 TOKEN_RE = re.compile(r"[A-Za-z0-9_]+")

@@ -38,7 +38,6 @@ from Experiment.Main_Baseline.tsm.tsm_memory import (  # noqa: E402
     build_tsm_prompt_spec_from_index,
 )
 from ours_scope_time_state.graph_query_runner import (  # noqa: E402
-    BM25Index,
     LLMRuntimeConfig,
     exact_match_score,
     f1_from_precision_recall,
@@ -62,12 +61,13 @@ from common.loader import (  # noqa: E402
     normalize_dialog_ids,
     ordered_unique,
 )
+from pipeline.external.embedding_retrieval import OpenAIEmbeddingIndex  # noqa: E402
 from pipeline.external.paths import EXTERNAL_CACHE_DIR, EXTERNAL_RESULT_DIR  # noqa: E402
 
 
 SUPPORTED_VARIANTS = (
     "full_text",
-    "naive_rag",
+    "rag",
     "mem0",
     "memgpt",
     "memory_bank",
@@ -116,24 +116,84 @@ class LoCoMoTSMCase:
     output_slots: Optional[Tuple[str, ...]] = None
 
 
-class TurnBM25Corpus:
-    def __init__(self, sample: LoCoMoSample) -> None:
+@dataclass(frozen=True)
+class EmbeddingRAGChunk:
+    chunk_id: str
+    turns: Tuple[DialogTurn, ...]
+    document: str
+
+
+class EmbeddingRAGCorpus:
+    def __init__(self, sample: LoCoMoSample, args: argparse.Namespace) -> None:
         self.sample = sample
         self.turns_by_id = {turn.dia_id: turn for turn in sample.turns}
-        self.doc_ids = [turn.dia_id for turn in sample.turns]
-        self.documents = [turn_document(turn) for turn in sample.turns]
-        self.index = BM25Index(self.doc_ids, self.documents)
+        self.chunk_target_chars = max(200, int(args.rag_chunk_target_chars))
+        self.chunk_overlap_turns = max(0, int(args.rag_chunk_overlap_turns))
+        self.embedding_model = str(args.rag_embedding_model)
+        self.chunks = self._build_chunks()
+        namespace = (
+            f"locomo-qa:embedding-rag:{sample.sample_id}:"
+            f"{short_hash(str(Path(args.data).resolve()))}:"
+            f"{self.chunk_target_chars}:{self.chunk_overlap_turns}"
+        )
+        self.index = OpenAIEmbeddingIndex(
+            [chunk.chunk_id for chunk in self.chunks],
+            [chunk.document for chunk in self.chunks],
+            model=self.embedding_model,
+            cache_path=Path(args.rag_embedding_cache),
+            namespace=namespace,
+            batch_size=max(1, int(args.rag_embedding_batch_size)),
+            base_url=args.rag_embedding_base_url or None,
+        )
+
+    def _build_chunks(self) -> List[EmbeddingRAGChunk]:
+        ordered_turns = sorted(self.sample.turns, key=lambda turn: dialog_sort_key(turn.dia_id))
+        turn_chunks = chunk_turns_by_chars(
+            ordered_turns,
+            target_chars=self.chunk_target_chars,
+            overlap_turns=self.chunk_overlap_turns,
+        )
+        chunks: List[EmbeddingRAGChunk] = []
+        for index, turns in enumerate(turn_chunks, start=1):
+            if not turns:
+                continue
+            dialog_ids = [turn.dia_id for turn in turns]
+            chunks.append(
+                EmbeddingRAGChunk(
+                    chunk_id=f"{self.sample.sample_id}:chunk:{index:04d}:{dialog_ids[0]}-{dialog_ids[-1]}",
+                    turns=tuple(turns),
+                    document=embedding_chunk_document(turns),
+                )
+            )
+        return chunks
 
     def retrieve(self, question: str, top_k: int) -> BaselineContext:
         hits = self.index.search(question, top_k)
-        dialog_ids = [doc_id for doc_id, _score in hits]
+        chunks_by_id = {chunk.chunk_id: chunk for chunk in self.chunks}
+        dialog_ids = ordered_unique(
+            turn.dia_id
+            for hit in hits
+            for turn in chunks_by_id.get(hit.doc_id, EmbeddingRAGChunk(hit.doc_id, (), "")).turns
+        )
         return BaselineContext(
             candidate_dialog_ids=dialog_ids,
             context=format_turn_context([self.turns_by_id[dialog_id] for dialog_id in dialog_ids if dialog_id in self.turns_by_id]),
             trace={
-                "retriever": "bm25_turns",
-                "top_k": top_k,
-                "hits": [{"dialog_id": doc_id, "score": score} for doc_id, score in hits],
+                "retriever": "embedding_turn_chunks",
+                "embedding_model": self.embedding_model,
+                "top_k_chunks": top_k,
+                "chunk_target_chars": self.chunk_target_chars,
+                "chunk_overlap_turns": self.chunk_overlap_turns,
+                "n_chunks": len(self.chunks),
+                "hits": [
+                    {
+                        "chunk_id": hit.doc_id,
+                        "score": hit.score,
+                        "dialog_ids": [turn.dia_id for turn in chunks_by_id.get(hit.doc_id, EmbeddingRAGChunk(hit.doc_id, (), "")).turns],
+                        "char_count": len(chunks_by_id[hit.doc_id].document) if hit.doc_id in chunks_by_id else 0,
+                    }
+                    for hit in hits
+                ],
             },
         )
 
@@ -885,7 +945,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--sample-id", default="conv-26")
     parser.add_argument("--provider", choices=("openai", "deepseek"), default="deepseek")
     parser.add_argument("--model", default=None)
-    parser.add_argument("--variants", nargs="+", default=["full_text", "naive_rag"], choices=SUPPORTED_VARIANTS)
+    parser.add_argument("--variants", nargs="+", default=["full_text", "rag"], choices=SUPPORTED_VARIANTS)
     parser.add_argument("--question-types", nargs="+", default=[])
     parser.add_argument("--limit-cases", type=int, default=0)
     parser.add_argument("--limit-per-type", type=int, default=0)
@@ -897,6 +957,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--baseline-store-dir", default=str(PROJECT_DIR / "Graph/output/baseline_store/locomo_qa"))
     parser.add_argument("--reuse-baseline-store", action="store_true")
     parser.add_argument("--dry-run", action="store_true", help="Validate selected rows and variants without LLM or embedding calls.")
+    parser.add_argument("--rag-chunk-target-chars", type=int, default=900)
+    parser.add_argument("--rag-chunk-overlap-turns", type=int, default=1)
+    parser.add_argument("--rag-embedding-model", default=os.environ.get("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small"))
+    parser.add_argument("--rag-embedding-base-url", default=os.environ.get("OPENAI_EMBEDDING_BASE_URL", ""))
+    parser.add_argument("--rag-embedding-cache", default=str(EXTERNAL_CACHE_DIR / "embedding_cache.locomo_qa_rag.json"))
+    parser.add_argument("--rag-embedding-batch-size", type=int, default=64)
     parser.add_argument("--mem0-skip-ingest", action="store_true")
     parser.add_argument("--mem0-ingest-limit", type=int, default=0)
     parser.add_argument("--mem0-start-index", type=int, default=1)
@@ -1027,6 +1093,44 @@ def turn_document(turn: DialogTurn) -> str:
             turn.image_query,
         )
     )
+
+
+def embedding_chunk_document(turns: Sequence[DialogTurn]) -> str:
+    lines: List[str] = []
+    for turn in turns:
+        lines.append(f"[{turn.dia_id} | {turn.session_date_time} | {turn.speaker}] {turn.text}")
+        if turn.image_caption:
+            lines.append(f"[{turn.dia_id} image_caption] {turn.image_caption}")
+        if turn.image_query:
+            lines.append(f"[{turn.dia_id} image_query] {turn.image_query}")
+    return "\n".join(lines)
+
+
+def chunk_turns_by_chars(
+    turns: Sequence[DialogTurn],
+    *,
+    target_chars: int,
+    overlap_turns: int,
+) -> List[List[DialogTurn]]:
+    target = max(200, target_chars)
+    overlap = max(0, overlap_turns)
+    chunks: List[List[DialogTurn]] = []
+    current: List[DialogTurn] = []
+    current_chars = 0
+    for turn in turns:
+        turn_chars = max(1, len(embedding_chunk_document([turn])))
+        if current and current_chars + turn_chars > target:
+            chunks.append(list(current))
+            current = current[-overlap:] if overlap else []
+            current_chars = sum(max(1, len(embedding_chunk_document([item]))) for item in current)
+            if current and current_chars + turn_chars > target:
+                current = []
+                current_chars = 0
+        current.append(turn)
+        current_chars += turn_chars
+    if current:
+        chunks.append(list(current))
+    return chunks
 
 
 def chunk_turns_by_count(turns: Sequence[DialogTurn], chunk_size: int) -> List[List[DialogTurn]]:
@@ -1678,7 +1782,7 @@ def run_variant(
     variant: str,
     rows: Sequence[LoCoMoQAItem],
     sample: LoCoMoSample,
-    bm25_corpus: TurnBM25Corpus,
+    rag_corpus: EmbeddingRAGCorpus,
     answer_runtime: LLMRuntimeConfig,
     args: argparse.Namespace,
 ) -> Dict[str, object]:
@@ -1710,8 +1814,8 @@ def run_variant(
     def context_for(row: LoCoMoQAItem) -> BaselineContext:
         if variant == "full_text":
             return full_text_context(sample)
-        if variant == "naive_rag":
-            return bm25_corpus.retrieve(row.question, args.top_k)
+        if variant == "rag":
+            return rag_corpus.retrieve(row.question, args.top_k)
         if variant == "mem0":
             if mem0_index is None:
                 raise RuntimeError("mem0 index was not initialized")
@@ -1830,6 +1934,13 @@ def main() -> int:
         print(f"sample_id={args.sample_id} rows={len(rows)} variants={','.join(args.variants)}")
         print(f"question_types={','.join(args.question_types) if args.question_types else '[all]'}")
         print(f"top_k={args.top_k} baseline_store_dir={args.baseline_store_dir}")
+        if "rag" in args.variants:
+            print(
+                "rag="
+                f"model:{args.rag_embedding_model} "
+                f"chunk_chars:{args.rag_chunk_target_chars} "
+                f"overlap_turns:{args.rag_chunk_overlap_turns}"
+            )
         return 0
     try:
         api_key, model, api_base = provider_config(args.provider)
@@ -1846,14 +1957,14 @@ def main() -> int:
         cache_path=Path(args.cache),
         use_cache=not args.no_cache,
     )
-    bm25_corpus = TurnBM25Corpus(sample)
+    rag_corpus = EmbeddingRAGCorpus(sample, args)
     try:
         results = [
             run_variant(
                 variant=variant,
                 rows=rows,
                 sample=sample,
-                bm25_corpus=bm25_corpus,
+                rag_corpus=rag_corpus,
                 answer_runtime=answer_runtime,
                 args=args,
             )
@@ -1880,6 +1991,17 @@ def main() -> int:
         "baseline_config": {
             "baseline_store_dir": str(Path(args.baseline_store_dir)),
             "reuse_baseline_store": args.reuse_baseline_store,
+            "rag": "openai_compatible_embedding_turn_chunks",
+            "rag_chunk_target_chars": args.rag_chunk_target_chars,
+            "rag_chunk_overlap_turns": args.rag_chunk_overlap_turns,
+            "rag_embedding_model": args.rag_embedding_model,
+            "rag_embedding_base_url": args.rag_embedding_base_url
+            or os.environ.get("OPENAI_EMBEDDING_BASE_URL")
+            or os.environ.get("OPENAI_EMBEDDING_API_BASE")
+            or os.environ.get("OPENAI_BASE_URL")
+            or os.environ.get("OPENAI_API_BASE"),
+            "rag_embedding_cache": args.rag_embedding_cache,
+            "rag_embedding_batch_size": args.rag_embedding_batch_size,
             "mem0_skip_ingest": args.mem0_skip_ingest,
             "mem0_start_index": args.mem0_start_index,
             "mem0_add_retries": args.mem0_add_retries,

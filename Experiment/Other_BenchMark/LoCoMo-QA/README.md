@@ -97,11 +97,11 @@ answers directly from retrieved graph evidence.
 The comparison table baselines are tracked separately from the graph runner:
 
 Implementation code lives under `Experiment/Other_BenchMark/LoCoMo-QA/Baseline/` in baseline-shaped
-directories such as `full_context_llm/`, `hybrid_rag/`, `ours_scope_time_state/`, `tsm/`,
+directories such as `full_context_llm/`, `rag/`, `ours_scope_time_state/`, `tsm/`,
 `memory_bank/`, `memoryos/`, and `graphiti_zep/`. The LoCoMo-QA root keeps experiment entrypoints only.
 
 - `Full Text`: direct full-conversation context, no retrieval paper required.
-- `Naive RAG`: BM25 over raw dialog turns, no retrieval paper required.
+- `RAG`: OpenAI-compatible embedding retrieval over raw conversation turn chunks. It uses no BM25/hybrid prefilter; retrieved chunks are mapped back to original dialog IDs for evidence accounting.
 - `Zep`: paper already stored at `RelatedWork/ZEP.pdf`; the `zep` variant runs the official `getzep/graphiti` runtime in a subprocess and reuses the local Graphiti client/driver construction from `Experiment/Main_Baseline/graphiti_zep/`.
 - `TSM`: paper already stored at `RelatedWork/TSM.pdf`; local STAMB reference implementation is under `Experiment/Main_Baseline/tsm/`.
 - `A-MEM`: paper stored at `RelatedWork/A-MEM.pdf`; official repositories are `WujiangXu/AgenticMemory` for paper reproduction and `agiresearch/A-mem` for the memory system.
@@ -124,9 +124,11 @@ env PYTHONDONTWRITEBYTECODE=1 LLM_PARSE_RETRIES=6 \
   --sample-id conv-26 \
   --provider deepseek \
   --model deepseek-v4-flash \
-  --variants full_text naive_rag \
+  --variants full_text rag \
   --question-types multi-hop open-domain \
   --top-k 24 \
+  --rag-chunk-target-chars 900 \
+  --rag-chunk-overlap-turns 1 \
   --answer-workers 2 \
   --output Graph/output/results/results_locomo_qa_memory_baselines_conv26_multi_open.json \
   --cache Graph/output/cache/llm_cache.locomo_qa_memory_baselines.conv-26.deepseek_v4_flash.json

@@ -45,7 +45,7 @@ Graph/output/
 # Downloaded external benchmark corpora and upstream source checkouts.
 Experiment/Other_BenchMark/Episodic-Memory/data/
 Experiment/Other_BenchMark/EverMemBench/dataset/
-Experiment/Other_BenchMark/EverMemBench/source/
+
 Experiment/Other_BenchMark/GroupMemBench/dataset/
 Experiment/Other_BenchMark/GroupMemBench/source/
 

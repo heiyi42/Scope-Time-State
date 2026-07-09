@@ -1,5 +1,5 @@
 # Core LLM client used by STAMB-State and external benchmark runners.
-openai
+openai>=1.0
 
 # TSM baseline dependencies.
 numpy
@@ -7,6 +7,8 @@ scikit-learn
 spacy
 dateparser
 
-# Graphiti/Zep baselines and semantic duplicate audits.
-graphiti-core
+# EverMemBench local/self-host evaluation dependencies.
+-r Experiment/Other_BenchMark/EverMemBench/source/EverMemBench/requirements.txt
+
+# Semantic duplicate audits.
 sentence-transformers

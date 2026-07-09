@@ -11,26 +11,28 @@ import sys
 from typing import Any, Dict, List, Mapping, Optional, Sequence
 
 
-PROJECT_DIR = Path(__file__).resolve().parents[3]
-if str(PROJECT_DIR) not in sys.path:
-    sys.path.insert(0, str(PROJECT_DIR))
+PROJECT_DIR = Path(__file__).resolve().parents[5]
+BASELINE_DIR = Path(__file__).resolve().parents[1]
+for import_path in (PROJECT_DIR, BASELINE_DIR):
+    if str(import_path) not in sys.path:
+        sys.path.insert(0, str(import_path))
 
 from Experiment.run.common.io import load_dotenv
 from Experiment.run.common.llm_client import LLMClient, provider_config
 from pipeline.external.embedding_retrieval import OpenAIEmbeddingIndex
-from pipeline.external.evermembench.loader import CACHE_DIR, DATA_DIR, EVERMEMBENCH_DIR, GRAPH_OUTPUT_DIR, RESULT_DIR
-from pipeline.external.evermembench.qa_probe import (
+from ours_scope_time_state.loader import CACHE_DIR, DATA_DIR, EVERMEMBENCH_DIR, GRAPH_OUTPUT_DIR, RESULT_DIR
+from ours_scope_time_state.qa_probe import (
     BM25Index,
     gold_event_ids,
     group_key,
     load_graph_documents,
     qa_query_text,
 )
-from pipeline.external.evermembench.staged import STSGraphEvidenceIndex
+from ours_scope_time_state.staged import STSGraphEvidenceIndex
 
 
 TASK_ORDER = ("F_SH", "F_MH", "F_TP", "MA_C", "MA_P", "MA_U", "P_Style", "P_Skill", "P_Title")
-PROMPTS_PATH = EVERMEMBENCH_DIR / "source/EverMemBench/eval/config/prompts.yaml"
+PROMPTS_PATH = BASELINE_DIR / "common/official_eval/prompts.yaml"
 FMH_SELECTOR_PROMPT_CANDIDATE_CAP = 32
 FMH_SELECTOR_EVIDENCE_CHARS = 220
 
@@ -100,9 +102,9 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument("--prompts-path", type=Path, default=PROMPTS_PATH)
-    parser.add_argument("--answer-provider", choices=("openai", "deepseek"), default="openai")
+    parser.add_argument("--answer-provider", choices=("openai", "deepseek", "local"), default="openai")
     parser.add_argument("--answer-model", default="gpt-4o-mini")
-    parser.add_argument("--judge-provider", choices=("openai", "deepseek"), default="deepseek")
+    parser.add_argument("--judge-provider", choices=("openai", "deepseek", "local"), default="deepseek")
     parser.add_argument("--judge-model", default="deepseek-v4-flash")
     parser.add_argument("--answer-workers", type=int, default=4)
     parser.add_argument("--judge-workers", type=int, default=4)

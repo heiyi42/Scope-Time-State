@@ -15,13 +15,15 @@ import sys
 from typing import Any, DefaultDict, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 
-PROJECT_DIR = Path(__file__).resolve().parents[3]
-if str(PROJECT_DIR) not in sys.path:
-    sys.path.insert(0, str(PROJECT_DIR))
+PROJECT_DIR = Path(__file__).resolve().parents[5]
+BASELINE_DIR = Path(__file__).resolve().parents[1]
+for import_path in (PROJECT_DIR, BASELINE_DIR):
+    if str(import_path) not in sys.path:
+        sys.path.insert(0, str(import_path))
 
 from Experiment.run.common.io import load_dotenv
 from Experiment.run.common.llm_client import LLMClient, LLMRequestError, provider_config
-from pipeline.external.evermembench.loader import CACHE_DIR, DATA_DIR, GRAPH_OUTPUT_DIR, EverMemEvent, load_topic_events
+from ours_scope_time_state.loader import CACHE_DIR, DATA_DIR, GRAPH_OUTPUT_DIR, EverMemEvent, load_topic_events
 
 
 NODE_TYPES = ("Episode/Event", "Claim", "StateFacet", "Entity/Scope", "Time")
@@ -227,7 +229,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", default=str(GRAPH_OUTPUT_DIR / "evermembench_topic_graph_v1"))
     parser.add_argument("--claim-mode", choices=("llm", "heuristic", "none"), default="heuristic")
     parser.add_argument("--resolver-mode", choices=("llm", "heuristic"), default="heuristic")
-    parser.add_argument("--provider", choices=("openai", "deepseek"), default="deepseek")
+    parser.add_argument("--provider", choices=("openai", "deepseek", "local"), default="deepseek")
     parser.add_argument("--model", default=None, help="Optional model override, e.g. deepseek-v4-pro.")
     parser.add_argument("--cache", default=str(CACHE_DIR / "llm_cache.evermembench_graph_builder.json"))
     parser.add_argument("--no-cache", action="store_true")
