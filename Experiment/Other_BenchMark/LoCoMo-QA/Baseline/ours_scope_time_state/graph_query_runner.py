@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import argparse
-from collections import Counter, defaultdict
+from collections import Counter, defaultdict, deque
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 import hashlib
@@ -41,7 +41,9 @@ SUPPORTED_VARIANTS = (
     "graph_bm25",
     "graph_embedding_event",
     "graph_embedding_scope_event",
+    "graph_embedding_scope_event_state",
 )
+GRAPH_EXPANSIONS = ("auto", "legacy", "relation-aware")
 TOKEN_RE = re.compile(r"[A-Za-z0-9_']+")
 
 
@@ -107,6 +109,8 @@ class BM25Index:
 class GraphEvidenceIndex:
     def __init__(self, graph_dir: Path) -> None:
         self.graph_dir = graph_dir
+        self.manifest: Dict[str, Any] = {}
+        self.schema_version = ""
         self.events: Dict[str, Dict[str, Any]] = {}
         self.claims: Dict[str, Dict[str, Any]] = {}
         self.states: Dict[str, Dict[str, Any]] = {}
@@ -138,10 +142,14 @@ class GraphEvidenceIndex:
         return cls(graph_dir)
 
     def _load(self) -> None:
+        manifest_path = self.graph_dir / "manifest.json"
         nodes_path = self.graph_dir / "nodes.jsonl"
         edges_path = self.graph_dir / "edges.jsonl"
         if not nodes_path.exists() or not edges_path.exists():
             raise FileNotFoundError(f"missing graph artifact files under {self.graph_dir}")
+        if manifest_path.exists():
+            self.manifest = json.loads(manifest_path.read_text())
+            self.schema_version = str(self.manifest.get("schema_version") or "")
         for line in nodes_path.read_text().splitlines():
             if not line.strip():
                 continue
@@ -211,6 +219,7 @@ class GraphEvidenceIndex:
         embedding_indices: Mapping[str, OpenAIEmbeddingIndex],
         embedding_candidate_k: int,
         scope_types: Sequence[str],
+        graph_expansion: str = "auto",
     ) -> RetrievalResult:
         targets = embedding_targets_for_variant(variant)
         scope_allowed_doc_ids = [
@@ -245,15 +254,12 @@ class GraphEvidenceIndex:
             event_embedding_hits = event_index.search(question, top_k, allowed_doc_ids=allowed)
             selected_event_hits = [(hit.doc_id, hit.score) for hit in event_embedding_hits]
             event_embedding_trace = [{"doc_id": doc_id, "score": score} for doc_id, score in selected_event_hits]
-        event_ids: List[str] = []
-        state_ids: List[str] = []
+        seed_event_ids: List[str] = []
         for doc_id, _score in selected_event_hits:
             if not doc_id.startswith("event::"):
                 continue
             event_id = doc_id[len("event::") :]
-            event_ids.append(event_id)
-            for claim_id in self.claims_by_event.get(event_id, []):
-                state_ids.extend(self.states_by_claim.get(claim_id, []))
+            seed_event_ids.append(event_id)
 
         allowed_state_doc_ids = self._state_doc_ids_for_scopes(routed_scope_ids)
         state_bm25_hits = self.state_bm25.search(question, max(candidate_k, state_search_k), allowed_doc_ids=allowed_state_doc_ids)
@@ -261,20 +267,65 @@ class GraphEvidenceIndex:
             supplemental_states = self.state_bm25.search(question, max(candidate_k, state_search_k))
             state_bm25_hits = merge_hits(state_bm25_hits, supplemental_states)
         selected_state_hits = state_bm25_hits[:state_search_k]
+        state_embedding_trace: List[Dict[str, Any]] = []
+        if "state" in targets:
+            state_index = embedding_indices.get("state")
+            if state_index is None:
+                raise ValueError(f"{variant} requires a state embedding index")
+            allowed = [doc_id for doc_id, _score in state_bm25_hits[:embedding_candidate_k]]
+            state_embedding_hits = state_index.search(
+                question,
+                state_search_k,
+                allowed_doc_ids=allowed,
+            )
+            selected_state_hits = [(hit.doc_id, hit.score) for hit in state_embedding_hits]
+            state_embedding_trace = [
+                {"doc_id": doc_id, "score": score}
+                for doc_id, score in selected_state_hits
+            ]
 
-        for doc_id, _score in selected_state_hits:
-            if not doc_id.startswith("state::"):
-                continue
-            state_id = doc_id[len("state::") :]
-            state_ids.append(state_id)
-            state = self.states.get(state_id, {})
-            event_ids.extend(str(item) for item in state.get("support_event_ids", []) or [])
-        event_ids = ordered_unique(event_ids)[:max_context_events]
-        state_ids = ordered_unique(state_ids)[:max_state_lines]
+        selected_state_ids = [
+            doc_id[len("state::") :]
+            for doc_id, _score in selected_state_hits
+            if doc_id.startswith("state::")
+        ]
+        resolved_expansion = self.resolve_graph_expansion(graph_expansion)
+        expansion_trace: Dict[str, Any]
+        if resolved_expansion == "relation-aware":
+            event_ids, state_ids, relation_lines, expansion_trace = self._expand_relation_aware(
+                seed_event_ids,
+                selected_state_ids,
+                max_context_events=max_context_events,
+                max_state_lines=max_state_lines,
+            )
+        else:
+            event_ids = list(seed_event_ids)
+            state_ids: List[str] = []
+            for event_id in seed_event_ids:
+                for claim_id in self.claims_by_event.get(event_id, []):
+                    state_ids.extend(self.states_by_claim.get(claim_id, []))
+            for state_id in selected_state_ids:
+                state_ids.append(state_id)
+                state = self.states.get(state_id, {})
+                event_ids.extend(str(item) for item in state.get("support_event_ids", []) or [])
+            event_ids = ordered_unique(event_ids)
+            if max_context_events > 0:
+                event_ids = event_ids[:max_context_events]
+            state_ids = ordered_unique(state_ids)
+            if max_state_lines > 0:
+                state_ids = state_ids[:max_state_lines]
+            relation_lines = self._relation_lines_for_states(state_ids)
+            expansion_trace = {
+                "mode": "legacy",
+                "seed_event_ids": seed_event_ids,
+                "selected_state_ids": state_ids,
+                "expanded_event_ids": event_ids,
+            }
         state_lines = [format_state_line(self.states[state_id]) for state_id in state_ids if state_id in self.states]
-        relation_lines = self._relation_lines_for_states(state_ids)
         context = self._context_text(event_ids)
         trace = {
+            "graph_schema_version": self.schema_version,
+            "graph_expansion": expansion_trace,
             "embedding_targets": sorted(targets),
             "scope_routing": {
                 "bm25_hits": [{"doc_id": doc_id, "score": score} for doc_id, score in scope_bm25_hits[: min(candidate_k, 20)]],
@@ -290,6 +341,7 @@ class GraphEvidenceIndex:
             "state_search": {
                 "bm25_hits": [{"doc_id": doc_id, "score": score} for doc_id, score in state_bm25_hits[: min(candidate_k, 30)]],
                 "selected_state_hits": [{"doc_id": doc_id, "score": score} for doc_id, score in selected_state_hits],
+                "embedding_hits": state_embedding_trace,
             },
             "selected_state_ids": state_ids,
         }
@@ -299,6 +351,111 @@ class GraphEvidenceIndex:
             relation_lines=relation_lines,
             context=context,
             trace=trace,
+        )
+
+    def resolve_graph_expansion(self, requested: str) -> str:
+        if requested not in GRAPH_EXPANSIONS:
+            raise ValueError(f"unsupported graph_expansion={requested}")
+        if requested != "auto":
+            return requested
+        if self.schema_version.startswith("locomo-qa-sample-sts-graph-v2"):
+            return "relation-aware"
+        return "legacy"
+
+    def _expand_relation_aware(
+        self,
+        seed_event_ids: Sequence[str],
+        selected_state_ids: Sequence[str],
+        *,
+        max_context_events: int,
+        max_state_lines: int,
+    ) -> Tuple[List[str], List[str], List[str], Dict[str, Any]]:
+        event_ids: List[str] = []
+        state_ids: List[str] = []
+        event_reasons: DefaultDict[str, List[str]] = defaultdict(list)
+        claim_queue: deque[Tuple[str, str]] = deque()
+        queued_claims: set[str] = set()
+        visited_claims: List[str] = []
+        visited_relation_edges: set[Tuple[str, str, str]] = set()
+        relation_lines: List[str] = []
+
+        def add_event(event_id: object, reason: str) -> None:
+            identifier = str(event_id or "")
+            if identifier not in self.events:
+                return
+            if identifier not in event_ids:
+                event_ids.append(identifier)
+            if reason not in event_reasons[identifier]:
+                event_reasons[identifier].append(reason)
+
+        def enqueue_claim(claim_id: object, reason: str) -> None:
+            identifier = str(claim_id or "")
+            if identifier not in self.claims or identifier in queued_claims:
+                return
+            queued_claims.add(identifier)
+            claim_queue.append((identifier, reason))
+
+        def add_state(state_id: object, reason: str) -> None:
+            identifier = str(state_id or "")
+            state = self.states.get(identifier)
+            if not state:
+                return
+            if identifier not in state_ids:
+                state_ids.append(identifier)
+            for event_id in state.get("support_event_ids", []) or []:
+                add_event(event_id, f"{reason}; StateFacet support_event")
+            for claim_id in state.get("support_claim_ids", []) or []:
+                enqueue_claim(claim_id, f"{reason}; StateFacet support_claim")
+
+        for rank, event_id in enumerate(seed_event_ids, start=1):
+            add_event(event_id, f"seed_event_rank={rank}")
+            for claim_id in self.claims_by_event.get(str(event_id), []):
+                enqueue_claim(claim_id, f"seed_event_rank={rank}; ASSERTS")
+        for rank, state_id in enumerate(selected_state_ids, start=1):
+            add_state(state_id, f"state_search_rank={rank}")
+
+        while claim_queue:
+            claim_id, reason = claim_queue.popleft()
+            visited_claims.append(claim_id)
+            claim = self.claims[claim_id]
+            add_event(claim.get("source_event_id"), f"{reason}; claim source_event")
+            for state_id in self.states_by_claim.get(claim_id, []):
+                add_state(state_id, f"{reason}; SUPPORTS")
+            for edge in self.relations_by_claim.get(claim_id, []):
+                edge_key = (
+                    str(edge.get("type") or ""),
+                    str(edge.get("from") or ""),
+                    str(edge.get("to") or ""),
+                )
+                if edge_key in visited_relation_edges:
+                    continue
+                visited_relation_edges.add(edge_key)
+                relation_lines.append(self._format_relation_edge(edge))
+                source = str(edge.get("from") or "")
+                target = str(edge.get("to") or "")
+                related_claim_id = target if source == claim_id else source
+                enqueue_claim(related_claim_id, f"{reason}; {edge.get('type')} related_claim")
+                for event_id in edge.get("evidence_event_ids", []) or []:
+                    add_event(event_id, f"{reason}; {edge.get('type')} evidence_event")
+
+        if max_context_events > 0:
+            event_ids = event_ids[:max_context_events]
+        if max_state_lines > 0:
+            state_ids = state_ids[:max_state_lines]
+        return (
+            event_ids,
+            state_ids,
+            relation_lines[:12],
+            {
+                "mode": "relation-aware",
+                "seed_event_ids": list(seed_event_ids),
+                "seed_state_ids": list(selected_state_ids),
+                "expanded_event_ids": event_ids,
+                "selected_state_ids": state_ids,
+                "visited_claim_ids": visited_claims,
+                "relation_edge_count": len(visited_relation_edges),
+                "event_reasons": {event_id: event_reasons[event_id] for event_id in event_ids},
+            },
         )
 
     def _event_doc_ids_for_scopes(self, scope_ids: Sequence[str]) -> Optional[List[str]]:
@@ -330,13 +487,16 @@ class GraphEvidenceIndex:
                     if key in seen:
                         continue
                     seen.add(key)
-                    source = self.claims.get(str(edge.get("from") or ""), {})
-                    target = self.claims.get(str(edge.get("to") or ""), {})
-                    lines.append(
-                        f"{edge.get('type')}: {claim_summary(source)} -> {claim_summary(target)} "
-                        f"reason={edge.get('reason', '')}"
-                    )
+                    lines.append(self._format_relation_edge(edge))
         return lines[:8]
+
+    def _format_relation_edge(self, edge: Mapping[str, Any]) -> str:
+        source = self.claims.get(str(edge.get("from") or ""), {})
+        target = self.claims.get(str(edge.get("to") or ""), {})
+        return (
+            f"{edge.get('type')}: {claim_summary(source)} -> {claim_summary(target)} "
+            f"reason={edge.get('reason', '')}"
+        )
 
     def _context_text(self, event_ids: Sequence[str]) -> str:
         chunks: List[str] = []
@@ -377,11 +537,22 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--top-k", type=int, default=12)
     parser.add_argument("--scope-top-k", type=int, default=8)
     parser.add_argument("--scope-types", default="speaker,entity,topic,session")
-    parser.add_argument("--state-search-k", type=int, default=12)
+    parser.add_argument(
+        "--state-search-k",
+        type=int,
+        default=12,
+        help="StateFacet candidates before graph expansion; use 16 with max-state-lines=16 for a 16-facet run.",
+    )
     parser.add_argument("--candidate-k", type=int, default=80)
     parser.add_argument("--embedding-candidate-k", type=int, default=80)
     parser.add_argument("--max-context-events", type=int, default=24)
     parser.add_argument("--max-state-lines", type=int, default=16)
+    parser.add_argument(
+        "--graph-expansion",
+        choices=GRAPH_EXPANSIONS,
+        default="auto",
+        help="auto keeps v1 on legacy expansion and enables relation-aware expansion for v2 graphs.",
+    )
     parser.add_argument("--answer-workers", type=int, default=4)
     parser.add_argument(
         "--disable-open-domain-mapping",
@@ -394,7 +565,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--embedding-cache", default=str(EXTERNAL_CACHE_DIR / "embedding_cache.locomo_qa_graph_query.json"))
     parser.add_argument("--embedding-base-url", default=os.environ.get("OPENAI_EMBEDDING_BASE_URL", ""))
     parser.add_argument("--embedding-batch-size", type=int, default=64)
-    parser.add_argument("--output", default=str(EXTERNAL_RESULT_DIR / "results_locomo_qa_graph_conv26.json"))
+    parser.add_argument(
+        "--output",
+        default=str(EXTERNAL_RESULT_DIR / "locomo_qa" / "ours_scope_time_state" / "results_locomo_qa_graph_conv26.json"),
+    )
     return parser.parse_args()
 
 
@@ -436,6 +610,9 @@ def state_document(state: Mapping[str, Any]) -> str:
             state.get("subject"),
             state.get("facet_key"),
             state.get("value"),
+            state.get("time_role"),
+            state.get("time_value"),
+            state.get("time_anchor"),
             state.get("current_after"),
             state.get("graph_text"),
         )
@@ -506,6 +683,8 @@ def embedding_targets_for_variant(variant: str) -> set[str]:
         return {"event"}
     if variant == "graph_embedding_scope_event":
         return {"scope", "event"}
+    if variant == "graph_embedding_scope_event_state":
+        return {"scope", "event", "state"}
     raise ValueError(f"unsupported variant={variant}")
 
 
@@ -522,6 +701,12 @@ def merge_hits(primary: Sequence[Tuple[str, float]], supplemental: Sequence[Tupl
 
 def format_state_line(state: Mapping[str, Any]) -> str:
     support = ", ".join(str(item) for item in state.get("support_event_ids", []) or [])
+    if state.get("time_role") or state.get("time_value"):
+        return (
+            f"{state.get('subject', '')} {state.get('facet_key', '')}: {state.get('value', '')} "
+            f"(current_after={state.get('current_after', '')}; time_role={state.get('time_role', '')}; "
+            f"time_value={state.get('time_value', '')}; support={support})"
+        )
     return (
         f"{state.get('subject', '')} {state.get('facet_key', '')}: {state.get('value', '')} "
         f"(time={state.get('current_after', '')}; support={support})"
@@ -529,7 +714,13 @@ def format_state_line(state: Mapping[str, Any]) -> str:
 
 
 def claim_summary(claim: Mapping[str, Any]) -> str:
-    return f"{claim.get('dialog_id', '')} {claim.get('subject', '')} {claim.get('facet_key', '')}: {claim.get('value', '')}"
+    temporal = ""
+    if claim.get("time_role") or claim.get("time_value"):
+        temporal = f" [{claim.get('time_role', '')}={claim.get('time_value', '')}]"
+    return (
+        f"{claim.get('dialog_id', '')} {claim.get('subject', '')} "
+        f"{claim.get('facet_key', '')}: {claim.get('value', '')}{temporal}"
+    )
 
 
 def answer_system_prompt() -> str:
@@ -706,6 +897,46 @@ def official_f1_score(prediction: object, ground_truth: object) -> float:
     return (2 * precision_value * recall_value) / (precision_value + recall_value)
 
 
+def official_bleu1_score(prediction: object, ground_truth: object) -> float:
+    prediction_tokens = nltk_bleu_tokens(prediction)
+    ground_truth_tokens = nltk_bleu_tokens(ground_truth)
+    if not prediction_tokens or not ground_truth_tokens:
+        return 0.0
+    try:
+        from nltk.translate.bleu_score import SmoothingFunction, sentence_bleu
+    except ImportError:
+        return manual_bleu1_score(prediction_tokens, ground_truth_tokens)
+    return float(
+        sentence_bleu(
+            [ground_truth_tokens],
+            prediction_tokens,
+            weights=(1, 0, 0, 0),
+            smoothing_function=SmoothingFunction().method1,
+        )
+    )
+
+
+def nltk_bleu_tokens(text: object) -> List[str]:
+    lowered = str(text or "").lower()
+    try:
+        import nltk
+
+        return list(nltk.word_tokenize(lowered))
+    except (ImportError, LookupError):
+        return re.findall(r"\w+|[^\w\s]", lowered, flags=re.UNICODE)
+
+
+def manual_bleu1_score(prediction_tokens: Sequence[str], ground_truth_tokens: Sequence[str]) -> float:
+    common = Counter(prediction_tokens) & Counter(ground_truth_tokens)
+    clipped_matches = sum(common.values())
+    if clipped_matches == 0:
+        return 0.0
+    precision_value = clipped_matches / len(prediction_tokens)
+    if len(prediction_tokens) > len(ground_truth_tokens):
+        return precision_value
+    return math.exp(1.0 - (len(ground_truth_tokens) / len(prediction_tokens))) * precision_value
+
+
 def official_multi_answer_f1(prediction: object, ground_truth: object) -> float:
     predictions = [item.strip() for item in str(prediction).split(",")]
     ground_truths = [item.strip() for item in str(ground_truth).split(",")]
@@ -741,6 +972,7 @@ def summarize(rows: Sequence[Dict[str, object]]) -> Dict[str, object]:
     by_question_type = {question_type: summarize_flat(type_rows) for question_type, type_rows in sorted(by_type.items())}
     summary = summarize_flat(rows)
     summary["task_averaged_answer_f1"] = mean(metrics["answer_f1"] for metrics in by_question_type.values())
+    summary["task_averaged_bleu1"] = mean(metrics["bleu1"] for metrics in by_question_type.values())
     summary["by_question_type"] = by_question_type
     return summary
 
@@ -749,6 +981,7 @@ def summarize_flat(rows: Sequence[Dict[str, object]]) -> Dict[str, object]:
     return {
         "n_cases": len(rows),
         "answer_f1": mean(float(row["answer_f1"]) for row in rows),
+        "bleu1": mean(None if row.get("bleu1") is None else float(row["bleu1"]) for row in rows),
         "exact_match": mean(1.0 if row["exact_match"] else 0.0 for row in rows if row["category"] != 5),
         "candidate_dialog_recall": mean(row["candidate_dialog_recall"] for row in rows),
         "candidate_dialog_precision": mean(row["candidate_dialog_precision"] for row in rows),
@@ -786,6 +1019,7 @@ def run_variant(
             embedding_indices=embedding_indices,
             embedding_candidate_k=args.embedding_candidate_k,
             scope_types=parse_scope_types(args.scope_types),
+            graph_expansion=args.graph_expansion,
         )
         retrieval.trace["retrieval_query"] = row.question
         client = make_sharded_client(answer_runtime, f"answer_{variant}", f"{row.question_id}_{short_hash(row.question)}")
@@ -834,6 +1068,7 @@ def run_variant(
             "evidence_dialog_precision": evidence_precision,
             "evidence_dialog_f1": f1_from_precision_recall(evidence_precision, evidence_recall),
             "answer_f1": official_style_answer_score(row, hypothesis),
+            "bleu1": None if row.category == 5 else official_bleu1_score(hypothesis, row.answer),
             "exact_match": exact_match_score(hypothesis, row.answer) if row.category != 5 else False,
             "retrieval_trace": retrieval.trace,
             "open_domain_mapping": open_domain_mapping,
@@ -861,8 +1096,8 @@ def print_summary(provider: str, model: str, results: Sequence[Dict[str, object]
     print("LoCoMo QA graph benchmark")
     print(f"answer_provider={provider} answer_model={model}")
     print()
-    print(f"{'variant':<35} {'n':>4} {'ans_f1':>8} {'task_f1':>8} {'exact':>8} {'cand_r':>8} {'cand_p':>8} {'ev_r':>8} {'ev_p':>8} {'ev_f1':>8}")
-    print("-" * 122)
+    print(f"{'variant':<35} {'n':>4} {'ans_f1':>8} {'task_f1':>8} {'bleu1':>8} {'task_b1':>8} {'exact':>8} {'cand_r':>8} {'cand_p':>8} {'ev_r':>8} {'ev_p':>8} {'ev_f1':>8}")
+    print("-" * 140)
     for result in results:
         summary = result["summary"]
         print(
@@ -870,6 +1105,8 @@ def print_summary(provider: str, model: str, results: Sequence[Dict[str, object]
             f"{summary['n_cases']:>4} "
             f"{format_metric(summary['answer_f1']):>8} "
             f"{format_metric(summary['task_averaged_answer_f1']):>8} "
+            f"{format_metric(summary['bleu1']):>8} "
+            f"{format_metric(summary['task_averaged_bleu1']):>8} "
             f"{format_metric(summary['exact_match']):>8} "
             f"{format_metric(summary['candidate_dialog_recall']):>8} "
             f"{format_metric(summary['candidate_dialog_precision']):>8} "
@@ -932,6 +1169,16 @@ def main() -> int:
             batch_size=args.embedding_batch_size,
             base_url=args.embedding_base_url or None,
         )
+    if "state" in needed_embedding_targets:
+        embedding_indices["state"] = OpenAIEmbeddingIndex(
+            graph.state_doc_ids,
+            graph.state_documents,
+            model=args.embedding_model,
+            cache_path=Path(args.embedding_cache),
+            namespace=f"{embedding_namespace}:states",
+            batch_size=args.embedding_batch_size,
+            base_url=args.embedding_base_url or None,
+        )
     try:
         results = [
             run_variant(
@@ -957,6 +1204,8 @@ def main() -> int:
         "sample_id": args.sample_id,
         "data_path": str(Path(args.data)),
         "graph_dir": str(Path(args.graph_dir)),
+        "graph_schema_version": graph.schema_version,
+        "graph_expansion": graph.resolve_graph_expansion(args.graph_expansion),
         "provider": args.provider,
         "model": model,
         "variants": list(args.variants),

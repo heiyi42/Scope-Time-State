@@ -57,6 +57,27 @@ Graph/output/graph/locomo_qa_sample_graph_v1/<sample_id>/
   edges.jsonl
 ```
 
+The existing v1 graph remains the reproducibility baseline. Build the role-aware v2 graph only with
+an explicit schema flag; its default graph and cache paths are separate from v1:
+
+```bash
+conda run -n py311 env PYTHONDONTWRITEBYTECODE=1 LLM_PARSE_RETRIES=6 \
+  python Experiment/Other_BenchMark/LoCoMo-QA/run_locomo_graph_builder.py \
+  --graph-schema v2 \
+  --sample-id conv-26 \
+  --provider deepseek \
+  --model deepseek-v4-flash \
+  --resolver-mode llm \
+  --message-chunk-size 16 \
+  --claim-workers 4 \
+  --resolver-workers 4
+```
+
+Without overrides, v2 writes to
+`Graph/output/graph/locomo_qa_sample_graph_time_role_relation_v2/<sample_id>/` and uses
+`Graph/output/cache/llm_cache.locomo_qa_graph_builder.time_role_relation_v2.json`. The CLI refuses
+to write a v2 graph into a directory whose name ends in `_v1`.
+
 ## Graph QA
 
 Run the `conv-26` questions against the graph using the EverMemBench-style staged retrieval variants:
@@ -78,14 +99,21 @@ conda run -n py311 env PYTHONDONTWRITEBYTECODE=1 LLM_PARSE_RETRIES=6 \
   --candidate-k 80 \
   --embedding-candidate-k 80 \
   --answer-workers 4 \
-  --output Graph/output/result/results_locomo_qa_graph_conv26_staged_embedding.json \
+  --output Graph/output/results/locomo_qa/ours_scope_time_state/results_locomo_qa_graph_conv26_staged_embedding.json \
   --cache Graph/output/cache/llm_cache.locomo_qa_graph_query.conv-26.deepseek_v4_flash.json \
   --embedding-cache Graph/output/cache/embedding_cache.locomo_qa_graph_query.conv-26.text_embedding_3_small.json
 ```
 
 Retrieval order is `scope routing -> scoped event retrieval -> state/graph expansion -> optional open-domain mapping -> answer -> official-style scoring`.
-`multi-hop` questions use the same graph retrieval path as the other task types; there is no
-task-specific second-hop expansion or question-decomposition logic.
+`--graph-expansion auto` preserves the legacy one-hop expansion for v1 graphs. For v2 graphs it
+automatically traverses `Event -> Claim -> StateFacet`, supporting claims/events, and
+`CORRECTS`/`SUPERSEDES`/`CONFLICTS_WITH` claim neighbors. The expansion remains generic across
+question types; there is no task-specific question-decomposition logic.
+
+The `graph_embedding_scope_event_state` variant additionally embedding-reranks the StateFacet
+candidate pool. For a final 16-facet run, set both `--state-search-k 16` and
+`--max-state-lines 16`; `max-state-lines` is the final prompt cap, while `state-search-k` controls
+how many StateFacets enter graph expansion.
 
 The mapping layer is only applied to `open-domain` questions after graph retrieval. It converts
 cited conversation facts into a short commonsense bridge and answer hint, without writing those
@@ -136,7 +164,7 @@ env PYTHONDONTWRITEBYTECODE=1 LLM_PARSE_RETRIES=6 \
   --rag-chunk-target-chars 900 \
   --rag-chunk-overlap-turns 1 \
   --answer-workers 2 \
-  --output Graph/output/results/results_locomo_qa_memory_baselines_conv26_multi_open.json \
+  --output Graph/output/results/locomo_qa/mixed/results_locomo_qa_memory_baselines_conv26_multi_open.json \
   --cache Graph/output/cache/llm_cache.locomo_qa_memory_baselines.conv-26.deepseek_v4_flash.json
 ```
 
@@ -185,7 +213,7 @@ env PYTHONDONTWRITEBYTECODE=1 TOKENIZERS_PARALLELISM=false LLM_PARSE_RETRIES=6 \
   --top-k 24 \
   --official-search-concurrency 1 \
   --answer-workers 2 \
-  --output Graph/output/results/results_locomo_qa_official_services_conv26_multi_open.json \
+  --output Graph/output/results/locomo_qa/mixed/results_locomo_qa_official_services_conv26_multi_open.json \
   --cache Graph/output/cache/llm_cache.locomo_qa_official_services.conv-26.deepseek_v4_flash.json
 ```
 
@@ -227,7 +255,10 @@ Node types:
 - `Claim`: atomic memory claims extracted from dialog turns.
 - `StateFacet`: graph-searchable fact facets supported by claims.
 - `Entity/Scope`: sample, session, speaker, entity, and topic scopes.
-- `Time`: session date-times and extracted claim time expressions.
+- `Time`: session date-times and extracted claim time expressions. In v2, `time_role` is a node
+  attribute with values such as `occurred_at`, `planned_for`, `deadline_at`, `valid_from`,
+  `started_at`, `completed_at`, `finalized_at`, and `current_after`; `TimeRole` is not a separate
+  node type.
 
 Edge types:
 

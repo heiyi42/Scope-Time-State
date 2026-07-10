@@ -140,7 +140,7 @@ CLAIM_WORKERS=${EVERMEMBENCH_CLAIM_WORKERS:-2}
 RESOLVER_WORKERS=${EVERMEMBENCH_RESOLVER_WORKERS:-2}
 ANSWER_WORKERS=${EVERMEMBENCH_ANSWER_WORKERS:-2}
 JUDGE_WORKERS=${EVERMEMBENCH_JUDGE_WORKERS:-2}
-mkdir -p "Graph/output/cache/$RUN_TAG" "Graph/output/result/$RUN_TAG"
+mkdir -p "Graph/output/cache/$RUN_TAG" "Graph/output/results/evermembench/$RUN_TAG"
 
 python Experiment/Other_BenchMark/EverMemBench/run_evermembench_graph_builder.py \
   --topic 01 \
@@ -173,7 +173,7 @@ python Experiment/Other_BenchMark/EverMemBench/run_evermembench_qa_eval.py \
   --judge-model "$LOCAL_MODEL" \
   --answer-workers "$ANSWER_WORKERS" \
   --judge-workers "$JUDGE_WORKERS" \
-  --output "Graph/output/result/$RUN_TAG/sts_topic01_F_SH_1.qa_judge.json" \
+  --output "Graph/output/results/evermembench/$RUN_TAG/sts_topic01_F_SH_1.qa_judge.json" \
   --answer-cache "Graph/output/cache/$RUN_TAG/answer_cache.json" \
   --judge-cache "Graph/output/cache/$RUN_TAG/judge_cache.json"
 ```
@@ -208,7 +208,7 @@ RUN_TAG=official_smoke_$(date +%Y%m%d_%H%M%S)
 
 CONDA_ENV=py311 \
 EVERMEMBENCH_RUN_ID="$RUN_TAG" \
-EVERMEMBENCH_OUTPUT_DIR="$PWD/Graph/output/result/$RUN_TAG/official_baselines" \
+EVERMEMBENCH_OUTPUT_DIR="$PWD/Graph/output/results/evermembench/$RUN_TAG/official_baselines" \
 EVERMEMBENCH_SMOKE=1 \
 EVERMEMBENCH_SMOKE_DAYS=1 \
 EVERMEMBENCH_QA_LIMIT=1 \
@@ -235,7 +235,7 @@ CLAIM_WORKERS=${EVERMEMBENCH_CLAIM_WORKERS:-2}
 RESOLVER_WORKERS=${EVERMEMBENCH_RESOLVER_WORKERS:-2}
 ANSWER_WORKERS=${EVERMEMBENCH_ANSWER_WORKERS:-2}
 JUDGE_WORKERS=${EVERMEMBENCH_JUDGE_WORKERS:-2}
-mkdir -p "Graph/output/cache/$RUN_TAG" "Graph/output/result/$RUN_TAG"
+mkdir -p "Graph/output/cache/$RUN_TAG" "Graph/output/results/evermembench/$RUN_TAG"
 
 for topic in 01 02 03 04 05; do
   python Experiment/Other_BenchMark/EverMemBench/run_evermembench_graph_builder.py \
@@ -270,7 +270,7 @@ for topic in 01 02 03 04 05; do
     --judge-model "$LOCAL_MODEL" \
     --answer-workers "$ANSWER_WORKERS" \
     --judge-workers "$JUDGE_WORKERS" \
-    --output "Graph/output/result/$RUN_TAG/sts_topic${topic}_all.qa_judge.json" \
+    --output "Graph/output/results/evermembench/$RUN_TAG/sts_topic${topic}_all.qa_judge.json" \
     --answer-cache "Graph/output/cache/$RUN_TAG/answer_cache.json" \
     --judge-cache "Graph/output/cache/$RUN_TAG/judge_cache.json"
 done
@@ -289,7 +289,7 @@ RUN_TAG=official_full_$(date +%Y%m%d_%H%M%S)
 
 CONDA_ENV=py311 \
 EVERMEMBENCH_RUN_ID="$RUN_TAG" \
-EVERMEMBENCH_OUTPUT_DIR="$PWD/Graph/output/result/$RUN_TAG/official_baselines" \
+EVERMEMBENCH_OUTPUT_DIR="$PWD/Graph/output/results/evermembench/$RUN_TAG/official_baselines" \
 EVERMEMBENCH_TOPICS="01 02 03 04 05" \
 EVERMEMBENCH_SYSTEMS="llm mem0_local memobase graphiti_local memos_local" \
 EVERMEMBENCH_STAGES="add search answer evaluate" \

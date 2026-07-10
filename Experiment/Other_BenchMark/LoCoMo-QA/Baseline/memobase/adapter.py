@@ -452,8 +452,6 @@ class MemobaseAdapter(BaseAdapter):
                 f"User not found in Memobase."
             )
         
-        self.console.print(f"      Using Memobase UUID: {memobase_uuid}", style="dim")
-        
         for attempt in range(self.max_retries):
             try:
                 # Run synchronous Memobase operation in executor

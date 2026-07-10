@@ -24,7 +24,7 @@ from pipeline.external.paths import EXTERNAL_CACHE_DIR, EXTERNAL_RESULT_DIR
 
 DATA_PATH = PROJECT_DIR / "Experiment/Other_BenchMark/LongMemEval-S/data/longmemeval_s_cleaned.json"
 CACHE_DIR = EXTERNAL_CACHE_DIR
-RESULT_DIR = EXTERNAL_RESULT_DIR
+RESULT_DIR = EXTERNAL_RESULT_DIR / "longmemeval_s"
 SUPPORTED_VARIANTS = (
     "bm25_session",
     "recent_sessions",

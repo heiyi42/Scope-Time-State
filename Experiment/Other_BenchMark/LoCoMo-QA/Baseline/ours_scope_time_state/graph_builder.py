@@ -29,6 +29,46 @@ from pipeline.external.paths import EXTERNAL_CACHE_DIR, EXTERNAL_GRAPH_DIR  # no
 
 
 NODE_TYPES = ("Episode/Event", "Claim", "StateFacet", "Entity/Scope", "Time")
+GRAPH_SCHEMA_V1 = "locomo-qa-sample-sts-graph-v1"
+GRAPH_SCHEMA_V2 = "locomo-qa-sample-sts-graph-v2-time-role"
+GRAPH_SCHEMAS = ("v1", "v2")
+TIME_ROLES = (
+    "occurred_at",
+    "mentioned_at",
+    "updated_at",
+    "planned_for",
+    "deadline_at",
+    "valid_from",
+    "started_at",
+    "completed_at",
+    "finalized_at",
+    "current_after",
+)
+CURRENT_AFTER_TIME_ROLES = {
+    "occurred_at",
+    "updated_at",
+    "valid_from",
+    "started_at",
+    "completed_at",
+    "finalized_at",
+    "current_after",
+}
+EMPTY_TIME_VALUES = {
+    "",
+    "empty",
+    "n/a",
+    "na",
+    "none",
+    "not mentioned",
+    "not specified",
+    "null",
+    "unknown",
+}
+PAST_TIME_EXPRESSION_RE = re.compile(
+    r"\b(?:ago|earlier|last\s+(?:day|night|week|month|year|mon(?:day)?|tues?(?:day)?|"
+    r"wednes(?:day)?|thurs?(?:day)?|fri(?:day)?|satur(?:day)?|sun(?:day)?)|previous(?:ly)?|yesterday)\b",
+    re.IGNORECASE,
+)
 EDGE_TYPES = (
     "MENTIONS",
     "IN_SCOPE",
@@ -92,12 +132,26 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build one offline LoCoMo sample-level STS graph.")
     parser.add_argument("--data", default=str(DATA_PATH))
     parser.add_argument("--sample-id", default="conv-26")
-    parser.add_argument("--output-dir", default=str(EXTERNAL_GRAPH_DIR / "locomo_qa_sample_graph_v1"))
+    parser.add_argument(
+        "--graph-schema",
+        choices=GRAPH_SCHEMAS,
+        default="v1",
+        help="v1 reproduces the existing graph; v2 adds role-aware Time nodes in a separate output family.",
+    )
+    parser.add_argument(
+        "--output-dir",
+        default=None,
+        help="Defaults to a schema-specific directory; v2 never defaults to the v1 graph directory.",
+    )
     parser.add_argument("--claim-mode", choices=("llm", "none"), default="llm")
     parser.add_argument("--resolver-mode", choices=("llm", "none"), default="llm")
     parser.add_argument("--provider", choices=("openai", "deepseek"), default="deepseek")
     parser.add_argument("--model", default=None, help="Optional model override, e.g. deepseek-v4-flash.")
-    parser.add_argument("--cache", default=str(EXTERNAL_CACHE_DIR / "llm_cache.locomo_qa_graph_builder.json"))
+    parser.add_argument(
+        "--cache",
+        default=None,
+        help="Defaults to a schema-specific cache so v2 prompts cannot reuse v1 responses.",
+    )
     parser.add_argument("--no-cache", action="store_true")
     parser.add_argument("--max-tokens", type=int, default=4096)
     parser.add_argument("--message-chunk-size", type=int, default=16)
@@ -107,6 +161,35 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-claims-per-turn", type=int, default=2)
     parser.add_argument("--event-limit", type=int, default=0, help="Debug limit only; 0 builds the full sample.")
     return parser.parse_args()
+
+
+def default_output_dir(graph_schema: str) -> Path:
+    if graph_schema == "v2":
+        return EXTERNAL_GRAPH_DIR / "locomo_qa_sample_graph_time_role_relation_v2"
+    return EXTERNAL_GRAPH_DIR / "locomo_qa_sample_graph_v1"
+
+
+def default_cache_path(graph_schema: str) -> Path:
+    if graph_schema == "v2":
+        return EXTERNAL_CACHE_DIR / "llm_cache.locomo_qa_graph_builder.time_role_relation_v2.json"
+    return EXTERNAL_CACHE_DIR / "llm_cache.locomo_qa_graph_builder.json"
+
+
+def ensure_output_schema_compatible(output_dir: Path, sample_id: str, graph_schema: str) -> None:
+    sample_dir = output_dir / safe_part(sample_id)
+    if not sample_dir.exists():
+        return
+    manifest_path = sample_dir / "manifest.json"
+    if not manifest_path.exists():
+        raise ValueError(f"refusing to replace existing graph directory without manifest: {sample_dir}")
+    existing = json.loads(manifest_path.read_text())
+    existing_schema = str(existing.get("schema_version") or "")
+    expected_schema = graph_schema_version(graph_schema)
+    if existing_schema != expected_schema:
+        raise ValueError(
+            f"refusing schema-conflicting overwrite at {sample_dir}: "
+            f"existing={existing_schema or 'unknown'} requested={expected_schema}"
+        )
 
 
 def json_dump(value: Any) -> str:
@@ -172,21 +255,60 @@ def add_edge(edges: List[Dict[str, Any]], edge_type: str, source: str, target: s
     edges.append(edge)
 
 
-def time_id(role: str, value: str) -> str:
-    return f"time::{safe_part(role)}::{safe_part(value)}::{short_hash(value)}"
+def time_id(role: str, value: str, anchor_value: str = "") -> str:
+    fingerprint = value if not anchor_value else f"{value}|anchor={anchor_value}"
+    return f"time::{safe_part(role)}::{safe_part(value)}::{short_hash(fingerprint)}"
 
 
-def add_time_node(nodes: Dict[str, Dict[str, Any]], role: str, value: str, sample_id: str) -> str:
-    identifier = time_id(role, value)
+def normalize_time_role(value: object) -> str:
+    role = re.sub(r"[^a-z0-9_]+", "_", str(value or "").strip().lower()).strip("_")
+    aliases = {
+        "claim_time": "mentioned_at",
+        "date": "occurred_at",
+        "deadline": "deadline_at",
+        "due_at": "deadline_at",
+        "finish_at": "completed_at",
+        "finished_at": "completed_at",
+        "plan_for": "planned_for",
+        "session_date_time": "occurred_at",
+        "start_at": "started_at",
+    }
+    role = aliases.get(role, role)
+    return role if role in TIME_ROLES else ""
+
+
+def normalize_claim_time_role(role_value: object, time_value: object) -> str:
+    role = normalize_time_role(role_value)
+    normalized_time = normalize_time_value(time_value)
+    if role == "planned_for" and PAST_TIME_EXPRESSION_RE.search(normalized_time):
+        return "occurred_at"
+    return role
+
+
+def graph_schema_version(graph_schema: str) -> str:
+    return GRAPH_SCHEMA_V2 if graph_schema == "v2" else GRAPH_SCHEMA_V1
+
+
+def add_time_node(
+    nodes: Dict[str, Dict[str, Any]],
+    role: str,
+    value: str,
+    sample_id: str,
+    **payload: Any,
+) -> str:
+    anchor_value = str(payload.get("anchor_value") or "")
+    identifier = time_id(role, value, anchor_value)
+    node = {
+        "node_type": "Time",
+        "time_id": identifier,
+        "sample_id": sample_id,
+        "time_role": role,
+        "value": value,
+    }
+    node.update({key: item for key, item in payload.items() if item is not None and item != ""})
     add_node(
         nodes,
-        {
-            "node_type": "Time",
-            "time_id": identifier,
-            "sample_id": sample_id,
-            "time_role": role,
-            "value": value,
-        },
+        node,
     )
     return identifier
 
@@ -238,18 +360,46 @@ def chunked(items: Sequence[DialogTurn], size: int) -> Iterable[Sequence[DialogT
         yield items[start : start + max(1, size)]
 
 
-def claim_system_prompt() -> str:
-    return (
+def claim_system_prompt(graph_schema: str) -> str:
+    prompt = (
         "You extract graph-ready memory claims from LoCoMo personal conversations. "
         "Use only the provided dialog turns, session dates, speakers, and text metadata. "
         "Do not use QA answers, evidence labels, or outside benchmark metadata. "
         "Resolve first-person pronouns to the speaker name when the subject is clear. "
         "Keep claims faithful, atomic, and useful for later single-hop, multi-hop, temporal, and open-domain QA. "
-        "Return strict JSON only."
+    )
+    if graph_schema == "v2":
+        prompt += (
+            "When a claim contains an explicit or relative time expression, preserve that expression and classify its "
+            "semantic time role. Do not invent a time or infer one from QA fields. "
+        )
+    return prompt + "Return strict JSON only."
+
+
+def time_role_prompt() -> str:
+    return (
+        "For time_role use exactly one of: "
+        + ", ".join(TIME_ROLES)
+        + ". Use occurred_at for an event that happened then; planned_for for an intended future event; "
+        "deadline_at for a due date; valid_from for a state beginning then; started_at/completed_at/finalized_at "
+        "for lifecycle boundaries; updated_at for an explicit update. Use mentioned_at only when the expression "
+        "describes when something was mentioned rather than when it happened. If no time expression supports the "
+        "claim, return empty strings for both time_role and time_value. Keep relative expressions verbatim."
     )
 
 
-def claim_user_prompt(sample_id: str, turns: Sequence[DialogTurn], max_claims_per_turn: int) -> str:
+def claim_user_prompt(
+    sample_id: str,
+    turns: Sequence[DialogTurn],
+    max_claims_per_turn: int,
+    graph_schema: str,
+) -> str:
+    temporal_instructions = f"{time_role_prompt()}\n\n" if graph_schema == "v2" else ""
+    time_role_field = (
+        f'"time_role": "{"|".join(TIME_ROLES)}|empty", '
+        if graph_schema == "v2"
+        else ""
+    )
     return (
         f"Benchmark: LoCoMo QA\n"
         f"Sample ID: {sample_id}\n"
@@ -258,6 +408,7 @@ def claim_user_prompt(sample_id: str, turns: Sequence[DialogTurn], max_claims_pe
         "For open-domain clues, store the conversation clue itself, not the outside-knowledge answer. "
         "Use facet_key from this set when possible: "
         f"{', '.join(sorted(FACET_KEYS))}.\n\n"
+        f"{temporal_instructions}"
         f"{turn_prompt_block(turns)}\n\n"
         "Return JSON with this schema:\n"
         "{"
@@ -267,6 +418,7 @@ def claim_user_prompt(sample_id: str, turns: Sequence[DialogTurn], max_claims_pe
         "\"subject\": \"person, place, activity, object, or relation\", "
         "\"facet_key\": \"identity|relationship|activity|preference|place|plan|event|date|status|health|work|education|family|other\", "
         "\"value\": \"faithful short fact from the dialog\", "
+        f"{time_role_field}"
         "\"time_value\": \"explicit or relative time expression, or empty string\", "
         "\"scope_labels\": [\"optional topic labels such as pottery, camping, LGBTQ support group\"], "
         "\"confidence\": 0.0"
@@ -280,6 +432,11 @@ def normalize_label(value: object, fallback: str = "") -> str:
     text = re.sub(r"\s+", " ", str(value or "").strip())
     text = text.strip(" \t\r\n'\"`.,:;!?()[]{}")
     return text[:180] or fallback
+
+
+def normalize_time_value(value: object) -> str:
+    normalized = normalize_label(value)
+    return "" if normalized.lower() in EMPTY_TIME_VALUES else normalized
 
 
 def normalize_facet(value: object) -> str:
@@ -309,8 +466,12 @@ def extract_claims_for_chunk(
     sample_id: str,
     turns: Sequence[DialogTurn],
     max_claims_per_turn: int,
+    graph_schema: str,
 ) -> List[Dict[str, Any]]:
-    raw = client.complete_json(claim_system_prompt(), claim_user_prompt(sample_id, turns, max_claims_per_turn))
+    raw = client.complete_json(
+        claim_system_prompt(graph_schema),
+        claim_user_prompt(sample_id, turns, max_claims_per_turn, graph_schema),
+    )
     raw_claims = raw.get("claims", [])
     if not isinstance(raw_claims, list):
         return []
@@ -330,18 +491,23 @@ def extract_claims_for_chunk(
         if not subject or not value:
             continue
         claim_count_by_dialog[dialog_id] += 1
-        claims.append(
-            {
-                "dialog_id": dialog_id,
-                "subject": subject,
-                "facet_key": normalize_facet(raw_claim.get("facet_key")),
-                "value": value,
-                "time_value": normalize_label(raw_claim.get("time_value")),
-                "scope_labels": normalize_scope_labels(raw_claim.get("scope_labels")),
-                "confidence": raw_claim.get("confidence"),
-                "extraction_method": "llm_offline_claim_extraction",
-            }
-        )
+        claim = {
+            "dialog_id": dialog_id,
+            "subject": subject,
+            "facet_key": normalize_facet(raw_claim.get("facet_key")),
+            "value": value,
+            "time_value": normalize_time_value(raw_claim.get("time_value")),
+            "scope_labels": normalize_scope_labels(raw_claim.get("scope_labels")),
+            "confidence": raw_claim.get("confidence"),
+            "extraction_method": "llm_offline_claim_extraction",
+        }
+        if graph_schema == "v2":
+            claim["time_role"] = normalize_claim_time_role(raw_claim.get("time_role"), claim["time_value"])
+            if claim["time_value"] and not claim["time_role"]:
+                claim["time_role"] = "occurred_at"
+            if claim["time_role"] and not claim["time_value"]:
+                claim["time_role"] = ""
+        claims.append(claim)
     return claims
 
 
@@ -354,6 +520,7 @@ def extract_llm_claims(
     message_chunk_size: int,
     max_claims_per_turn: int,
     workers: int,
+    graph_schema: str,
 ) -> List[Dict[str, Any]]:
     turn_chunks = list(chunked(turns, message_chunk_size))
 
@@ -366,7 +533,13 @@ def extract_llm_claims(
             last_id = turn_chunk[-1].dia_id if turn_chunk else "empty"
             shard_name = f"{sample_id}_{chunk_index:05d}_{short_hash(first_id + last_id)}"
             chunk_client = make_sharded_client(runtime, "claim_extraction", shard_name)
-        claims = extract_claims_for_chunk(chunk_client, sample_id, turn_chunk, max_claims_per_turn)
+        claims = extract_claims_for_chunk(
+            chunk_client,
+            sample_id,
+            turn_chunk,
+            max_claims_per_turn,
+            graph_schema,
+        )
         return chunk_index, claims
 
     if workers <= 1:
@@ -402,6 +575,7 @@ def materialize_base_event(
     edges: List[Dict[str, Any]],
     sample_id: str,
     turn: DialogTurn,
+    graph_schema: str,
 ) -> None:
     event_id = turn.dia_id
     add_node(
@@ -429,7 +603,14 @@ def materialize_base_event(
         identifier = node_id(scope)
         add_edge(edges, "IN_SCOPE", event_id, identifier, reason=f"dialog turn in {scope['scope_type']} scope")
         add_edge(edges, "MENTIONS", event_id, identifier, reason=f"dialog turn mentions {scope['scope_type']}")
-    occurred_time = add_time_node(nodes, "session_date_time", turn.session_date_time, sample_id)
+    occurred_role = "occurred_at" if graph_schema == "v2" else "session_date_time"
+    occurred_time = add_time_node(
+        nodes,
+        occurred_role,
+        turn.session_date_time,
+        sample_id,
+        source_field="session_date_time" if graph_schema == "v2" else None,
+    )
     add_edge(edges, "OCCURRED_AT", event_id, occurred_time, reason="LoCoMo session date_time")
 
 
@@ -440,6 +621,7 @@ def materialize_claim(
     turn_by_id: Mapping[str, DialogTurn],
     raw_claim: Mapping[str, Any],
     claim_index: int,
+    graph_schema: str,
 ) -> Optional[Dict[str, Any]]:
     dialog_id = str(raw_claim.get("dialog_id") or "")
     turn = turn_by_id.get(dialog_id)
@@ -467,12 +649,15 @@ def materialize_claim(
         "subject": subject,
         "facet_key": facet_key,
         "value": value,
-        "time_value": normalize_label(raw_claim.get("time_value")),
+        "time_value": normalize_time_value(raw_claim.get("time_value")),
         "scope_labels": normalize_scope_labels(raw_claim.get("scope_labels")),
         "confidence": raw_claim.get("confidence"),
         "extraction_method": raw_claim.get("extraction_method", "llm_offline_claim_extraction"),
         "graph_text": f"{subject} {facet_key}: {value}",
     }
+    if graph_schema == "v2":
+        claim_node["time_role"] = normalize_claim_time_role(raw_claim.get("time_role"), claim_node["time_value"])
+        claim_node["time_anchor"] = turn.session_date_time
     add_node(nodes, claim_node)
     add_edge(edges, "ASSERTS", dialog_id, claim_id, reason="dialog turn asserts extracted memory claim")
 
@@ -492,9 +677,46 @@ def materialize_claim(
         add_edge(edges, "IN_SCOPE", dialog_id, topic_scope_id, reason="claim topic label")
 
     time_value = str(claim_node.get("time_value") or "").strip()
-    support_time = add_time_node(nodes, "claim_time" if time_value else "session_date_time", time_value or turn.session_date_time, sample_id)
-    if time_value:
-        add_edge(edges, "HAS_TIME", claim_id, support_time, reason="claim extracted time expression")
+    time_role = str(claim_node.get("time_role") or "").strip()
+    if graph_schema == "v2":
+        if time_value:
+            time_role = time_role or "occurred_at"
+            claim_node["time_role"] = time_role
+            claim_time = add_time_node(
+                nodes,
+                time_role,
+                time_value,
+                sample_id,
+                anchor_value=turn.session_date_time,
+                value_kind="relative_or_explicit_expression",
+            )
+            add_edge(
+                edges,
+                "HAS_TIME",
+                claim_id,
+                claim_time,
+                reason="claim extracted role-aware time expression",
+                time_role=time_role,
+                source_event_id=dialog_id,
+            )
+        current_after_value = time_value if time_value and time_role in CURRENT_AFTER_TIME_ROLES else turn.session_date_time
+        support_time = add_time_node(
+            nodes,
+            "current_after",
+            current_after_value,
+            sample_id,
+            anchor_value=turn.session_date_time,
+        )
+    else:
+        support_time = add_time_node(
+            nodes,
+            "claim_time" if time_value else "session_date_time",
+            time_value or turn.session_date_time,
+            sample_id,
+        )
+        if time_value:
+            add_edge(edges, "HAS_TIME", claim_id, support_time, reason="claim extracted time expression")
+        current_after_value = time_value or turn.session_date_time
 
     facet_id = (
         f"state::{safe_part(sample_id)}::{safe_part(subject[:60])}::"
@@ -509,13 +731,28 @@ def materialize_claim(
         "value": value,
         "support_claim_ids": [claim_id],
         "support_event_ids": [dialog_id],
-        "current_after": time_value or turn.session_date_time,
+        "current_after": current_after_value,
         "scope_ids": [subject_scope_id] + topic_scope_ids,
         "graph_text": f"{subject} {facet_key}: {value}",
     }
+    if graph_schema == "v2":
+        state_node.update(
+            {
+                "time_role": time_role,
+                "time_value": time_value,
+                "time_anchor": turn.session_date_time,
+            }
+        )
     add_node(nodes, state_node)
     add_edge(edges, "SUPPORTS", claim_id, facet_id, reason="claim supports state facet")
-    add_edge(edges, "CURRENT_AFTER", facet_id, support_time, reason="state facet support time")
+    add_edge(
+        edges,
+        "CURRENT_AFTER",
+        facet_id,
+        support_time,
+        reason="state facet support time",
+        source_time_role=(time_role or "occurred_at") if graph_schema == "v2" else None,
+    )
     add_edge(edges, "CURRENT_STATE_OF", facet_id, subject_scope_id, reason="state facet subject")
     for topic_scope_id in topic_scope_ids:
         add_edge(edges, "CURRENT_STATE_OF", facet_id, topic_scope_id, reason="state facet topic")
@@ -532,21 +769,28 @@ def relation_system_prompt() -> str:
     )
 
 
-def relation_user_prompt(sample_id: str, bucket_index: int, claims: Sequence[Mapping[str, Any]]) -> str:
+def relation_user_prompt(
+    sample_id: str,
+    bucket_index: int,
+    claims: Sequence[Mapping[str, Any]],
+    graph_schema: str,
+) -> str:
     claim_rows = []
     for claim in claims:
-        claim_rows.append(
-            {
-                "claim_id": claim.get("claim_id"),
-                "dialog_id": claim.get("dialog_id"),
-                "session_id": claim.get("session_id"),
-                "speaker": claim.get("speaker"),
-                "subject": claim.get("subject"),
-                "facet_key": claim.get("facet_key"),
-                "value": claim.get("value"),
-                "time_value": claim.get("time_value"),
-            }
-        )
+        row = {
+            "claim_id": claim.get("claim_id"),
+            "dialog_id": claim.get("dialog_id"),
+            "session_id": claim.get("session_id"),
+            "speaker": claim.get("speaker"),
+            "subject": claim.get("subject"),
+            "facet_key": claim.get("facet_key"),
+            "value": claim.get("value"),
+            "time_value": claim.get("time_value"),
+        }
+        if graph_schema == "v2":
+            row["time_role"] = claim.get("time_role")
+            row["time_anchor"] = claim.get("time_anchor")
+        claim_rows.append(row)
     return (
         f"Benchmark: LoCoMo QA\n"
         f"Sample ID: {sample_id}\n"
@@ -657,8 +901,12 @@ def resolve_relation_bucket(
     sample_id: str,
     bucket_index: int,
     claims: Sequence[Mapping[str, Any]],
+    graph_schema: str,
 ) -> Tuple[int, List[Dict[str, Any]]]:
-    raw = client.complete_json(relation_system_prompt(), relation_user_prompt(sample_id, bucket_index, claims))
+    raw = client.complete_json(
+        relation_system_prompt(),
+        relation_user_prompt(sample_id, bucket_index, claims, graph_schema),
+    )
     return bucket_index, normalize_relations(raw, claims)
 
 
@@ -670,6 +918,7 @@ def resolve_claim_relations(
     claims: Sequence[Mapping[str, Any]],
     candidate_limit: int,
     workers: int,
+    graph_schema: str,
 ) -> List[Dict[str, Any]]:
     buckets = relation_buckets(claims, candidate_limit)
     if not buckets:
@@ -682,7 +931,7 @@ def resolve_claim_relations(
                 raise ValueError("parallel relation resolver requires LLMRuntimeConfig")
             claim_ids = "|".join(str(claim.get("claim_id") or "") for claim in bucket_claims)
             bucket_client = make_sharded_client(runtime, "relation_resolver", f"{sample_id}_{bucket_index:05d}_{short_hash(claim_ids)}")
-        return resolve_relation_bucket(bucket_client, sample_id, bucket_index, bucket_claims)
+        return resolve_relation_bucket(bucket_client, sample_id, bucket_index, bucket_claims, graph_schema)
 
     if workers <= 1:
         relations: List[Dict[str, Any]] = []
@@ -747,13 +996,26 @@ def dedupe_edges(edges: Sequence[Mapping[str, Any]]) -> List[Dict[str, Any]]:
     return unique
 
 
-def validate_graph(nodes: Mapping[str, Mapping[str, Any]], edges: Sequence[Mapping[str, Any]]) -> List[str]:
+def validate_graph(
+    nodes: Mapping[str, Mapping[str, Any]],
+    edges: Sequence[Mapping[str, Any]],
+    graph_schema: str = "v1",
+) -> List[str]:
     warnings: List[str] = []
     node_types_by_id = {identifier: str(node.get("node_type") or "") for identifier, node in nodes.items()}
     for identifier, node in nodes.items():
         node_type = str(node.get("node_type") or "")
         if node_type not in NODE_TYPES:
             warnings.append(f"unsupported_node_type:{identifier}:{node_type}")
+        if graph_schema == "v2" and node_type == "Time":
+            time_role = str(node.get("time_role") or "")
+            if time_role not in TIME_ROLES:
+                warnings.append(f"unsupported_time_role:{identifier}:{time_role}")
+        if graph_schema == "v2" and node_type == "Claim":
+            time_value = str(node.get("time_value") or "")
+            time_role = str(node.get("time_role") or "")
+            if time_value and time_role not in TIME_ROLES:
+                warnings.append(f"claim_time_role_missing:{identifier}:{time_value}")
     for index, edge in enumerate(edges):
         edge_type = str(edge.get("type") or "")
         source = str(edge.get("from") or "")
@@ -768,6 +1030,11 @@ def validate_graph(nodes: Mapping[str, Mapping[str, Any]], edges: Sequence[Mappi
         actual = (node_types_by_id[source], node_types_by_id[target])
         if actual != expected:
             warnings.append(f"edge_endpoint_type_mismatch:{index}:{edge_type}:{actual[0]}->{actual[1]}")
+        if graph_schema == "v2" and edge_type == "HAS_TIME" and target in nodes:
+            edge_role = str(edge.get("time_role") or "")
+            target_role = str(nodes[target].get("time_role") or "")
+            if edge_role != target_role:
+                warnings.append(f"has_time_role_mismatch:{index}:{edge_role}:{target_role}")
     forbidden_fields = {"A", "R", "answer", "options", "gold_evidence", "evidence"}
     for identifier, node in nodes.items():
         leaked = sorted(forbidden_fields & set(node.keys()))
@@ -792,13 +1059,14 @@ def build_sample_graph(
     resolver_candidate_limit: int,
     max_claims_per_turn: int,
     event_limit: int,
+    graph_schema: str = "v1",
 ) -> Dict[str, Any]:
     sample = load_sample(data_path, sample_id)
     turns = list(sample.turns[:event_limit] if event_limit else sample.turns)
     nodes: Dict[str, Dict[str, Any]] = {}
     edges: List[Dict[str, Any]] = []
     for turn in turns:
-        materialize_base_event(nodes, edges, sample.sample_id, turn)
+        materialize_base_event(nodes, edges, sample.sample_id, turn, graph_schema)
 
     raw_claims: List[Dict[str, Any]] = []
     if claim_mode == "llm":
@@ -813,13 +1081,22 @@ def build_sample_graph(
                 message_chunk_size=message_chunk_size,
                 max_claims_per_turn=max_claims_per_turn,
                 workers=claim_workers,
+                graph_schema=graph_schema,
             )
         )
 
     turn_by_id = {turn.dia_id: turn for turn in turns}
     claims: List[Dict[str, Any]] = []
     for index, raw_claim in enumerate(raw_claims, start=1):
-        claim = materialize_claim(nodes, edges, sample.sample_id, turn_by_id, raw_claim, index)
+        claim = materialize_claim(
+            nodes,
+            edges,
+            sample.sample_id,
+            turn_by_id,
+            raw_claim,
+            index,
+            graph_schema,
+        )
         if claim is not None:
             claims.append(claim)
 
@@ -834,6 +1111,7 @@ def build_sample_graph(
             claims=claims,
             candidate_limit=resolver_candidate_limit,
             workers=resolver_workers,
+            graph_schema=graph_schema,
         )
         for relation in relations:
             add_edge(
@@ -847,7 +1125,7 @@ def build_sample_graph(
 
     edge_rows = dedupe_edges(edges)
     node_rows = sorted(nodes.values(), key=lambda node: (str(node.get("node_type") or ""), node_id(node)))
-    warnings = validate_graph(nodes, edge_rows)
+    warnings = validate_graph(nodes, edge_rows, graph_schema)
     summary = {
         "sample_id": sample.sample_id,
         "session_count": len({turn.session_id for turn in turns}),
@@ -860,6 +1138,14 @@ def build_sample_graph(
         "edge_counts": dict(Counter(str(edge.get("type") or "") for edge in edge_rows).most_common()),
         "claim_facets": dict(Counter(str(claim.get("facet_key") or "") for claim in claims).most_common()),
         "claim_extraction_methods": dict(Counter(str(claim.get("extraction_method") or "") for claim in claims).most_common()),
+        "claim_time_roles": dict(Counter(str(claim.get("time_role") or "none") for claim in claims).most_common()),
+        "time_node_roles": dict(
+            Counter(
+                str(node.get("time_role") or "")
+                for node in node_rows
+                if node.get("node_type") == "Time"
+            ).most_common()
+        ),
         "relation_edge_count": len(relations),
         "relation_edge_types": dict(Counter(str(relation.get("type") or "") for relation in relations).most_common()),
         "top_subjects": dict(Counter(str(claim.get("subject") or "") for claim in claims).most_common(20)),
@@ -868,7 +1154,7 @@ def build_sample_graph(
     manifest = {
         "benchmark": "LoCoMo QA",
         "sample_id": sample.sample_id,
-        "schema_version": "locomo-qa-sample-sts-graph-v1",
+        "schema_version": graph_schema_version(graph_schema),
         "created_at": datetime.now(timezone.utc).isoformat(),
         "data_path": str(data_path),
         "source_fields": ["sample_id", "conversation.session_*", "conversation.session_*_date_time"],
@@ -889,6 +1175,15 @@ def build_sample_graph(
         "resolver_candidate_limit": resolver_candidate_limit,
         "max_claims_per_turn": max_claims_per_turn,
         "event_limit": event_limit,
+        "temporal_semantics": {
+            "mode": "role_aware" if graph_schema == "v2" else "legacy",
+            "time_roles": list(TIME_ROLES) if graph_schema == "v2" else ["session_date_time", "claim_time"],
+            "relative_time_policy": (
+                "Preserve the source expression and anchor it to the source session date_time."
+                if graph_schema == "v2"
+                else "Legacy claim_time value."
+            ),
+        },
         "node_types": list(NODE_TYPES),
         "edge_types": list(EDGE_TYPES),
         "edge_endpoint_types": {edge: list(types) for edge, types in EDGE_ENDPOINT_TYPES.items()},
@@ -911,6 +1206,19 @@ def write_sample_graph(output_dir: Path, sample_id: str, graph: Mapping[str, Any
 
 def main() -> int:
     args = parse_args()
+    output_dir = Path(args.output_dir) if args.output_dir else default_output_dir(args.graph_schema)
+    cache_path = Path(args.cache) if args.cache else default_cache_path(args.graph_schema)
+    if args.graph_schema == "v2" and output_dir.name.lower().endswith("_v1"):
+        print(
+            f"Refusing to write a v2 graph into a v1-labelled directory: {output_dir}",
+            file=sys.stderr,
+        )
+        return 2
+    try:
+        ensure_output_schema_compatible(output_dir, args.sample_id, args.graph_schema)
+    except ValueError as exc:
+        print(f"Output safety check failed: {exc}", file=sys.stderr)
+        return 2
     client: Optional[LLMClient] = None
     runtime: Optional[LLMRuntimeConfig] = None
     provider: Optional[str] = None
@@ -933,7 +1241,7 @@ def main() -> int:
             model=model,
             api_key=api_key,
             api_base=api_base,
-            cache_path=Path(args.cache),
+            cache_path=cache_path,
             use_cache=not args.no_cache,
         )
         runtime = LLMRuntimeConfig(
@@ -941,7 +1249,7 @@ def main() -> int:
             model=model,
             api_key=api_key,
             api_base=api_base,
-            cache_path=Path(args.cache),
+            cache_path=cache_path,
             use_cache=not args.no_cache,
         )
     try:
@@ -960,6 +1268,7 @@ def main() -> int:
             resolver_candidate_limit=args.resolver_candidate_limit,
             max_claims_per_turn=args.max_claims_per_turn,
             event_limit=args.event_limit,
+            graph_schema=args.graph_schema,
         )
     except LLMRequestError as exc:
         print("\nLLM request failed during LoCoMo graph build.", file=sys.stderr)
@@ -972,10 +1281,13 @@ def main() -> int:
         print("\nLoCoMo graph build failed.", file=sys.stderr)
         print(f"error: {exc}", file=sys.stderr)
         return 1
-    sample_dir = write_sample_graph(Path(args.output_dir), args.sample_id, graph)
+    sample_dir = write_sample_graph(output_dir, args.sample_id, graph)
     summary = graph["summary"]
     print("LoCoMo QA sample graph")
-    print(f"sample_id={args.sample_id} output_dir={sample_dir}")
+    print(
+        f"sample_id={args.sample_id} schema={graph['manifest']['schema_version']} "
+        f"output_dir={sample_dir}"
+    )
     print(
         "stats "
         f"events={summary['event_count']} claims={summary['claim_count']} "

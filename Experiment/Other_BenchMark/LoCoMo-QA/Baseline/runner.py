@@ -43,6 +43,7 @@ from ours_scope_time_state.graph_query_runner import (  # noqa: E402
     exact_match_score,
     f1_from_precision_recall,
     format_metric,
+    official_bleu1_score,
     official_style_answer_score,
     precision,
     recall,
@@ -518,6 +519,7 @@ class MemoryBankSubprocessSampleIndex:
             "memory_bank_current_date": self.args.memory_bank_current_date,
             "memory_bank_embedding_model": self.args.memory_bank_embedding_model,
             "memory_bank_embedding_device": self.args.memory_bank_embedding_device,
+            "memory_bank_chunk_size": self.args.memory_bank_chunk_size,
         }
 
     def _worker_command(self, worker_path: Path, request_path: Path, response_path: Path) -> List[str]:
@@ -807,13 +809,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model", default=None)
     parser.add_argument("--variants", nargs="+", default=["full_text", "rag"], choices=SUPPORTED_VARIANTS)
     parser.add_argument("--question-types", nargs="+", default=[])
+    parser.add_argument("--skip-cases", type=int, default=0)
     parser.add_argument("--limit-cases", type=int, default=0)
     parser.add_argument("--limit-per-type", type=int, default=0)
     parser.add_argument("--top-k", type=int, default=24)
     parser.add_argument("--answer-workers", type=int, default=2)
     parser.add_argument("--cache", default=str(EXTERNAL_CACHE_DIR / "llm_cache.locomo_qa_memory_baselines.json"))
     parser.add_argument("--no-cache", action="store_true")
-    parser.add_argument("--output", default=str(EXTERNAL_RESULT_DIR / "results_locomo_qa_memory_baselines.json"))
+    parser.add_argument("--output", default="")
     parser.add_argument("--baseline-store-dir", default=str(PROJECT_DIR / "Graph/output/baseline_store/locomo_qa"))
     parser.add_argument("--reuse-baseline-store", action="store_true")
     parser.add_argument("--dry-run", action="store_true", help="Validate selected rows and variants without LLM or embedding calls.")
@@ -843,6 +846,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--memory-bank-current-date", default="")
     parser.add_argument("--memory-bank-embedding-model", default=os.environ.get("MEMORY_BANK_EMBEDDING_MODEL", "minilm-l6"))
     parser.add_argument("--memory-bank-embedding-device", default=os.environ.get("MEMORY_BANK_EMBEDDING_DEVICE", "cpu"))
+    parser.add_argument("--memory-bank-chunk-size", type=int, default=int(os.environ.get("MEMORY_BANK_CHUNK_SIZE", "12")))
     parser.add_argument("--memory-bank-conda-env", default=os.environ.get("MEMORY_BANK_CONDA_ENV", "locomo_memorybank"))
     parser.add_argument("--memory-bank-python", default=os.environ.get("MEMORY_BANK_PYTHON", ""))
     parser.add_argument("--memory-bank-timeout-seconds", type=int, default=int(os.environ.get("MEMORY_BANK_TIMEOUT_SECONDS", "7200")))
@@ -874,6 +878,16 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def default_output_path_for_variants(args: argparse.Namespace) -> Path:
+    if len(args.variants) == 1:
+        subdir = args.variants[0]
+        variant_slug = args.variants[0]
+    else:
+        subdir = "mixed"
+        variant_slug = "_".join(args.variants)
+    return EXTERNAL_RESULT_DIR / "locomo_qa" / subdir / f"results_locomo_qa_{variant_slug}_{args.sample_id}.json"
+
+
 def env_bool(name: str, default: bool) -> bool:
     raw = os.environ.get(name)
     if raw is None:
@@ -881,9 +895,28 @@ def env_bool(name: str, default: bool) -> bool:
     return raw.strip().lower() in {"1", "true", "yes", "y", "on"}
 
 
+def sanitize_jsonable(value: Any) -> Any:
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, Mapping):
+        return {str(key): sanitize_jsonable(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple, set)):
+        return [sanitize_jsonable(item) for item in value]
+    if isinstance(value, Path):
+        return str(value)
+    if isinstance(value, datetime):
+        return value.isoformat()
+    try:
+        json.dumps(value)
+    except TypeError:
+        return str(value)
+    return value
+
+
 def select_rows(
     rows: Sequence[LoCoMoQAItem],
     question_types: Sequence[str],
+    skip_cases: int,
     limit_cases: int,
     limit_per_type: int,
 ) -> List[LoCoMoQAItem]:
@@ -900,6 +933,8 @@ def select_rows(
             limited.append(row)
             counts[row.question_type] += 1
         selected = limited
+    if skip_cases:
+        selected = selected[skip_cases:]
     if limit_cases:
         selected = selected[:limit_cases]
     return selected
@@ -1067,6 +1102,7 @@ def load_memory_bank_official_runtime(repo_path: str) -> Dict[str, Any]:
     spec.loader.exec_module(module)
     runtime = {
         "repo": repo,
+        "module": module,
         "prompts": load_memory_bank_official_prompts(str(repo)),
         "LocalMemoryRetrieval": getattr(module, "LocalMemoryRetrieval", None),
         "MemoryForgetterLoader": getattr(module, "MemoryForgetterLoader", None),
@@ -1321,18 +1357,15 @@ def memory_bank_official_answer_system_prompt() -> str:
     )
 
 
-def memory_bank_official_answer_user_prompt(row: LoCoMoQAItem, store: Mapping[str, Any], memory_context: str) -> str:
+def memory_bank_official_answer_user_prompt(row: LoCoMoQAItem, memory_context: str) -> str:
     return (
-        "MemoryBank overall history:\n"
-        f"{store.get('overall_history') or '[none]'}\n\n"
-        "MemoryBank overall personality / response strategy:\n"
-        f"{store.get('overall_personality') or '[none]'}\n\n"
         "Recalled MemoryBank memories:\n"
         f"{memory_context}\n\n"
         f"Question ID: {row.question_id}\n"
         f"Question: {row.question}\n\n"
         "Do not use benchmark gold answers, gold evidence, categories, or question-type labels. "
-        "Cite only dialog IDs present in recalled memories. Return JSON only:\n"
+        "Cite only dialog IDs present in recalled memories. "
+        "Use at most 5 evidence_dialog_ids, choosing the most direct supporting IDs. Return JSON only:\n"
         "{\"answer\":\"short answer\", \"evidence_dialog_ids\":[\"D1:1\"]}"
     )
 
@@ -1627,6 +1660,7 @@ def run_variant(
             "evidence_dialog_precision": evidence_precision,
             "evidence_dialog_f1": f1_from_precision_recall(evidence_precision, evidence_recall),
             "answer_f1": official_style_answer_score(row, hypothesis),
+            "bleu1": None if row.category == 5 else official_bleu1_score(hypothesis, row.answer),
             "exact_match": exact_match_score(hypothesis, row.answer) if row.category != 5 else False,
             "retrieval_trace": context.trace,
         }
@@ -1653,8 +1687,8 @@ def print_summary(provider: str, model: str, results: Sequence[Dict[str, object]
     print("LoCoMo QA memory baselines")
     print(f"answer_provider={provider} answer_model={model}")
     print()
-    print(f"{'variant':<20} {'n':>4} {'ans_f1':>8} {'task_f1':>8} {'exact':>8} {'cand_r':>8} {'cand_p':>8} {'ev_r':>8} {'ev_p':>8} {'ev_f1':>8}")
-    print("-" * 107)
+    print(f"{'variant':<20} {'n':>4} {'ans_f1':>8} {'task_f1':>8} {'bleu1':>8} {'task_b1':>8} {'exact':>8} {'cand_r':>8} {'cand_p':>8} {'ev_r':>8} {'ev_p':>8} {'ev_f1':>8}")
+    print("-" * 125)
     for result in results:
         summary = result["summary"]
         print(
@@ -1662,6 +1696,8 @@ def print_summary(provider: str, model: str, results: Sequence[Dict[str, object]
             f"{summary['n_cases']:>4} "
             f"{format_metric(summary['answer_f1']):>8} "
             f"{format_metric(summary['task_averaged_answer_f1']):>8} "
+            f"{format_metric(summary['bleu1']):>8} "
+            f"{format_metric(summary['task_averaged_bleu1']):>8} "
             f"{format_metric(summary['exact_match']):>8} "
             f"{format_metric(summary['candidate_dialog_recall']):>8} "
             f"{format_metric(summary['candidate_dialog_precision']):>8} "
@@ -1674,10 +1710,13 @@ def print_summary(provider: str, model: str, results: Sequence[Dict[str, object]
 def main() -> int:
     load_dotenv()
     args = parse_args()
+    if not args.output:
+        args.output = str(default_output_path_for_variants(args))
     sample = load_sample(Path(args.data), args.sample_id)
     rows = select_rows(
         load_sample_qa(Path(args.data), args.sample_id),
         args.question_types,
+        args.skip_cases,
         args.limit_cases,
         args.limit_per_type,
     )
@@ -1688,7 +1727,9 @@ def main() -> int:
         print("LoCoMo QA memory baselines dry run")
         print(f"sample_id={args.sample_id} rows={len(rows)} variants={','.join(args.variants)}")
         print(f"question_types={','.join(args.question_types) if args.question_types else '[all]'}")
+        print(f"skip_cases={args.skip_cases} limit_cases={args.limit_cases} limit_per_type={args.limit_per_type}")
         print(f"top_k={args.top_k} baseline_store_dir={args.baseline_store_dir}")
+        print(f"output={args.output}")
         official_variants = [variant for variant in args.variants if variant in OFFICIAL_SERVICE_VARIANTS]
         if official_variants:
             print(f"official_service_variants={','.join(official_variants)}")
@@ -1746,6 +1787,7 @@ def main() -> int:
         "variants": list(args.variants),
         "question_types": [normalize_question_type(item) for item in args.question_types],
         "top_k": args.top_k,
+        "skip_cases": args.skip_cases,
         "limit_cases": args.limit_cases,
         "limit_per_type": args.limit_per_type,
         "baseline_config": {
@@ -1783,6 +1825,8 @@ def main() -> int:
             "memory_bank_current_date": args.memory_bank_current_date,
             "memory_bank_embedding_model": args.memory_bank_embedding_model,
             "memory_bank_embedding_device": args.memory_bank_embedding_device,
+            "memory_bank_chunk_size": args.memory_bank_chunk_size,
+            "memory_bank_answer_prompt_context": "official_search_memory_recall_only",
             "memory_bank_conda_env": args.memory_bank_conda_env,
             "memory_bank_python": args.memory_bank_python,
             "a_mem": "official_agiresearch_a_mem_runtime",

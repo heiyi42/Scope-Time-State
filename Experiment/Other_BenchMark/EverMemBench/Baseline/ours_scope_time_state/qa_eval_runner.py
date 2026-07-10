@@ -55,7 +55,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--scope-routing", choices=("sts", "none"), default="sts")
     parser.add_argument("--scope-top-k", type=int, default=4)
     parser.add_argument("--scope-types", default="group,person")
-    parser.add_argument("--state-search-k", type=int, default=12)
+    parser.add_argument(
+        "--state-final-top",
+        type=int,
+        default=16,
+        help="Number of StateFacets directly retained by the unified STS expansion.",
+    )
     parser.add_argument("--max-context-events", type=int, default=40)
     parser.add_argument("--temporal-interval", choices=("auto", "none"), default="none")
     parser.add_argument("--temporal-top-k", type=int, default=50)
@@ -88,18 +93,9 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--embedding-base-url", default=None)
     parser.add_argument(
-        "--mc-resolver",
-        choices=("official", "sts"),
-        default="official",
-        help="official keeps the vanilla MC answer prompt; sts injects a Scope-Time-State decision frame before answering.",
-    )
-    parser.add_argument(
         "--include-options-in-query",
         action="store_true",
-        help=(
-            "Append MC option text to non-STS retrieval queries. Ignored when --mc-resolver=sts "
-            "so the STS graph retrieval path remains question-only."
-        ),
+        help="Append multiple-choice option text to retrieval queries.",
     )
     parser.add_argument("--prompts-path", type=Path, default=PROMPTS_PATH)
     parser.add_argument("--answer-provider", choices=("openai", "deepseek", "local"), default="openai")
@@ -445,7 +441,6 @@ def official_detailed_results(rows: Sequence[Mapping[str, Any]]) -> List[Dict[st
                     "top_events": row.get("top_events", []),
                     "graph_expansion_trace": row.get("graph_expansion_trace", {}),
                     "temporal_interval_trace": row.get("temporal_interval_trace", {}),
-                    "mc_semantic_decision_trace": row.get("mc_semantic_decision_trace", {}),
                     "retrieval_diagnostics": row.get("retrieval_diagnostics", {}),
                 },
             }
@@ -543,926 +538,6 @@ def search_seed_events(
         "embedding_candidate_count": len(embedding_candidate_ids) if embedding_index is not None else 0,
         "top_scores": ranked_rows[:20],
     }
-
-
-GENERIC_MC_DECISION_CONFIG: Dict[str, Any] = {
-    "decision_type": "question_conditioned_state_selection",
-    "state_roles": [
-        "current_valid_state",
-        "constraint",
-        "decision",
-        "owner",
-        "status",
-        "next_step",
-        "preference",
-        "style",
-        "role",
-        "skill",
-        "link",
-        "metric",
-        "scope",
-    ],
-    "time_roles": ["CURRENT_AFTER", "updated_at", "occurred_at", "mentioned_at", "planned_for", "deadline_at"],
-    "validity_policy": (
-        "Use question-visible anchors to select directly relevant current StateFacets. "
-        "Use CURRENT_AFTER and relation edges to reject stale, superseded, corrected, or conflicting evidence."
-    ),
-    "answer_rule": "Choose the option best supported by the retrieved current valid state evidence and source events.",
-}
-
-
-GENERIC_RETRIEVAL_POLICY: Dict[str, Any] = {
-    "name": "sts_generic_question_only",
-    "query_terms": [],
-    "facet_key_weights": {
-        "constraint": 1.1,
-        "decision": 1.0,
-        "owner": 0.9,
-        "status": 0.7,
-        "next_step": 0.6,
-        "link": 0.3,
-        "metric": 0.2,
-        "scope": 0.2,
-    },
-    "relation_weights": {
-        "SUPERSEDES": 1.2,
-        "CORRECTS": 1.2,
-        "CONFLICTS_WITH": 0.8,
-        "SUPPORTS": 0.3,
-    },
-    "status_weights": {
-        "current": 0.8,
-        "active": 0.6,
-        "ambiguous": -0.5,
-        "conflict_unresolved": -0.6,
-    },
-    "raw_event_mode": "query_terms",
-    "raw_event_budget": 6,
-    "raw_event_neighbor_window": 1,
-    "state_budget": 12,
-    "final_policy_scale": 1.2,
-    "evidence_shape": "generic_current_state_table",
-}
-
-
-TIME_ROLE_CHOICES = (
-    "CURRENT_AFTER",
-    "updated_at",
-    "occurred_at",
-    "mentioned_at",
-    "planned_for",
-    "deadline_at",
-    "valid_from",
-    "started_at",
-    "completed_at",
-    "finalized_at",
-)
-
-TIME_ROLE_DESCRIPTIONS = {
-    "CURRENT_AFTER": "The current-state timestamp attached to a StateFacet; use for current/latest/valid state questions.",
-    "updated_at": "General latest update ordering when the query asks about the most recent applicable state.",
-    "occurred_at": "The factual occurrence time of an event or decision.",
-    "mentioned_at": "The time something was said or stylistically observed; useful for speaker/person style questions.",
-    "planned_for": "A planned future action, next step, schedule, or intended work item.",
-    "deadline_at": "A due date or deadline constraint.",
-    "valid_from": "The start of a validity window or policy applicability.",
-    "started_at": "The start point of a task or interval.",
-    "completed_at": "A completion point of a task or interval.",
-    "finalized_at": "A finalized/released/approved endpoint of a task or interval.",
-}
-
-TIME_ROLE_ALIASES = {
-    "current": "CURRENT_AFTER",
-    "current_after": "CURRENT_AFTER",
-    "currentafter": "CURRENT_AFTER",
-    "latest": "CURRENT_AFTER",
-    "valid": "CURRENT_AFTER",
-    "update": "updated_at",
-    "updated": "updated_at",
-    "updated_at": "updated_at",
-    "occurred": "occurred_at",
-    "occurred_at": "occurred_at",
-    "event_time": "occurred_at",
-    "mentioned": "mentioned_at",
-    "mentioned_at": "mentioned_at",
-    "planned": "planned_for",
-    "planned_for": "planned_for",
-    "plan": "planned_for",
-    "deadline": "deadline_at",
-    "deadline_at": "deadline_at",
-    "due": "deadline_at",
-    "valid_from": "valid_from",
-    "started": "started_at",
-    "started_at": "started_at",
-    "start": "started_at",
-    "completed": "completed_at",
-    "completed_at": "completed_at",
-    "complete": "completed_at",
-    "finalized": "finalized_at",
-    "finalized_at": "finalized_at",
-    "final": "finalized_at",
-}
-
-def _unique_limited(values: Sequence[str], limit: int) -> List[str]:
-    selected: List[str] = []
-    seen: set[str] = set()
-    for value in values:
-        text = " ".join(str(value or "").split())
-        if not text:
-            continue
-        key = text.lower()
-        if key in seen:
-            continue
-        seen.add(key)
-        selected.append(text)
-        if len(selected) >= limit:
-            break
-    return selected
-
-
-def _mc_hint_terms(text: str) -> List[str]:
-    stop_terms = {
-        "about",
-        "after",
-        "also",
-        "and",
-        "are",
-        "before",
-        "but",
-        "can",
-        "check",
-        "could",
-        "does",
-        "for",
-        "from",
-        "have",
-        "help",
-        "how",
-        "into",
-        "just",
-        "like",
-        "need",
-        "new",
-        "now",
-        "our",
-        "please",
-        "previously",
-        "project",
-        "quick",
-        "really",
-        "right",
-        "should",
-        "system",
-        "task",
-        "that",
-        "the",
-        "this",
-        "time",
-        "what",
-        "when",
-        "where",
-        "who",
-        "with",
-        "would",
-    }
-    terms: List[str] = []
-    for token in re.findall(r"[A-Za-z0-9]+", text.lower()):
-        if len(token) < 3 or token in stop_terms:
-            continue
-        terms.append(token)
-    return _unique_limited(terms, 40)
-
-
-NON_PERSON_NAME_TOKENS = {
-    "Account",
-    "Accounting",
-    "Application",
-    "Asset",
-    "Audit",
-    "Baseline",
-    "Carbon",
-    "Compliance",
-    "Data",
-    "Department",
-    "Design",
-    "Emission",
-    "Engineer",
-    "European",
-    "Information",
-    "Management",
-    "Platform",
-    "Product",
-    "Report",
-    "Security",
-    "Services",
-    "Supplier",
-    "System",
-    "Technical",
-    "Web",
-}
-
-
-def likely_person_name(value: str) -> bool:
-    tokens = [token for token in str(value or "").split() if token]
-    if len(tokens) != 2:
-        return False
-    if any(token in NON_PERSON_NAME_TOKENS for token in tokens):
-        return False
-    return all(re.fullmatch(r"[A-Z][a-z]+", token) for token in tokens)
-
-
-def extract_person_names(text: str, limit: int = 10) -> List[str]:
-    candidates = re.findall(r"\b[A-Z][a-z]+ [A-Z][a-z]+\b", text)
-    return _unique_limited([candidate for candidate in candidates if likely_person_name(candidate)], limit)
-
-
-GENERIC_PHRASE_TOKENS = {
-    "platform",
-    "system",
-    "project",
-    "module",
-    "backend",
-    "frontend",
-    "engineer",
-    "department",
-    "company",
-}
-
-
-GENERIC_EVENT_ACRONYMS = {"API", "ID", "UI", "PRD", "HTTP"}
-
-
-def discriminative_phrase(value: str) -> bool:
-    terms = _mc_hint_terms(value)
-    if not terms:
-        return False
-    generic_count = sum(1 for term in terms if term in GENERIC_PHRASE_TOKENS)
-    if generic_count and len(terms) >= 4:
-        return False
-    return True
-
-
-def mc_question_hints(item: Mapping[str, Any], include_options_in_query: bool) -> Dict[str, Any]:
-    question = str(item.get("Q") or "")
-    query_text = qa_query_text(item, include_options=include_options_in_query)
-    names = extract_person_names(query_text, 10)
-    raw_quoted = (
-        re.findall(r"\"([^\"]{3,80})\"", query_text)
-        + re.findall(r"(?<![A-Za-z])'([^'\n]{3,80})'(?![A-Za-z])", query_text)
-        + re.findall(r"“([^”]{3,80})”", query_text)
-    )
-    quoted = _unique_limited([phrase for phrase in raw_quoted if discriminative_phrase(phrase)], 12)
-    acronyms = _unique_limited(re.findall(r"\b[A-Z]{2,}\b", query_text), 8)
-    return {
-        "names": names,
-        "quoted_terms": quoted,
-        "acronyms": acronyms,
-        "query_terms": _mc_hint_terms(query_text),
-        "option_text_used": bool(include_options_in_query),
-        "question_only_terms": _mc_hint_terms(question),
-    }
-
-
-def mc_line_relevance_score(line: str, hint_terms: Sequence[str]) -> float:
-    lowered = line.lower()
-    score = 0.0
-    for term in hint_terms:
-        if term and term.lower() in lowered:
-            score += 1.0
-    if "CURRENT_AFTER=" in line:
-        score += 1.5
-    if "status=current" in lowered or "status=active" in lowered:
-        score += 1.0
-    if any(marker in lowered for marker in ("supersedes", "corrects", "conflicts_with", "invalidated", "replaced")):
-        score += 2.0
-    return score
-
-
-def select_mc_evidence_lines(lines: Sequence[str], hint_terms: Sequence[str], limit: int) -> List[str]:
-    scored = [
-        (mc_line_relevance_score(line, hint_terms), index, line)
-        for index, line in enumerate(lines)
-        if str(line or "").strip()
-    ]
-    scored.sort(key=lambda value: (-value[0], value[1]))
-    return [line for _, _, line in scored[:limit]]
-
-
-def mc_important_phrases(text: str) -> List[str]:
-    phrases = re.findall(r"`([^`]{2,80})`", text)
-    phrases.extend(re.findall(r"\"([^\"]{3,80})\"", text))
-    phrases.extend(re.findall(r"(?<![A-Za-z])'([^'\n]{3,80})'(?![A-Za-z])", text))
-    phrases.extend(re.findall(r"“([^”]{3,80})”", text))
-    phrases.extend(re.findall(r"\b[A-Z]{2,}(?:[-_][A-Z0-9]+)*\b", text))
-    phrases.extend(re.findall(r"\b[A-Z][a-z]+(?: [A-Z][a-z]+){1,3}\b", text))
-    return _unique_limited(phrases, 16)
-
-
-def mc_scope_trace(routed_scopes: Sequence[Mapping[str, Any]]) -> List[Dict[str, Any]]:
-    trace: List[Dict[str, Any]] = []
-    for rank, scope in enumerate(routed_scopes, start=1):
-        trace.append(
-            {
-                "rank": rank,
-                "scope_id": scope.get("scope_id"),
-                "scope_type": scope.get("scope_type"),
-                "label": scope.get("label"),
-                "score": scope.get("score"),
-                "event_count": scope.get("event_count"),
-            }
-        )
-    return trace
-
-
-def normalize_time_roles(raw_roles: object, fallback_roles: Sequence[str]) -> List[str]:
-    values: List[str] = []
-    if isinstance(raw_roles, str):
-        values = [part.strip() for part in re.split(r"[,;/\n]+", raw_roles) if part.strip()]
-    elif isinstance(raw_roles, (list, tuple, set)):
-        values = [str(part).strip() for part in raw_roles if str(part).strip()]
-    normalized: List[str] = []
-    for value in values:
-        direct = value if value in TIME_ROLE_CHOICES else None
-        alias = TIME_ROLE_ALIASES.get(value.strip().lower().replace(" ", "_"))
-        role = direct or alias
-        if role and role not in normalized:
-            normalized.append(role)
-    if normalized:
-        return normalized[:4]
-    fallback = [str(role) for role in fallback_roles if str(role) in TIME_ROLE_CHOICES]
-    return list(dict.fromkeys(fallback))[:4] or ["CURRENT_AFTER"]
-
-
-def select_time_roles_deterministic(
-    item: Mapping[str, Any],
-    config: Mapping[str, Any],
-) -> Dict[str, Any]:
-    fallback_roles = normalize_time_roles(config.get("time_roles", []), ["CURRENT_AFTER"])
-    question = str(item.get("Q") or "")
-    lowered = question.lower()
-    selected: List[str] = []
-    matched_rules: List[Dict[str, str]] = []
-
-    def add(role: str, rule: str) -> None:
-        if role not in TIME_ROLE_CHOICES or role in selected:
-            return
-        selected.append(role)
-        matched_rules.append({"role": role, "rule": rule})
-
-    if re.search(r"\b(current|latest|valid|still|now|active|existing|newer|updated|changed|override|supersed|correct)\b", lowered):
-        add("CURRENT_AFTER", "current_or_valid_state_cue")
-        add("updated_at", "current_or_valid_state_cue")
-    if re.search(r"\b(plan|planned|planning|schedule|scheduled|next|follow[- ]?up|future|upcoming|intend)\b", lowered):
-        add("planned_for", "planned_or_next_step_cue")
-    if re.search(r"\b(deadline|due|by \w+day|before the end|cutoff)\b", lowered):
-        add("deadline_at", "deadline_cue")
-    if re.search(r"\b(said|mention|mentioned|asked|told|style|tone|speaker|wording|phrase|title|person|colleague)\b", lowered):
-        add("mentioned_at", "person_or_mention_cue")
-        add("occurred_at", "person_or_mention_cue")
-    if re.search(r"\b(start|started|begin|began|initiation|kickoff)\b", lowered):
-        add("started_at", "start_endpoint_cue")
-        add("planned_for", "start_endpoint_cue")
-    if re.search(r"\b(complete|completed|finish|finished|final|finalized|release|released|delivered|archived|approved)\b", lowered):
-        add("completed_at", "completion_endpoint_cue")
-        add("finalized_at", "completion_endpoint_cue")
-    if re.search(r"\b(after|before|how long|how many days|from start|start to finish|elapsed|span)\b", lowered):
-        add("occurred_at", "temporal_interval_cue")
-
-    for role in fallback_roles:
-        if len(selected) >= 5:
-            break
-        add(role, "generic_default")
-
-    selected = normalize_time_roles(selected, fallback_roles)
-    return {
-        "enabled": True,
-        "selector": "deterministic_time_role_router",
-        "selected_time_roles": selected,
-        "primary_time_role": selected[0] if selected else "CURRENT_AFTER",
-        "fallback_time_roles": fallback_roles,
-        "matched_rules": matched_rules,
-        "gold_used": False,
-    }
-
-
-def generic_retrieval_policy() -> Dict[str, Any]:
-    policy = {
-        key: value.copy() if isinstance(value, dict) else list(value) if isinstance(value, list) else value
-        for key, value in GENERIC_RETRIEVAL_POLICY.items()
-    }
-    return policy
-
-
-def graph_retrieval_query_specs(
-    item: Mapping[str, Any],
-) -> List[Dict[str, Any]]:
-    question = " ".join(str(item.get("Q") or "").split())
-    hints = mc_question_hints(item, include_options_in_query=False)
-    specs: List[Dict[str, Any]] = []
-
-    def add(name: str, query: str, weight: float) -> None:
-        normalized = " ".join(str(query or "").split())
-        if not normalized:
-            return
-        key = normalized.lower()
-        if any(str(existing.get("query") or "").lower() == key for existing in specs):
-            return
-        specs.append({"name": name, "query": normalized, "weight": round(float(weight), 4)})
-
-    add("question", question, 1.0)
-    for phrase in mc_important_phrases(question)[:8]:
-        add("question_phrase", phrase, 0.85)
-    if hints["names"]:
-        add("names", " ".join(hints["names"]), 0.75)
-    if hints["quoted_terms"]:
-        add("quoted_terms", " ".join(hints["quoted_terms"]), 0.75)
-    if hints["acronyms"]:
-        add("acronyms", " ".join(hints["acronyms"]), 0.7)
-    if hints["question_only_terms"]:
-        add("question_terms", " ".join(hints["question_only_terms"][:18]), 0.65)
-
-    return specs[:14]
-
-
-def relation_event_ids(facet: Mapping[str, Any], relation_needs: Sequence[str]) -> List[str]:
-    wanted = {str(value) for value in relation_needs}
-    relation_profile = facet.get("relation_profile")
-    if not isinstance(relation_profile, Mapping):
-        return []
-    event_ids: List[object] = []
-    for key in ("outgoing_validity_edges", "incoming_validity_edges", "conflict_edges"):
-        for edge in relation_profile.get(key, []) or []:
-            if not isinstance(edge, Mapping):
-                continue
-            edge_type = str(edge.get("type") or "")
-            if wanted and edge_type not in wanted:
-                continue
-            event_ids.extend(edge.get("evidence_event_ids", []) or [])
-    return dedupe_list(event_ids)
-
-
-def facet_source_event_ids(selected_facets: Sequence[Mapping[str, Any]]) -> List[str]:
-    event_ids: List[object] = []
-    for facet in selected_facets:
-        event_ids.extend(facet.get("support_event_ids", []) or [])
-        event_ids.extend(relation_event_ids(facet, ["SUPPORTS", "SUPERSEDES", "CORRECTS", "CONFLICTS_WITH"]))
-    return dedupe_list(event_ids)
-
-
-def _generic_relation_score(facet: Mapping[str, Any], retrieval_policy: Mapping[str, Any]) -> float:
-    weights = retrieval_policy.get("relation_weights") if isinstance(retrieval_policy.get("relation_weights"), Mapping) else {}
-    relation_profile = facet.get("relation_profile") if isinstance(facet.get("relation_profile"), Mapping) else {}
-    score = 0.0
-    for key, direction_scale in (
-        ("outgoing_validity_edges", 1.0),
-        ("incoming_validity_edges", -0.8),
-        ("conflict_edges", 0.5),
-    ):
-        for edge in relation_profile.get(key, []) or []:
-            if not isinstance(edge, Mapping):
-                continue
-            edge_type = str(edge.get("type") or "")
-            score += direction_scale * float(weights.get(edge_type, 0.0) or 0.0)
-    return max(-4.0, min(3.0, score))
-
-
-def _text_term_score(text: str, terms: Sequence[str], per_hit: float = 0.4) -> float:
-    lowered = text.lower()
-    score = 0.0
-    for term in terms:
-        normalized = str(term or "").strip().lower()
-        if normalized and normalized in lowered:
-            score += per_hit
-    return score
-
-
-def phrase_match_score(phrase: str, document: str) -> tuple[float, Optional[str]]:
-    normalized = str(phrase or "").strip()
-    if not normalized:
-        return 0.0, None
-    lowered_doc = document.lower()
-    lowered_phrase = normalized.lower()
-    if lowered_phrase in lowered_doc:
-        return 10.0, f"phrase_exact:{normalized}"
-    phrase_terms = _mc_hint_terms(normalized)
-    if len(phrase_terms) >= 2:
-        underscore_variant = "_".join(phrase_terms).lower()
-        compact_variant = "".join(phrase_terms).lower()
-        if underscore_variant and underscore_variant in lowered_doc:
-            return 9.0, f"phrase_code:{underscore_variant}"
-        if compact_variant and compact_variant in lowered_doc:
-            return 7.0, f"phrase_compact:{compact_variant}"
-    return 0.0, None
-
-
-def generic_facet_score(
-    facet: Mapping[str, Any],
-    graph_evidence: STSGraphEvidenceIndex,
-    hints: Mapping[str, Any],
-    retrieval_policy: Mapping[str, Any],
-) -> tuple[float, Dict[str, Any]]:
-    state_id = str(facet.get("state_facet_id") or "")
-    state = graph_evidence.state_facets.get(state_id, {})
-    facet_key = str(state.get("facet_key") or "").lower()
-    subject = str(state.get("subject") or "")
-    value = str(state.get("value") or "")
-    summary = str(facet.get("summary") or "")
-    combined = " ".join([subject, facet_key, value, summary]).lower()
-
-    facet_weights = retrieval_policy.get("facet_key_weights") if isinstance(retrieval_policy.get("facet_key_weights"), Mapping) else {}
-    status_weights = retrieval_policy.get("status_weights") if isinstance(retrieval_policy.get("status_weights"), Mapping) else {}
-    names = [str(name) for name in hints.get("names", []) if name]
-    quoted_terms = [str(term) for term in hints.get("quoted_terms", []) if term]
-    acronyms = [str(term) for term in hints.get("acronyms", []) if term]
-    question_terms = [str(term) for term in hints.get("question_only_terms", []) if term]
-
-    facet_key_score = float(facet_weights.get(facet_key, 0.0) or 0.0)
-    status_score = float(status_weights.get(str(facet.get("status") or "").lower(), 0.0) or 0.0)
-    name_score = _text_term_score(combined, names, per_hit=1.2)
-    phrase_score = _text_term_score(combined, [*quoted_terms, *acronyms], per_hit=1.1)
-    question_term_score = min(3.0, _text_term_score(combined, question_terms, per_hit=0.18))
-    relation_score = _generic_relation_score(facet, retrieval_policy)
-
-    total = facet_key_score + status_score + name_score + phrase_score + question_term_score + relation_score
-    return total, {
-        "facet_key": facet_key,
-        "facet_key_score": round(facet_key_score, 4),
-        "status_score": round(status_score, 4),
-        "name_score": round(name_score, 4),
-        "phrase_score": round(phrase_score, 4),
-        "question_term_score": round(question_term_score, 4),
-        "relation_score": round(relation_score, 4),
-        "total": round(total, 4),
-    }
-
-
-def generic_event_evidence(
-    graph_evidence: STSGraphEvidenceIndex,
-    item: Mapping[str, Any],
-    scope_ids: Sequence[str],
-    limit: int,
-) -> tuple[List[str], List[Dict[str, Any]]]:
-    if limit <= 0:
-        return [], []
-    allowed_scopes = {str(scope_id) for scope_id in scope_ids if scope_id}
-    allowed_events = graph_evidence.events_for_scopes(list(allowed_scopes)) if allowed_scopes else set(graph_evidence.events)
-    hints = mc_question_hints(item, include_options_in_query=False)
-    names = [str(name) for name in hints.get("names", []) if name]
-    query_terms = [str(term) for term in hints.get("question_only_terms", []) if term]
-    quoted_terms = [str(term) for term in hints.get("quoted_terms", []) if term]
-    acronyms = [str(term) for term in hints.get("acronyms", []) if term]
-    scoring_acronyms = [acronym for acronym in acronyms if acronym not in GENERIC_EVENT_ACRONYMS]
-    phrases = [*quoted_terms, *scoring_acronyms]
-    scored: List[tuple[float, str, Dict[str, Any]]] = []
-    for event_id in allowed_events:
-        event = graph_evidence.events.get(str(event_id), {})
-        if not event:
-            continue
-        speaker = str(event.get("speaker") or "")
-        event_text = " ".join(
-            str(part)
-            for part in (
-                event.get("date"),
-                event.get("group"),
-                speaker,
-                event.get("text"),
-                graph_evidence._event_claim_text(str(event_id)),
-            )
-            if part not in {None, ""}
-        )
-        lowered = event_text.lower()
-        score = 0.0
-        reasons: List[str] = []
-        for phrase in phrases:
-            phrase_score, reason = phrase_match_score(phrase, event_text)
-            if phrase_score:
-                score += phrase_score
-                if reason:
-                    reasons.append(reason)
-        term_score = _text_term_score(lowered, query_terms, per_hit=0.55)
-        if term_score:
-            score += min(8.0, term_score)
-            reasons.append("question_terms")
-        for name in names:
-            if name and (name.lower() == speaker.lower() or name.lower() in lowered):
-                score += 3.0
-                reasons.append(f"name:{name}")
-        if score <= 0.0:
-            continue
-        scored.append(
-            (
-                score,
-                str(event_id),
-                {
-                    "event_id": str(event_id),
-                    "score": round(score, 4),
-                    "speaker": speaker,
-                    "date": event.get("date"),
-                    "reasons": _unique_limited(reasons, 8),
-                    "text": truncate_text(event_text, 500),
-                },
-            )
-        )
-    scored.sort(key=lambda value: (-value[0], value[1]))
-    selected = scored[:limit]
-    return [event_id for _, event_id, _ in selected], [trace for _, _, trace in selected]
-
-
-def adjacent_event_ids(graph_evidence: STSGraphEvidenceIndex, event_id: str, window: int) -> List[str]:
-    if window <= 0:
-        return []
-    match = re.match(r"^(.*:)(\d+)$", str(event_id or ""))
-    if not match:
-        return []
-    prefix, index_text = match.groups()
-    index = int(index_text)
-    neighbors: List[str] = []
-    ordered_offsets = [offset for offset in range(1, window + 1)] + [-offset for offset in range(1, window + 1)]
-    for offset in ordered_offsets:
-        neighbor = f"{prefix}{index + offset}"
-        if neighbor in graph_evidence.events:
-            neighbors.append(neighbor)
-    return neighbors
-
-
-def expand_event_neighbors(
-    graph_evidence: STSGraphEvidenceIndex,
-    event_ids: Sequence[str],
-    window: int,
-) -> tuple[List[str], Dict[str, List[str]]]:
-    expanded: List[str] = []
-    neighbor_trace: Dict[str, List[str]] = {}
-    for event_id in event_ids:
-        expanded.append(str(event_id))
-        neighbors = adjacent_event_ids(graph_evidence, str(event_id), window)
-        if neighbors:
-            neighbor_trace[str(event_id)] = neighbors
-            expanded.extend(neighbors)
-    return dedupe_list(expanded), neighbor_trace
-
-
-def retrieve_graph_evidence_deterministic(
-    graph_evidence: STSGraphEvidenceIndex,
-    item: Mapping[str, Any],
-    config: Mapping[str, Any],
-    scope_ids: Sequence[str],
-    time_roles: Sequence[str],
-    state_search_k: int,
-    max_context_events: int,
-) -> tuple[List[Dict[str, Any]], Dict[str, Any]]:
-    retrieval_policy = generic_retrieval_policy()
-    facet_budget = max(6, min(18, int(retrieval_policy.get("state_budget") or state_search_k or 12)))
-    per_query_limit = max(4, min(8, facet_budget))
-    event_budget = max(1, min(max_context_events, 32))
-    search_k = max(state_search_k * 16, facet_budget * 16, 80)
-    query_specs = graph_retrieval_query_specs(item)
-    merged: Dict[str, Dict[str, Any]] = {}
-    per_query: List[Dict[str, Any]] = []
-    selected_time_roles = normalize_time_roles(time_roles, config.get("time_roles", []))
-    hints = mc_question_hints(item, include_options_in_query=False)
-    for index, spec in enumerate(query_specs):
-        query = str(spec.get("query") or "")
-        weight = float(spec.get("weight") or 0.0)
-        facets = graph_evidence.select_state_facets(
-            query,
-            scope_ids,
-            selected_time_roles,
-            limit=per_query_limit,
-            search_k=search_k,
-        )
-        per_query.append(
-            {
-                "index": index,
-                "name": spec.get("name"),
-                "query": query,
-                "weight": weight,
-                "time_roles": selected_time_roles,
-                "selected_state_facet_ids": [facet["state_facet_id"] for facet in facets],
-            }
-        )
-        for rank, facet in enumerate(facets, start=1):
-            state_id = str(facet.get("state_facet_id") or "")
-            if not state_id:
-                continue
-            query_hit = {
-                "query_index": index,
-                "name": spec.get("name"),
-                "query": query,
-                "weight": weight,
-                "rank": rank,
-            }
-            relation_profile = facet.get("relation_profile") if isinstance(facet.get("relation_profile"), Mapping) else {}
-            relation_count = sum(
-                len(relation_profile.get(key, []) or [])
-                for key in ("outgoing_validity_edges", "incoming_validity_edges", "conflict_edges")
-            )
-            generic_score, generic_trace = generic_facet_score(facet, graph_evidence, hints, retrieval_policy)
-            adjusted_score = (
-                weight * (1.0 / (rank + 1))
-                + 0.02 * float(facet.get("score") or 0.0)
-                + 0.03 * float(facet.get("validity_score") or 0.0)
-                + 0.02 * float(facet.get("time_role_score") or 0.0)
-                + 0.01 * relation_count
-                + 0.25 * generic_score
-            )
-            existing = merged.get(state_id)
-            if existing is None:
-                record = dict(facet)
-                record["retrieval_score"] = round(adjusted_score, 6)
-                record["base_score"] = facet.get("score")
-                record["generic_score"] = round(generic_score, 4)
-                record["generic_trace"] = generic_trace
-                record["matched_queries"] = [query_hit]
-                merged[state_id] = record
-            else:
-                existing["retrieval_score"] = round(float(existing.get("retrieval_score") or 0.0) + adjusted_score, 6)
-                existing["score"] = max(float(existing.get("score") or 0.0), float(facet.get("score") or 0.0))
-                existing["generic_score"] = round(
-                    max(float(existing.get("generic_score") or 0.0), generic_score),
-                    4,
-                )
-                existing.setdefault("matched_queries", []).append(query_hit)
-    final_policy_scale = float(retrieval_policy.get("final_policy_scale") or 1.0)
-    for record in merged.values():
-        record["final_retrieval_score"] = round(
-            float(record.get("retrieval_score") or 0.0)
-            + final_policy_scale * float(record.get("generic_score") or 0.0),
-            6,
-        )
-    selected = sorted(
-        merged.values(),
-        key=lambda facet: (
-            -float(facet.get("final_retrieval_score") or 0.0),
-            -float(facet.get("retrieval_score") or 0.0),
-            -float(facet.get("score") or 0.0),
-            str(facet.get("state_facet_id") or ""),
-        ),
-    )[:facet_budget]
-    raw_event_budget = max(0, min(event_budget, int(retrieval_policy.get("raw_event_budget") or 0)))
-    generic_event_ids, generic_event_trace = generic_event_evidence(
-        graph_evidence,
-        item,
-        scope_ids,
-        raw_event_budget,
-    )
-    expanded_generic_event_ids, generic_neighbor_trace = expand_event_neighbors(
-        graph_evidence,
-        generic_event_ids,
-        int(retrieval_policy.get("raw_event_neighbor_window") or 0),
-    )
-    source_event_ids = dedupe_list(
-        [
-            *generic_event_ids[:1],
-            *generic_event_ids[1:],
-            *expanded_generic_event_ids,
-            *facet_source_event_ids(selected),
-        ]
-    )[:event_budget]
-    return selected, {
-        "enabled": True,
-        "retriever": "sts_generic_graphrag",
-        "retrieval_policy": {
-            "name": retrieval_policy.get("name"),
-            "evidence_shape": retrieval_policy.get("evidence_shape"),
-            "raw_event_mode": retrieval_policy.get("raw_event_mode"),
-            "raw_event_neighbor_window": retrieval_policy.get("raw_event_neighbor_window"),
-            "query_terms": list(retrieval_policy.get("query_terms", []) or []),
-            "facet_key_weights": dict(retrieval_policy.get("facet_key_weights", {}) or {}),
-            "relation_weights": dict(retrieval_policy.get("relation_weights", {}) or {}),
-        },
-        "task_label_used_for_retrieval": False,
-        "option_text_used_for_retrieval": False,
-        "facet_budget": facet_budget,
-        "event_budget": event_budget,
-        "search_k": search_k,
-        "query_specs": query_specs,
-        "per_query": per_query,
-        "time_roles": selected_time_roles,
-        "selected_state_facet_ids": [facet.get("state_facet_id") for facet in selected],
-        "generic_event_ids": generic_event_ids,
-        "expanded_generic_event_ids": expanded_generic_event_ids,
-        "generic_event_neighbor_trace": generic_neighbor_trace,
-        "generic_event_trace": generic_event_trace,
-        "source_event_ids": source_event_ids,
-        "gold_used": False,
-    }
-
-
-def build_mc_semantic_decision_frame(
-    item: Mapping[str, Any],
-    routed_scopes: Sequence[Mapping[str, Any]],
-    expanded: Any,
-    selected_state_facets: Optional[Sequence[Mapping[str, Any]]] = None,
-    time_role_decision: Optional[Mapping[str, Any]] = None,
-    graph_retrieval_trace: Optional[Mapping[str, Any]] = None,
-) -> tuple[str, Dict[str, Any]]:
-    config = GENERIC_MC_DECISION_CONFIG
-
-    hints = mc_question_hints(item, include_options_in_query=False)
-    hint_terms = [str(term) for term in hints.get("query_terms", [])]
-    state_filter_items = [dict(facet_item) for facet_item in selected_state_facets or []]
-    if state_filter_items:
-        state_lines = [str(item.get("summary") or "") for item in state_filter_items if item.get("summary")]
-    else:
-        state_lines = select_mc_evidence_lines(getattr(expanded, "state_summaries", []), hint_terms, 10)
-    relation_lines = select_mc_evidence_lines(getattr(expanded, "relation_summaries", []), hint_terms, 8)
-    scope_trace = mc_scope_trace(routed_scopes)
-    selected_time_roles = normalize_time_roles(
-        time_role_decision.get("selected_time_roles") if isinstance(time_role_decision, Mapping) else None,
-        config["time_roles"],
-    )
-    selector_rules = []
-    if isinstance(time_role_decision, Mapping):
-        selector_rules = [
-            f"{rule.get('role')}:{rule.get('rule')}"
-            for rule in time_role_decision.get("matched_rules", [])
-            if isinstance(rule, Mapping)
-        ]
-    graph_query_specs = []
-    retrieval_policy_trace = {}
-    if isinstance(graph_retrieval_trace, Mapping):
-        retrieval_policy_trace = dict(graph_retrieval_trace.get("retrieval_policy") or {})
-        graph_query_specs = [
-            f"{spec.get('name')}={spec.get('query')}"
-            for spec in graph_retrieval_trace.get("query_specs", [])
-            if isinstance(spec, Mapping)
-        ][:8]
-
-    trace = {
-        "enabled": True,
-        "resolver": "sts_mc_semantic_decision_frame",
-        "decision_type": config["decision_type"],
-        "task_label_used_for_decision": False,
-        "scope_node": scope_trace,
-        "target_state_roles": list(config["state_roles"]),
-        "time_role_route": selected_time_roles,
-        "time_role_router": dict(time_role_decision or {}),
-        "graph_retrieval": dict(graph_retrieval_trace or {}),
-        "state_facet_validity_filter": state_filter_items,
-        "validity_policy": config["validity_policy"],
-        "answer_rule": config["answer_rule"],
-        "question_hints": hints,
-        "selected_state_facets": state_lines,
-        "selected_relations": relation_lines,
-        "gold_used": False,
-    }
-
-    scope_lines = [
-        "- "
-        + "; ".join(
-            [
-                f"rank={scope.get('rank')}",
-                f"scope_id={scope.get('scope_id')}",
-                f"type={scope.get('scope_type')}",
-                f"label={scope.get('label')}",
-                f"score={float(scope.get('score') or 0.0):.4f}",
-                f"event_count={scope.get('event_count')}",
-            ]
-        )
-        for scope in scope_trace
-    ]
-    hint_parts = []
-    if hints["names"]:
-        hint_parts.append("names=" + ", ".join(hints["names"]))
-    if hints["quoted_terms"]:
-        hint_parts.append("quoted_terms=" + ", ".join(hints["quoted_terms"]))
-    if hints["acronyms"]:
-        hint_parts.append("acronyms=" + ", ".join(hints["acronyms"]))
-    if hints["question_only_terms"]:
-        hint_parts.append("question_terms=" + ", ".join(hints["question_only_terms"][:16]))
-
-    lines = [
-        "[STS_MC_DECISION_FRAME]",
-        f"decision_type={config['decision_type']}",
-        "task_label_used_for_decision=false",
-        "pipeline_nodes=scope_route -> generic_graph_retrieval -> time_role_route -> state_facet_validity_filter -> option_selection",
-        "graph_retriever=sts_generic_graphrag",
-        "retrieval_policy="
-        + "; ".join(
-            [
-                f"name={retrieval_policy_trace.get('name')}",
-                f"evidence_shape={retrieval_policy_trace.get('evidence_shape')}",
-                f"raw_event_mode={retrieval_policy_trace.get('raw_event_mode')}",
-            ]
-        ),
-        "scope_node:",
-        *(scope_lines or ["- none"]),
-        "target_state_roles=" + ", ".join(config["state_roles"]),
-        "time_role_route=" + ", ".join(selected_time_roles),
-        "time_role_rules=" + ("; ".join(selector_rules) if selector_rules else "generic_default"),
-        "graph_query_specs:",
-        *(f"- {query_spec}" for query_spec in graph_query_specs),
-        "validity_filter_policy=" + str(config["validity_policy"]),
-        "question_hints=" + ("; ".join(hint_parts) if hint_parts else "none"),
-        "valid_state_facets:",
-        *(f"- {line}" for line in state_lines),
-        "selected_relations:",
-        *(f"- {line}" for line in relation_lines),
-        "resolver_instruction="
-        + str(config["answer_rule"])
-        + " Use relation edges and CURRENT_AFTER fields to reject stale or superseded evidence.",
-    ]
-    return "\n".join(lines), trace
 
 
 def should_use_temporal_interval(item: Mapping[str, Any], mode: str) -> bool:
@@ -3260,7 +2335,7 @@ def run_answer(
     scope_routing: str,
     scope_top_k: int,
     scope_types: Sequence[str],
-    state_search_k: int,
+    state_final_top: int,
     max_context_events: int,
     temporal_interval: str,
     temporal_top_k: int,
@@ -3268,10 +2343,8 @@ def run_answer(
     fmh_endpoint_selector: str,
     fmh_endpoint_candidates: int,
     embedding_candidate_k: int,
-    mc_resolver: str,
 ) -> Dict[str, Any]:
-    is_mc_sts = question_type(item) == "multiple_choice" and mc_resolver == "sts"
-    retrieval_include_options = bool(include_options_in_query and not is_mc_sts)
+    retrieval_include_options = bool(include_options_in_query)
     query_text = qa_query_text(item, include_options=retrieval_include_options)
     scope_route_query = str(item.get("Q") or "")
     expansion_query = query_text
@@ -3328,7 +2401,7 @@ def run_answer(
             item,
             seed_events,
             include_options_in_query=retrieval_include_options,
-            state_search_k=state_search_k,
+            state_search_k=state_final_top,
             max_context_events=max_context_events,
             query_text=expansion_query,
             scope_ids=[str(scope["scope_id"]) for scope in routed_scopes] if scope_routing == "sts" else None,
@@ -3375,63 +2448,10 @@ def run_answer(
         notes_by_event=notes_by_event,
         graph_preamble=graph_preamble,
     )
-    mc_semantic_trace: Dict[str, Any] = {"enabled": False, "resolver": mc_resolver}
     scope_ids = [str(scope["scope_id"]) for scope in routed_scopes] if scope_routing == "sts" else []
-    mc_strategy = "official"
-    mc_preamble = ""
-    if question_type(item) == "multiple_choice" and mc_resolver == "sts":
-        if expanded_evidence is None:
-            raise ValueError("mc_resolver=sts requires graph_expansion=sts")
-        if graph_evidence is None:
-            raise ValueError("mc_resolver=sts requires STSGraphEvidenceIndex")
-        task_config = GENERIC_MC_DECISION_CONFIG
-        time_role_decision = select_time_roles_deterministic(item, task_config)
-        selected_time_roles = [str(role) for role in time_role_decision.get("selected_time_roles", []) if role]
-        selected_state_facets, graph_retrieval_trace = retrieve_graph_evidence_deterministic(
-            graph_evidence,
-            item,
-            task_config,
-            scope_ids,
-            selected_time_roles,
-            state_search_k,
-            max_context_events,
-        )
-        need_event_ids = [str(event_id) for event_id in graph_retrieval_trace.get("source_event_ids", []) if event_id]
-        if need_event_ids:
-            augmented_notes = {event_id: list(values) for event_id, values in notes_by_event.items()}
-            for event_id in need_event_ids:
-                augmented_notes.setdefault(event_id, []).append("generic_graph_retrieval source_event")
-            top_events = dedupe_list([*need_event_ids, *top_events])[:max_context_events]
-            notes_by_event = augmented_notes
-            context = build_context(
-                top_events,
-                doc_by_event,
-                max_event_chars,
-                notes_by_event=notes_by_event,
-                graph_preamble=graph_preamble,
-            )
-            graph_trace["generic_graph_context_event_ids"] = need_event_ids
-        graph_trace["generic_graph_retrieval"] = graph_retrieval_trace
-        mc_preamble, mc_semantic_trace = build_mc_semantic_decision_frame(
-            item,
-            routed_scopes,
-            expanded_evidence,
-            selected_state_facets,
-            time_role_decision,
-            graph_retrieval_trace,
-        )
-        mc_strategy = "sts_frame_official_answer_question_only_retrieval"
-        mc_semantic_trace["strategy"] = mc_strategy
-        graph_trace["mc_semantic_decision"] = mc_semantic_trace
     temporal_trace: Dict[str, Any] = {}
     raw_answer: str
-    if question_type(item) == "multiple_choice" and mc_resolver == "sts":
-        framed_context = "\n\n".join(part for part in (mc_preamble, context) if part.strip())
-        raw_answer = answer_client.complete_text("", answer_prompt(item, framed_context, answer_prompts)).strip()
-        mc_semantic_trace["resolver"] = "sts_frame_official_answer"
-        mc_semantic_trace["selected_answer"] = parse_mc_answer(raw_answer)
-        graph_trace["mc_semantic_decision"] = mc_semantic_trace
-    elif should_use_fmh_long_interval(item, temporal_interval):
+    if should_use_fmh_long_interval(item, temporal_interval):
         temporal_answer, temporal_trace = try_fmh_long_interval_answer(
             item,
             seed_index,
@@ -3440,7 +2460,7 @@ def run_answer(
             graph_evidence,
             scope_top_k,
             scope_types,
-            state_search_k,
+            state_final_top,
             max_context_events,
             temporal_top_k,
             answer_client=answer_client,
@@ -3494,7 +2514,6 @@ def run_answer(
         "top_events": top_events,
         "graph_expansion_trace": graph_trace,
         "temporal_interval_trace": temporal_trace,
-        "mc_semantic_decision_trace": mc_semantic_trace,
         "retrieval_diagnostics": retrieval_diagnostics(item, top_events),
     }
 
@@ -3546,7 +2565,7 @@ def main() -> None:
     expected_total = None
     if args.limit_per_task > 0 and not task_prefixes:
         expected_total = (
-            args.limit_per_task * len(TASK_ORDER)
+            len(selected_all)
             if args.question_type == "all"
             else sum(1 for item in selected_all if question_type(item) == args.question_type)
         )
@@ -3599,7 +2618,8 @@ def main() -> None:
         f"answer={args.answer_provider}/{args.answer_model} judge={args.judge_provider}/{args.judge_model} "
         f"top_k={args.top_k} scope_routing={args.scope_routing} scope_top_k={args.scope_top_k} "
         f"graph_expansion={args.graph_expansion} "
-        f"state_search_k={args.state_search_k} max_context_events={args.max_context_events} "
+        f"state_final_top={args.state_final_top} "
+        f"max_context_events={args.max_context_events} "
         f"temporal_interval={args.temporal_interval} temporal_top_k={args.temporal_top_k} "
         f"time_selector={args.time_selector} "
         f"fmh_endpoint_selector={args.fmh_endpoint_selector} fmh_endpoint_candidates={args.fmh_endpoint_candidates} "
@@ -3607,7 +2627,6 @@ def main() -> None:
         f"embedding_retrieval={args.embedding_retrieval} embedding_model={args.embedding_model if args.embedding_retrieval == 'hybrid' else 'none'} "
         f"embedding_targets={sorted(embedding_targets) if args.embedding_retrieval == 'hybrid' else []} "
         f"embedding_candidate_k={args.embedding_candidate_k if args.embedding_retrieval == 'hybrid' else 0} "
-        f"mc_resolver={args.mc_resolver} "
         f"include_options_in_query={args.include_options_in_query}",
         flush=True,
     )
@@ -3631,7 +2650,7 @@ def main() -> None:
             args.scope_routing,
             args.scope_top_k,
             scope_types,
-            args.state_search_k,
+            args.state_final_top,
             args.max_context_events,
             args.temporal_interval,
             args.temporal_top_k,
@@ -3639,7 +2658,6 @@ def main() -> None:
             args.fmh_endpoint_selector,
             args.fmh_endpoint_candidates,
             args.embedding_candidate_k,
-            args.mc_resolver,
         ),
     )
     print("Judging...", flush=True)
@@ -3670,7 +2688,7 @@ def main() -> None:
             "graph_expansion": args.graph_expansion,
             "include_options_in_query": args.include_options_in_query,
             "top_k": args.top_k,
-            "state_search_k": args.state_search_k,
+            "state_final_top": args.state_final_top,
             "max_context_events": args.max_context_events,
             "temporal_interval": args.temporal_interval,
             "temporal_top_k": args.temporal_top_k,
@@ -3685,7 +2703,6 @@ def main() -> None:
             "embedding_candidate_k": args.embedding_candidate_k if args.embedding_retrieval == "hybrid" else 0,
             "task_label_used_for_retrieval": False,
             "option_text_used_for_sts_retrieval": False,
-            "mc_resolver": args.mc_resolver,
             "max_event_chars": args.max_event_chars,
         },
         "answer_model": {

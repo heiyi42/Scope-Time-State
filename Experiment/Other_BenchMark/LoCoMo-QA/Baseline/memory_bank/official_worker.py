@@ -88,6 +88,7 @@ class MemoryBankOfficialWorkerIndex:
         install_memorybank_langchain_compat()
         self.official = load_memory_bank_official_runtime(config.memory_bank_official_repo)
         self.official_prompts = self.official["prompts"]
+        self._patch_official_splitter_chunk_size()
         self.store_dir = Path(config.baseline_store_dir) / "memory_bank" / sample.sample_id
         self.store_path = self.store_dir / "memory_bank.json"
         self.vector_store_dir = self.store_dir / "faiss"
@@ -231,7 +232,42 @@ class MemoryBankOfficialWorkerIndex:
             top_k=self.config.top_k,
             language=self.language,
         )
+        retriever.chunk_size = int(self.config.memory_bank_chunk_size)
         return retriever
+
+    def _patch_official_splitter_chunk_size(self) -> None:
+        module = self.official.get("module")
+        if module is None:
+            return
+        chunk_size = int(self.config.memory_bank_chunk_size)
+        if chunk_size <= 0:
+            return
+        if getattr(module, "_locomo_memorybank_splitter_chunk_size", None) == chunk_size:
+            return
+        splitter_cls = getattr(module, "ChineseTextSplitter", None)
+        if splitter_cls is None:
+            return
+
+        class ChunkedChineseTextSplitter(splitter_cls):  # type: ignore[misc, valid-type]
+            def __init__(self, *args: Any, **kwargs: Any) -> None:
+                kwargs.setdefault("chunk_size", chunk_size)
+                kwargs.setdefault("chunk_overlap", 0)
+                super().__init__(*args, **kwargs)
+
+            def split_text(self, text: str) -> List[str]:
+                chunks: List[str] = []
+                for piece in super().split_text(text):
+                    if not piece:
+                        continue
+                    if len(piece) <= chunk_size:
+                        chunks.append(piece)
+                        continue
+                    chunks.extend(piece[start : start + chunk_size] for start in range(0, len(piece), chunk_size))
+                return chunks
+
+        ChunkedChineseTextSplitter.__name__ = getattr(splitter_cls, "__name__", "ChineseTextSplitter")
+        module.ChineseTextSplitter = ChunkedChineseTextSplitter
+        module._locomo_memorybank_splitter_chunk_size = chunk_size
 
     def _load_or_build_vector_store(self) -> Any:
         if self.config.reuse_baseline_store and (self.vector_store_dir / "index.faiss").exists():
@@ -311,7 +347,7 @@ class MemoryBankOfficialWorkerIndex:
         )
         output = output_client.complete_json(
             memory_bank_official_answer_system_prompt(),
-            memory_bank_official_answer_user_prompt(row, self._user_store(), memory_context),
+            memory_bank_official_answer_user_prompt(row, memory_context),
         )
         evidence_dialog_ids = normalize_output_dialog_ids(output.get("evidence_dialog_ids"))
         return {
@@ -333,15 +369,14 @@ class MemoryBankOfficialWorkerIndex:
                 "embedding_device": self.config.memory_bank_embedding_device,
                 "current_date": self.current_date,
                 "top_k": self.config.top_k,
+                "chunk_size": self.config.memory_bank_chunk_size,
+                "chunk_size_applied_to": "official_index_splitter_and_faiss_neighbor_expansion",
+                "answer_prompt_context": "official_search_memory_recall_only",
                 "sources": sources,
                 "candidate_dialog_ids_source": "official_memory_ids_mapped_to_dialog_ids",
                 "n_recalled": len(related_memos),
             },
         }
-
-    def _user_store(self) -> Mapping[str, Any]:
-        user_store = self.store.get(self.user_name) if isinstance(self.store.get(self.user_name), Mapping) else {}
-        return user_store
 
     def _candidate_dialog_ids(self, sources: Sequence[str], related_memos: Sequence[str]) -> List[str]:
         dialog_ids: List[str] = []
@@ -374,6 +409,7 @@ def namespace_from_request(request: Mapping[str, Any]) -> argparse.Namespace:
         memory_bank_current_date=str(request.get("memory_bank_current_date") or ""),
         memory_bank_embedding_model=str(request.get("memory_bank_embedding_model") or "minilm-l6"),
         memory_bank_embedding_device=str(request.get("memory_bank_embedding_device") or "cpu"),
+        memory_bank_chunk_size=int(request.get("memory_bank_chunk_size") or 12),
     )
 
 

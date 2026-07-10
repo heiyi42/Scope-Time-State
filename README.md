@@ -1,88 +1,179 @@
-# Scope-Time-State Handoff
+# EpisodicMemory
 
-本仓库包含 STAMB-State benchmark，以及面向长期智能体记忆场景的 Scope-Time-State pipeline。当前核心任务是：在带有时间、状态更新、纠错、计划和作用域变化的事件流中，检索“当前最新有效状态”。
+本仓库用于研究长期对话记忆中的 Scope-Time-State（STS）问题：系统不只是检索与问题相关的历史片段，而是要在长时间、多主题、带有状态更新和时间变化的事件流中，构造当前仍然有效的状态，并据此回答问题。
 
-## 当前状态
+当前代码已经从早期的 standalone benchmark 文档转向以外部 benchmark 为载体的可运行图记忆 pipeline。主要工作集中在 EverMemBench、GroupMemBench 和 LoCoMo-QA，LongMemEval-S 用于跨数据集验证。
 
-- STAMB-State v1.3 数据和协议已经构建完成：24 个 scope、480 条 public event、240 个 evaluator case，以及 120 个 case 的 `balanced_half` 子集。
-- 人工标注还没有完成。当前 annotation 文件主要是协议、样例和参考材料，不是完整的 annotator agreement 或 adjudication 证据。
-- v1.3 的 canonical scored table 还没有完成，暂时不能把 v1.3 当作最终论文结果汇报。
-- Public End-to-End 是面向论文主表的主要设置；Oracle-Facet 是用于隔离 state construction 能力的受控诊断设置。
-- 外部 benchmark adapter 已经放在 `pipeline/external/` 下，包括 LongMemEval-S、LoCoMo-QA 和 STALE；MemConflict 仍是计划中的小样本诊断。
-- 当前 worktree 有意保持为活跃开发状态，提交或推送 GitHub 前需要检查 generated outputs、缓存和本地敏感配置。
+## 当前 solution
 
-## 目录结构
+当前方法的主线是：
 
-- `Design/BenchMark/`：任务定义、graph formalism、标注指南和 benchmark 文档。
-- `Experiment/run/`：CLI 入口和 prompt runner 胶水层。
-- `pipeline/oracle/`：Oracle-Facet 实现。
-- `pipeline/public/`：STAMB-State Public End-to-End 实现。
-- `pipeline/external/`：外部 benchmark adapter。
-- `Experiment/Main_Baseline/`：主要 baseline 实现和外部系统 runner。
-- `Experiment/Other_BenchMark/`：外部 benchmark 的薄封装和本地数据位置。
-- `stamb_state_benchmark/data/`：benchmark 数据。
-- `stamb_state_benchmark/output/`：经过筛选的结果快照，以及默认忽略的本地输出和缓存。
+```text
+dialogue-only memory
+  -> persistent graph construction
+  -> scope routing
+  -> time-role aware event retrieval
+  -> claim extraction
+  -> correction / supersession / conflict resolution
+  -> StateFacet consolidation
+  -> evidence-backed answer
+```
 
-## 关键文档
+图中保存的核心对象包括：
 
-- 任务定义：`Design/BenchMark/STAMB-State_TASK_DEFINITION.md`
-- Benchmark 总览：`Design/BenchMark/STAMB-State_Benchmark_README.md`
-- 实验 runner 说明：`Experiment/README.md`
-- 结果状态：`Experiment/RESULTS.md`
-- Obsidian 研究笔记：`/Users/mac/Documents/Obsidian Vault/NewIdea/Scope-Time-State Ambiguity/Scope-Time-State Ambiguity.md`
+- `Episode/Event`：原始对话、日志或消息；
+- `Entity/Scope`：项目、主题、频道、阶段、参与者等范围对象；
+- `Claim`：从事件中抽取出的原子事实或状态判断；
+- `StateFacet`：当前决策、风险、问题、计划、完成状态等状态维度；
+- `Time`：事件发生时间以及状态有效性相关的时间角色。
+
+主要关系包括 `IN_SCOPE`、`ASSERTS`、`CORRECTS`、`SUPERSEDES`、`CONFLICTS_WITH`、`SUPPORTS`、`CURRENT_AFTER` 和 `CURRENT_STATE_OF`。
+
+查询阶段按以下顺序运行：
+
+1. 根据问题路由到目标 scope；
+2. 识别问题对应的 time role；
+3. 在目标 scope 内召回候选事件；
+4. 使用 claim 和 StateFacet 结构判断当前状态；
+5. 只根据锁定的状态和证据生成答案。
+
+BM25/词法检索负责候选召回，embedding 在需要时用于事件或 scope 的候选重排；embedding 不是图语义本身，也不替代后续的状态有效性判断。
+
+图构建只读取对话或消息数据，不读取 QA、答案、gold evidence 或问题类型标签。问题查询阶段复用已经构建好的持久化图，避免把每个问题的答案信息带入图构建。
+
+## 当前 benchmark 运行面
+
+| Benchmark | 当前运行路径 | 作用 |
+| --- | --- | --- |
+| EverMemBench | `Experiment/Other_BenchMark/EverMemBench/` | 主题级对话图、STS QA 和本地/self-host baseline 矩阵 |
+| GroupMemBench | `pipeline/external/groupmembench/` | 域级持久化图、scope/time/state 检索和状态 facet 解析 |
+| LoCoMo-QA | `Experiment/Other_BenchMark/LoCoMo-QA/` | sample 级持久化图、多跳/开放域/时间问答和 memory baselines |
+| LongMemEval-S | `pipeline/external/longmemeval_s/` | session retrieval、时间推理和知识更新的外部验证 |
+
+### EverMemBench
+
+主入口：
+
+- `run_evermembench_graph_builder.py`：只用 dialogue 构建 topic graph；
+- `run_evermembench_qa_eval.py`：在已构建的图上进行检索、回答和 judge；
+- `run_evermembench_baseline_adapters.py`：检查本地/self-host baseline；
+- `run_official_baselines.sh`：运行公平的本地 baseline 矩阵。
+
+当前公平比较集合为：
+
+```text
+llm mem0_local memobase graphiti_local memos_local
+```
+
+云端或 hosted adapter 不属于默认公平矩阵。具体服务依赖、模型固定和服务器运行顺序见 [`Experiment/Other_BenchMark/EverMemBench/README.md`](Experiment/Other_BenchMark/EverMemBench/README.md) 和 [`SERVER_COMMANDS.md`](Experiment/Other_BenchMark/EverMemBench/SERVER_COMMANDS.md)。
+
+### GroupMemBench
+
+当前规范路径是离线域级图：
+
+```text
+domain dialogue corpus
+  -> per-scope claim extraction
+  -> per-scope StateFacet consolidation
+  -> domain graph merge
+  -> graph query runner
+```
+
+使用 `pipeline.external.groupmembench.domain_graph_builder` 构建可复用的域图，再由 `graph_query_runner` 查询。`graph_builder.py` 保留为 query-conditioned smoke path，不作为域级主图构建路径。
+
+GroupMemBench 的检索链是：
+
+```text
+scope routing
+  -> lexical/BM25 candidate filtering
+  -> optional event/scope embedding rerank
+  -> graph expansion
+  -> StateFacet readout
+  -> answer and optional judge
+```
+
+可复现的域图命令由下面的 recipe 生成：
+
+```bash
+conda run -n py311 python -m pipeline.external.groupmembench.domain_graph_recipes --domain Finance
+```
+
+### LoCoMo-QA
+
+LoCoMo 当前采用 graph-first 路径：每个 `sample_id` 构建一个持久化图，然后复用该图回答同一 sample 的全部问题。查询链是：
+
+```text
+scope routing
+  -> scoped event retrieval
+  -> Event / Claim / StateFacet graph expansion
+  -> optional open-domain mapping
+  -> answer and official-style scoring
+```
+
+`open-domain mapping` 只在回答阶段使用，不把推断出的常识写回图中。图构建器只读取 `sample_id` 和 `conversation`，不会使用答案、证据或问题类型。
+
+### LongMemEval-S
+
+LongMemEval-S 作为外部验证使用，当前入口是：
+
+```bash
+conda run -n py311 \
+  python Experiment/Other_BenchMark/LongMemEval-S/run_longmemeval_s.py \
+  --provider deepseek \
+  --variants bm25_session scope_time_state_task_adapter \
+  --limit-per-type 1
+```
+
+其中 `oracle_sessions` 只用于 sanity upper bound，不能作为公平主结果。
+
+## 仓库结构
+
+- `pipeline/external/`：外部 benchmark 的真实 pipeline；
+- `Experiment/Other_BenchMark/EverMemBench/`：EverMemBench 数据、入口和 baseline adapter；
+- `Experiment/Other_BenchMark/GroupMemBench/`：GroupMemBench 数据和上游源码位置；
+- `Experiment/Other_BenchMark/LoCoMo-QA/`：LoCoMo 图构建、图查询和 memory baseline 入口；
+- `Experiment/Other_BenchMark/LongMemEval-S/`：LongMemEval-S 薄封装和数据位置；
+- `Experiment/Main_Baseline/`：仍被外部 benchmark 复用的 baseline 实现；
+- `Graph/output/`：图、缓存、baseline store、结果和运行产物；
+- `Relatedwork/`：相关论文 PDF；
+- `scripts/`：数据校验、审计和辅助脚本。
+
+## 环境与运行约定
+
+使用项目验证环境：
+
+```bash
+conda activate py311
+pip install -r requirements.txt
+```
+
+本地模型服务和 embedding 配置通过项目根目录 `.env` 提供。`.env`、API key、缓存、图产物和日志不应提交到仓库。
+
+日志默认写入：
+
+```text
+Experiment/Other_BenchMark/EverMemBench/log/
+```
+
+图和实验输出默认写入：
+
+```text
+Graph/output/
+```
+
+## 当前边界
+
+- EverMemBench、GroupMemBench 和 LoCoMo-QA 的主 pipeline 需要分别遵守各自的数据边界，不能把一个 benchmark 的 gold 字段带入另一个 benchmark；
+- 官方 service baseline 只有在 LLM、embedding 和服务依赖都明确固定后，才进入公平比较；
+- smoke、cache 和中间 graph artifact 不能直接当作最终论文结果；
+- 结果汇总应以对应 benchmark 的实际 runner 输出为准，不再依赖已经移出当前工程的旧 benchmark 结果文档。
 
 ## 快速验证
 
-使用 `py311` 环境。
-
 ```bash
-conda run -n py311 python Experiment/run/run_llm_benchmark.py --dry-run
-conda run -n py311 python Experiment/run/run_public_benchmark.py --data-version v1_3 --case-subset balanced_half --dry-run
-conda run -n py311 python scripts/validate_v1.py --v1-dir stamb_state_benchmark/data/v1_3 --out stamb_state_benchmark/output/validation_report_v1_3.json
+conda run -n py311 python Experiment/Other_BenchMark/EverMemBench/run_evermembench_service_readiness.py --check-llm
+conda run -n py311 python Experiment/Other_BenchMark/LoCoMo-QA/run_locomo_memory_baselines.py --sample-id conv-26 --variants full_text rag --question-types temporal --limit-cases 1 --dry-run
+conda run -n py311 python Experiment/Other_BenchMark/LongMemEval-S/run_longmemeval_s.py --provider deepseek --variants bm25_session scope_time_state_task_adapter --limit-per-type 1 --dry-run
 ```
 
-质量审计：
-
-```bash
-conda run -n py311 python scripts/audit_benchmark_quality.py \
-  --v1-dir stamb_state_benchmark/data/v1_3 \
-  --out stamb_state_benchmark/output/quality_report_v1_3.json \
-  --semantic-out stamb_state_benchmark/output/semantic_duplicate_report_v1_3.json \
-  --openai-embedding-model text-embedding-3-large \
-  --openai-embedding-out stamb_state_benchmark/output/openai_embedding_duplicate_report_v1_3.json \
-  --fail-on-warnings
-```
-
-## 结果状态
-
-当前已经记录的结果证据还不完整：
-
-- v1/v1.1 的 canonical checkpoint 已经记录在 `Experiment/RESULTS.md`。
-- 当前最完整的 STAMB baseline checkpoint 是 v1.1 public half，共 36 个 case，位于 `stamb_state_benchmark/output/results_v1_1_public_half_*.json`。
-- LongMemEval-S 有一个 60-case 的 judged diagnostic 结果：`results_longmemeval_s_task_adapter_10_per_type_v2.json`。
-- LoCoMo-QA 有一个 50-case per-type diagnostic 结果：`results_locomo_qa_10_per_type_gpt4omini_memory_router_raw.json`。
-- STALE 有 10-scenario judged diagnostic 结果，目前 prompt v2 最强：`results_stale_scope_time_state_10_balanced_deepseek_prompt_v2_judged.json`。
-
-## 当前不要宣称
-
-- 不要宣称 STAMB-State 已经完全达到论文发布级别。
-- 不要宣称人工标注已经完成。
-- 不要宣称 v1.3 public results 是最终结果。
-- 不要把 Oracle-Facet 当作 public 主表使用。
-- 不要混淆 Graphiti/Zep 真实系统 adapter 结果和 Graphiti 论文复现/审计结果。
-- 不要把新的 prompt tweak 静默替换为默认路径；如果效果和语义还没有充分确认，应先保留为 measured ablation。
-
-## 下一步优先级
-
-1. 完成 STAMB-State 人工标注：独立 annotator 输出、agreement report 和 adjudication records。
-2. 跑完 v1.3 Public End-to-End canonical scored table，优先从 `balanced_half` 开始。
-3. 添加外部 adapter 后，运行小样本 MemConflict diagnostic。
-4. 产出统一 baseline provenance table，覆盖 TSM、STALE/CUPMem、Graphiti/Zep、Full-context、Hybrid RAG 和 Ours。
-5. 降低 public Ours 的 `hard_neg` 和 `over_ev`，同时保持 `unknown_current` 能力。
-6. 扩展外部 benchmark 检查：LongMemEval-S official-judge run、LoCoMo-QA open-domain/multi-hop 修复，以及 STALE T2 propagation 修复。
-
-## Git 注意事项
-
-生成输出和缓存默认不应该提交。只提交已经写入 `Experiment/RESULTS.md` 的 curated snapshot，或者在 `.gitignore` 中明确允许追踪的文件。
-
-推送 GitHub 前需要额外确认本地敏感文件没有进入提交，尤其是 `.env`、API key、私有数据路径和大体积临时输出。
+更完整的服务器上传、环境配置和 EverMemBench 全流程见 [`SERVER_COMMANDS.md`](Experiment/Other_BenchMark/EverMemBench/SERVER_COMMANDS.md)。
