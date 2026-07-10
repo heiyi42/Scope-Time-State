@@ -1,6 +1,6 @@
 # STS
 
-本仓库用于研究长期对话记忆中的 Scope-Time-State（STS）问题：系统不只是检索与问题相关的历史片段，而是要在长时间、多主题、带有状态更新和时间变化的事件流中，构造当前仍然有效的状态，并据此回答问题。
+本仓库用于研究长期记忆中的 Scope-Time-State（STS）问题：系统不只是检索与问题相关的历史片段，而是要在长时间、多主题、带有状态更新和时间变化的事件流中，构造当前仍然有效的状态，并据此回答问题。输入可以是对话、群组消息、日志，或 EPBench 一类按时间展开的合成长文本/小说。
 
 当前代码已经从早期的 standalone benchmark 文档转向以外部 benchmark 为载体的可运行图记忆 pipeline。主要工作集中在 EverMemBench、GroupMemBench 和 LoCoMo-QA，LongMemEval-S 用于跨数据集验证。
 
@@ -9,7 +9,7 @@
 当前方法的主线是：
 
 ```text
-dialogue-only memory
+benchmark-visible chronological memory source
   -> persistent graph construction
   -> scope routing
   -> time-role aware event retrieval
@@ -39,7 +39,7 @@ dialogue-only memory
 
 BM25/词法检索负责候选召回，embedding 在需要时用于事件或 scope 的候选重排；embedding 不是图语义本身，也不替代后续的状态有效性判断。
 
-图构建只读取对话或消息数据，不读取 QA、答案、gold evidence 或问题类型标签。问题查询阶段复用已经构建好的持久化图，避免把每个问题的答案信息带入图构建。
+图构建只读取 benchmark 允许作为记忆的原始来源：对话 benchmark 读取 dialogue/message，叙事 benchmark 读取小说的段落、章节或事件流；不读取 QA、答案、gold evidence 或问题类型标签。问题查询阶段复用已经构建好的持久化图，避免把每个问题的答案信息带入图构建。
 
 ## 当前 benchmark 运行面
 

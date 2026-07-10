@@ -5,7 +5,7 @@
 ## 当前实验流程
 
 ```text
-dialogue-only data
+benchmark-visible chronological memory source
   -> graph build / ingest
   -> persistent graph artifact
   -> scope and time-aware retrieval
@@ -14,7 +14,7 @@ dialogue-only data
   -> optional judge and summary
 ```
 
-图构建阶段只读取对话、消息或日志，不读取 QA、答案、gold evidence 或问题类型标签。查询阶段复用已经构建好的图；缓存、图文件、日志和结果统一放在 `Graph/output/` 或对应 benchmark 的日志目录下。
+图构建阶段只读取 benchmark 允许作为记忆的原始来源：对话 benchmark 使用对话、消息或日志；EPBench 一类叙事 benchmark 使用合成长文本/小说的段落、章节或事件流。不读取 QA、答案、gold evidence 或问题类型标签。查询阶段复用已经构建好的图；缓存、图文件、日志和结果统一放在 `Graph/output/` 或对应 benchmark 的日志目录下。
 
 ## 目录和职责
 
@@ -139,7 +139,7 @@ conda run -n py311 \
 
 ## Baseline 边界
 
-- baseline 只能读取对应 benchmark 允许的 dialogue/history；
+- baseline 只能读取对应 benchmark 允许的原始记忆来源；
 - gold answer、gold evidence、question type 和 evaluator-only metadata 不进入 graph build 或 retrieval prompt；
 - hosted service 只有在 LLM、embedding、服务版本和检索配置可核对时，才进入公平比较；
 - smoke output、cache、partial graph 和中间 judge 文件不能直接当作最终论文结果。
