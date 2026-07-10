@@ -34,8 +34,3 @@ retry:
 # Debug
 debug:
   show_usage: false  
-
-# Cache warmup (LLM system only — sends first request, waits, then batch processes)
-warmup:
-  enabled: true
-  delay_seconds: 15

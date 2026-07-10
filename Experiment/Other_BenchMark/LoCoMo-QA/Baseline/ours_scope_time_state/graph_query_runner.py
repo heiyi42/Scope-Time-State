@@ -25,6 +25,7 @@ for import_path in (PROJECT_DIR, BASELINE_DIR):
 from Experiment.run.common.io import load_dotenv  # noqa: E402
 from Experiment.run.common.llm_client import LLMClient, LLMRequestError, provider_config  # noqa: E402
 from pipeline.external.embedding_retrieval import OpenAIEmbeddingIndex  # noqa: E402
+from pipeline.external.time_role_selection import select_time_roles  # noqa: E402
 from common.loader import (  # noqa: E402
     DATA_PATH,
     LoCoMoQAItem,
@@ -45,6 +46,7 @@ SUPPORTED_VARIANTS = (
 )
 GRAPH_EXPANSIONS = ("auto", "legacy", "relation-aware")
 TOKEN_RE = re.compile(r"[A-Za-z0-9_']+")
+EMBEDDING_RETRIEVAL_SCORE_WEIGHT = 8.0
 
 
 @dataclass(frozen=True)
@@ -106,6 +108,56 @@ class BM25Index:
         return [(doc_id, score) for doc_id, score, _index in scores[:top_k]]
 
 
+def hybrid_union_rows(
+    bm25_hits: Sequence[Tuple[str, float]],
+    embedding_hits: Sequence[Any],
+) -> List[Dict[str, Any]]:
+    rows: Dict[str, Dict[str, Any]] = {}
+    for rank, (doc_id, score) in enumerate(bm25_hits, start=1):
+        rows[str(doc_id)] = {
+            "doc_id": str(doc_id),
+            "lexical_score": float(score),
+            "lexical_rank": rank,
+            "embedding_score": 0.0,
+            "embedding_rank": None,
+        }
+    for rank, hit in enumerate(embedding_hits, start=1):
+        doc_id = str(hit.doc_id)
+        row = rows.setdefault(
+            doc_id,
+            {
+                "doc_id": doc_id,
+                "lexical_score": 0.0,
+                "lexical_rank": None,
+                "embedding_score": 0.0,
+                "embedding_rank": None,
+            },
+        )
+        row["embedding_score"] = max(float(hit.score), 0.0)
+        row["embedding_rank"] = rank
+    for row in rows.values():
+        row["score"] = round(
+            float(row["lexical_score"])
+            + EMBEDDING_RETRIEVAL_SCORE_WEIGHT * float(row["embedding_score"]),
+            6,
+        )
+        if row["lexical_rank"] is not None and row["embedding_rank"] is not None:
+            row["retrieval_source"] = "hybrid"
+        elif row["embedding_rank"] is not None:
+            row["retrieval_source"] = "embedding"
+        else:
+            row["retrieval_source"] = "bm25"
+    return sorted(
+        rows.values(),
+        key=lambda row: (
+            -float(row["score"]),
+            row["lexical_rank"] if row["lexical_rank"] is not None else 10**9,
+            row["embedding_rank"] if row["embedding_rank"] is not None else 10**9,
+            str(row["doc_id"]),
+        ),
+    )
+
+
 class GraphEvidenceIndex:
     def __init__(self, graph_dir: Path) -> None:
         self.graph_dir = graph_dir
@@ -115,6 +167,7 @@ class GraphEvidenceIndex:
         self.claims: Dict[str, Dict[str, Any]] = {}
         self.states: Dict[str, Dict[str, Any]] = {}
         self.scopes: Dict[str, Dict[str, Any]] = {}
+        self.time_nodes: Dict[str, Dict[str, Any]] = {}
         self.claims_by_event: DefaultDict[str, List[str]] = defaultdict(list)
         self.states_by_claim: DefaultDict[str, List[str]] = defaultdict(list)
         self.scopes_by_event: DefaultDict[str, List[str]] = defaultdict(list)
@@ -122,6 +175,10 @@ class GraphEvidenceIndex:
         self.scopes_by_state: DefaultDict[str, List[str]] = defaultdict(list)
         self.states_by_scope: DefaultDict[str, List[str]] = defaultdict(list)
         self.relations_by_claim: DefaultDict[str, List[Dict[str, Any]]] = defaultdict(list)
+        self.times_by_claim: DefaultDict[str, List[Dict[str, Any]]] = defaultdict(list)
+        self.current_time_by_state: Dict[str, str] = {}
+        self.occurred_time_by_event: Dict[str, str] = {}
+        self.occurred_time_id_by_event: Dict[str, str] = {}
         self._load()
         (
             self.event_doc_ids,
@@ -163,6 +220,8 @@ class GraphEvidenceIndex:
                 self.states[str(node.get("facet_id"))] = node
             elif node_type == "Entity/Scope":
                 self.scopes[str(node.get("scope_id") or node.get("entity_id"))] = node
+            elif node_type == "Time":
+                self.time_nodes[str(node.get("time_id"))] = node
         for line in edges_path.read_text().splitlines():
             if not line.strip():
                 continue
@@ -180,6 +239,20 @@ class GraphEvidenceIndex:
             elif edge_type == "CURRENT_STATE_OF" and source in self.states and target in self.scopes:
                 self.scopes_by_state[source].append(target)
                 self.states_by_scope[target].append(source)
+            elif edge_type == "HAS_TIME" and source in self.claims and target in self.time_nodes:
+                time_node = self.time_nodes[target]
+                self.times_by_claim[source].append(
+                    {
+                        "time_role": edge.get("time_role") or time_node.get("time_role"),
+                        "value": time_node.get("value"),
+                        "time_id": target,
+                    }
+                )
+            elif edge_type == "CURRENT_AFTER" and source in self.states and target in self.time_nodes:
+                self.current_time_by_state[source] = str(self.time_nodes[target].get("value") or "")
+            elif edge_type == "OCCURRED_AT" and source in self.events and target in self.time_nodes:
+                self.occurred_time_by_event[source] = str(self.time_nodes[target].get("value") or "")
+                self.occurred_time_id_by_event[source] = target
             elif edge_type in {"CORRECTS", "SUPERSEDES", "CONFLICTS_WITH"}:
                 self.relations_by_claim[source].append(edge)
                 self.relations_by_claim[target].append(edge)
@@ -205,6 +278,171 @@ class GraphEvidenceIndex:
             scope_documents.append(scope_document(scope))
         return event_doc_ids, event_documents, state_doc_ids, state_documents, scope_doc_ids, scope_documents
 
+    def _state_time_roles(self, state_id: str) -> List[str]:
+        state = self.states.get(state_id, {})
+        roles: List[str] = []
+        if state.get("current_after") or self.current_time_by_state.get(state_id):
+            roles.append("CURRENT_AFTER")
+        state_role = str(state.get("time_role") or "")
+        if state_role:
+            roles.append(state_role)
+        for claim_id in state.get("support_claim_ids", []) or []:
+            claim = self.claims.get(str(claim_id), {})
+            claim_role = str(claim.get("time_role") or "")
+            if claim_role:
+                roles.append(claim_role)
+            for time_item in self.times_by_claim.get(str(claim_id), []):
+                time_role = str(time_item.get("time_role") or "")
+                if time_role:
+                    roles.append(time_role)
+        return ordered_unique(roles)
+
+    def _event_time_profile(self, event_id: str) -> Dict[str, Any]:
+        event = self.events.get(event_id, {})
+        roles: List[str] = []
+        time_values: List[str] = []
+        time_ids: List[str] = []
+        current_state_ids: List[str] = []
+        occurred_at = self.occurred_time_by_event.get(event_id) or event.get("occurred_at")
+        if occurred_at:
+            roles.append("occurred_at")
+            time_values.append(str(occurred_at))
+        occurred_time_id = self.occurred_time_id_by_event.get(event_id)
+        if occurred_time_id:
+            time_ids.append(occurred_time_id)
+        for claim_id in self.claims_by_event.get(event_id, []):
+            claim = self.claims.get(claim_id, {})
+            claim_role = str(claim.get("time_role") or "")
+            if claim_role:
+                roles.append(claim_role)
+            claim_time_value = claim.get("time_value")
+            if claim_time_value:
+                time_values.append(str(claim_time_value))
+            for time_item in self.times_by_claim.get(claim_id, []):
+                time_role = str(time_item.get("time_role") or "")
+                if time_role:
+                    roles.append(time_role)
+                if time_item.get("value"):
+                    time_values.append(str(time_item["value"]))
+                if time_item.get("time_id"):
+                    time_ids.append(str(time_item["time_id"]))
+            for state_id in self.states_by_claim.get(claim_id, []):
+                state = self.states.get(state_id, {})
+                if state.get("current_after") or self.current_time_by_state.get(state_id):
+                    roles.append("CURRENT_AFTER")
+                    current_state_ids.append(state_id)
+        return {
+            "time_roles": ordered_unique(roles),
+            "time_values": ordered_unique(time_values),
+            "time_ids": ordered_unique(time_ids),
+            "current_state_ids": ordered_unique(current_state_ids),
+        }
+
+    def _rerank_event_rows(
+        self,
+        event_rows: Sequence[Mapping[str, Any]],
+        time_roles: Sequence[str],
+        limit: int,
+    ) -> List[Dict[str, Any]]:
+        requested_roles = {str(role) for role in time_roles if role}
+        ranked: List[Dict[str, Any]] = []
+        for candidate in event_rows:
+            doc_id = str(candidate.get("doc_id") or "")
+            if not doc_id.startswith("event::"):
+                continue
+            event_id = doc_id[len("event::") :]
+            profile = self._event_time_profile(event_id)
+            matched_roles = sorted(requested_roles.intersection(profile["time_roles"]))
+            time_role_score = 0.0
+            if requested_roles:
+                time_role_score = 2.0 + 0.5 * len(matched_roles) if matched_roles else -0.5
+            row = dict(candidate)
+            row.update(
+                {
+                    "event_id": event_id,
+                    "base_retrieval_score": round(float(candidate.get("score") or 0.0), 6),
+                    "selected_time_roles": sorted(requested_roles),
+                    "event_time_roles": profile["time_roles"],
+                    "matched_time_roles": matched_roles,
+                    "time_role_score": round(time_role_score, 4),
+                    "time_values": profile["time_values"],
+                    "time_ids": profile["time_ids"],
+                    "current_state_ids": profile["current_state_ids"],
+                    "score": round(float(candidate.get("score") or 0.0) + time_role_score, 6),
+                }
+            )
+            ranked.append(row)
+        ranked.sort(
+            key=lambda row: (
+                -float(row["score"]),
+                row["lexical_rank"] if row.get("lexical_rank") is not None else 10**9,
+                row["embedding_rank"] if row.get("embedding_rank") is not None else 10**9,
+                str(row["event_id"]),
+            )
+        )
+        return ranked[:limit]
+
+    def _state_validity_score(self, state_id: str) -> Tuple[float, Dict[str, int]]:
+        state = self.states.get(state_id, {})
+        profile = {"outgoing": 0, "incoming": 0, "conflicts": 0}
+        score = 1.5 if state.get("current_after") or self.current_time_by_state.get(state_id) else 0.0
+        support_claim_ids = {str(claim_id) for claim_id in state.get("support_claim_ids", []) or []}
+        for claim_id in support_claim_ids:
+            for edge in self.relations_by_claim.get(claim_id, []):
+                edge_type = str(edge.get("type") or "")
+                source = str(edge.get("from") or "")
+                target = str(edge.get("to") or "")
+                if edge_type == "CONFLICTS_WITH":
+                    profile["conflicts"] += 1
+                    score -= 1.0
+                elif source == claim_id:
+                    profile["outgoing"] += 1
+                    score += 1.5
+                elif target == claim_id:
+                    profile["incoming"] += 1
+                    score -= 2.0
+        return score, profile
+
+    def _rerank_state_hits(
+        self,
+        state_hits: Sequence[Tuple[str, float]],
+        time_roles: Sequence[str],
+        limit: int,
+    ) -> List[Dict[str, Any]]:
+        requested_roles = {str(role) for role in time_roles if role}
+        ranked: List[Dict[str, Any]] = []
+        for candidate_rank, (doc_id, base_score) in enumerate(state_hits, start=1):
+            if not doc_id.startswith("state::"):
+                continue
+            state_id = doc_id[len("state::") :]
+            if state_id not in self.states:
+                continue
+            state_roles = self._state_time_roles(state_id)
+            validity_score, relation_profile = self._state_validity_score(state_id)
+            matched_roles = requested_roles.intersection(state_roles)
+            if matched_roles:
+                time_role_score = 2.0 + 0.5 * len(matched_roles)
+            elif "CURRENT_AFTER" in requested_roles and "CURRENT_AFTER" in state_roles:
+                time_role_score = 1.5
+            else:
+                time_role_score = -0.5 if requested_roles else 0.0
+            ranked.append(
+                {
+                    "doc_id": doc_id,
+                    "state_facet_id": state_id,
+                    "candidate_rank": candidate_rank,
+                    "base_score": round(float(base_score), 6),
+                    "validity_score": round(validity_score, 4),
+                    "time_role_score": round(time_role_score, 4),
+                    "time_roles": state_roles,
+                    "current_after": self.states[state_id].get("current_after") or self.current_time_by_state.get(state_id),
+                    "relation_profile": relation_profile,
+                    "score": round(float(base_score) + validity_score + time_role_score, 6),
+                }
+            )
+        ranked.sort(key=lambda row: (-float(row["score"]), int(row["candidate_rank"]), str(row["state_facet_id"])))
+        return ranked[:limit]
+
     def retrieve(
         self,
         question: str,
@@ -219,6 +457,8 @@ class GraphEvidenceIndex:
         embedding_indices: Mapping[str, OpenAIEmbeddingIndex],
         embedding_candidate_k: int,
         scope_types: Sequence[str],
+        time_role_client: Any,
+        time_role_selector: str,
         graph_expansion: str = "auto",
     ) -> RetrievalResult:
         targets = embedding_targets_for_variant(variant)
@@ -228,32 +468,41 @@ class GraphEvidenceIndex:
             if not scope_types or str(scope.get("scope_type") or "") in set(scope_types)
         ]
         scope_bm25_hits = self.scope_bm25.search(question, candidate_k, allowed_doc_ids=scope_allowed_doc_ids)
-        selected_scope_hits = scope_bm25_hits[:scope_top_k]
-        scope_embedding_trace: List[Dict[str, Any]] = []
+        scope_embedding_hits: Sequence[Any] = []
         if "scope" in targets:
             scope_index = embedding_indices.get("scope")
             if scope_index is None:
                 raise ValueError(f"{variant} requires a scope embedding index")
-            allowed = [doc_id for doc_id, _score in scope_bm25_hits[:embedding_candidate_k]]
-            scope_embedding_hits = scope_index.search(question, scope_top_k, allowed_doc_ids=allowed)
-            selected_scope_hits = [(hit.doc_id, hit.score) for hit in scope_embedding_hits]
-            scope_embedding_trace = [{"doc_id": doc_id, "score": score} for doc_id, score in selected_scope_hits]
+            scope_embedding_hits = scope_index.search(
+                question,
+                embedding_candidate_k,
+                allowed_doc_ids=scope_allowed_doc_ids,
+            )
+        scope_candidate_rows = hybrid_union_rows(scope_bm25_hits, scope_embedding_hits)
+        selected_scope_rows = scope_candidate_rows[:scope_top_k]
+        selected_scope_hits = [(str(row["doc_id"]), float(row["score"])) for row in selected_scope_rows]
         routed_scope_ids = [doc_id[len("scope::") :] for doc_id, _score in selected_scope_hits if doc_id.startswith("scope::")]
+
         allowed_event_doc_ids = self._event_doc_ids_for_scopes(routed_scope_ids)
         event_bm25_hits = self.event_bm25.search(question, candidate_k, allowed_doc_ids=allowed_event_doc_ids)
-        if len(event_bm25_hits) < top_k:
-            supplemental = self.event_bm25.search(question, candidate_k)
-            event_bm25_hits = merge_hits(event_bm25_hits, supplemental)
-        selected_event_hits = event_bm25_hits[:top_k]
-        event_embedding_trace: List[Dict[str, Any]] = []
+        event_embedding_hits: Sequence[Any] = []
         if "event" in targets:
             event_index = embedding_indices.get("event")
             if event_index is None:
                 raise ValueError(f"{variant} requires an event embedding index")
-            allowed = [doc_id for doc_id, _score in event_bm25_hits[:embedding_candidate_k]]
-            event_embedding_hits = event_index.search(question, top_k, allowed_doc_ids=allowed)
-            selected_event_hits = [(hit.doc_id, hit.score) for hit in event_embedding_hits]
-            event_embedding_trace = [{"doc_id": doc_id, "score": score} for doc_id, score in selected_event_hits]
+            event_embedding_hits = event_index.search(
+                question,
+                embedding_candidate_k,
+                allowed_doc_ids=allowed_event_doc_ids,
+            )
+        event_candidate_rows = hybrid_union_rows(event_bm25_hits, event_embedding_hits)
+        time_role_selection = select_time_roles(question, time_role_client, time_role_selector)
+        selected_event_rows = self._rerank_event_rows(
+            event_candidate_rows,
+            time_role_selection["time_roles"],
+            top_k,
+        )
+        selected_event_hits = [(str(row["doc_id"]), float(row["score"])) for row in selected_event_rows]
         seed_event_ids: List[str] = []
         for doc_id, _score in selected_event_hits:
             if not doc_id.startswith("event::"):
@@ -263,26 +512,32 @@ class GraphEvidenceIndex:
 
         allowed_state_doc_ids = self._state_doc_ids_for_scopes(routed_scope_ids)
         state_bm25_hits = self.state_bm25.search(question, max(candidate_k, state_search_k), allowed_doc_ids=allowed_state_doc_ids)
-        if len(state_bm25_hits) < state_search_k:
-            supplemental_states = self.state_bm25.search(question, max(candidate_k, state_search_k))
-            state_bm25_hits = merge_hits(state_bm25_hits, supplemental_states)
-        selected_state_hits = state_bm25_hits[:state_search_k]
-        state_embedding_trace: List[Dict[str, Any]] = []
+        state_rerank_k = min(max(state_search_k * 4, state_search_k), max(candidate_k, state_search_k))
+        state_embedding_hits: Sequence[Any] = []
         if "state" in targets:
             state_index = embedding_indices.get("state")
             if state_index is None:
                 raise ValueError(f"{variant} requires a state embedding index")
-            allowed = [doc_id for doc_id, _score in state_bm25_hits[:embedding_candidate_k]]
             state_embedding_hits = state_index.search(
                 question,
-                state_search_k,
-                allowed_doc_ids=allowed,
+                embedding_candidate_k,
+                allowed_doc_ids=allowed_state_doc_ids,
             )
-            selected_state_hits = [(hit.doc_id, hit.score) for hit in state_embedding_hits]
-            state_embedding_trace = [
-                {"doc_id": doc_id, "score": score}
-                for doc_id, score in selected_state_hits
-            ]
+        state_candidate_rows = hybrid_union_rows(state_bm25_hits, state_embedding_hits)[:state_rerank_k]
+        state_candidate_hits = [
+            (str(row["doc_id"]), float(row["score"]))
+            for row in state_candidate_rows
+        ]
+
+        selected_state_rows = self._rerank_state_hits(
+            state_candidate_hits,
+            time_role_selection["time_roles"],
+            state_search_k,
+        )
+        selected_state_hits = [
+            (str(row["doc_id"]), float(row["score"]))
+            for row in selected_state_rows
+        ]
 
         selected_state_ids = [
             doc_id[len("state::") :]
@@ -325,23 +580,36 @@ class GraphEvidenceIndex:
         context = self._context_text(event_ids)
         trace = {
             "graph_schema_version": self.schema_version,
+            "pipeline_order": [
+                "scope_routing",
+                "event_candidate_retrieval",
+                "time_role_selection",
+                "event_time_rerank",
+                "statefacet_validity_selection",
+                "graph_expansion",
+            ],
             "graph_expansion": expansion_trace,
             "embedding_targets": sorted(targets),
             "scope_routing": {
                 "bm25_hits": [{"doc_id": doc_id, "score": score} for doc_id, score in scope_bm25_hits[: min(candidate_k, 20)]],
-                "selected_scope_hits": [{"doc_id": doc_id, "score": score} for doc_id, score in selected_scope_hits],
-                "embedding_hits": scope_embedding_trace,
+                "embedding_hits": [{"doc_id": hit.doc_id, "score": hit.score} for hit in scope_embedding_hits[:20]],
+                "union_hits": scope_candidate_rows[:20],
+                "selected_scope_hits": selected_scope_rows,
                 "scope_ids": routed_scope_ids,
             },
             "event_retrieval": {
                 "bm25_hits": [{"doc_id": doc_id, "score": score} for doc_id, score in event_bm25_hits[: min(candidate_k, 30)]],
-                "selected_event_hits": [{"doc_id": doc_id, "score": score} for doc_id, score in selected_event_hits],
-                "embedding_hits": event_embedding_trace,
+                "embedding_hits": [{"doc_id": hit.doc_id, "score": hit.score} for hit in event_embedding_hits[:30]],
+                "pre_time_role_union_hits": event_candidate_rows[:30],
+                "selected_event_hits": selected_event_rows,
             },
+            "time_role_selection": time_role_selection,
             "state_search": {
+                "requested_time_roles": list(time_role_selection["time_roles"]),
                 "bm25_hits": [{"doc_id": doc_id, "score": score} for doc_id, score in state_bm25_hits[: min(candidate_k, 30)]],
-                "selected_state_hits": [{"doc_id": doc_id, "score": score} for doc_id, score in selected_state_hits],
-                "embedding_hits": state_embedding_trace,
+                "embedding_hits": [{"doc_id": hit.doc_id, "score": hit.score} for hit in state_embedding_hits[:30]],
+                "pre_time_role_hits": state_candidate_rows,
+                "selected_state_hits": selected_state_rows,
             },
             "selected_state_ids": state_ids,
         }
@@ -522,7 +790,10 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run LoCoMo questions against a sample-level STS graph.")
     parser.add_argument("--data", default=str(DATA_PATH))
     parser.add_argument("--sample-id", default="conv-26")
-    parser.add_argument("--graph-dir", default=str(EXTERNAL_GRAPH_DIR / "locomo_qa_sample_graph_v1" / "conv-26"))
+    parser.add_argument(
+        "--graph-dir",
+        default=str(EXTERNAL_GRAPH_DIR / "locomo_qa_sample_graph_time_role_relation_v2" / "conv-26"),
+    )
     parser.add_argument("--provider", choices=("openai", "deepseek"), default="deepseek")
     parser.add_argument("--model", default=None)
     parser.add_argument("--variants", nargs="+", default=list(SUPPORTED_VARIANTS), choices=SUPPORTED_VARIANTS)
@@ -547,6 +818,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--embedding-candidate-k", type=int, default=80)
     parser.add_argument("--max-context-events", type=int, default=24)
     parser.add_argument("--max-state-lines", type=int, default=16)
+    parser.add_argument(
+        "--time-role-selector",
+        choices=("llm", "none"),
+        default="llm",
+        help="Question-only Time routing after Event candidates for Event and State reranking.",
+    )
     parser.add_argument(
         "--graph-expansion",
         choices=GRAPH_EXPANSIONS,
@@ -686,17 +963,6 @@ def embedding_targets_for_variant(variant: str) -> set[str]:
     if variant == "graph_embedding_scope_event_state":
         return {"scope", "event", "state"}
     raise ValueError(f"unsupported variant={variant}")
-
-
-def merge_hits(primary: Sequence[Tuple[str, float]], supplemental: Sequence[Tuple[str, float]]) -> List[Tuple[str, float]]:
-    seen = set()
-    merged: List[Tuple[str, float]] = []
-    for doc_id, score in list(primary) + list(supplemental):
-        if doc_id in seen:
-            continue
-        seen.add(doc_id)
-        merged.append((doc_id, score))
-    return merged
 
 
 def format_state_line(state: Mapping[str, Any]) -> str:
@@ -1007,6 +1273,11 @@ def run_variant(
     eval_rows: List[Dict[str, object]] = []
 
     def run_row(index: int, row: LoCoMoQAItem) -> Tuple[int, Dict[str, object]]:
+        time_role_client = make_sharded_client(
+            answer_runtime,
+            "time_role_selector",
+            short_hash(row.question),
+        )
         retrieval = graph.retrieve(
             row.question,
             variant=variant,
@@ -1019,6 +1290,8 @@ def run_variant(
             embedding_indices=embedding_indices,
             embedding_candidate_k=args.embedding_candidate_k,
             scope_types=parse_scope_types(args.scope_types),
+            time_role_client=time_role_client,
+            time_role_selector=args.time_role_selector,
             graph_expansion=args.graph_expansion,
         )
         retrieval.trace["retrieval_query"] = row.question
@@ -1179,6 +1452,9 @@ def main() -> int:
             batch_size=args.embedding_batch_size,
             base_url=args.embedding_base_url or None,
         )
+    for target, embedding_index in embedding_indices.items():
+        print(f"materializing {target} embedding index ({len(embedding_index.doc_ids)} documents)", flush=True)
+        embedding_index.embed_documents()
     try:
         results = [
             run_variant(
@@ -1214,6 +1490,7 @@ def main() -> int:
         "scope_top_k": args.scope_top_k,
         "scope_types": parse_scope_types(args.scope_types),
         "state_search_k": args.state_search_k,
+        "time_role_selector": args.time_role_selector,
         "candidate_k": args.candidate_k,
         "embedding_candidate_k": args.embedding_candidate_k,
         "embedding_model": args.embedding_model if needed_embedding_targets else None,

@@ -8,8 +8,11 @@
 benchmark-visible chronological memory source
   -> graph build / ingest
   -> persistent graph artifact
-  -> scope and time-aware retrieval
-  -> claim / StateFacet resolution
+  -> Scope routing (BM25 ∪ embedding)
+  -> scoped Event candidates (BM25 ∪ embedding)
+  -> question-only Time-role selection
+  -> Time-aware Event rerank
+  -> StateFacet validity resolution and graph expansion
   -> answer
   -> optional judge and summary
 ```
@@ -37,7 +40,6 @@ benchmark-visible chronological memory source
 - `run_evermembench_qa_eval.py`：在已构建的 graph 上运行检索、回答和 judge；
 - `run_evermembench_qa_probe.py`：检查 scope、time、event 和 StateFacet 检索；
 - `run_evermembench_enrich_topic_graph.py`：图 enrichment 工具；
-- `run_evermembench_fmh_endpoint_audit.py`：F_MH endpoint 选择审计；
 - `run_evermembench_baseline_adapters.py`：查看可用 baseline adapter；
 - `run_official_baselines.sh`：运行公平的本地/self-host baseline 矩阵。
 

@@ -11,11 +11,12 @@
 ```text
 benchmark-visible chronological memory source
   -> persistent graph construction
-  -> scope routing
-  -> time-role aware event retrieval
-  -> claim extraction
-  -> correction / supersession / conflict resolution
-  -> StateFacet consolidation
+  -> Event / Claim / Time / StateFacet / validity relations
+  -> Scope routing (BM25 ∪ embedding)
+  -> scoped Event candidate retrieval (BM25 ∪ embedding)
+  -> question-only Time-role selection
+  -> Time-aware Event rerank
+  -> StateFacet validity selection and graph expansion
   -> evidence-backed answer
 ```
 
@@ -31,15 +32,16 @@ benchmark-visible chronological memory source
 
 查询阶段按以下顺序运行：
 
-1. 根据问题路由到目标 scope；
-2. 识别问题对应的 time role；
-3. 在目标 scope 内召回候选事件；
-4. 使用 claim 和 StateFacet 结构判断当前状态；
-5. 只根据锁定的状态和证据生成答案。
+1. 用 BM25 与 embedding 两路独立召回并路由到目标 Scope；
+2. 在目标 Scope 内用 BM25 与 embedding 两路独立召回候选 Event，并取并集；
+3. 只根据问题文本选择通用 Time role；
+4. 用图中的 `OCCURRED_AT`、`HAS_TIME` 和 `CURRENT_AFTER` 对候选 Event 做时间重排；
+5. 按 Time role、`CURRENT_AFTER` 和 validity relation 选择 StateFacet，再沿图扩展证据；
+6. 只根据锁定的状态和证据生成答案。
 
-BM25/词法检索负责候选召回，embedding 在需要时用于事件或 scope 的候选重排；embedding 不是图语义本身，也不替代后续的状态有效性判断。
+Scope 和 Event 都采用 BM25 与 embedding 的独立召回并集，不再只用 embedding 重排 BM25 候选池。Time 是结构化图语义重排，不再做一套独立的文本 embedding；embedding 也不替代后续的状态有效性判断。
 
-图构建只读取 benchmark 允许作为记忆的原始来源：对话 benchmark 读取 dialogue/message，叙事 benchmark 读取小说的段落、章节或事件流；不读取 QA、答案、gold evidence 或问题类型标签。问题查询阶段复用已经构建好的持久化图，避免把每个问题的答案信息带入图构建。
+图构建只读取 benchmark 允许作为记忆的原始来源：对话 benchmark 读取 dialogue/message，叙事 benchmark 读取小说的段落、章节或事件流；不读取 QA、答案、gold evidence 或问题类型标签。time-role selector 也只读取问题文本，不读取 benchmark/task 标签、选项、答案或 gold evidence；问题查询阶段复用已经构建好的持久化图，避免把每个问题的答案信息带入图构建。
 
 ## 当前 benchmark 运行面
 
@@ -103,11 +105,13 @@ conda run -n py311 python -m pipeline.external.groupmembench.domain_graph_recipe
 LoCoMo 当前采用 graph-first 路径：每个 `sample_id` 构建一个持久化图，然后复用该图回答同一 sample 的全部问题。查询链是：
 
 ```text
-scope routing
-  -> scoped event retrieval
-  -> Event / Claim / StateFacet graph expansion
-  -> optional open-domain mapping
-  -> answer and official-style scoring
+Scope routing (BM25 ∪ embedding)
+  -> scoped Event candidates (BM25 ∪ embedding)
+  -> question-only Time-role selection
+  -> Time-aware Event rerank
+  -> StateFacet validity selection and Event / Claim / StateFacet graph expansion
+  -> answer
+  -> optional open-domain mapping and official-style scoring
 ```
 
 `open-domain mapping` 只在回答阶段使用，不把推断出的常识写回图中。图构建器只读取 `sample_id` 和 `conversation`，不会使用答案、证据或问题类型。

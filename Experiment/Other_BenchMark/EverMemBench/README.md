@@ -13,14 +13,11 @@ do not edit or delete them as if they were duplicate implementations.
 - `run_evermembench_qa_eval.py`: entrypoint for running QA over a built topic graph.
 - `run_evermembench_qa_probe.py`: entrypoint for retrieval/probe diagnostics.
 - `run_evermembench_enrich_topic_graph.py`: entrypoint for graph enrichment utilities.
-- `run_evermembench_fmh_endpoint_audit.py`: entrypoint for F_MH endpoint-selection audit.
 - `run_evermembench_baseline_adapters.py`: entrypoint for inspecting local/self-host baseline adapters.
 - `run_official_baselines.sh`: conda `py311` runner for the fair local/self-host baseline matrix.
-- `SERVER_COMMANDS.md`: copy/paste command sequence from upload to environment setup and experiment launch.
-- `SERVER_TODO.md`: minimal server-side checklist for deciding whether the service baselines can run.
-- `Baseline/SERVICE_SETUP.md`: GitHub-checked local service setup for Mem0, MemOS, Memobase, and Graphiti.
+
 - `Baseline/ours_scope_time_state/`: local EverMemBench Scope-Time-State implementation.
-- `Baseline/full_context_llm/`: direct full-dialogue LLM baseline.
+- `Baseline/embedding_rag/`: dense embedding retrieval over deterministic dialogue chunks.
 - `Baseline/mem0_local/`: Mem0 open-source self-host REST adapter.
 - `Baseline/memos_local/`: MemOS open-source local server adapter.
 - `Baseline/memobase/`: Memobase self-host/local server adapter via the official SDK.
@@ -35,8 +32,13 @@ graph build.
 The fair main-table baseline set is local/self-host only:
 
 ```text
-llm mem0_local memobase graphiti_local memos_local
+embedding_rag mem0_local memobase memos_local graphiti_local
 ```
+
+`embedding_rag` replaces the former full-context control. It builds deterministic
+day-and-group-local chunks (2400 target characters with one-message overlap), embeds
+them with `text-embedding-3-small`, retrieves the top 10 chunks per question, and
+passes only those retrieved chunks to the shared answer prompt.
 
 Hosted/cloud adapters such as `mem0`, `memos`, `zep`, and legacy `evermemos` are intentionally not part of the
 default runnable matrix because their internal model, embedding, and retrieval settings cannot be held fixed.
@@ -52,6 +54,9 @@ wrappers so `python -m eval.cli` can still run the benchmark.
   Override these on the server for the deployed 30B model.
 - Embeddings are not local by default. Use `OPENAI_EMBEDDING_MODEL=text-embedding-3-small`
   and `OPENAI_EMBEDDING_DIM=1536`; Graphiti local defaults to the same model/dimension.
+- Embedding RAG caches document and query vectors under
+  `Graph/output/cache/evermembench_embedding_rag`; override it with
+  `EVERMEMBENCH_EMBEDDING_RAG_CACHE`.
 - For Mem0/MemOS/Memobase, embedding happens inside the local service when that
   service owns retrieval, so configure each service with the same embedding model/dimension.
 - For the STS QA runner, use `--answer-provider local --judge-provider local` with
@@ -79,9 +84,12 @@ conda run -n py311 \
 conda run -n py311 \
   python Experiment/Other_BenchMark/EverMemBench/run_evermembench_qa_eval.py \
   --topic 01 \
-  --graph-dir Graph/output/evermembench_topic_graph_llm_v6_endpoint_lifecycle/01 \
+  --graph-dir Graph/output/graph/evermembench_topic_graph_llm_v6_endpoint_lifecycle/01 \
   --scope-routing sts \
-  --graph-expansion sts
+  --graph-expansion sts \
+  --time-role-selector llm \
+  --embedding-retrieval hybrid \
+  --embedding-targets event,scope
 ```
 
 ```bash
@@ -93,6 +101,6 @@ conda run -n py311 \
 ```bash
 EVERMEMBENCH_SMOKE=1 \
 EVERMEMBENCH_QA_LIMIT=2 \
-EVERMEMBENCH_SYSTEMS="llm mem0_local" \
+EVERMEMBENCH_SYSTEMS="embedding_rag mem0_local" \
 bash Experiment/Other_BenchMark/EverMemBench/run_official_baselines.sh
 ```

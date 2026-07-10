@@ -1,0 +1,11 @@
+name: "embedding_rag"
+version: "1.0"
+description: "Dense embedding retrieval over deterministic dialogue chunks"
+embedding_model: "${OPENAI_EMBEDDING_MODEL:text-embedding-3-small}"
+embedding_base_url: "${OPENAI_EMBEDDING_BASE_URL:https://api.openai.com/v1}"
+embedding_cache: "${EVERMEMBENCH_EMBEDDING_RAG_CACHE:Graph/output/cache/evermembench_embedding_rag}"
+embedding_batch_size: ${EVERMEMBENCH_EMBEDDING_BATCH_SIZE:48}
+chunk_target_chars: ${EVERMEMBENCH_RAG_CHUNK_TARGET_CHARS:2400}
+chunk_overlap_messages: ${EVERMEMBENCH_RAG_CHUNK_OVERLAP_MESSAGES:1}
+search:
+  top_k: ${EVERMEMBENCH_RAG_TOP_K:10}

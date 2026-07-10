@@ -216,31 +216,6 @@ class AnswerResult:
 
 
 @dataclass
-class LightAnswerResult:
-    """
-    Lightweight answer result for LLM system (memory-efficient).
-    
-    Used when full dialogue context is shared across all questions,
-    avoiding redundant storage of SearchResult/context in each result.
-    This significantly reduces memory usage for large dialogues.
-    
-    Attributes:
-        question_id: ID of the question
-        question: The question text
-        question_type: "multiple_choice" or "open_ended"
-        golden_answer: The correct/expected answer
-        generated_answer: The model-generated answer
-        answer_duration_ms: Time taken for answer generation
-    """
-    question_id: str
-    question: str
-    question_type: str
-    golden_answer: str
-    generated_answer: str
-    answer_duration_ms: float = 0.0
-
-
-@dataclass
 class EvaluationResult:
     """
     Result of evaluation for all questions.
@@ -259,4 +234,3 @@ class EvaluationResult:
     accuracy_by_type: Dict[str, Dict[str, Any]] = field(default_factory=dict)
     detailed_results: List[Dict[str, Any]] = field(default_factory=list)
     metadata: Dict[str, Any] = field(default_factory=dict)
-

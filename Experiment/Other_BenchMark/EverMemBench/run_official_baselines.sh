@@ -6,7 +6,7 @@ SOURCE_DIR="$ROOT/source/EverMemBench"
 DATA_DIR="$ROOT/dataset"
 
 CONDA_ENV="${CONDA_ENV:-py311}"
-SYSTEMS="${EVERMEMBENCH_SYSTEMS:-llm mem0_local memobase graphiti_local memos_local}"
+SYSTEMS="${EVERMEMBENCH_SYSTEMS:-embedding_rag mem0_local memobase memos_local graphiti_local}"
 TOPICS="${EVERMEMBENCH_TOPICS:-01 02 03 04 05}"
 STAGES="${EVERMEMBENCH_STAGES:-add search answer evaluate}"
 OUTPUT_DIR="${EVERMEMBENCH_OUTPUT_DIR:-$SOURCE_DIR/eval/results}"

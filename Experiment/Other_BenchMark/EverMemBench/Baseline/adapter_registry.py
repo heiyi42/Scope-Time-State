@@ -17,11 +17,11 @@ from common.official_eval.imports import BaseAdapter, load_yaml  # noqa: E402
 
 
 ADAPTERS: Dict[str, Tuple[str, str, Optional[Path]]] = {
+    "embedding_rag": ("embedding_rag.adapter", "EmbeddingRAGAdapter", BASELINE_DIR / "embedding_rag/config.yaml"),
     "memos_local": ("memos_local.adapter", "MemosLocalAdapter", BASELINE_DIR / "memos_local/config.yaml"),
     "mem0_local": ("mem0_local.adapter", "Mem0LocalAdapter", BASELINE_DIR / "mem0_local/config.yaml"),
     "memobase": ("memobase.adapter", "MemobaseAdapter", BASELINE_DIR / "memobase/config.yaml"),
     "graphiti_local": ("graphiti_local.adapter", "GraphitiLocalAdapter", BASELINE_DIR / "graphiti_local/config.yaml"),
-    "llm": ("full_context_llm.adapter", "LLMAdapter", BASELINE_DIR / "full_context_llm/config.yaml"),
 }
 
 

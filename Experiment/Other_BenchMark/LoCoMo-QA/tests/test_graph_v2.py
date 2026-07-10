@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import defaultdict
 from pathlib import Path
 import sys
+from types import SimpleNamespace
 import unittest
 
 
@@ -177,6 +178,62 @@ class RelationAwareExpansionTests(unittest.TestCase):
         self.assertEqual(graph.resolve_graph_expansion("auto"), "legacy")
         graph.schema_version = graph_builder.GRAPH_SCHEMA_V2
         self.assertEqual(graph.resolve_graph_expansion("auto"), "relation-aware")
+
+
+class RetrievalPipelineTests(unittest.TestCase):
+    def test_hybrid_union_keeps_dense_only_candidates(self) -> None:
+        rows = graph_query_runner.hybrid_union_rows(
+            [("bm25-only", 2.0), ("both", 1.0)],
+            [
+                SimpleNamespace(doc_id="dense-only", score=0.9),
+                SimpleNamespace(doc_id="both", score=0.7),
+            ],
+        )
+        by_id = {row["doc_id"]: row for row in rows}
+
+        self.assertEqual(set(by_id), {"bm25-only", "both", "dense-only"})
+        self.assertEqual(by_id["dense-only"]["retrieval_source"], "embedding")
+        self.assertEqual(by_id["both"]["retrieval_source"], "hybrid")
+
+    def test_time_role_rerank_uses_event_graph_roles(self) -> None:
+        graph = graph_query_runner.GraphEvidenceIndex.__new__(graph_query_runner.GraphEvidenceIndex)
+        graph.events = {
+            "started": {"event_id": "started", "occurred_at": "2024-01-01"},
+            "completed": {"event_id": "completed", "occurred_at": "2024-01-02"},
+        }
+        graph.claims = {
+            "claim-started": {"time_role": "started_at"},
+            "claim-completed": {"time_role": "completed_at"},
+        }
+        graph.states = {}
+        graph.claims_by_event = defaultdict(
+            list,
+            {"started": ["claim-started"], "completed": ["claim-completed"]},
+        )
+        graph.states_by_claim = defaultdict(list)
+        graph.times_by_claim = defaultdict(list)
+        graph.current_time_by_state = {}
+        graph.occurred_time_by_event = {}
+        graph.occurred_time_id_by_event = {}
+        candidates = [
+            {
+                "doc_id": "event::started",
+                "score": 1.0,
+                "lexical_rank": 1,
+                "embedding_rank": None,
+            },
+            {
+                "doc_id": "event::completed",
+                "score": 1.0,
+                "lexical_rank": 2,
+                "embedding_rank": None,
+            },
+        ]
+
+        ranked = graph._rerank_event_rows(candidates, ["completed_at"], 2)
+
+        self.assertEqual([row["event_id"] for row in ranked], ["completed", "started"])
+        self.assertEqual(ranked[0]["matched_time_roles"], ["completed_at"])
 
 
 if __name__ == "__main__":

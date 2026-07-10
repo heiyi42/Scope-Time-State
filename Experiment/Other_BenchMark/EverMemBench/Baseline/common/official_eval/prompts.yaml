@@ -66,51 +66,6 @@ answer:
     [QUESTION]
     {question}
 
-# LLM System Answer Prompts (for --system llm)
-# Uses FULL DIALOGUE as context instead of retrieved memories
-# These prompts are used when evaluating LLM directly without memory systems
-llm_answer:
-  # Multiple choice question prompt for LLM system (uses full dialogue)
-  multiple_choice: |
-    You are a rigorous question-answering assistant. You will be given a very long dialogue transcript and one multiple-choice question with four options. Your task is to choose the single best answer (A/B/C/D) based ONLY on the dialogue.
-
-    Rules:
-    1. Use only information explicitly stated in the dialogue or directly entailed by it. Do NOT use outside knowledge, assumptions, or guesses beyond the dialogue.
-    2. If multiple options seem plausible, choose the one most strongly and directly supported by the dialogue.
-    3. If the dialogue does not provide enough information to be certain, you MUST still pick one option (A/B/C/D). Choose the option that is least inconsistent with the dialogue.
-    4. Do NOT output any reasoning, explanation, punctuation, or extra text.
-
-    Output format (must be followed exactly):
-    Output ONLY a single uppercase letter: A or B or C or D
-
-    [DIALOGUE]
-    {context}
-
-    [QUESTION]
-    {question}
-
-    [OPTIONS]
-    {options}
-
-  # Open-ended question prompt for LLM system (uses full dialogue)
-  open_ended: |
-    You are a rigorous question-answering assistant. You will be given a very long dialogue transcript and one open-ended question. Your task is to answer the question using ONLY the information in the dialogue.
-
-    Rules:
-    1. Use only information explicitly stated in the dialogue or directly entailed by it. Do NOT use outside knowledge, assumptions, or speculation.
-    2. If the dialogue does not contain enough information to answer, output exactly: NOT ENOUGH INFORMATION
-    3. Keep the answer concise, specific, and aligned with the dialogue. Do not add commentary.
-    4. Do NOT output any reasoning steps, explanations, or extra text beyond the final answer.
-
-    Output format (must be followed exactly):
-    Output ONLY the answer text (or exactly: NOT ENOUGH INFORMATION)
-
-    [DIALOGUE]
-    {context}
-
-    [QUESTION]
-    {question}
-
 # LLM Judge Prompts for evaluation
 llm_judge:
   system_prompt: |

@@ -30,11 +30,7 @@ class EmbeddingHit:
 
 
 class OpenAIEmbeddingIndex:
-    """Lazy OpenAI embedding reranker over an explicit candidate pool.
-
-    This class deliberately does not build a full vector index at construction time.
-    Callers should pass BM25/graph candidate ids to search(..., allowed_doc_ids=...).
-    """
+    """Cached dense retriever over the full corpus or an explicit allowed subset."""
 
     def __init__(
         self,
@@ -52,6 +48,7 @@ class OpenAIEmbeddingIndex:
         if batch_size <= 0:
             raise ValueError("embedding batch_size must be positive")
         self.doc_ids = [str(doc_id) for doc_id in doc_ids]
+        self._document_index_by_id = {doc_id: index for index, doc_id in enumerate(self.doc_ids)}
         self.doc_by_id = {
             str(doc_id): " ".join(str(document or "").split())[:6000]
             for doc_id, document in zip(doc_ids, documents)
@@ -63,6 +60,8 @@ class OpenAIEmbeddingIndex:
         self.batch_size = batch_size
         self.base_url = base_url
         self._lock = RLock()
+        self._document_vectors_by_id: Dict[str, List[float]] = {}
+        self._document_matrix: Any = None
 
     def _cache_key(self, kind: str, doc_id: str, text: str) -> str:
         return f"{self.namespace}:{self.model}:{kind}:{doc_id}:{_hash_text(text)}"
@@ -138,6 +137,19 @@ class OpenAIEmbeddingIndex:
         key = self._cache_key("query", _hash_text(query), query)
         return self._embed_texts([query], [key])[0]
 
+    def embed_documents(self) -> None:
+        """Materialize and cache every document embedding in the index."""
+        documents = [self.doc_by_id[doc_id] for doc_id in self.doc_ids]
+        cache_keys = [self._cache_key("doc", doc_id, self.doc_by_id[doc_id]) for doc_id in self.doc_ids]
+        vectors = self._embed_texts(documents, cache_keys)
+        self._document_vectors_by_id = dict(zip(self.doc_ids, vectors))
+        try:
+            import numpy as np
+        except ImportError:
+            self._document_matrix = None
+        else:
+            self._document_matrix = np.asarray(vectors, dtype=np.float32)
+
     def _create_embeddings_with_retry(self, client: Any, batch: Sequence[str]) -> Any:
         delay_seconds = 5.0
         for attempt in range(1, 8):
@@ -181,12 +193,26 @@ class OpenAIEmbeddingIndex:
             candidate_ids = candidate_ids[:max_candidates]
         if not candidate_ids:
             return []
-        candidate_texts = [self.doc_by_id[doc_id] for doc_id in candidate_ids]
-        vectors = self._embed_texts(
-            candidate_texts,
-            [self._cache_key("doc", doc_id, self.doc_by_id[doc_id]) for doc_id in candidate_ids],
-        )
         query_vector = self.embed_query(str(query or ""))
+
+        if self._document_matrix is not None:
+            import numpy as np
+
+            matrix_indexes = [self._document_index_by_id[doc_id] for doc_id in candidate_ids]
+            scores = self._document_matrix[matrix_indexes] @ np.asarray(query_vector, dtype=np.float32)
+            limit = min(top_k, len(candidate_ids))
+            indexes = np.argpartition(scores, -limit)[-limit:]
+            ranked_indexes = sorted(indexes.tolist(), key=lambda index: (-float(scores[index]), candidate_ids[index]))
+            return [EmbeddingHit(doc_id=candidate_ids[index], score=float(scores[index])) for index in ranked_indexes]
+
+        missing_ids = [doc_id for doc_id in candidate_ids if doc_id not in self._document_vectors_by_id]
+        if missing_ids:
+            missing_vectors = self._embed_texts(
+                [self.doc_by_id[doc_id] for doc_id in missing_ids],
+                [self._cache_key("doc", doc_id, self.doc_by_id[doc_id]) for doc_id in missing_ids],
+            )
+            self._document_vectors_by_id.update(zip(missing_ids, missing_vectors))
+        vectors = [self._document_vectors_by_id.get(doc_id, []) for doc_id in candidate_ids]
         scored = [
             EmbeddingHit(doc_id=doc_id, score=_dot(query_vector, vector))
             for doc_id, vector in zip(candidate_ids, vectors)

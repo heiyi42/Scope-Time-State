@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass
-from datetime import date
 from pathlib import Path
 import re
 from typing import Any, DefaultDict, Dict, List, Mapping, Optional, Sequence
@@ -13,51 +12,8 @@ from ours_scope_time_state.qa_probe import BM25Index, qa_query_text, read_jsonl
 
 RELATION_EDGE_TYPES = {"SUPERSEDES", "CORRECTS", "CONFLICTS_WITH"}
 EMBEDDING_RETRIEVAL_SCORE_WEIGHT = 8.0
-TIME_SOURCE_SCORE = {
-    "explicit_text_time": 12.0,
-    "relative_text_time": 8.0,
-    "phase_from_event_time": 5.0,
-    "source_event_fallback": -4.0,
-    "source_event_occurred_at": -4.0,
-}
 PERSON_NAME_RE = re.compile(r"\b[A-Z][a-z]+ [A-Z][a-z]+\b")
 
-START_CUE_RE = re.compile(
-    r"\b(start(?:ed|ing)?|begin(?:ning)?|began|initiat(?:ed|e|ing)|launched|kicked off)\b|"
-    r"\b(first draft|initial draft|prepared .*draft|v0\.1)\b",
-    re.I,
-)
-END_CUE_RE = re.compile(
-    r"\b(completed|complete|finished|finali[sz](?:ed|e|ing)|uploaded|released|approved|closed|archived|delivered|done|received and reviewed)\b",
-    re.I,
-)
-STRONG_START_RE = re.compile(
-    r"officially start(?:ed|ing)|\bi'?ve started(?: on)?\b|today (?:i'?m|we'?re|we are)?\s*start(?:ing)?|"
-    r"starting (?:work on|a )?new|starting work on|"
-    r"\b(?:i|we)\s+will\s+start\b.*\btoday\b|"
-    r"\bnew (?:task|work item|assignment)\b|first draft|initial draft|prepared .*draft|v0\.1",
-    re.I,
-)
-NON_INITIAL_START_RE = re.compile(
-    r"started yesterday|continue|continuing|currently|in progress|being written|progress of|update on .*progress|"
-    r"further deepen|preparations? .*started|start importing|can start|"
-    r"finali[sz]e revisions?|final version|final stages?|final detail|self-inspection|yesterday|"
-    r"going online|go-live|release branch|last friday|last week|incorporating",
-    re.I,
-)
-STRONG_END_RE = re.compile(
-    r"task (?:has been |is |was )?completed|officially announce.*completed|fully completed|final .*uploaded|"
-    r"complete technical design document.*uploaded|received and reviewed|approve|approved|officially delivered|"
-    r"completed all development and testing",
-    re.I,
-)
-NON_FINAL_END_RE = re.compile(
-    r"draft|preliminary|80%|remaining|expect|expected|about to|currently|undergoing|ready to be executed|"
-    r"by tomorrow|tomorrow|will be|will start|this afternoon|next_step|next step|specific plans?|plans? to|"
-    r"progress|started|starting|implementing|officially started|coding today|constraint|architectural decision|"
-    r"must include|required|mandatory|synchronizing|newly released",
-    re.I,
-)
 ENDPOINT_STOP_TERMS = {
     "about",
     "after",
@@ -148,25 +104,6 @@ NON_PERSON_NAME_TOKENS = {
     "Project",
     "System",
 }
-EFFORT_METRIC_RE = re.compile(
-    r"\b(\d+(?:\.\d+)?)\s*(person[- ]days?|man[- ]days?|workdays?|working days?|days?)\b",
-    re.I,
-)
-EFFORT_CONTEXT_RE = re.compile(
-    r"\b(effort|spent|invested|take|took|takes|last(?:ed)?|duration|workload|work hours|planned|estimated|actual|in total|combined|collectively)\b",
-    re.I,
-)
-
-
-def _parse_iso_day(value: object) -> Optional[date]:
-    text = str(value or "")
-    match = re.search(r"\d{4}-\d{2}-\d{2}", text)
-    if not match:
-        return None
-    try:
-        return date.fromisoformat(match.group(0))
-    except ValueError:
-        return None
 
 
 def _endpoint_term(token: str) -> str:
@@ -334,37 +271,14 @@ def _endpoint_content_match_score(query: str, document: str) -> tuple[float, Dic
     }
 
 
-def _fallback_effort_metric(text: str, facet_key: str) -> Dict[str, Any]:
-    match = EFFORT_METRIC_RE.search(text)
-    if not match:
-        return {}
-    unit_text = match.group(2).lower().replace(" ", "-")
-    if unit_text.startswith("person") or unit_text.startswith("man"):
-        metric_type = "person_days"
-        unit = "person-days"
-    elif unit_text in {"workday", "workdays", "working-day", "working-days"}:
-        metric_type = "workdays"
-        unit = "workdays"
-    else:
-        if facet_key != "metric" and not EFFORT_CONTEXT_RE.search(text):
-            return {}
-        metric_type = "duration_days"
-        unit = "days"
-    return {
-        "metric_type": metric_type,
-        "metric_unit": unit,
-        "metric_value_num": float(match.group(1)),
-        "metric_value_text": match.group(0),
-        "metric_source": "fallback_text_numeric_unit",
-    }
-
-
 @dataclass(frozen=True)
 class ExpandedEvidence:
     event_ids: List[str]
     notes_by_event: Dict[str, List[str]]
     seed_event_ids: List[str]
     state_facet_ids: List[str]
+    time_roles: List[str]
+    state_selection_trace: List[Dict[str, Any]]
     state_summaries: List[str]
     relation_summaries: List[str]
     relation_edge_count: int
@@ -374,6 +288,8 @@ class ExpandedEvidence:
             "seed_event_ids": self.seed_event_ids,
             "expanded_event_ids": self.event_ids,
             "state_facet_ids": self.state_facet_ids,
+            "time_roles": self.time_roles,
+            "state_selection_trace": self.state_selection_trace,
             "state_summaries": self.state_summaries,
             "relation_summaries": self.relation_summaries,
             "relation_edge_count": self.relation_edge_count,
@@ -411,19 +327,9 @@ class STSGraphEvidenceIndex:
         self._scope_doc_ids: List[str] = []
         self._scope_docs: List[str] = []
         self._scope_doc_by_id: Dict[str, str] = {}
-        self._temporal_endpoint_index: Optional[BM25Index] = None
-        self._temporal_endpoint_doc_ids: List[str] = []
-        self._temporal_endpoint_docs: List[str] = []
-        self._temporal_endpoint_candidates: Dict[str, Dict[str, Any]] = {}
-        self._effort_metric_index: Optional[BM25Index] = None
-        self._effort_metric_doc_ids: List[str] = []
-        self._effort_metric_docs: List[str] = []
-        self._effort_metric_candidates: Dict[str, Dict[str, Any]] = {}
         self._embedding_model: Optional[str] = None
         self._embedding_state_index: Optional[OpenAIEmbeddingIndex] = None
         self._embedding_scope_index: Optional[OpenAIEmbeddingIndex] = None
-        self._embedding_temporal_endpoint_index: Optional[OpenAIEmbeddingIndex] = None
-        self._embedding_effort_metric_index: Optional[OpenAIEmbeddingIndex] = None
         self._embedding_candidate_k = 32
         self._load()
         self._build_state_index()
@@ -443,7 +349,7 @@ class STSGraphEvidenceIndex:
         targets: Optional[set[str]] = None,
         candidate_k: int = 32,
     ) -> None:
-        enabled_targets = {"state", "scope", "temporal", "effort"} if targets is None else targets
+        enabled_targets = {"state", "scope"} if targets is None else targets
         self._embedding_model = model
         self._embedding_candidate_k = max(1, int(candidate_k))
         if "state" in enabled_targets:
@@ -466,26 +372,6 @@ class STSGraphEvidenceIndex:
                 batch_size=batch_size,
                 base_url=base_url,
             )
-        if "temporal" in enabled_targets:
-            self._embedding_temporal_endpoint_index = OpenAIEmbeddingIndex(
-                self._temporal_endpoint_doc_ids,
-                self._temporal_endpoint_docs,
-                model=model,
-                cache_path=cache_path,
-                namespace=f"{namespace}:temporal_endpoints",
-                batch_size=batch_size,
-                base_url=base_url,
-            )
-        if "effort" in enabled_targets:
-            self._embedding_effort_metric_index = OpenAIEmbeddingIndex(
-                self._effort_metric_doc_ids,
-                self._effort_metric_docs,
-                model=model,
-                cache_path=cache_path,
-                namespace=f"{namespace}:effort_metrics",
-                batch_size=batch_size,
-                base_url=base_url,
-            )
 
     def _rank_index(
         self,
@@ -498,13 +384,13 @@ class STSGraphEvidenceIndex:
     ) -> List[Dict[str, Any]]:
         if top_k <= 0:
             return []
-        allowed = {str(doc_id) for doc_id in allowed_doc_ids or [] if doc_id}
         rows: Dict[str, Dict[str, Any]] = {}
         if bm25_index is not None:
-            for rank, hit in enumerate(bm25_index.search(query, top_k), start=1):
+            for rank, hit in enumerate(
+                bm25_index.search(query, top_k, allowed_doc_ids=allowed_doc_ids),
+                start=1,
+            ):
                 doc_id = str(hit.event_id)
-                if allowed and doc_id not in allowed:
-                    continue
                 rows[doc_id] = {
                     "doc_id": doc_id,
                     "lexical_score": float(hit.score),
@@ -512,14 +398,12 @@ class STSGraphEvidenceIndex:
                     "embedding_score": 0.0,
                     "embedding_rank": None,
                 }
-        embedding_candidate_ids = list(rows)[: self._embedding_candidate_k]
-        if embedding_index is not None and embedding_candidate_ids:
+        if embedding_index is not None:
             for rank, hit in enumerate(
                 embedding_index.search(
                     query,
-                    min(top_k, len(embedding_candidate_ids)),
-                    allowed_doc_ids=embedding_candidate_ids,
-                    max_candidates=self._embedding_candidate_k,
+                    min(top_k, self._embedding_candidate_k),
+                    allowed_doc_ids=allowed_doc_ids,
                 ),
                 start=1,
             ):
@@ -728,8 +612,6 @@ class STSGraphEvidenceIndex:
         self._state_docs = [self._state_doc(state_id) for state_id in self._state_doc_ids]
         self._state_index = BM25Index(self._state_doc_ids, self._state_docs)
         self._build_scope_index()
-        self._build_temporal_endpoint_index()
-        self._build_effort_metric_index()
 
     def _scope_doc(self, scope_id: str) -> str:
         scope = self.scopes[scope_id]
@@ -758,662 +640,23 @@ class STSGraphEvidenceIndex:
         self._scope_doc_by_id = dict(zip(self._scope_doc_ids, self._scope_docs))
         self._scope_index = BM25Index(self._scope_doc_ids, self._scope_docs)
 
-    def _event_claim_text(self, event_id: str) -> str:
-        return " ".join(self._claim_text(claim_id) for claim_id in self.claims_by_event.get(event_id, []))
-
-    def _temporal_candidate_date(self, event_id: str) -> Optional[str]:
-        event = self.events.get(event_id, {})
-        parsed = _parse_iso_day(event.get("date") or self.occurred_time_by_event.get(event_id))
-        return parsed.isoformat() if parsed else None
-
-    def _claim_time_profile(self, claim_id: str, allowed_roles: Sequence[str]) -> Dict[str, Any]:
-        allowed = {str(role) for role in allowed_roles if role}
-        best: Dict[str, Any] = {}
-        best_score = -999.0
-        for time_item in self.times_by_claim.get(claim_id, []):
-            role = str(time_item.get("time_role") or "")
-            if allowed and role not in allowed:
-                continue
-            source = str(time_item.get("time_value_source") or "")
-            explicitness = float(time_item.get("time_explicitness_score") or 0.0)
-            score = TIME_SOURCE_SCORE.get(source, 0.0) + explicitness
-            if score > best_score:
-                best_score = score
-                best = dict(time_item)
-        return best
-
-    def _start_quality(self, document: str, claim: Optional[Mapping[str, Any]] = None) -> tuple[float, List[str]]:
-        score = 0.0
-        reasons: List[str] = []
-        if claim and claim.get("phase_role") == "started":
-            score += 7.0
-            reasons.append("claim_phase_started")
-        if claim and claim.get("time_role") == "planned_for":
-            score += 4.0
-            reasons.append("claim_planned_for")
-        has_strong_start = bool(STRONG_START_RE.search(document))
-        if has_strong_start:
-            score += 9.0
-            reasons.append("strong_start_cue")
-        elif START_CUE_RE.search(document):
-            score += 2.0
-            reasons.append("generic_start_cue")
-        if not has_strong_start and NON_INITIAL_START_RE.search(document):
-            score -= 12.0
-            reasons.append("non_initial_start_penalty")
-        return score, reasons
-
-    def _end_quality(self, document: str, claim: Optional[Mapping[str, Any]] = None) -> tuple[float, List[str]]:
-        score = 0.0
-        reasons: List[str] = []
-        if claim and claim.get("phase_role") in {"completed", "finalized"}:
-            score += 6.0
-            reasons.append("claim_phase_end")
-        has_strong_end = bool(STRONG_END_RE.search(document))
-        if has_strong_end:
-            score += 9.0
-            reasons.append("strong_end_cue")
-        elif END_CUE_RE.search(document):
-            score += 2.0
-            reasons.append("generic_end_cue")
-        if NON_FINAL_END_RE.search(document):
-            penalty = 6.0 if has_strong_end else 24.0
-            score -= penalty
-            reasons.append("non_final_end_penalty")
-        return score, reasons
-
-    def _add_temporal_candidate(
-        self,
-        candidate_id: str,
-        endpoint_kind: str,
-        event_id: str,
-        document: str,
-        source: str,
-        source_id: str,
-        quality_score: float,
-        quality_reasons: Sequence[str],
-        claim: Optional[Mapping[str, Any]] = None,
-        time_profile: Optional[Mapping[str, Any]] = None,
-    ) -> None:
-        event = self.events.get(event_id)
-        if not event:
-            return
-        time_value = str((time_profile or {}).get("value") or "")
-        time_date = _parse_iso_day(time_value)
-        event_date_text = time_date.isoformat() if time_date else self._temporal_candidate_date(event_id)
-        if not event_date_text:
-            return
-        time_value_source = (time_profile or {}).get("time_value_source") or (claim.get("time_value_source") if claim else "event_text")
-        time_explicitness_score = (time_profile or {}).get("time_explicitness_score")
-        if time_explicitness_score is None and claim:
-            time_explicitness_score = claim.get("time_explicitness_score")
-        time_id = str((time_profile or {}).get("time_id") or "")
-        if not time_id and event_id in self.occurred_time_id_by_event:
-            time_id = self.occurred_time_id_by_event[event_id]
-        candidate = {
-            "candidate_id": candidate_id,
-            "endpoint_kind": endpoint_kind,
-            "source": source,
-            "source_id": source_id,
-            "event_id": event_id,
-            "event_date": event_date_text,
-            "group": event.get("group"),
-            "speaker": event.get("speaker"),
-            "evidence_text": " ".join(document.split())[:700],
-            "scope_id": claim.get("scope_id") if claim else None,
-            "task_object_scope_ids": list(claim.get("task_object_scope_ids", []) or []) if claim else [],
-            "task_object_labels": list(claim.get("task_object_labels", []) or []) if claim else [],
-            "subject": claim.get("subject") if claim else None,
-            "predicate": claim.get("predicate") if claim else None,
-            "object": claim.get("object") if claim else None,
-            "value": claim.get("value") if claim else None,
-            "facet_key": claim.get("facet_key") if claim else None,
-            "time_role": (time_profile or {}).get("time_role") or (claim.get("time_role") if claim else "occurred_at"),
-            "phase_role": claim.get("phase_role") if claim else None,
-            "time_id": time_id,
-            "time_value": time_value or event.get("date"),
-            "time_value_source": time_value_source,
-            "time_explicitness_score": time_explicitness_score,
-            "quality_score": quality_score,
-            "quality_reasons": list(quality_reasons),
-        }
-        self._temporal_endpoint_candidates[candidate_id] = candidate
-        self._temporal_endpoint_doc_ids.append(candidate_id)
-        self._temporal_endpoint_docs.append(document)
-
-    def _build_temporal_endpoint_index(self) -> None:
-        self._temporal_endpoint_candidates = {}
-        self._temporal_endpoint_doc_ids = []
-        self._temporal_endpoint_docs = []
-
-        for claim_id, claim in sorted(self.claims.items()):
-            event_id = str(claim.get("source_event_id") or "")
-            event = self.events.get(event_id, {})
-            document = " ".join(
-                str(part)
-                for part in (
-                    self._claim_text(claim_id),
-                    event.get("date"),
-                    event.get("group"),
-                    event.get("speaker"),
-                    event.get("text"),
-                )
-                if part not in {None, ""}
-            )
-            if claim.get("phase_role") == "started" or claim.get("time_role") in {"started_at", "planned_for"}:
-                quality_score, quality_reasons = self._start_quality(document, claim)
-                time_profile = self._claim_time_profile(claim_id, ["started_at", "planned_for", "occurred_at"])
-                self._add_temporal_candidate(
-                    f"claim:{claim_id}:start",
-                    "start",
-                    event_id,
-                    document,
-                    "claim",
-                    claim_id,
-                    quality_score,
-                    quality_reasons,
-                    claim,
-                    time_profile,
-                )
-            if claim.get("phase_role") in {"completed", "finalized"} or claim.get("time_role") in {"completed_at", "finalized_at"}:
-                quality_score, quality_reasons = self._end_quality(document, claim)
-                time_profile = self._claim_time_profile(claim_id, ["completed_at", "finalized_at", "occurred_at"])
-                self._add_temporal_candidate(
-                    f"claim:{claim_id}:end",
-                    "end",
-                    event_id,
-                    document,
-                    "claim",
-                    claim_id,
-                    quality_score,
-                    quality_reasons,
-                    claim,
-                    time_profile,
-                )
-
-        for event_id, event in sorted(self.events.items()):
-            document = " ".join(
-                str(part)
-                for part in (
-                    event.get("date"),
-                    event.get("group"),
-                    event.get("speaker"),
-                    event.get("text"),
-                    self._event_claim_text(event_id),
-                )
-                if part not in {None, ""}
-            )
-            if START_CUE_RE.search(document) or re.search(r"new .* task", document, re.I):
-                quality_score, quality_reasons = self._start_quality(document)
-                self._add_temporal_candidate(
-                    f"event:{event_id}:start",
-                    "start",
-                    event_id,
-                    document,
-                    "event",
-                    event_id,
-                    quality_score,
-                    quality_reasons,
-                )
-            if END_CUE_RE.search(document):
-                quality_score, quality_reasons = self._end_quality(document)
-                self._add_temporal_candidate(
-                    f"event:{event_id}:end",
-                    "end",
-                    event_id,
-                    document,
-                    "event",
-                    event_id,
-                    quality_score,
-                    quality_reasons,
-                )
-
-        self._temporal_endpoint_index = BM25Index(self._temporal_endpoint_doc_ids, self._temporal_endpoint_docs)
-
-    def _metric_fields_for_claim(self, claim_id: str) -> Dict[str, Any]:
-        claim = self.claims.get(claim_id, {})
-        if claim.get("metric_type") and claim.get("metric_value_num") is not None:
-            return {
-                "metric_type": claim.get("metric_type"),
-                "metric_unit": claim.get("metric_unit"),
-                "metric_value_num": claim.get("metric_value_num"),
-                "metric_value_text": claim.get("metric_value_text"),
-                "metric_kind": claim.get("metric_kind"),
-                "metric_source": claim.get("metric_source"),
-            }
-        return _fallback_effort_metric(self._claim_text(claim_id), str(claim.get("facet_key") or ""))
-
-    def _add_effort_metric_candidate(
-        self,
-        candidate_id: str,
-        claim_id: str,
-        source: str,
-        state_id: Optional[str] = None,
-    ) -> None:
-        claim = self.claims.get(claim_id, {})
-        metric = self._metric_fields_for_claim(claim_id)
-        if not claim or not metric:
-            return
-        event_id = str(claim.get("source_event_id") or "")
-        event = self.events.get(event_id, {})
-        if not event:
-            return
-        state = self.state_facets.get(state_id or "", {})
-        document = " ".join(
-            str(part)
-            for part in (
-                self._claim_text(claim_id),
-                state.get("subject"),
-                state.get("facet_key"),
-                state.get("value"),
-                event.get("date"),
-                event.get("group"),
-                event.get("speaker"),
-                event.get("text"),
-            )
-            if part not in {None, ""}
-        )
-        candidate = {
-            "candidate_id": candidate_id,
-            "source": source,
-            "claim_id": claim_id,
-            "state_facet_id": state_id,
-            "event_id": event_id,
-            "event_date": self._temporal_candidate_date(event_id),
-            "group": event.get("group"),
-            "speaker": event.get("speaker"),
-            "scope_id": claim.get("scope_id"),
-            "subject": claim.get("subject"),
-            "facet_key": claim.get("facet_key"),
-            "value": claim.get("value"),
-            "evidence_text": " ".join(document.split())[:900],
-            **metric,
-        }
-        self._effort_metric_candidates[candidate_id] = candidate
-        self._effort_metric_doc_ids.append(candidate_id)
-        self._effort_metric_docs.append(document)
-
-    def _add_effort_event_candidate(self, event_id: str) -> None:
-        event = self.events.get(event_id, {})
-        if not event:
-            return
-        metric = _fallback_effort_metric(str(event.get("text") or ""), "metric")
-        if not metric:
-            return
-        document = " ".join(
-            str(part)
-            for part in (
-                event.get("date"),
-                event.get("group"),
-                event.get("speaker"),
-                event.get("text"),
-                metric.get("metric_value_text"),
-                metric.get("metric_type"),
-                metric.get("metric_unit"),
-            )
-            if part not in {None, ""}
-        )
-        candidate_id = f"event:{event_id}:metric"
-        candidate = {
-            "candidate_id": candidate_id,
-            "source": "event",
-            "claim_id": None,
-            "state_facet_id": None,
-            "event_id": event_id,
-            "event_date": self._temporal_candidate_date(event_id),
-            "group": event.get("group"),
-            "speaker": event.get("speaker"),
-            "scope_id": None,
-            "subject": None,
-            "facet_key": "metric",
-            "value": metric.get("metric_value_text"),
-            "evidence_text": " ".join(document.split())[:900],
-            **metric,
-        }
-        self._effort_metric_candidates[candidate_id] = candidate
-        self._effort_metric_doc_ids.append(candidate_id)
-        self._effort_metric_docs.append(document)
-
-    def _build_effort_metric_index(self) -> None:
-        self._effort_metric_candidates = {}
-        self._effort_metric_doc_ids = []
-        self._effort_metric_docs = []
-        for claim_id in sorted(self.claims):
-            self._add_effort_metric_candidate(f"claim:{claim_id}:metric", claim_id, "claim")
-        for state_id, state in sorted(self.state_facets.items()):
-            for claim_id in state.get("support_claim_ids", []) or []:
-                claim_id_text = str(claim_id)
-                if claim_id_text in self.claims:
-                    self._add_effort_metric_candidate(f"state:{state_id}:{claim_id_text}:metric", claim_id_text, "state_facet", state_id)
-        for event_id in sorted(self.events):
-            self._add_effort_event_candidate(event_id)
-        self._effort_metric_index = BM25Index(self._effort_metric_doc_ids, self._effort_metric_docs)
-
-    def rank_effort_metric_candidates(
-        self,
-        query: str,
-        top_k: int,
-        scope_ids: Optional[Sequence[str]] = None,
-        boost_event_ids: Optional[Sequence[str]] = None,
-    ) -> List[Dict[str, Any]]:
-        if self._effort_metric_index is None or top_k <= 0:
-            return []
-        allowed_scopes = {str(scope_id) for scope_id in scope_ids or [] if scope_id}
-        allowed_events = self.events_for_scopes(list(allowed_scopes)) if allowed_scopes else set()
-        boosted_events = {str(event_id) for event_id in boost_event_ids or [] if event_id}
-        ranked = self._rank_index(
-            self._effort_metric_index,
-            self._embedding_effort_metric_index,
-            query,
-            max(top_k * 20, top_k),
-        )
-        candidates: List[Dict[str, Any]] = []
-        seen_claims: set[str] = set()
-        for ranked_candidate in ranked:
-            candidate = dict(self._effort_metric_candidates.get(str(ranked_candidate["doc_id"]), {}))
-            if not candidate:
-                continue
-            event_id = str(candidate.get("event_id") or "")
-            if allowed_events and event_id not in allowed_events:
-                continue
-            claim_id = str(candidate.get("claim_id") or "")
-            seen_key = claim_id or str(candidate.get("candidate_id") or "")
-            if seen_key in seen_claims:
-                continue
-            seen_claims.add(seen_key)
-            content_score, content_trace = _endpoint_content_match_score(query, str(candidate.get("evidence_text") or ""))
-            graph_boost = 8.0 if event_id in boosted_events else 0.0
-            metric_type = str(candidate.get("metric_type") or "")
-            unit_score = 0.0
-            lowered_query = query.lower()
-            if "person" in lowered_query and metric_type == "person_days":
-                unit_score += 8.0
-            if "work" in lowered_query and metric_type == "workdays":
-                unit_score += 8.0
-            if "day" in lowered_query and metric_type == "duration_days":
-                unit_score += 2.0
-            candidate["bm25_score"] = round(float(ranked_candidate.get("lexical_score") or 0.0), 4)
-            candidate["embedding_score"] = round(float(ranked_candidate.get("embedding_score") or 0.0), 6)
-            candidate["retrieval_source"] = ranked_candidate.get("retrieval_source")
-            candidate["graph_expansion_boost"] = graph_boost
-            candidate["content_match_score"] = content_score
-            candidate["content_match_trace"] = content_trace
-            candidate["unit_score"] = unit_score
-            candidate["score"] = float(ranked_candidate.get("score") or 0.0) + content_score + graph_boost + unit_score
-            candidates.append(candidate)
-        candidates.sort(key=lambda item: (-float(item.get("score") or 0.0), str(item.get("event_id") or "")))
-        return candidates[:top_k]
-
-    def rank_temporal_endpoint_candidates(
-        self,
-        query: str,
-        endpoint_kind: str,
-        top_k: int,
-        scope_ids: Optional[Sequence[str]] = None,
-        allowed_time_roles: Optional[Sequence[str]] = None,
-        boost_event_ids: Optional[Sequence[str]] = None,
-        allowed_event_ids: Optional[Sequence[str]] = None,
-    ) -> List[Dict[str, Any]]:
-        if self._temporal_endpoint_index is None or top_k <= 0:
-            return []
-        allowed_scopes = {str(scope_id) for scope_id in scope_ids or [] if scope_id}
-        if allowed_event_ids is not None:
-            allowed_events = {str(event_id) for event_id in allowed_event_ids if event_id}
-        else:
-            allowed_events = self.events_for_scopes(list(allowed_scopes)) if allowed_scopes else set()
-        allowed_roles = {str(role) for role in allowed_time_roles or [] if role}
-        boosted_events = {str(event_id) for event_id in boost_event_ids or [] if event_id}
-        ranked = self._rank_index(
-            self._temporal_endpoint_index,
-            self._embedding_temporal_endpoint_index,
-            query,
-            max(top_k * 12, top_k),
-        )
-        candidates: List[Dict[str, Any]] = []
-        for ranked_candidate in ranked:
-            candidate = dict(self._temporal_endpoint_candidates.get(str(ranked_candidate["doc_id"]), {}))
-            if not candidate:
-                continue
-            if candidate.get("endpoint_kind") != endpoint_kind:
-                continue
-            if allowed_events and str(candidate.get("event_id") or "") not in allowed_events:
-                continue
-            if allowed_roles and str(candidate.get("time_role") or "occurred_at") not in allowed_roles:
-                continue
-            content_score, content_trace = _endpoint_content_match_score(
-                query,
-                str(candidate.get("evidence_text") or ""),
-            )
-            quality_reasons = {str(reason) for reason in candidate.get("quality_reasons", []) or []}
-            query_terms = set(_endpoint_terms(query))
-            evidence_text = str(candidate.get("evidence_text") or "")
-            allows_draft_completion = (
-                endpoint_kind == "end"
-                and {"strategy", "report", "guide", "manual", "material"} & query_terms
-                and re.search(r"\b(?:draft|preliminary).{0,80}\b(?:completed|uploaded|released)\b", evidence_text, re.I)
-            )
-            if (
-                endpoint_kind == "end"
-                and "non_final_end_penalty" in quality_reasons
-                and "strong_end_cue" not in quality_reasons
-                and not allows_draft_completion
-            ):
-                content_score *= 0.35
-                content_trace = {**content_trace, "non_final_content_scale": 0.35}
-            if (
-                endpoint_kind == "start"
-                and "non_initial_start_penalty" in quality_reasons
-                and "strong_start_cue" not in quality_reasons
-            ):
-                content_score *= 0.45
-                content_trace = {**content_trace, "non_initial_content_scale": 0.45}
-            candidate["bm25_score"] = round(float(ranked_candidate.get("lexical_score") or 0.0), 4)
-            candidate["embedding_score"] = round(float(ranked_candidate.get("embedding_score") or 0.0), 6)
-            candidate["retrieval_source"] = ranked_candidate.get("retrieval_source")
-            graph_boost = 8.0 if str(candidate.get("event_id") or "") in boosted_events else 0.0
-            time_source_score = TIME_SOURCE_SCORE.get(str(candidate.get("time_value_source") or ""), 0.0)
-            time_source_score += float(candidate.get("time_explicitness_score") or 0.0)
-            semantic_penalty = 0.0
-            structured_text = " ".join(
-                str(part)
-                for part in (
-                    candidate.get("subject"),
-                    candidate.get("predicate"),
-                    candidate.get("object"),
-                    candidate.get("value"),
-                    " ".join(str(label) for label in candidate.get("task_object_labels", []) or []),
-                )
-                if part
-            )
-            structured_terms = set(_endpoint_terms(structured_text))
-            evidence_terms = set(_endpoint_terms(evidence_text))
-            if (
-                str(candidate.get("source") or "") == "claim"
-                and {"dashboard", "workbench", "center", "user"} & query_terms
-                and not ({"api", "interface", "aggregate"} & query_terms)
-                and {"api", "interface", "aggregate"} & structured_terms
-            ):
-                    semantic_penalty -= 18.0
-            if endpoint_kind == "start" and "develop" in query_terms:
-                if re.search(
-                    r"\b(low[- ]?fidelity|high[- ]?fidelity|wireframes?|IA draft|design draft|"
-                    r"component specifications?|preliminary layout|interactive high[- ]?fidelity prototypes?)\b",
-                    evidence_text,
-                    re.I,
-                ):
-                    semantic_penalty -= 24.0
-                if re.search(r"\bfirst draft\b", evidence_text, re.I) and not re.search(
-                    r"\b(?:started on|start(?:ed|ing)? developing|officially start(?:ed|ing))\b",
-                    evidence_text,
-                    re.I,
-                ):
-                    semantic_penalty -= 16.0
-                if (
-                    str(candidate.get("source") or "") == "claim"
-                    and not ({"strong_start_cue", "generic_start_cue"} & quality_reasons)
-                    and not re.search(
-                        r"\b(?:officially start(?:ed|ing)|i'?ve started|started on|"
-                        r"start(?:ed|ing)? (?:work|develop|build|implement|test|write)|"
-                        r"begin(?:s|ning)? (?:work|develop|build|implement|test|write)|new task)\b",
-                        evidence_text,
-                        re.I,
-                    )
-                ):
-                    semantic_penalty -= 18.0
-                if re.search(
-                    r"\b(?:unclear|next week|schedule unclear|final confirmation|suggested|"
-                    r"separated from|preference|research information architecture)\b",
-                    evidence_text,
-                    re.I,
-                ):
-                    semantic_penalty -= 12.0
-                if re.search(
-                    r"\b(?:integrating? data display|switch from mock data|yesterday .{0,80} API (?:was )?deployed|"
-                    r"joint debugging|connect(?:ing)? it|data display part)\b",
-                    evidence_text,
-                    re.I,
-                ):
-                    semantic_penalty -= 24.0
-                if "test" not in query_terms and re.search(r"\b(?:testing|regression testing)\b", evidence_text, re.I):
-                    semantic_penalty -= 18.0
-            if allows_draft_completion:
-                semantic_penalty += 30.0
-                if "market" in query_terms and "market" in evidence_terms:
-                    semantic_penalty += 20.0
-            candidate["graph_expansion_boost"] = graph_boost
-            candidate["time_source_score"] = round(time_source_score, 4)
-            candidate["semantic_penalty"] = round(semantic_penalty, 4)
-            candidate["content_match_score"] = content_score
-            candidate["content_match_trace"] = content_trace
-            candidate["score"] = (
-                float(ranked_candidate.get("score") or 0.0)
-                + float(candidate.get("quality_score") or 0.0)
-                + graph_boost
-                + time_source_score
-                + content_score
-                + semantic_penalty
-            )
-            candidates.append(candidate)
-        candidates.sort(key=lambda item: (-float(item.get("score") or 0.0), str(item.get("event_id") or "")))
-        return candidates[:top_k]
-
-    def temporal_endpoint_candidates(
-        self,
-        endpoint_kind: str,
-        allowed_time_roles: Optional[Sequence[str]] = None,
-        allowed_event_ids: Optional[Sequence[str]] = None,
-    ) -> List[Dict[str, Any]]:
-        allowed_roles = {str(role) for role in allowed_time_roles or [] if role}
-        allowed_events = {str(event_id) for event_id in allowed_event_ids or [] if event_id}
-        candidates: List[Dict[str, Any]] = []
-        for candidate in self._temporal_endpoint_candidates.values():
-            if candidate.get("endpoint_kind") != endpoint_kind:
-                continue
-            if allowed_roles and str(candidate.get("time_role") or "occurred_at") not in allowed_roles:
-                continue
-            if allowed_events and str(candidate.get("event_id") or "") not in allowed_events:
-                continue
-            candidate_copy = dict(candidate)
-            time_source_score = TIME_SOURCE_SCORE.get(str(candidate_copy.get("time_value_source") or ""), 0.0)
-            time_source_score += float(candidate_copy.get("time_explicitness_score") or 0.0)
-            candidate_copy["time_source_score"] = round(time_source_score, 4)
-            candidate_copy["score"] = float(candidate_copy.get("quality_score") or 0.0) + time_source_score
-            candidates.append(candidate_copy)
-        candidates.sort(key=lambda item: (str(item.get("event_date") or ""), -float(item.get("score") or 0.0), str(item.get("event_id") or "")))
-        return candidates
-
-    def resolve_temporal_interval(
-        self,
-        start_query: str,
-        end_query: str,
-        start_endpoint_kind: str,
-        end_endpoint_kind: str,
-        top_k: int,
-        scope_ids: Optional[Sequence[str]] = None,
-        inclusive: bool = True,
-        start_time_roles: Optional[Sequence[str]] = None,
-        end_time_roles: Optional[Sequence[str]] = None,
-        boost_event_ids: Optional[Sequence[str]] = None,
-    ) -> Dict[str, Any]:
-        start_candidates = self.rank_temporal_endpoint_candidates(
-            start_query,
-            start_endpoint_kind,
-            top_k,
-            scope_ids,
-            allowed_time_roles=start_time_roles,
-            boost_event_ids=boost_event_ids,
-        )
-        end_candidates = self.rank_temporal_endpoint_candidates(
-            end_query,
-            end_endpoint_kind,
-            top_k,
-            scope_ids,
-            allowed_time_roles=end_time_roles,
-            boost_event_ids=boost_event_ids,
-        )
-        best_pair: Optional[Dict[str, Any]] = None
-
-        for start_candidate in start_candidates:
-            start_date = _parse_iso_day(start_candidate.get("event_date"))
-            if start_date is None:
-                continue
-            for end_candidate in end_candidates:
-                end_date = _parse_iso_day(end_candidate.get("event_date"))
-                if end_date is None or end_date < start_date:
-                    continue
-                day_delta = (end_date - start_date).days
-                computed_days = day_delta + 1 if inclusive else day_delta
-                pair_score = float(start_candidate.get("score") or 0.0) + float(end_candidate.get("score") or 0.0)
-                if start_candidate.get("group") == end_candidate.get("group"):
-                    pair_score += 12.0
-                else:
-                    pair_score -= 4.0
-                if 2 <= computed_days <= 14:
-                    pair_score += min(8.0, float(computed_days))
-                if computed_days == 1:
-                    pair_score -= 3.0
-                if computed_days > 21:
-                    pair_score -= 10.0
-                if start_candidate.get("source") == "claim":
-                    pair_score += 1.0
-                if end_candidate.get("source") == "claim":
-                    pair_score += 1.0
-                pair = {
-                    "pair_score": pair_score,
-                    "start": start_candidate,
-                    "end": end_candidate,
-                    "start_date": start_date.isoformat(),
-                    "end_date": end_date.isoformat(),
-                    "computed_days": computed_days,
-                    "inclusive": inclusive,
-                }
-                if best_pair is None or pair_score > float(best_pair.get("pair_score") or 0.0):
-                    best_pair = pair
-
-        return {
-            "resolver": "sts_temporal_endpoint_graph",
-            "start_query": start_query,
-            "end_query": end_query,
-            "start_endpoint_kind": start_endpoint_kind,
-            "end_endpoint_kind": end_endpoint_kind,
-            "top_k": top_k,
-            "top_start_candidates": start_candidates[:8],
-            "top_end_candidates": end_candidates[:8],
-            "selected_pair": best_pair,
-            "error": None if best_pair else "no_valid_temporal_pair",
-        }
-
     def route_scopes(self, query: str, top_k: int, scope_types: Sequence[str]) -> List[Dict[str, Any]]:
         allowed_types = {str(value) for value in scope_types}
         if self._scope_index is None or top_k <= 0:
             return []
         candidates: List[Dict[str, Any]] = []
         scope_search_k = max(top_k * 12, top_k, 32)
+        allowed_scope_ids = [
+            scope_id
+            for scope_id in self._scope_doc_ids
+            if not allowed_types or str(self.scopes.get(scope_id, {}).get("scope_type") or "") in allowed_types
+        ]
         ranked_scopes = self._rank_index(
             self._scope_index,
             self._embedding_scope_index,
             query,
             scope_search_k,
+            allowed_doc_ids=allowed_scope_ids,
         )
         for ranked in ranked_scopes:
             scope_id = str(ranked["doc_id"])
@@ -1576,6 +819,41 @@ class STSGraphEvidenceIndex:
                     roles.append(str(time_role))
         return list(dict.fromkeys(roles))
 
+    def event_time_profile(self, event_id: str) -> Dict[str, Any]:
+        roles: List[str] = []
+        time_values: List[str] = []
+        time_ids: List[str] = []
+        state_facet_ids: List[str] = []
+        if event_id in self.occurred_time_by_event:
+            roles.append("occurred_at")
+            time_values.append(self.occurred_time_by_event[event_id])
+            occurred_time_id = self.occurred_time_id_by_event.get(event_id)
+            if occurred_time_id:
+                time_ids.append(occurred_time_id)
+        for claim_id in self.claims_by_event.get(event_id, []):
+            claim = self.claims.get(claim_id, {})
+            claim_role = claim.get("time_role")
+            if claim_role:
+                roles.append(str(claim_role))
+            for time_item in self.times_by_claim.get(claim_id, []):
+                if time_item.get("time_role"):
+                    roles.append(str(time_item["time_role"]))
+                if time_item.get("value"):
+                    time_values.append(str(time_item["value"]))
+                if time_item.get("time_id"):
+                    time_ids.append(str(time_item["time_id"]))
+            for state_id in self.states_by_claim.get(claim_id, []):
+                state = self.state_facets.get(state_id, {})
+                if str(state.get("status") or "") == "current" or state.get("current_after") or self.current_time_by_state.get(state_id):
+                    roles.append("CURRENT_AFTER")
+                    state_facet_ids.append(state_id)
+        return {
+            "time_roles": list(dict.fromkeys(roles)),
+            "time_values": list(dict.fromkeys(value for value in time_values if value)),
+            "time_ids": list(dict.fromkeys(time_ids)),
+            "current_state_facet_ids": list(dict.fromkeys(state_facet_ids)),
+        }
+
     def _state_relation_profile(self, state_id: str) -> Dict[str, Any]:
         profile: Dict[str, Any] = {
             "outgoing_validity_edges": [],
@@ -1616,11 +894,17 @@ class STSGraphEvidenceIndex:
             return []
         allowed_scopes = {str(scope_id) for scope_id in scope_ids or [] if scope_id}
         allowed_time_roles = {str(role) for role in time_roles or [] if role}
+        allowed_state_ids = [
+            state_id
+            for state_id in self._state_doc_ids
+            if not allowed_scopes or allowed_scopes.intersection(self._state_scope_ids(state_id))
+        ]
         ranked_states = self._rank_index(
             self._state_index,
             self._embedding_state_index,
             query,
             search_k or max(limit * 12, limit),
+            allowed_doc_ids=allowed_state_ids,
         )
         selected: List[Dict[str, Any]] = []
         for rank, ranked in enumerate(ranked_states, start=1):
@@ -1628,8 +912,6 @@ class STSGraphEvidenceIndex:
             state = self.state_facets.get(state_id, {})
             state_scope_ids = self._state_scope_ids(state_id)
             state_scope = str(self.current_scope_by_state.get(state_id) or state.get("scope_id") or "")
-            if allowed_scopes and not allowed_scopes.intersection(state_scope_ids):
-                continue
             status = str(state.get("status") or "")
             state_time_roles = self._state_time_roles(state_id)
             relation_profile = self._state_relation_profile(state_id)
@@ -1687,6 +969,7 @@ class STSGraphEvidenceIndex:
         max_context_events: int,
         query_text: Optional[str] = None,
         scope_ids: Optional[Sequence[str]] = None,
+        time_roles: Optional[Sequence[str]] = None,
     ) -> ExpandedEvidence:
         notes: DefaultDict[str, List[str]] = defaultdict(list)
         ordered_events: List[str] = []
@@ -1753,28 +1036,48 @@ class STSGraphEvidenceIndex:
             for state_id in self.states_by_claim.get(text, []):
                 add_state(state_id, f"{reason}; SUPPORTS StateFacet")
 
+        state_selection_trace: List[Dict[str, Any]] = []
+        selected_time_roles = list(dict.fromkeys(str(role) for role in time_roles or [] if role))
         if self._state_index is not None and state_search_k > 0:
             query = query_text or qa_query_text(qa_item, include_options=include_options_in_query)
             search_k = max(state_search_k * 12, state_search_k)
-            added_states = 0
-            for rank, ranked_state in enumerate(
-                self._rank_index(self._state_index, self._embedding_state_index, query, search_k),
-                start=1,
-            ):
-                before = len(state_facet_ids)
+            selected_states = self.select_state_facets(
+                query,
+                scope_ids,
+                selected_time_roles,
+                state_search_k,
+                search_k=search_k,
+            )
+            state_selection_trace = [
+                {
+                    key: row.get(key)
+                    for key in (
+                        "state_facet_id",
+                        "rank",
+                        "score",
+                        "validity_score",
+                        "time_role_score",
+                        "time_roles",
+                        "current_after",
+                        "retrieval_source",
+                    )
+                }
+                for row in selected_states
+            ]
+            for selected_state in selected_states:
                 add_state(
-                    ranked_state["doc_id"],
-                    f"statefacet_{ranked_state.get('retrieval_source') or 'bm25'}_rank={rank}",
+                    selected_state["state_facet_id"],
+                    "statefacet_"
+                    f"{selected_state.get('retrieval_source') or 'bm25'}_rank={selected_state['rank']}; "
+                    f"validity_score={selected_state['validity_score']}; "
+                    f"time_role_score={selected_state['time_role_score']}; "
+                    f"selected_time_roles={selected_time_roles}",
                 )
-                if len(state_facet_ids) > before:
-                    added_states += 1
-                if added_states >= state_search_k:
-                    break
 
         for rank, event_id in enumerate(seed_event_ids, start=1):
-            add_event(event_id, f"scoped_bm25_seed_rank={rank}")
+            add_event(event_id, f"scoped_hybrid_time_reranked_seed_rank={rank}")
             for claim_id in self.claims_by_event.get(str(event_id), []):
-                add_claim(claim_id, f"scoped_bm25_seed_rank={rank}; ASSERTS")
+                add_claim(claim_id, f"scoped_hybrid_time_reranked_seed_rank={rank}; ASSERTS")
 
         if max_context_events > 0:
             ordered_events = ordered_events[:max_context_events]
@@ -1785,6 +1088,8 @@ class STSGraphEvidenceIndex:
             notes_by_event={event_id: values for event_id, values in notes.items()},
             seed_event_ids=[str(event_id) for event_id in seed_event_ids],
             state_facet_ids=state_facet_ids,
+            time_roles=selected_time_roles,
+            state_selection_trace=state_selection_trace,
             state_summaries=[self.state_summary(state_id) for state_id in state_facet_ids[:state_search_k + len(seed_event_ids)]],
             relation_summaries=relation_summaries,
             relation_edge_count=relation_edge_count,

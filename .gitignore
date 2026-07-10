@@ -51,3 +51,4 @@ Experiment/Other_BenchMark/GroupMemBench/source/
 
 # Locally collected related-work PDFs. Existing tracked PDFs remain tracked.
 Relatedwork/*.pdf
+output/pdf/*pdf

@@ -69,13 +69,25 @@ class BM25Index:
             for token, postings in self.postings.items()
         }
 
-    def search(self, query: str, top_k: int) -> List[RankedEvent]:
+    def search(
+        self,
+        query: str,
+        top_k: int,
+        allowed_doc_ids: Optional[Sequence[str]] = None,
+    ) -> List[RankedEvent]:
+        allowed = (
+            None
+            if allowed_doc_ids is None
+            else {str(doc_id) for doc_id in allowed_doc_ids if doc_id}
+        )
         scores: Dict[int, float] = defaultdict(float)
         for token in Counter(tokenize(query)):
             idf = self.idf.get(token)
             if idf is None:
                 continue
             for doc_index, tf in self.postings[token]:
+                if allowed is not None and self.doc_ids[doc_index] not in allowed:
+                    continue
                 length = self.doc_lengths[doc_index]
                 denom = tf + self.k1 * (1.0 - self.b + self.b * length / max(1e-9, self.avgdl))
                 scores[doc_index] += idf * (tf * (self.k1 + 1.0) / denom)

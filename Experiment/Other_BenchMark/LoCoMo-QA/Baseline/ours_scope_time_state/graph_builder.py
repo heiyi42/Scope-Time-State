@@ -135,8 +135,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--graph-schema",
         choices=GRAPH_SCHEMAS,
-        default="v1",
-        help="v1 reproduces the existing graph; v2 adds role-aware Time nodes in a separate output family.",
+        default="v2",
+        help="v2 is the default STS graph with role-aware Time nodes; v1 is retained only for legacy reproduction.",
     )
     parser.add_argument(
         "--output-dir",
