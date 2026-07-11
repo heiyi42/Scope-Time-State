@@ -1,0 +1,16 @@
+# Mem0 OSS server configuration for this official LoCoMo run.
+# Mount this file as the server's /app/config.yaml before ingesting data.
+# The embedding model is separate from the ingest and QA LLMs.
+
+version: "v1.1"
+
+llm:
+  provider: openai
+  config:
+    model: gpt-4o-mini
+    temperature: 0.1
+
+embedder:
+  provider: openai
+  config:
+    model: text-embedding-3-small
