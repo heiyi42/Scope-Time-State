@@ -16,6 +16,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+import time
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 
@@ -257,6 +258,8 @@ class TSMSampleIndex:
 
 
 class OfficialLettaMemGPTSampleIndex:
+    STATE_SCHEMA = "locomo-letta-memgpt-official-recall-v2"
+
     def __init__(self, sample: LoCoMoSample, args: argparse.Namespace) -> None:
         self.sample = sample
         self.args = args
@@ -269,13 +272,23 @@ class OfficialLettaMemGPTSampleIndex:
         self.state = self._load_or_initialize_agent()
 
     def _load_or_initialize_agent(self) -> Dict[str, Any]:
+        state: Dict[str, Any] = {}
         if self.args.reuse_baseline_store and self.state_path.exists():
             state = json.loads(self.state_path.read_text())
+            if state.get("schema_version") != self.STATE_SCHEMA:
+                state = {}
             if state.get("agent_id") and state.get("ingested"):
                 print(f"[letta-memgpt] load_agent_state {self.state_path}", flush=True)
                 return state
+            if state.get("agent_id") and int(state.get("ingested_chunks") or 0) > 0:
+                print(
+                    f"[letta-memgpt] resume_agent_state {self.state_path} "
+                    f"chunks={state['ingested_chunks']}",
+                    flush=True,
+                )
+            else:
+                state = {}
 
-        state: Dict[str, Any] = {}
         if self.args.letta_agent_id:
             state["agent_id"] = self.args.letta_agent_id
             state["conversation_id"] = self.args.letta_conversation_id or "default"
@@ -292,37 +305,42 @@ class OfficialLettaMemGPTSampleIndex:
 
         agent_id = str(state.get("agent_id") or "")
         conversation_id = str(state.get("conversation_id") or self.args.letta_conversation_id or "default")
+        if not agent_id:
+            warmup = self._run_letta_prompt(
+                "Reply exactly OK. Do not call any tool or start any agent.",
+                agent_id=None,
+                conversation_id=None,
+                new_agent=True,
+                new_conversation=True,
+            )
+            agent_id = str(warmup.get("agent_id") or "")
+            conversation_id = str(warmup.get("conversation_id") or conversation_id or "default")
+            if not agent_id:
+                raise RuntimeError("official Letta warm-up did not return agent_id")
+        completed_chunks = int(state.get("ingested_chunks") or 0)
         for index, chunk in enumerate(chunks, start=1):
+            if index <= completed_chunks:
+                continue
             prompt = letta_ingest_prompt(self.sample, chunk, index, len(chunks))
             print(f"[letta-memgpt] ingest_chunk {index}/{len(chunks)} turns={len(chunk)}", flush=True)
             result = self._run_letta_prompt(
                 prompt,
                 agent_id=agent_id or None,
-                conversation_id=conversation_id if agent_id else None,
-                new_agent=not agent_id,
-                new_conversation=False,
+                # Letta Code rejects --conversation together with --agent.
+                # Start each chunk in a fresh conversation while preserving the
+                # same agent's memory, preventing context growth across chunks.
+                conversation_id=None,
+                new_agent=False,
+                new_conversation=True,
             )
             agent_id = str(result.get("agent_id") or agent_id)
             conversation_id = str(result.get("conversation_id") or conversation_id or "default")
             if not agent_id:
                 raise RuntimeError("official Letta command did not return agent_id")
-            self._write_state(
-                {
-                    "schema_version": "locomo-letta-memgpt-official-v1",
-                    "sample_id": self.sample.sample_id,
-                    "agent_id": agent_id,
-                    "conversation_id": conversation_id,
-                    "ingested": False,
-                    "ingested_chunks": index,
-                    "ingested_dialog_ids": [turn.dia_id for turn in self.sample.turns[: sum(len(item) for item in chunks[:index])]],
-                    "letta_backend": self.args.letta_backend,
-                    "letta_command": self.command,
-                    "letta_command_cwd": str(self.command_cwd or self.work_dir),
-                }
-            )
+            self._checkpoint_state(agent_id, conversation_id, index, chunks)
 
         final_state = {
-            "schema_version": "locomo-letta-memgpt-official-v1",
+            "schema_version": self.STATE_SCHEMA,
             "sample_id": self.sample.sample_id,
             "agent_id": agent_id,
             "conversation_id": conversation_id,
@@ -335,6 +353,31 @@ class OfficialLettaMemGPTSampleIndex:
         }
         self._write_state(final_state)
         return final_state
+
+    def _checkpoint_state(
+        self,
+        agent_id: str,
+        conversation_id: str,
+        index: int,
+        chunks: Sequence[Sequence[DialogTurn]],
+    ) -> None:
+        self._write_state(
+            {
+                "schema_version": self.STATE_SCHEMA,
+                "sample_id": self.sample.sample_id,
+                "agent_id": agent_id,
+                "conversation_id": conversation_id,
+                "ingested": False,
+                "ingested_chunks": index,
+                "ingested_dialog_ids": [
+                    turn.dia_id
+                    for turn in self.sample.turns[: sum(len(item) for item in chunks[:index])]
+                ],
+                "letta_backend": self.args.letta_backend,
+                "letta_command": self.command,
+                "letta_command_cwd": str(self.command_cwd or self.work_dir),
+            }
+        )
 
     def _write_state(self, state: Mapping[str, Any]) -> None:
         self.state_path.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n")
@@ -349,7 +392,19 @@ class OfficialLettaMemGPTSampleIndex:
         new_conversation: bool,
     ) -> Dict[str, Any]:
         cmd = list(self.command)
-        cmd.extend(["--backend", self.args.letta_backend, "--output-format", "json", "--memfs-startup", "skip", "--no-skills"])
+        cmd.extend(
+            [
+                "--backend",
+                self.args.letta_backend,
+                "--output-format",
+                "json",
+                "--memfs-startup",
+                "skip",
+                "--no-skills",
+                "--permission-mode",
+                "unrestricted",
+            ]
+        )
         if self.args.letta_model:
             cmd.extend(["--model", self.args.letta_model])
         if self.args.letta_toolset:
@@ -369,26 +424,44 @@ class OfficialLettaMemGPTSampleIndex:
         if self.args.letta_backend == "local":
             env.setdefault("LETTA_LOCAL_BACKEND_EXPERIMENTAL", "1")
         cwd = self.command_cwd or self.work_dir
-        try:
-            proc = subprocess.run(
-                cmd,
-                cwd=str(cwd),
-                env=env,
-                text=True,
-                capture_output=True,
-                timeout=max(30, self.args.letta_timeout_seconds),
-                check=False,
-            )
-        except FileNotFoundError as exc:
-            raise RuntimeError(f"official Letta command not found: {cmd[0]}") from exc
-        except subprocess.TimeoutExpired as exc:
-            raise RuntimeError(f"official Letta command timed out after {self.args.letta_timeout_seconds}s") from exc
-        if proc.returncode != 0:
-            stderr = proc.stderr[-4000:]
-            stdout = proc.stdout[-2000:]
+        proc: Optional[subprocess.CompletedProcess[str]] = None
+        attempts = max(1, self.args.letta_request_retries)
+        for attempt in range(1, attempts + 1):
+            try:
+                proc = subprocess.run(
+                    cmd,
+                    cwd=str(cwd),
+                    env=env,
+                    text=True,
+                    capture_output=True,
+                    timeout=max(30, self.args.letta_timeout_seconds),
+                    check=False,
+                )
+            except FileNotFoundError as exc:
+                raise RuntimeError(f"official Letta command not found: {cmd[0]}") from exc
+            except subprocess.TimeoutExpired as exc:
+                if attempt == attempts:
+                    raise RuntimeError(
+                        f"official Letta command timed out after {self.args.letta_timeout_seconds}s"
+                    ) from exc
+                print(f"[letta-memgpt] request_retry {attempt}/{attempts} reason=timeout", flush=True)
+                time.sleep(min(2 ** (attempt - 1), 5))
+                continue
+            if proc.returncode == 0:
+                break
+            if attempt < attempts:
+                print(
+                    f"[letta-memgpt] request_retry {attempt}/{attempts} returncode={proc.returncode}",
+                    flush=True,
+                )
+                time.sleep(min(2 ** (attempt - 1), 5))
+        if proc is None or proc.returncode != 0:
+            stderr = "" if proc is None else proc.stderr[-4000:]
+            stdout = "" if proc is None else proc.stdout[-2000:]
+            returncode = "none" if proc is None else proc.returncode
             raise RuntimeError(
                 "official Letta command failed; "
-                f"returncode={proc.returncode}; stdout_tail={stdout!r}; stderr_tail={stderr!r}"
+                f"returncode={returncode}; stdout_tail={stdout!r}; stderr_tail={stderr!r}"
             )
         try:
             parsed = json.loads(proc.stdout)
@@ -418,8 +491,9 @@ class OfficialLettaMemGPTSampleIndex:
             direct_answer=answer,
             direct_evidence_dialog_ids=tuple(evidence_dialog_ids),
             trace={
-                "retriever": "official_letta_memgpt",
+                "retriever": "official_letta_recall",
                 "official_runtime": "letta-code",
+                "recall_method": "Agent(subagent_type=recall) -> letta messages search --mode hybrid",
                 "agent_id": self.state.get("agent_id"),
                 "ingest_conversation_id": self.state.get("conversation_id"),
                 "query_conversation_id": result.get("conversation_id"),
@@ -835,6 +909,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--letta-skip-ingest", action="store_true")
     parser.add_argument("--letta-ingest-chunk-turns", type=int, default=10)
     parser.add_argument("--letta-timeout-seconds", type=int, default=900)
+    parser.add_argument("--letta-request-retries", type=int, default=3)
     parser.add_argument("--letta-toolset", choices=("auto", "codex", "default", "gemini"), default=os.environ.get("LETTA_TOOLSET", "auto"))
     parser.add_argument("--letta-base-tools", default=os.environ.get("LETTA_BASE_TOOLS", "memory"))
     parser.add_argument("--letta-query-conversation", choices=("new", "ingest"), default="new")
@@ -1024,9 +1099,9 @@ def resolve_letta_command(args: argparse.Namespace) -> Tuple[List[str], Optional
 def letta_ingest_prompt(sample: LoCoMoSample, turns: Sequence[DialogTurn], chunk_index: int, n_chunks: int) -> str:
     return (
         "You are an official Letta/MemGPT memory agent being prepared for a LoCoMo QA evaluation.\n"
-        "Ingest the following conversation chunk into your memory and conversation history. "
-        "Preserve dialog IDs, speakers, dates, image captions, user preferences, events, and factual details. "
-        "This is an ingestion turn only; do not answer any benchmark question yet.\n\n"
+        "The user message containing this chunk is automatically retained in your official recall/message history. "
+        "Do not call tools, do not create or modify memory files, and do not summarize or transform the chunk. "
+        "Reply exactly INGESTED. This is an ingestion turn only; do not answer any benchmark question yet.\n\n"
         f"Sample ID: {sample.sample_id}\n"
         f"Chunk: {chunk_index}/{n_chunks}\n\n"
         f"{format_turn_context(turns)}"
@@ -1036,12 +1111,20 @@ def letta_ingest_prompt(sample: LoCoMoSample, turns: Sequence[DialogTurn], chunk
 def letta_question_prompt(row: LoCoMoQAItem) -> str:
     return (
         "Answer the LoCoMo QA question using only the conversation previously ingested into this Letta agent. "
-        "Use your official memory and message-search mechanisms when needed. Do not use files, benchmark data, "
-        "gold answers, gold evidence, categories, or question-type labels.\n\n"
+        "Your first action must be exactly one Agent tool call with subagent_type='recall', "
+        "description='Recall LoCoMo evidence', and run_in_background=false. Its prompt must ask it to use hybrid "
+        "message search over this agent's past conversations for the question below and return only the few "
+        "relevant messages, including exact dialog IDs and dates. Do not omit run_in_background=false. "
+        "Do not call TaskList, TaskGet, TaskOutput, or a second Agent; the blocking Agent result is your evidence. "
+        "Do not use Bash, Read, memory files, workspace files, or manually scan the full conversation. "
+        "For date questions, resolve relative expressions such as yesterday or last Saturday against the dated "
+        "dialog and return the resulting calendar date, never the unresolved relative phrase. "
+        "Do not use gold answers, gold evidence, categories, or question-type labels.\n\n"
         f"Question ID: {row.question_id}\n"
         f"Question: {row.question}\n\n"
-        "Return strict JSON only:\n"
-        "{\"answer\":\"short answer\", \"evidence_dialog_ids\":[\"D1:1\"]}"
+        "Return a strict JSON object only, with a string field named answer and an array field named "
+        "evidence_dialog_ids. Fill evidence_dialog_ids only with the exact relevant dialog IDs returned by recall; "
+        "do not copy an example or invent an ID."
     )
 
 
@@ -1804,7 +1887,7 @@ def main() -> int:
             or os.environ.get("OPENAI_API_BASE"),
             "rag_embedding_cache": args.rag_embedding_cache,
             "rag_embedding_batch_size": args.rag_embedding_batch_size,
-            "memgpt": "official_letta_runtime",
+            "memgpt": "official_letta_recall_runtime",
             "letta_command": args.letta_command,
             "letta_code_repo": args.letta_code_repo,
             "letta_backend": args.letta_backend,
@@ -1813,6 +1896,7 @@ def main() -> int:
             "letta_conversation_id": args.letta_conversation_id,
             "letta_skip_ingest": args.letta_skip_ingest,
             "letta_ingest_chunk_turns": args.letta_ingest_chunk_turns,
+            "letta_request_retries": args.letta_request_retries,
             "letta_toolset": args.letta_toolset,
             "letta_base_tools": args.letta_base_tools,
             "letta_query_conversation": args.letta_query_conversation,
