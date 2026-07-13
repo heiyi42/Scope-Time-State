@@ -79,11 +79,14 @@ Subject resolution follows these rules:
 2. When distinct labels exist, one bounded label-level LLM alias assignment may
    merge clear aliases such as `Caro` and `Caroline`, or `Melanie's kids` and
    `Melanie's children`.
-3. The assignment is validated as a complete partition of the input labels and
-   is applied to Claims only after the entire result passes validation.
-4. An owner/possessed-entity guard rejects an assignment that merges a bare
+3. The LLM returns only a complete partition of the labels. The builder derives
+   each canonical subject ID deterministically from the validated group, so the
+   model cannot invent or drift canonical IDs between runs.
+4. The assignment is applied to Claims only after the entire result passes
+   validation.
+5. An owner/possessed-entity guard rejects an assignment that merges a bare
    owner with a possessive entity, such as `Nate` with `Nate's pets`.
-5. Exact-label homonyms are outside this layer. Claim extraction must provide a
+6. Exact-label homonyms are outside this layer. Claim extraction must provide a
    grounded qualified owner such as `coworker Alex` or `cousin Alex` when the
    conversation requires them to remain distinct.
 
@@ -92,10 +95,11 @@ There is no qualifier-span protocol or response-local subject namespace.
 
 ## Candidate Families
 
-For each canonical subject, the builder creates temporary candidate families
-across raw slot labels. The family assignment is intentionally high recall:
-Claims that might describe the same state dimension should be placed together,
-while clearly unrelated dimensions may be separated early.
+For each canonical subject, one subject-level LLM assignment creates temporary
+candidate families across raw slot labels. The family assignment is
+intentionally high recall: Claims that might describe the same state dimension
+should be placed together, while clearly unrelated dimensions may be separated
+early.
 
 Each family assignment receives Claim context, including raw slot, object,
 answer span, full grounded evidence, memory kind, modality, polarity, and report
@@ -105,6 +109,18 @@ provenance.
 
 Raw `state_slot` is evidence for the family decision, not a hard partition key.
 The old slot-alias result is not retained as a fallback.
+
+## Family-Local Object Identity
+
+After candidate-family validation, the existing claim-level object assignment
+is applied separately inside each family. It receives every family member with
+its grounded evidence and returns one canonical object ID per Claim. It may
+merge clear aliases while keeping homonymous objects distinct, and its result
+must cover the complete family before any Claim is mutated.
+
+Object identity is not allowed to split a candidate family into hard state
+buckets. The final semantic resolver still receives every Claim in the family,
+including its assigned object ID, and decides the final state dimensions.
 
 ## Final Semantic State Assignment
 
@@ -116,12 +132,11 @@ groups. Every final group contains:
 - `state_cardinality`, exactly `single` or `multi`
 - its complete member Claim IDs
 - one `canonical_state_value_id` per member Claim
-- family-local canonical object identity for each member Claim
 
 The validator requires each input Claim to occur in exactly one final group,
-each group ID to be unique within the subject, each member to have all required
-canonical fields, and one cardinality declaration per final group. Results are
-committed to Claims only after full validation.
+each group ID to be unique across all candidate families for that subject, each
+member to have all required canonical fields, and one cardinality declaration
+per final group. Results are committed to Claims only after full validation.
 
 The final resolver may merge different raw slots into one state dimension and
 may split identical raw slots into different dimensions. Related-but-distinct
