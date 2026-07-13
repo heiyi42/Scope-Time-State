@@ -1,264 +1,215 @@
-# LoCoMo v3 State and Identity Repair Design
+# LoCoMo v3 状态与身份修复设计
 
-## Purpose
+## 目的
 
-Repair the LoCoMo v3 graph builder so that `StateFacet` represents a resolved
-persistent state rather than a mostly one-Claim-per-facet projection. Keep the
-design inside the Scope-Time-State boundary: subject identity exists only to
-identify the owner of a state, not to solve open-world entity resolution.
+修复 LoCoMo v3 构图器，使 `StateFacet` 表达经过解析的持久状态，而不是基本等同于
+“一条 Claim 对应一个 Facet”的投影。设计必须保持在 Scope-Time-State 边界内：
+Subject identity 只负责确定状态归属者，不承担开放世界实体消歧。
 
-This is the first of two independent changes. It covers subject ownership,
-semantic state grouping, state resolution, validation, and dead-code removal.
-Time-role and absolute-time improvements are intentionally deferred to a
-separate change after this design is implemented and verified.
+这是两个独立改动中的第一部分。本设计只覆盖 Subject 归属、语义状态分组、状态解析、
+验证和死代码删除。Time role 与绝对时间规范化改进明确推迟到第二部分，并且只有在本设计
+完成实现和验证后才开始。
 
-## Current Failure
+## 当前故障
 
-The current builder first canonicalizes raw `state_slot` labels, then partitions
-Claims by that slot before the semantic state-group resolver runs. A false
-negative in slot aliasing is therefore irreversible: related Claims never reach
-the same resolver call. In the current artifacts this produces 85 persistent
-Claims and 85 StateFacets for `conv-26`, and 126 persistent Claims and 124
-StateFacets for `conv-42`.
+当前构图器先规范化原始 `state_slot` 标签，再按 slot 切分 Claim，之后才调用语义状态组
+resolver。因此，slot alias 阶段一旦出现假阴性就无法恢复：本应比较的 Claim 永远不会进入
+同一次 resolver 调用。现有产物中，`conv-26` 的 85 条 persistent Claim 生成了 85 个
+StateFacet；`conv-42` 的 126 条 persistent Claim 生成了 124 个 StateFacet。
 
-The unfinished global subject reconciler is a separate regression. It expanded
-state ownership into claim-level global entity disambiguation with qualifier
-spans, internal cluster IDs, page reconciliation, and local ID namespaces. Its
-protocol no longer matches four existing tests, and it does not prevent coarse
-merges such as `Nate's pets` into `Nate`.
+尚未完成的全局 Subject reconciler 是另一个独立回归。它把“状态归属”扩展成了 Claim
+级全局实体消歧，并引入 qualifier span、内部 cluster ID、分页 reconciliation 和局部 ID
+命名空间。其协议已经与四个现有测试不一致，同时也没有阻止 `Nate's pets` 被粗粒度合并到
+`Nate`。
 
-## Goals
+## 目标
 
-1. Let semantically related persistent Claims reach the same final grouping
-   pass even when their raw `state_slot` labels differ.
-2. Keep different state dimensions separate even when they share a raw slot or
-   topic.
-3. Resolve subject ownership with the minimum identity machinery needed by STS.
-4. Allow positive and negative values of one state dimension to be compared
-   without collapsing them into one value.
-5. Require complete, validated LLM assignments and preserve atomic graph writes.
-6. Remove the subject and slot code that the new path replaces; do not retain a
-   legacy fallback, compatibility switch, or second live implementation.
-7. Preserve existing graph artifacts until the new implementation passes its
-   complete test suite and is rebuilt into a new output directory.
+1. 即使原始 `state_slot` 标签不同，语义相关的 persistent Claim 也能进入同一次最终分组。
+2. 即使共享原始 slot 或主题，不同状态维度仍必须保持分离。
+3. 仅使用 STS 所需的最小身份机制解析 Subject 归属。
+4. 允许同一状态维度的正值和负值相互比较，但不能把它们合成一个 value。
+5. 要求 LLM assignment 完整且通过验证，并保持图产物的原子写入。
+6. 删除被新路径替代的 Subject 和 slot 代码；不保留 legacy fallback、兼容开关或第二套活跃实现。
+7. 在新实现通过完整测试并输出到新目录之前，保留现有图产物不变。
 
-## Non-Goals
+## 非目标
 
-- Open-world entity resolution or cross-conversation identity linking.
-- Claim extraction redesign or Claim recall optimization.
-- Time-role changes, new Time roles, or broader temporal grounding.
-- A target merge percentage. Correct positive and negative fixtures are the
-  acceptance criterion; consolidation is not optimized for its own sake.
-- Silent truncation, lossy windows, or `latest Claim = current` fallback.
+- 开放世界实体消歧或跨对话身份关联。
+- Claim 提取重构或 Claim 召回率优化。
+- 修改 Time role、增加新 Time role 或扩展时间 grounding。
+- 追求某个固定合并比例。验收依据是正负 golden fixture 的正确性，而不是为了合并而合并。
+- 静默截断、损失性窗口处理或 `latest Claim = current` fallback。
 
-## Chosen Architecture
+## 选定架构
 
 ```text
 grounded Claims
-  -> minimal subject ownership
-  -> high-recall temporary state candidate families
-  -> family-local object identity
-  -> final semantic slot/group/cardinality/value assignment
-  -> final state buckets
-  -> current-state resolution and explicit validity relations
+  -> 最小 Subject 归属解析
+  -> 高召回临时状态候选族
+  -> 候选族内 Object identity
+  -> 最终语义 slot/group/cardinality/value assignment
+  -> 最终状态 bucket
+  -> 当前状态解析与显式 validity relation
   -> StateFacets
 ```
 
-The temporary candidate family is not a canonical graph identity. It exists
-only to give the final semantic resolver enough recall to recover from raw-slot
-variation. The final resolver remains responsible for separating different
-state dimensions.
+临时候选族不是图中的 canonical identity。它唯一的作用是提高最终语义 resolver 的召回，
+从而恢复原始 slot 表达差异造成的漏分组。最终 resolver 仍负责拆开不同状态维度。
 
-## Subject Ownership
+## Subject 归属
 
-`canonical_subject` is the state owner supplied by grounded Claim extraction.
-Subject resolution follows these rules:
+`canonical_subject` 是 grounded Claim 提取阶段给出的状态归属者。Subject 解析遵循以下规则：
 
-1. Claims with the same normalized subject label receive the same deterministic
-   owner ID without an LLM call.
-2. When distinct labels exist, one bounded label-level LLM alias assignment may
-   merge clear aliases such as `Caro` and `Caroline`, or `Melanie's kids` and
-   `Melanie's children`.
-3. The LLM returns only a complete partition of the labels. The builder derives
-   each canonical subject ID deterministically from the validated group, so the
-   model cannot invent or drift canonical IDs between runs.
-4. The assignment is applied to Claims only after the entire result passes
-   validation.
-5. An owner/possessed-entity guard rejects an assignment that merges a bare
-   owner with a possessive entity, such as `Nate` with `Nate's pets`.
-6. Exact-label homonyms are outside this layer. Claim extraction must provide a
-   grounded qualified owner such as `coworker Alex` or `cousin Alex` when the
-   conversation requires them to remain distinct.
+1. 规范化后 Subject 标签相同的 Claim 使用同一个确定性 owner ID，不调用 LLM。
+2. 存在不同标签时，只允许一次有界的标签级 LLM alias assignment，用于合并
+   `Caro`/`Caroline`、`Melanie's kids`/`Melanie's children` 等明确别名。
+3. LLM 只返回标签的完整分区。构图器根据通过验证的分组确定性生成 canonical subject ID，
+   因而模型不能在不同运行间自由创造或漂移 canonical ID。
+4. 只有整个 assignment 通过验证后，结果才会写回 Claim。
+5. owner/possessed-entity guard 必须拒绝把裸 owner 与其所有物合并，例如
+   `Nate` 与 `Nate's pets`。
+6. 完全同名但实际不同的实体不在这一层处理。对话要求区分时，Claim 提取阶段必须给出有
+   原文依据的限定归属者，例如 `coworker Alex` 与 `cousin Alex`。
 
-The builder will not page, shard, or reconcile subject clusters globally.
-There is no qualifier-span protocol or response-local subject namespace.
+构图器不对 Subject cluster 做分页、分片或全局 reconciliation；不再存在 qualifier-span
+协议或 response-local Subject 命名空间。
 
-## Candidate Families
+## 候选族
 
-For each canonical subject, one subject-level LLM assignment creates temporary
-candidate families across raw slot labels. The family assignment is
-intentionally high recall: Claims that might describe the same state dimension
-should be placed together, while clearly unrelated dimensions may be separated
-early.
+对于每个 canonical subject，一次 Subject 级 LLM assignment 跨原始 slot 标签建立临时
+候选族。候选族追求高召回：可能描述同一状态维度的 Claim 应进入同一候选族；明显无关的
+维度可以提前分开。
 
-Each family assignment receives Claim context, including raw slot, object,
-answer span, full grounded evidence, memory kind, modality, polarity, and report
-time. It must return every eligible persistent Claim exactly once. Family IDs
-are temporary and must not appear in nodes, edges, canonical IDs, or graph
-provenance.
+候选族 assignment 接收 Claim 上下文，包括原始 slot、object、answer span、完整 grounded
+evidence、memory kind、modality、polarity 和 reported time。它必须让每条符合条件的
+persistent Claim 恰好出现一次。候选族 ID 只是临时 ID，不得写入 node、edge、canonical ID
+或图 provenance。
 
-Raw `state_slot` is evidence for the family decision, not a hard partition key.
-The old slot-alias result is not retained as a fallback.
+原始 `state_slot` 只是候选族判断的证据，不再是硬分桶键。旧 slot-alias 结果不作为 fallback
+保留。
 
-## Family-Local Object Identity
+## 候选族内 Object identity
 
-After candidate-family validation, the existing claim-level object assignment
-is applied separately inside each family. It receives every family member with
-its grounded evidence and returns one canonical object ID per Claim. It may
-merge clear aliases while keeping homonymous objects distinct, and its result
-must cover the complete family before any Claim is mutated.
+候选族通过验证后，在每个候选族内部独立执行现有的 Claim 级 Object assignment。它接收该
+候选族的全部成员及其 grounded evidence，并为每条 Claim 返回一个 canonical object ID。
+它可以合并明确别名，同时必须保持同名异物分离；在完整覆盖候选族之前不得修改任何 Claim。
 
-Object identity is not allowed to split a candidate family into hard state
-buckets. The final semantic resolver still receives every Claim in the family,
-including its assigned object ID, and decides the final state dimensions.
+Object identity 不得再次把候选族切成硬状态 bucket。最终语义 resolver 仍会看到候选族内的
+全部 Claim 及其已分配的 object ID，并负责决定最终状态维度。
 
-## Final Semantic State Assignment
+## 最终语义状态 assignment
 
-Within each candidate family, one semantic assignment returns one or more final
-groups. Every final group contains:
+每个候选族由一次语义 assignment 输出一个或多个最终 group。每个最终 group 必须包含：
 
 - `canonical_state_slot`
 - `canonical_state_group_id`
-- `state_cardinality`, exactly `single` or `multi`
-- its complete member Claim IDs
-- one `canonical_state_value_id` per member Claim
+- `state_cardinality`，且只能是 `single` 或 `multi`
+- 完整的成员 Claim ID
+- 每条成员 Claim 对应的一个 `canonical_state_value_id`
 
-The validator requires each input Claim to occur in exactly one final group,
-each group ID to be unique across all candidate families for that subject, each
-member to have all required canonical fields, and one cardinality declaration
-per final group. Results are committed to Claims only after full validation.
+validator 要求每条输入 Claim 恰好出现在一个最终 group 中；同一 Subject 的所有候选族之间
+group ID 也必须唯一；每个成员必须具备全部 canonical 字段；每个最终 group 只能声明一次
+cardinality。完整结果通过验证后才会写回 Claim。
 
-The final resolver may merge different raw slots into one state dimension and
-may split identical raw slots into different dimensions. Related-but-distinct
-dimensions such as `screenplay_theme` and `screenplay_status` must remain
-separate.
+最终 resolver 可以把不同原始 slot 合并为同一状态维度，也可以把相同原始 slot 拆成不同
+维度。`screenplay_theme` 与 `screenplay_status` 等相关但不同的维度必须保持分离。
 
-Positive and negative Claims may be members of the same final state group.
-Polarity remains part of the canonical state-value key, so opposite assertions
-cannot become support for the same value. Their lifecycle is resolved later by
-an explicit `CORRECTS`, `SUPERSEDES`, or `CONFLICTS_WITH` relation when needed.
+正值和负值 Claim 可以属于同一个最终状态 group。polarity 仍是 canonical state-value key
+的一部分，因此相反断言不能成为同一个 value 的 support。需要淘汰旧值时，后续 resolver
+必须显式给出 `CORRECTS`、`SUPERSEDES` 或 `CONFLICTS_WITH` relation。
 
-## Current-State Resolution
+## 当前状态解析
 
-Final state buckets remain keyed by canonical subject, final state group, and
-final state slot. The current-state resolver:
+最终状态 bucket 仍由 canonical subject、最终 state group 和最终 state slot 共同确定。
+当前状态 resolver 必须：
 
-- merges Claims for the same canonical value into one StateFacet support set;
-- permits multiple simultaneous values only for a `multi` group;
-- emits exactly one current or ambiguous value for a `single` group;
-- cannot keep a corrected or superseded Claim as the current primary;
-- cannot hide a different value inside a support list;
-- requires every non-current Claim to remain connected to a materialized state
-  through an explicit validity relation;
-- never defaults to the latest Claim when semantic resolution is incomplete.
+- 把同一 canonical value 的 Claim 合并到一个 StateFacet support 集合；
+- 只有 `multi` group 才允许多个同时有效的 value；
+- `single` group 必须输出且只输出一个 current 或 ambiguous value；
+- 不得把已被 corrected 或 superseded 的 Claim 保留为 current primary；
+- 不得把不同 value 隐藏在同一个 support list 中；
+- 每条未 materialize 为当前状态的 Claim 都必须通过显式 validity relation 与已 materialize
+  状态保持连通；
+- 语义解析不完整时，绝不能默认使用最新 Claim。
 
-## Large Inputs and Failure Semantics
+## 大输入与失败语义
 
-The number 24 is not a semantic boundary. The repaired v3 path will not fail
-merely because a family or state bucket contains more than 24 Claims.
+数字 24 不是语义边界。修复后的 v3 路径不会仅仅因为候选族或状态 bucket 超过 24 条 Claim
+就失败。
 
-The resolver receives the complete input whenever it fits the configured model
-context. Its response must still cover every Claim without duplication. A build
-fails only when the complete request cannot fit the model capacity, the provider
-fails, or semantic validation remains incomplete after the configured retries.
+只要完整输入能够进入所配置模型的 context，resolver 就必须看到全部输入。返回结果仍必须
+完整覆盖所有 Claim 且不得重复。只有完整请求确实无法进入模型容量、provider 调用失败，或
+在配置的重试次数后语义验证仍不完整时，构图才失败。
 
-The builder must never truncate a family, drop Claims, silently split an
-equivalence class, or introduce paginated anchor reconciliation. Failures occur
-before output replacement and preserve the prior graph directory.
+构图器不得截断候选族、丢弃 Claim、静默拆开 equivalence class，也不得重新引入带 anchor
+的分页 reconciliation。所有失败都必须发生在替换输出之前，并保留原图目录。
 
-## Validation and Atomicity
+## 验证与原子性
 
-Validation remains fail closed at semantic boundaries:
+语义边界继续执行 fail-closed 验证：
 
-- subject labels form a complete valid partition;
-- candidate families cover every eligible persistent Claim exactly once;
-- final groups cover every family member exactly once;
-- all canonical state and object fields are nonempty and valid;
-- final group cardinality is declared once and is internally consistent;
-- StateFacet support lists and `SUPPORTS` edges agree exactly;
-- obsolete and conflicting values obey explicit relation semantics;
-- all Claim and StateFacet provenance remains grounded in source Events.
+- Subject 标签必须形成完整合法分区；
+- 候选族必须恰好覆盖每条符合条件的 persistent Claim；
+- 最终 group 必须恰好覆盖所属候选族的每个成员；
+- 所有 canonical state/object 字段必须非空且合法；
+- 每个最终 group 只能声明一次且内部一致的 cardinality；
+- StateFacet support list 与 `SUPPORTS` edge 必须完全一致；
+- obsolete 与 conflicting value 必须遵守显式 relation 语义；
+- 所有 Claim 和 StateFacet provenance 必须能追溯到源 Event。
 
-No partially validated assignment is written into Claim dictionaries. Graph
-output continues to use staged sibling-directory writes and is replaced only
-after full graph validation succeeds.
+任何部分验证通过的 assignment 都不能写进 Claim dictionary。图输出继续使用同级临时目录
+分阶段写入，并且只有在完整图验证成功后才替换目标目录。
 
-## Dead-Code Removal
+## 死代码删除
 
-The implementation removes the replaced subject machinery, including qualifier
-constants and validation, claim-level subject assignment, global initial/batch/
-page reconciliation, internal cluster IDs, local ID namespaces, subject shard
-cache stages, and the `llm_global_subject_identity_reconciliation` provenance.
+实现中必须删除被替代的 Subject 机制，包括 qualifier 常量与验证、Claim 级 Subject
+assignment、全局 initial/batch/page reconciliation、内部 cluster ID、local-ID namespace、
+Subject shard cache stage，以及 `llm_global_subject_identity_reconciliation` provenance。
 
-It also removes the old slot-representative/slot-alias/canonical-slot prepartition
-path, its dedicated provenance names, and any tests that exist only to preserve
-the rejected qualifier, pagination, or local-ID architecture.
+同时删除旧 slot representative、slot alias、canonical-slot 预分桶路径及其专用 provenance；
+删除只用于维持 qualifier、分页或 local-ID 架构的测试。
 
-Generic label and claim-ID assignment helpers may remain only when they still
-have a live caller in the object or final semantic assignment path. Unused
-helpers, imports, prompt builders, cache stages, and compatibility branches are
-deleted in the same change.
+通用 label 与 Claim-ID assignment helper 只有在 Object 或最终语义 assignment 路径中仍有
+活跃调用者时才可保留。未使用 helper、import、prompt builder、cache stage 和兼容分支必须在
+同一改动中删除。
 
-## Test-Driven Acceptance
+## 测试驱动验收
 
-Production changes are implemented only after a failing regression test proves
-the intended behavior. The required fixtures are:
+每个生产代码改动都必须先由失败的回归测试证明目标行为。必须覆盖以下 fixture：
 
-1. Exact subject labels merge deterministically without an LLM call.
-2. `Caro` and `Caroline` can merge through the label-level alias assignment.
-3. `Nate` and `Nate's pets` cannot share a canonical subject ID, even if an LLM
-   proposes the merge.
-4. Grounded qualified owners such as `coworker Alex` and `cousin Alex` remain
-   distinct.
-5. Different raw slots describing one lifecycle enter the same final group and
-   can produce an explicit supersession.
-6. The same raw slot used for different state dimensions is split into separate
-   final groups.
-7. Related but different dimensions are not merged.
-8. Multiple compatible values in a `multi` group remain separate current
-   StateFacets.
-9. Positive and negative values can share a group, cannot share one support
-   value, and require a relation when one becomes obsolete.
-10. More than 24 Claims are sent as a complete resolver input rather than
-    rejected or truncated.
-11. Missing, duplicated, or invalid assignments fail before any Claim mutation
-    or output replacement.
+1. 完全相同的 Subject 标签无需 LLM 即可确定性合并。
+2. `Caro` 与 `Caroline` 可以通过标签级 alias assignment 合并。
+3. 即使 LLM 建议合并，`Nate` 与 `Nate's pets` 也不能共享 canonical subject ID。
+4. `coworker Alex` 与 `cousin Alex` 等 grounded 限定归属者保持分离。
+5. 描述同一生命周期的不同原始 slot 能进入同一最终 group，并能产生显式 supersession。
+6. 同一原始 slot 用于不同状态维度时，必须拆成不同最终 group。
+7. 相关但不同的状态维度不得合并。
+8. `multi` group 中多个兼容 value 必须保持为不同的 current StateFacet。
+9. 正值和负值可以共享 group，但不能共享一个 support value；淘汰其中一个时必须存在 relation。
+10. 超过 24 条 Claim 时，完整输入必须进入 resolver，而不是被拒绝或截断。
+11. assignment 遗漏、重复或字段非法时，必须在修改 Claim 或替换输出之前失败。
 
-All existing LoCoMo graph tests plus the new fixtures must pass. Acceptance is
-based on fixture correctness and graph invariants, not on forcing a particular
-aggregate consolidation rate.
+全部现有 LoCoMo graph 测试与新增 fixture 都必须通过。验收依据是 fixture 正确性和图 invariant，
+而不是强迫总体 consolidation rate 达到某个数值。
 
-## Artifact Verification
+## 产物验证
 
-After the complete test suite passes, build `conv-26`, `conv-42`, and `conv-43`
-with the requested `gpt-4o-mini` configuration into a new graph directory. Do
-not overwrite the current v3 artifacts.
+完整测试通过后，使用指定的 `gpt-4o-mini` 配置把 `conv-26`、`conv-42`、`conv-43` 构建到
+新的图目录，不覆盖当前 v3 产物。
 
-Audit the new artifacts for:
+新产物必须审计：
 
-- Claim-to-StateFacet support-size distribution;
-- multi-Claim semantic groups and their evidence;
-- false merges across owners, objects, and state dimensions;
-- explicit state `CORRECTS`, `SUPERSEDES`, and `CONFLICTS_WITH` relations;
-- complete provenance and zero graph validation warnings.
+- Claim 到 StateFacet 的 support-size 分布；
+- 多 Claim 语义 group 及其 evidence；
+- 跨 owner、object 和 state dimension 的错误合并；
+- 显式状态 `CORRECTS`、`SUPERSEDES` 与 `CONFLICTS_WITH` relation；
+- 完整 provenance 与零图验证 warning。
 
-The new graph is accepted only when these semantic checks agree with the golden
-fixtures and manual evidence inspection. A higher merge rate alone is not
-evidence of correctness.
+只有这些语义检查与 golden fixture 和人工 evidence 检查一致时，新图才通过验收。更高的合并
+比例本身不能证明构图正确。
 
-## Deferred Time Change
+## 推迟的 Time 改动
 
-The subsequent Time-specific design will separately address deterministic
-grounding for uniquely resolvable expressions, role-aware weekday direction,
-fronted lifecycle time phrases, and correct null semantics for unresolved
-absolute time. None of those changes belong in this implementation.
+后续独立的 Time 设计将处理：可唯一解析表达的确定性 grounding、根据 role 判断 weekday
+方向、句首 lifecycle 时间表达，以及绝对时间无法解析时正确的 null 字段语义。这些改动均不
+属于本次实现。
