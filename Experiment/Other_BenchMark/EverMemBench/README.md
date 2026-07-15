@@ -1,7 +1,7 @@
 # EverMemBench
 
 This directory keeps the EverMemBench experiment entrypoints, dataset mirror, and upstream source checkout.
-Baseline implementation code lives under `Baseline/` in the same shape as `Experiment/Main_Baseline/`.
+Baseline implementation code lives under the benchmark-local `Baseline/` directory.
 When running or modifying experiments, treat `Baseline/*` as the source of truth
 for our implementations. The `source/EverMemBench/eval/src/adapters/*_local_adapter.py`
 files are compatibility wrappers for the official `python -m eval.cli` entrypoint;
@@ -12,7 +12,6 @@ do not edit or delete them as if they were duplicate implementations.
 - `run_evermembench_graph_builder.py`: entrypoint for building the local Scope-Time-State topic graph.
 - `run_evermembench_qa_eval.py`: entrypoint for running QA over a built topic graph.
 - `run_evermembench_qa_probe.py`: entrypoint for retrieval/probe diagnostics.
-- `run_evermembench_enrich_topic_graph.py`: entrypoint for graph enrichment utilities.
 - `run_evermembench_baseline_adapters.py`: entrypoint for inspecting local/self-host baseline adapters.
 - `run_official_baselines.sh`: conda `py311` runner for the fair local/self-host baseline matrix.
 
@@ -28,6 +27,10 @@ do not edit or delete them as if they were duplicate implementations.
 
 The local implementation reads dialogue data for graph construction and does not read QA/gold files during
 graph build.
+
+EverMemBench and LoCoMo now use the same `scope-time-state-graph-v2-state-merge`
+schema and state-merge core. Graph construction is a single build path with no
+benchmark-specific post-build enrichment stage.
 
 The fair main-table baseline set is local/self-host only:
 
@@ -76,21 +79,29 @@ conda run -n py311 \
   python Experiment/Other_BenchMark/EverMemBench/run_evermembench_graph_builder.py \
   --topic 01 \
   --claim-mode llm \
+  --resolver-mode llm \
   --provider deepseek \
-  --model deepseek-v4-flash
+  --model deepseek-v4-flash \
+  --output-dir Graph/output/graph/evermembench_topic_graph_v2_state_merge
 ```
 
 ```bash
 conda run -n py311 \
   python Experiment/Other_BenchMark/EverMemBench/run_evermembench_qa_eval.py \
   --topic 01 \
-  --graph-dir Graph/output/graph/evermembench_topic_graph_llm_v6_endpoint_lifecycle/01 \
+  --graph-dir Graph/output/graph/evermembench_topic_graph_v2_state_merge/01 \
   --scope-routing sts \
   --graph-expansion sts \
   --time-role-selector llm \
+  --temporal-grounding question-only \
   --embedding-retrieval hybrid \
   --embedding-targets event,scope
 ```
+
+With `--temporal-grounding question-only` (the default), the unified STS QA path resolves relative
+expressions from selected Event text and graph Claim time values against visible source timestamps after
+graph expansion and before answer generation. It does not read task prefixes, question-type labels, answers,
+or gold evidence. Use `--temporal-grounding none` only for the explicit ablation.
 
 ```bash
 conda run -n py311 \
