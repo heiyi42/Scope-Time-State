@@ -51,6 +51,8 @@ def _stable_id(prefix: str, *parts: object) -> str:
 
 
 QUOTE_TRANSLATION = str.maketrans({"'": '"', "‘": '"', "’": '"', "“": '"', "”": '"'})
+TOKEN_RE = re.compile(r"[\w]+(?:['’][\w]+)*", re.UNICODE)
+SENTENCE_RE = re.compile(r"\S.*?(?:[.!?]+[\"”’]?(?=\s|$)|$)")
 
 
 def _locate_source_span(source: str, candidate: str) -> str | None:
@@ -62,6 +64,45 @@ def _locate_source_span(source: str, candidate: str) -> str | None:
         if start >= 0:
             return source[start : start + len(candidate)]
     return None
+
+
+def _normalized_token(value: str) -> str:
+    return value.replace("’", "'").casefold()
+
+
+def _locate_unique_ordered_token_span(source: str, candidate: str) -> str | None:
+    candidate_tokens = [_normalized_token(match.group()) for match in TOKEN_RE.finditer(candidate)]
+    if len(candidate_tokens) < 4:
+        return None
+    max_window_tokens = len(candidate_tokens) + max(4, len(candidate_tokens) // 2)
+    matches: set[tuple[int, int]] = set()
+    for sentence_match in SENTENCE_RE.finditer(source):
+        sentence = sentence_match.group()
+        source_matches = list(TOKEN_RE.finditer(sentence))
+        source_tokens = [_normalized_token(match.group()) for match in source_matches]
+        for first_index, token in enumerate(source_tokens):
+            if token != candidate_tokens[0]:
+                continue
+            matched_indices = [first_index]
+            source_index = first_index + 1
+            for candidate_token in candidate_tokens[1:]:
+                while source_index < len(source_tokens) and source_tokens[source_index] != candidate_token:
+                    source_index += 1
+                if source_index >= len(source_tokens):
+                    break
+                matched_indices.append(source_index)
+                source_index += 1
+            if len(matched_indices) != len(candidate_tokens):
+                continue
+            if matched_indices[-1] - matched_indices[0] + 1 > max_window_tokens:
+                continue
+            start = sentence_match.start() + source_matches[matched_indices[0]].start()
+            end = sentence_match.start() + source_matches[matched_indices[-1]].end()
+            matches.add((start, end))
+    if len(matches) != 1:
+        return None
+    start, end = next(iter(matches))
+    return source[start:end]
 
 
 def require_span(chapter: Chapter, span: object, *, fallback: object = None) -> str:
@@ -76,6 +117,18 @@ def require_span(chapter: Chapter, span: object, *, fallback: object = None) -> 
         f"chapter {chapter.chapter_id}: evidence_span not found. "
         f"Rejected evidence candidates: {rejected}"
     )
+
+
+def require_claim_span(chapter: Chapter, span: object) -> str:
+    try:
+        return require_span(chapter, span)
+    except ValueError:
+        source = _compact(chapter.text)
+        candidate = _compact(span)
+        matched = _locate_unique_ordered_token_span(source, candidate)
+        if matched is not None:
+            return matched
+        raise
 
 
 def _normalize_mentions(
@@ -200,7 +253,7 @@ def normalize_extraction(
                     "subject": subject,
                     "predicate": predicate,
                     "value": value,
-                    "evidence_span": require_span(chapter, claim.get("evidence_span")),
+                    "evidence_span": require_claim_span(chapter, claim.get("evidence_span")),
                 }
             )
         except (TypeError, ValueError) as exc:

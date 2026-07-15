@@ -158,6 +158,89 @@ class GraphBuilderTests(unittest.TestCase):
             record["claims"][0]["evidence_span"],
         )
 
+    def test_claim_evidence_reanchors_across_source_insertions(self):
+        chapter = Chapter(
+            1,
+            "Noa Middleton, the lead instructor, nodded approvingly, then continued.",
+        )
+        raw = {
+            "chapter_id": 1,
+            "concise_summary": "Noa approved.",
+            "dates": [],
+            "locations": [],
+            "entities": [{
+                "value": "Noa Middleton",
+                "role": "primary",
+                "evidence_span": "Noa Middleton",
+            }],
+            "event_types": [],
+            "claims": [{
+                "subject": "Noa Middleton",
+                "predicate": "episodic_action",
+                "value": "nodded approvingly",
+                "evidence_span": "Noa Middleton nodded approvingly",
+            }],
+        }
+
+        record = normalize_extraction(chapter, raw)
+
+        self.assertEqual(
+            "Noa Middleton, the lead instructor, nodded approvingly",
+            record["claims"][0]["evidence_span"],
+        )
+
+    def test_claim_evidence_reanchor_rejects_unrelated_statement(self):
+        chapter = Chapter(1, "Noah Williams discretely wrote observations in a notebook.")
+        raw = {
+            "chapter_id": 1,
+            "concise_summary": "Noah recorded observations.",
+            "dates": [],
+            "locations": [],
+            "entities": [{
+                "value": "Noah Williams",
+                "role": "primary",
+                "evidence_span": "Noah Williams",
+            }],
+            "event_types": [],
+            "claims": [{
+                "subject": "Noah Williams",
+                "predicate": "episodic_action",
+                "value": "checked his watch",
+                "evidence_span": "He checked his watch on September 22, 2026",
+            }],
+        }
+
+        with self.assertRaisesRegex(ValueError, "evidence_span not found"):
+            normalize_extraction(chapter, raw)
+
+    def test_claim_evidence_reanchor_rejects_ambiguous_matches(self):
+        chapter = Chapter(
+            1,
+            "Noa Middleton, the instructor, nodded approvingly. "
+            "Noa Middleton, the organizer, nodded approvingly.",
+        )
+        raw = {
+            "chapter_id": 1,
+            "concise_summary": "Noa approved twice.",
+            "dates": [],
+            "locations": [],
+            "entities": [{
+                "value": "Noa Middleton",
+                "role": "primary",
+                "evidence_span": "Noa Middleton",
+            }],
+            "event_types": [],
+            "claims": [{
+                "subject": "Noa Middleton",
+                "predicate": "episodic_action",
+                "value": "nodded approvingly",
+                "evidence_span": "Noa Middleton nodded approvingly",
+            }],
+        }
+
+        with self.assertRaisesRegex(ValueError, "evidence_span not found"):
+            normalize_extraction(chapter, raw)
+
     def test_scope_falls_back_to_exact_value_when_long_span_is_not_verbatim(self):
         chapter = Chapter(1, 'Cora Xiong wore a shirt reading "Hoppy and I Know It."')
         raw = {
@@ -199,7 +282,7 @@ class GraphBuilderTests(unittest.TestCase):
                     "subject": "Noa Middleton",
                     "predicate": "episodic_action",
                     "value": "nodded approvingly",
-                    "evidence_span": "Noa Middleton nodded approvingly",
+                    "evidence_span": "Noa Middleton celebrated a victory",
                 }],
             }],
         }
@@ -213,7 +296,7 @@ class GraphBuilderTests(unittest.TestCase):
 
         self.assertEqual(2, len(client.user_prompts))
         self.assertIn("Prior invalid JSON", client.user_prompts[1])
-        self.assertIn("Noa Middleton nodded approvingly", client.user_prompts[1])
+        self.assertIn("Noa Middleton celebrated a victory", client.user_prompts[1])
         self.assertIn("evidence_span not found", client.user_prompts[1])
         self.assertIn("Rejected evidence candidates", client.user_prompts[1])
         self.assertEqual(
@@ -242,7 +325,7 @@ class GraphBuilderTests(unittest.TestCase):
                     "subject": "Noa Middleton",
                     "predicate": "episodic_action",
                     "value": "nodded approvingly",
-                    "evidence_span": "Noa Middleton nodded approvingly",
+                    "evidence_span": "Noa Middleton celebrated a victory",
                 }],
             }],
         }
