@@ -50,85 +50,79 @@ def _stable_id(prefix: str, *parts: object) -> str:
     return f"{prefix}::{digest}"
 
 
-QUOTE_TRANSLATION = str.maketrans({"'": '"', "‘": '"', "’": '"', "“": '"', "”": '"'})
-TOKEN_RE = re.compile(r"[\w]+(?:['’][\w]+)*", re.UNICODE)
-SENTENCE_RE = re.compile(r"\S.*?(?:[.!?]+[\"”’]?(?=\s|$)|$)")
+EXTRACTION_SCHEMA_VERSION = "epbench-sentence-evidence-v2"
+MAX_CLAIM_EVIDENCE_SENTENCES = 5
+SENTENCE_BOUNDARY_RE = re.compile(r"[.!?]+[\"”’']*(?:\s+|$)")
+NON_TERMINAL_ABBREVIATIONS = {
+    "dr",
+    "e.g",
+    "i.e",
+    "jr",
+    "mr",
+    "mrs",
+    "ms",
+    "prof",
+    "sr",
+    "st",
+    "vs",
+}
 
 
-def _locate_source_span(source: str, candidate: str) -> str | None:
-    for source_form, candidate_form in (
-        (source.lower(), candidate.lower()),
-        (source.translate(QUOTE_TRANSLATION).lower(), candidate.translate(QUOTE_TRANSLATION).lower()),
-    ):
-        start = source_form.find(candidate_form)
-        if start >= 0:
-            return source[start : start + len(candidate)]
-    return None
-
-
-def _normalized_token(value: str) -> str:
-    return value.replace("’", "'").casefold()
-
-
-def _locate_unique_ordered_token_span(source: str, candidate: str) -> str | None:
-    candidate_tokens = [_normalized_token(match.group()) for match in TOKEN_RE.finditer(candidate)]
-    if len(candidate_tokens) < 4:
-        return None
-    max_window_tokens = len(candidate_tokens) + max(4, len(candidate_tokens) // 2)
-    matches: set[tuple[int, int]] = set()
-    for sentence_match in SENTENCE_RE.finditer(source):
-        sentence = sentence_match.group()
-        source_matches = list(TOKEN_RE.finditer(sentence))
-        source_tokens = [_normalized_token(match.group()) for match in source_matches]
-        for first_index, token in enumerate(source_tokens):
-            if token != candidate_tokens[0]:
-                continue
-            matched_indices = [first_index]
-            source_index = first_index + 1
-            for candidate_token in candidate_tokens[1:]:
-                while source_index < len(source_tokens) and source_tokens[source_index] != candidate_token:
-                    source_index += 1
-                if source_index >= len(source_tokens):
-                    break
-                matched_indices.append(source_index)
-                source_index += 1
-            if len(matched_indices) != len(candidate_tokens):
-                continue
-            if matched_indices[-1] - matched_indices[0] + 1 > max_window_tokens:
-                continue
-            start = sentence_match.start() + source_matches[matched_indices[0]].start()
-            end = sentence_match.start() + source_matches[matched_indices[-1]].end()
-            matches.add((start, end))
-    if len(matches) != 1:
-        return None
-    start, end = next(iter(matches))
-    return source[start:end]
-
-
-def require_span(chapter: Chapter, span: object, *, fallback: object = None) -> str:
+def chapter_sentences(chapter: Chapter) -> list[str]:
     source = _compact(chapter.text)
-    candidates = [candidate for candidate in (_compact(span), _compact(fallback)) if candidate]
-    for candidate in candidates:
-        matched = _locate_source_span(source, candidate)
-        if matched is not None:
-            return matched
-    rejected = json.dumps(candidates, ensure_ascii=False)
-    raise ValueError(
-        f"chapter {chapter.chapter_id}: evidence_span not found. "
-        f"Rejected evidence candidates: {rejected}"
-    )
+    sentences: list[str] = []
+    start = 0
+    for boundary in SENTENCE_BOUNDARY_RE.finditer(source):
+        boundary_text = boundary.group().rstrip()
+        punctuation = boundary_text[0]
+        punctuation_run = re.match(r"[.!?]+", boundary_text)
+        if punctuation_run and punctuation_run.group().startswith("..."):
+            continue
+        if punctuation == ".":
+            prior_word = re.search(r"([A-Za-z]+(?:\.[A-Za-z]+)*)$", source[start : boundary.start()])
+            abbreviation = prior_word.group(1).casefold() if prior_word else ""
+            if abbreviation in NON_TERMINAL_ABBREVIATIONS or len(abbreviation) == 1:
+                continue
+        next_character = source[boundary.end() : boundary.end() + 1]
+        if next_character and next_character.islower():
+            continue
+        candidate = source[start : boundary.end()].strip()
+        if candidate.count('"') % 2 == 1 or candidate.count("“") > candidate.count("”"):
+            continue
+        sentence = candidate
+        if sentence:
+            sentences.append(sentence)
+        start = boundary.end()
+    remainder = source[start:].strip()
+    if remainder:
+        sentences.append(remainder)
+    if not sentences and source:
+        sentences.append(source)
+    return sentences
 
 
-def require_claim_span(chapter: Chapter, span: object) -> str:
-    try:
-        return require_span(chapter, span)
-    except ValueError:
-        source = _compact(chapter.text)
-        candidate = _compact(span)
-        matched = _locate_unique_ordered_token_span(source, candidate)
-        if matched is not None:
-            return matched
-        raise
+def sentence_evidence(
+    chapter: Chapter,
+    sentence_ids: object,
+    *,
+    max_sentences: int,
+) -> tuple[list[int], list[str]]:
+    if not isinstance(sentence_ids, list) or not sentence_ids:
+        raise ValueError(f"chapter {chapter.chapter_id}: evidence_sentence_ids must be a non-empty list")
+    if any(isinstance(item, bool) or not isinstance(item, int) for item in sentence_ids):
+        raise ValueError(f"chapter {chapter.chapter_id}: evidence_sentence_ids must contain integers")
+    normalized_ids = sorted(set(sentence_ids))
+    if len(normalized_ids) > max_sentences:
+        raise ValueError(
+            f"chapter {chapter.chapter_id}: evidence_sentence_ids allows at most {max_sentences} sentences"
+        )
+    sentences = chapter_sentences(chapter)
+    if normalized_ids[0] < 1 or normalized_ids[-1] > len(sentences):
+        raise ValueError(
+            f"chapter {chapter.chapter_id}: evidence_sentence_ids {normalized_ids} "
+            f"outside 1..{len(sentences)}"
+        )
+    return normalized_ids, [sentences[sentence_id - 1] for sentence_id in normalized_ids]
 
 
 def _normalize_mentions(
@@ -156,13 +150,21 @@ def _normalize_mentions(
             value = _compact(item.get("value"))
             if not value:
                 raise ValueError("extraction value is empty")
-            evidence = require_span(chapter, item.get("evidence_span"), fallback=value)
+            evidence_sentence_ids, evidence_spans = sentence_evidence(
+                chapter,
+                item.get("evidence_sentence_ids"),
+                max_sentences=1,
+            )
             role = _compact(item.get("role")) if allow_role else ""
             key = (value.casefold(), role.casefold())
             if key in seen:
                 continue
             seen.add(key)
-            row = {"value": value, "evidence_span": evidence}
+            row = {
+                "value": value,
+                "evidence_sentence_ids": evidence_sentence_ids,
+                "evidence_spans": evidence_spans,
+            }
             if allow_role:
                 row["role"] = role or "mentioned"
             rows.append(row)
@@ -248,12 +250,18 @@ def normalize_extraction(
             value = _compact(claim.get("value"))
             if not subject or not value:
                 raise ValueError("claim subject/value is empty")
+            evidence_sentence_ids, evidence_spans = sentence_evidence(
+                chapter,
+                claim.get("evidence_sentence_ids"),
+                max_sentences=MAX_CLAIM_EVIDENCE_SENTENCES,
+            )
             record["claims"].append(
                 {
                     "subject": subject,
                     "predicate": predicate,
                     "value": value,
-                    "evidence_span": require_claim_span(chapter, claim.get("evidence_span")),
+                    "evidence_sentence_ids": evidence_sentence_ids,
+                    "evidence_spans": evidence_spans,
                 }
             )
         except (TypeError, ValueError) as exc:
@@ -270,17 +278,30 @@ EXTRACTION_SYSTEM_PROMPT = """Extract EPBench chapters into this exact STS v2 JS
   "chapters": [{
     "chapter_id": 1,
     "concise_summary": "short chapter summary",
-    "dates": [{"value": "date", "evidence_span": "exact source substring"}],
-    "locations": [{"value": "place", "evidence_span": "exact source substring"}],
-    "entities": [{"value": "entity", "role": "primary|participant|organization|mentioned", "evidence_span": "exact source substring"}],
-    "event_types": [{"value": "event type", "evidence_span": "exact source substring"}],
-    "claims": [{"subject": "entity", "predicate": "episodic_action", "value": "atomic value", "evidence_span": "exact source substring"}]
+    "dates": [{"value": "date", "evidence_sentence_ids": [1]}],
+    "locations": [{"value": "place", "evidence_sentence_ids": [1]}],
+    "entities": [{"value": "entity", "role": "primary|participant|organization|mentioned", "evidence_sentence_ids": [1]}],
+    "event_types": [{"value": "event type", "evidence_sentence_ids": [1]}],
+    "claims": [{"subject": "entity", "predicate": "episodic_action", "value": "atomic value", "evidence_sentence_ids": [1, 2]}]
   }]
 }
 Return exactly one object per visible chapter_id. Never return bare strings inside these lists.
-Never rename value to name or omit subject/value from a Claim. Every evidence_span must be copied
-verbatim from its own chapter. Allowed Claim predicates are episodic_action, lives_in, works_at,
-member_of, has_status, and prefers. Use [] when no grounded item exists. Do not infer unstated facts."""
+Never rename value to name or omit subject/value from a Claim. Dates, locations, entities, and event
+types must cite exactly one sentence. A Claim may cite 1 to 5 unique sentence IDs from its own chapter.
+The selected sentences may be nonadjacent when each is necessary to support the Claim. Create a Claim
+only when the cited sentences jointly and explicitly support its subject, predicate, and value. A
+pronoun may be resolved only when another cited sentence names
+the person. Allowed Claim predicates are episodic_action, lives_in, works_at, member_of, has_status,
+and prefers. Use [] when no grounded item exists. Do not infer unstated facts. Never return evidence
+text; return sentence IDs only."""
+
+
+def _render_numbered_chapter(chapter: Chapter) -> str:
+    sentences = "\n".join(
+        f'<sentence id={sentence_id}>{sentence}</sentence>'
+        for sentence_id, sentence in enumerate(chapter_sentences(chapter), start=1)
+    )
+    return f"<chapter id={chapter.chapter_id}>\n{sentences}\n</chapter>"
 
 
 def _extract_chunk(
@@ -288,7 +309,7 @@ def _extract_chunk(
     client: JsonClient,
     max_claims_per_chapter: int,
 ) -> list[dict[str, Any]]:
-    visible = "\n\n".join(f"<chapter id={row.chapter_id}>\n{row.text}\n</chapter>" for row in chapters)
+    visible = "\n\n".join(_render_numbered_chapter(chapter) for chapter in chapters)
     prompt = f"Maximum claims per chapter: {max_claims_per_chapter}.\n\n{visible}"
     last_error: Exception | None = None
     raw: Mapping[str, Any] | None = None
@@ -445,7 +466,8 @@ def _base_graph(chapters: Sequence[Chapter], records: Sequence[Mapping[str, Any]
                     "type": "IN_SCOPE" if scope_type in {"entity", "event_type"} else "MENTIONS",
                     "from": event_id,
                     "to": scope_id,
-                    "evidence_span": mention["evidence_span"],
+                    "evidence_sentence_ids": mention["evidence_sentence_ids"],
+                    "evidence_spans": mention["evidence_spans"],
                 }
                 if scope_type == "entity":
                     edge["role"] = mention.get("role", "mentioned")
@@ -466,7 +488,13 @@ def _base_graph(chapters: Sequence[Chapter], records: Sequence[Mapping[str, Any]
                 },
             )
             edges.append(
-                {"type": "OCCURRED_AT", "from": event_id, "to": time_id, "evidence_span": date["evidence_span"]}
+                {
+                    "type": "OCCURRED_AT",
+                    "from": event_id,
+                    "to": time_id,
+                    "evidence_sentence_ids": date["evidence_sentence_ids"],
+                    "evidence_spans": date["evidence_spans"],
+                }
             )
 
         for claim_index, raw_claim in enumerate(record.get("claims", [])):
@@ -495,7 +523,8 @@ def _base_graph(chapters: Sequence[Chapter], records: Sequence[Mapping[str, Any]
                 "subject": raw_claim["subject"],
                 "predicate": raw_claim["predicate"],
                 "value": raw_claim["value"],
-                "evidence_span": raw_claim["evidence_span"],
+                "evidence_sentence_ids": raw_claim["evidence_sentence_ids"],
+                "evidence_spans": raw_claim["evidence_spans"],
                 "graph_text": f"{raw_claim['subject']} {raw_claim['predicate']} {raw_claim['value']}",
                 "time_ids": list(time_ids),
             }
@@ -743,13 +772,15 @@ def write_graph(output_dir: Path, graph: Mapping[str, Any]) -> Path:
 
 __all__ = [
     "ALLOWED_CLAIM_PREDICATES",
+    "EXTRACTION_SCHEMA_VERSION",
     "build_graph",
+    "chapter_sentences",
     "compact_event_card",
     "extract_chapter_records",
     "eligible_state_identity",
     "materialize_state_facets",
     "normalize_extraction",
-    "require_span",
+    "sentence_evidence",
     "validate_graph",
     "write_graph",
 ]

@@ -33,7 +33,12 @@ if __package__ in {None, ""}:
         RESULT_DIR,
         SCOPE_TOP_K,
     )
-    from STS.graph_builder import build_graph, extract_chapter_records, write_graph  # type: ignore
+    from STS.graph_builder import (  # type: ignore
+        EXTRACTION_SCHEMA_VERSION,
+        build_graph,
+        extract_chapter_records,
+        write_graph,
+    )
     from STS.loader import load_chapters, load_qa  # type: ignore
     from STS.qa_runner import run_judge, run_qa  # type: ignore
     from STS.staged import EmbeddingConfig, STSGraphIndex  # type: ignore
@@ -54,7 +59,7 @@ else:
         RESULT_DIR,
         SCOPE_TOP_K,
     )
-    from .graph_builder import build_graph, extract_chapter_records, write_graph
+    from .graph_builder import EXTRACTION_SCHEMA_VERSION, build_graph, extract_chapter_records, write_graph
     from .loader import load_chapters, load_qa
     from .qa_runner import run_judge, run_qa
     from .staged import EmbeddingConfig, STSGraphIndex
@@ -130,7 +135,9 @@ def _load_extraction_cache(path: Path) -> dict[int, dict[str, Any]]:
     if not path.is_file():
         return {}
     payload = json.loads(path.read_text(encoding="utf-8"))
-    rows = payload.get("records", []) if isinstance(payload, dict) else []
+    if not isinstance(payload, dict) or payload.get("schema_version") != EXTRACTION_SCHEMA_VERSION:
+        return {}
+    rows = payload.get("records", [])
     return {int(row["chapter_id"]): row for row in rows}
 
 
@@ -152,7 +159,13 @@ def _build(args: argparse.Namespace, paths: ArtifactPaths, clients: ClientBundle
             workers=args.workers,
         )
         cached.update({int(record["chapter_id"]): record for record in records})
-        _write_json_atomic(cache_path, {"records": [cached[key] for key in sorted(cached)]})
+        _write_json_atomic(
+            cache_path,
+            {
+                "schema_version": EXTRACTION_SCHEMA_VERSION,
+                "records": [cached[key] for key in sorted(cached)],
+            },
+        )
     selected_records = [cached[chapter.chapter_id] for chapter in chapters]
     graph = build_graph(
         chapters,
@@ -162,6 +175,7 @@ def _build(args: argparse.Namespace, paths: ArtifactPaths, clients: ClientBundle
     )
     graph["manifest"]["runtime"] = {
         "build_model": args.model,
+        "evidence_mode": "sentence_id",
         "message_chunk_size": args.message_chunk_size,
         "max_claims_per_chapter": args.max_claims_per_chapter,
     }

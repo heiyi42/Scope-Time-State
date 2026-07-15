@@ -421,8 +421,9 @@ class STSGraphIndex:
             row = chapter_row(event_id)
             row["score"] += hit.score
             row["claims"].add(hit.doc_id)
-            if claim.get("evidence_span"):
-                row["evidence"].add(str(claim["evidence_span"]))
+            for evidence_span in claim.get("evidence_spans", []):
+                if evidence_span:
+                    row["evidence"].add(str(evidence_span))
             row["contributions"].append({"layer": "claim", "doc_id": hit.doc_id, "score": hit.score})
 
         for row in chapter_rows.values():

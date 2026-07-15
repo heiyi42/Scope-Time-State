@@ -74,7 +74,7 @@ def synthetic_graph():
             nodes.append({"node_id": scope_id, "node_type": "Entity/Scope", "scope_type": scope_type, "value": value, "graph_text": f"{scope_type}: {value}"})
             edges.append({"type": "IN_SCOPE" if scope_type != "location" else "MENTIONS", "from": event_id, "to": scope_id})
         claim_id = f"claim::{chapter_id}"
-        nodes.append({"node_id": claim_id, "claim_id": claim_id, "node_type": "Claim", "chapter_id": chapter_id, "source_event_id": event_id, "graph_text": f"{entity} attended {event_type}", "evidence_span": f"{entity} attended {event_type}"})
+        nodes.append({"node_id": claim_id, "claim_id": claim_id, "node_type": "Claim", "chapter_id": chapter_id, "source_event_id": event_id, "graph_text": f"{entity} attended {event_type}", "evidence_spans": [f"{entity} attended {event_type}"]})
         edges.append({"type": "ASSERTS", "from": event_id, "to": claim_id})
     return {"schema_version": "scope-time-state-graph-v2-state-merge", "nodes": nodes, "edges": edges}
 

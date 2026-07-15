@@ -12,9 +12,11 @@ if str(STS_DIR.parent) not in sys.path:
     sys.path.insert(0, str(STS_DIR.parent))
 
 from STS.graph_builder import (
+    EXTRACTION_SCHEMA_VERSION,
     EXTRACTION_SYSTEM_PROMPT,
     _extract_chunk,
     build_graph,
+    chapter_sentences,
     normalize_extraction,
     write_graph,
 )
@@ -30,38 +32,38 @@ VALID_RECORDS = [
     {
         "chapter_id": 1,
         "concise_summary": "Julian Ross attended a Tech Hackathon.",
-        "dates": [{"value": "March 23, 2024", "evidence_span": "March 23, 2024"}],
-        "locations": [{"value": "High Line", "evidence_span": "High Line"}],
+        "dates": [{"value": "March 23, 2024", "evidence_sentence_ids": [1]}],
+        "locations": [{"value": "High Line", "evidence_sentence_ids": [1]}],
         "entities": [
-            {"value": "Julian Ross", "role": "primary", "evidence_span": "Julian Ross"}
+            {"value": "Julian Ross", "role": "primary", "evidence_sentence_ids": [1]}
         ],
-        "event_types": [{"value": "Tech Hackathon", "evidence_span": "Tech Hackathon"}],
+        "event_types": [{"value": "Tech Hackathon", "evidence_sentence_ids": [1]}],
         "claims": [
             {
                 "subject": "Julian Ross",
                 "predicate": "episodic_action",
                 "value": "attended a Tech Hackathon",
-                "evidence_span": "Julian Ross attended a Tech Hackathon",
+                "evidence_sentence_ids": [1],
             }
         ],
     },
     {
         "chapter_id": 2,
         "concise_summary": "Julian Ross attended a Robotics Workshop.",
-        "dates": [{"value": "April 2, 2024", "evidence_span": "April 2, 2024"}],
-        "locations": [{"value": "Central Park", "evidence_span": "Central Park"}],
+        "dates": [{"value": "April 2, 2024", "evidence_sentence_ids": [1]}],
+        "locations": [{"value": "Central Park", "evidence_sentence_ids": [1]}],
         "entities": [
-            {"value": "Julian Ross", "role": "primary", "evidence_span": "Julian Ross"}
+            {"value": "Julian Ross", "role": "primary", "evidence_sentence_ids": [1]}
         ],
         "event_types": [
-            {"value": "Robotics Workshop", "evidence_span": "Robotics Workshop"}
+            {"value": "Robotics Workshop", "evidence_sentence_ids": [1]}
         ],
         "claims": [
             {
                 "subject": "Julian Ross",
                 "predicate": "episodic_action",
                 "value": "attended a Robotics Workshop",
-                "evidence_span": "Julian Ross attended a Robotics Workshop",
+                "evidence_sentence_ids": [1],
             }
         ],
     },
@@ -76,20 +78,20 @@ COMPATIBLE_STATE_RECORDS = [
     {
         "chapter_id": 1,
         "concise_summary": "Julian Ross lives in Seattle.",
-        "dates": [{"value": "March 23, 2024", "evidence_span": "March 23, 2024"}],
-        "locations": [{"value": "Seattle", "evidence_span": "Seattle"}],
-        "entities": [{"value": "Julian Ross", "role": "primary", "evidence_span": "Julian Ross"}],
+        "dates": [{"value": "March 23, 2024", "evidence_sentence_ids": [1]}],
+        "locations": [{"value": "Seattle", "evidence_sentence_ids": [1]}],
+        "entities": [{"value": "Julian Ross", "role": "primary", "evidence_sentence_ids": [1]}],
         "event_types": [],
-        "claims": [{"subject": "Julian Ross", "predicate": "lives_in", "value": "Seattle", "evidence_span": "Julian Ross lives in Seattle"}],
+        "claims": [{"subject": "Julian Ross", "predicate": "lives_in", "value": "Seattle", "evidence_sentence_ids": [1]}],
     },
     {
         "chapter_id": 2,
         "concise_summary": "Julian Ross still lives in Seattle.",
-        "dates": [{"value": "April 2, 2024", "evidence_span": "April 2, 2024"}],
-        "locations": [{"value": "Seattle", "evidence_span": "Seattle"}],
-        "entities": [{"value": "Julian Ross", "role": "primary", "evidence_span": "Julian Ross"}],
+        "dates": [{"value": "April 2, 2024", "evidence_sentence_ids": [1]}],
+        "locations": [{"value": "Seattle", "evidence_sentence_ids": [1]}],
+        "entities": [{"value": "Julian Ross", "role": "primary", "evidence_sentence_ids": [1]}],
         "event_types": [],
-        "claims": [{"subject": "Julian Ross", "predicate": "lives_in", "value": "Seattle", "evidence_span": "Julian Ross still lives in Seattle"}],
+        "claims": [{"subject": "Julian Ross", "predicate": "lives_in", "value": "Seattle", "evidence_sentence_ids": [1]}],
     },
 ]
 
@@ -113,56 +115,81 @@ class GraphBuilderTests(unittest.TestCase):
     def test_epbench_build_defaults_to_one_chapter_per_request(self):
         self.assertEqual(1, MESSAGE_CHUNK_SIZE)
 
-    def test_extraction_prompt_fixes_every_nested_item_shape(self):
+    def test_extraction_prompt_requires_sentence_ids_without_evidence_text(self):
         self.assertIn('"dates": [{"value":', EXTRACTION_SYSTEM_PROMPT)
         self.assertIn('"entities": [{"value":', EXTRACTION_SYSTEM_PROMPT)
         self.assertIn('"claims": [{"subject":', EXTRACTION_SYSTEM_PROMPT)
         self.assertIn('"predicate": "episodic_action"', EXTRACTION_SYSTEM_PROMPT)
+        self.assertIn('"evidence_sentence_ids": [1]', EXTRACTION_SYSTEM_PROMPT)
+        self.assertNotIn('"evidence_span":', EXTRACTION_SYSTEM_PROMPT)
         self.assertNotIn('"predicate": "allowed predicate"', EXTRACTION_SYSTEM_PROMPT)
+        self.assertIn("1 to 5 unique sentence IDs", EXTRACTION_SYSTEM_PROMPT)
+        self.assertIn("may be nonadjacent", EXTRACTION_SYSTEM_PROMPT)
+        self.assertNotIn("contiguous", EXTRACTION_SYSTEM_PROMPT)
+        self.assertIn("cited sentences jointly and explicitly support", EXTRACTION_SYSTEM_PROMPT)
         self.assertIn("Never return bare strings inside these lists", EXTRACTION_SYSTEM_PROMPT)
 
-    def test_extraction_maps_quote_variation_back_to_exact_source_span(self):
-        chapter = Chapter(
-            1,
-            'Cora Xiong proclaimed "Hoppy and I Know It," and joined the debate.',
-        )
-        raw = {
-            "chapter_id": 1,
-            "concise_summary": "Cora joined the debate.",
-            "dates": [],
-            "locations": [],
-            "entities": [
-                {
-                    "value": "Cora Xiong",
-                    "role": "primary",
-                    "evidence_span": "Cora Xiong proclaimed 'Hoppy and I Know It,'",
-                }
-            ],
-            "event_types": [],
-            "claims": [
-                {
-                    "subject": "Cora Xiong",
-                    "predicate": "has_status",
-                    "value": "joined the debate",
-                    "evidence_span": "Cora Xiong proclaimed 'Hoppy and I Know It,' and joined the debate",
-                }
-            ],
-        }
-        record = normalize_extraction(chapter, raw)
+    def test_sentence_splitter_preserves_abbreviation_and_sentence_order(self):
+        chapter = Chapter(1, "Mila entered St. Patrick's Cathedral. She joined the performance.")
+
         self.assertEqual(
-            'Cora Xiong proclaimed "Hoppy and I Know It,"',
-            record["entities"][0]["evidence_span"],
-        )
-        self.assertEqual(
-            'Cora Xiong proclaimed "Hoppy and I Know It," and joined the debate',
-            record["claims"][0]["evidence_span"],
+            ["Mila entered St. Patrick's Cathedral.", "She joined the performance."],
+            chapter_sentences(chapter),
         )
 
-    def test_claim_evidence_reanchors_across_source_insertions(self):
+    def test_sentence_splitter_keeps_ellipsis_and_open_dialogue_together(self):
         chapter = Chapter(
             1,
-            "Noa Middleton, the lead instructor, nodded approvingly, then continued.",
+            'She announced, "Please welcome... Zoe Brown!" Applause followed. '
+            'Later she said, "Alright, everyone! Let\'s take five."',
         )
+
+        self.assertEqual(
+            [
+                'She announced, "Please welcome... Zoe Brown!"',
+                "Applause followed.",
+                'Later she said, "Alright, everyone! Let\'s take five."',
+            ],
+            chapter_sentences(chapter),
+        )
+
+    def test_sentence_id_copies_the_complete_source_sentence(self):
+        chapter = Chapter(1, "Noa arrived early. Noa Middleton nodded approvingly.")
+        raw = {
+            "chapter_id": 1,
+            "concise_summary": "Noa approved.",
+            "dates": [{"value": "today", "evidence_sentence_ids": [2]}],
+            "locations": [{"value": "workshop", "evidence_sentence_ids": [2]}],
+            "entities": [{
+                "value": "Noa Middleton",
+                "role": "primary",
+                "evidence_sentence_ids": [2],
+            }],
+            "event_types": [{"value": "approval", "evidence_sentence_ids": [2]}],
+            "claims": [{
+                "subject": "Noa Middleton",
+                "predicate": "episodic_action",
+                "value": "nodded approvingly",
+                "evidence_sentence_ids": [2, 1, 2],
+            }],
+        }
+
+        record = normalize_extraction(chapter, raw)
+
+        for field in ("dates", "locations", "entities", "event_types"):
+            self.assertEqual([2], record[field][0]["evidence_sentence_ids"])
+            self.assertEqual(
+                ["Noa Middleton nodded approvingly."],
+                record[field][0]["evidence_spans"],
+            )
+        self.assertEqual([1, 2], record["claims"][0]["evidence_sentence_ids"])
+        self.assertEqual(
+            ["Noa arrived early.", "Noa Middleton nodded approvingly."],
+            record["claims"][0]["evidence_spans"],
+        )
+
+    def test_legacy_singular_sentence_id_is_rejected(self):
+        chapter = Chapter(1, "Noa Middleton nodded approvingly.")
         raw = {
             "chapter_id": 1,
             "concise_summary": "Noa approved.",
@@ -171,97 +198,48 @@ class GraphBuilderTests(unittest.TestCase):
             "entities": [{
                 "value": "Noa Middleton",
                 "role": "primary",
-                "evidence_span": "Noa Middleton",
+                "evidence_sentence_id": 1,
             }],
-            "event_types": [],
-            "claims": [{
-                "subject": "Noa Middleton",
-                "predicate": "episodic_action",
-                "value": "nodded approvingly",
-                "evidence_span": "Noa Middleton nodded approvingly",
-            }],
-        }
-
-        record = normalize_extraction(chapter, raw)
-
-        self.assertEqual(
-            "Noa Middleton, the lead instructor, nodded approvingly",
-            record["claims"][0]["evidence_span"],
-        )
-
-    def test_claim_evidence_reanchor_rejects_unrelated_statement(self):
-        chapter = Chapter(1, "Noah Williams discretely wrote observations in a notebook.")
-        raw = {
-            "chapter_id": 1,
-            "concise_summary": "Noah recorded observations.",
-            "dates": [],
-            "locations": [],
-            "entities": [{
-                "value": "Noah Williams",
-                "role": "primary",
-                "evidence_span": "Noah Williams",
-            }],
-            "event_types": [],
-            "claims": [{
-                "subject": "Noah Williams",
-                "predicate": "episodic_action",
-                "value": "checked his watch",
-                "evidence_span": "He checked his watch on September 22, 2026",
-            }],
-        }
-
-        with self.assertRaisesRegex(ValueError, "evidence_span not found"):
-            normalize_extraction(chapter, raw)
-
-    def test_claim_evidence_reanchor_rejects_ambiguous_matches(self):
-        chapter = Chapter(
-            1,
-            "Noa Middleton, the instructor, nodded approvingly. "
-            "Noa Middleton, the organizer, nodded approvingly.",
-        )
-        raw = {
-            "chapter_id": 1,
-            "concise_summary": "Noa approved twice.",
-            "dates": [],
-            "locations": [],
-            "entities": [{
-                "value": "Noa Middleton",
-                "role": "primary",
-                "evidence_span": "Noa Middleton",
-            }],
-            "event_types": [],
-            "claims": [{
-                "subject": "Noa Middleton",
-                "predicate": "episodic_action",
-                "value": "nodded approvingly",
-                "evidence_span": "Noa Middleton nodded approvingly",
-            }],
-        }
-
-        with self.assertRaisesRegex(ValueError, "evidence_span not found"):
-            normalize_extraction(chapter, raw)
-
-    def test_scope_falls_back_to_exact_value_when_long_span_is_not_verbatim(self):
-        chapter = Chapter(1, 'Cora Xiong wore a shirt reading "Hoppy and I Know It."')
-        raw = {
-            "chapter_id": 1,
-            "concise_summary": "Cora wore a shirt.",
-            "dates": [],
-            "locations": [],
-            "entities": [
-                {
-                    "value": "Cora Xiong",
-                    "role": "primary",
-                    "evidence_span": "Cora Xiong wore a funny beer shirt",
-                }
-            ],
             "event_types": [],
             "claims": [],
         }
-        record = normalize_extraction(chapter, raw)
-        self.assertEqual("Cora Xiong", record["entities"][0]["evidence_span"])
 
-    def test_repair_prompt_includes_prior_invalid_json_and_rejected_span(self):
+        with self.assertRaisesRegex(ValueError, "evidence_sentence_ids must be a non-empty list"):
+            normalize_extraction(chapter, raw)
+
+    def test_claim_evidence_sentences_are_deduplicated_sorted_and_limited_to_five(self):
+        chapter = Chapter(
+            1,
+            "One happened. Two happened. Three happened. Four happened. Five happened. Six happened.",
+        )
+        base = {
+            "chapter_id": 1,
+            "concise_summary": "Several things happened.",
+            "dates": [],
+            "locations": [],
+            "entities": [],
+            "event_types": [],
+            "claims": [{
+                "subject": "Someone",
+                "predicate": "episodic_action",
+                "value": "did something",
+                "evidence_sentence_ids": [3, 1, 3],
+            }],
+        }
+
+        record = normalize_extraction(chapter, base)
+        self.assertEqual([1, 3], record["claims"][0]["evidence_sentence_ids"])
+        self.assertEqual(
+            ["One happened.", "Three happened."],
+            record["claims"][0]["evidence_spans"],
+        )
+
+        too_many = json.loads(json.dumps(base))
+        too_many["claims"][0]["evidence_sentence_ids"] = [1, 2, 3, 4, 5, 6]
+        with self.assertRaisesRegex(ValueError, "at most 5"):
+            normalize_extraction(chapter, too_many)
+
+    def test_repair_prompt_includes_prior_invalid_sentence_id(self):
         chapter = Chapter(
             1,
             "Noa Middleton, the lead instructor, nodded approvingly.",
@@ -275,33 +253,30 @@ class GraphBuilderTests(unittest.TestCase):
                 "entities": [{
                     "value": "Noa Middleton",
                     "role": "primary",
-                    "evidence_span": "Noa Middleton",
+                    "evidence_sentence_ids": [1],
                 }],
                 "event_types": [],
                 "claims": [{
                     "subject": "Noa Middleton",
                     "predicate": "episodic_action",
                     "value": "nodded approvingly",
-                    "evidence_span": "Noa Middleton celebrated a victory",
+                    "evidence_sentence_ids": [9],
                 }],
             }],
         }
         repaired = json.loads(json.dumps(invalid))
-        repaired["chapters"][0]["claims"][0]["evidence_span"] = (
-            "Noa Middleton, the lead instructor, nodded approvingly"
-        )
+        repaired["chapters"][0]["claims"][0]["evidence_sentence_ids"] = [1]
         client = RepairClient([invalid, repaired])
 
         records = _extract_chunk([chapter], client, max_claims_per_chapter=8)
 
         self.assertEqual(2, len(client.user_prompts))
         self.assertIn("Prior invalid JSON", client.user_prompts[1])
-        self.assertIn("Noa Middleton celebrated a victory", client.user_prompts[1])
-        self.assertIn("evidence_span not found", client.user_prompts[1])
-        self.assertIn("Rejected evidence candidates", client.user_prompts[1])
+        self.assertIn('"evidence_sentence_ids": [9]', client.user_prompts[1])
+        self.assertIn("outside 1..1", client.user_prompts[1])
         self.assertEqual(
-            "Noa Middleton, the lead instructor, nodded approvingly",
-            records[0]["claims"][0]["evidence_span"],
+            "Noa Middleton, the lead instructor, nodded approvingly.",
+            records[0]["claims"][0]["evidence_spans"][0],
         )
 
     def test_final_repair_drops_only_ungrounded_nested_item(self):
@@ -318,14 +293,14 @@ class GraphBuilderTests(unittest.TestCase):
                 "entities": [{
                     "value": "Noa Middleton",
                     "role": "primary",
-                    "evidence_span": "Noa Middleton",
+                    "evidence_sentence_ids": [1],
                 }],
                 "event_types": [],
                 "claims": [{
                     "subject": "Noa Middleton",
                     "predicate": "episodic_action",
                     "value": "nodded approvingly",
-                    "evidence_span": "Noa Middleton celebrated a victory",
+                    "evidence_sentence_ids": [9],
                 }],
             }],
         }
@@ -338,18 +313,18 @@ class GraphBuilderTests(unittest.TestCase):
         self.assertEqual(1, len(records[0]["normalization_warnings"]))
         self.assertIn("claims[0]", records[0]["normalization_warnings"][0])
 
-    def test_extraction_rejects_scope_without_exact_source_evidence(self):
+    def test_extraction_rejects_scope_with_out_of_range_sentence_id(self):
         chapter = Chapter(1, "Julian attended a Tech Hackathon at High Line.")
         raw = {
             "chapter_id": 1,
             "concise_summary": "Julian attended a hackathon.",
             "dates": [],
-            "locations": [{"value": "Central Park", "evidence_span": "Central Park"}],
+            "locations": [{"value": "Central Park", "evidence_sentence_ids": [2]}],
             "entities": [],
             "event_types": [],
             "claims": [],
         }
-        with self.assertRaisesRegex(ValueError, "evidence_span"):
+        with self.assertRaisesRegex(ValueError, "outside 1..1"):
             normalize_extraction(chapter, raw)
 
     def test_base_graph_uses_one_event_per_chapter(self):

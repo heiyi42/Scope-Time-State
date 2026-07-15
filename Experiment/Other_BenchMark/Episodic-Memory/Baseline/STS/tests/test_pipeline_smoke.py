@@ -13,6 +13,7 @@ if str(STS_DIR.parent) not in sys.path:
     sys.path.insert(0, str(STS_DIR.parent))
 
 from STS.run import ClientBundle, main
+from STS.graph_builder import EXTRACTION_SCHEMA_VERSION
 
 
 class ExtractionClient:
@@ -72,6 +73,10 @@ class PipelineSmokeTests(unittest.TestCase):
             )
             self.assertEqual(0, code)
             self.assertTrue((root / "graph" / "book1" / "manifest.json").is_file())
+            extraction_cache = json.loads((root / "cache" / "extraction_records.json").read_text())
+            manifest = json.loads((root / "graph" / "book1" / "manifest.json").read_text())
+            self.assertEqual(EXTRACTION_SCHEMA_VERSION, extraction_cache["schema_version"])
+            self.assertEqual("sentence_id", manifest["runtime"]["evidence_mode"])
             self.assertEqual(2, len(json.loads((root / "results" / "qa.json").read_text())["rows"]))
             self.assertEqual(2, len(json.loads((root / "results" / "judged.json").read_text())["rows"]))
 
