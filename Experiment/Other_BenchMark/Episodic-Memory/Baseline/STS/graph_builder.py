@@ -6,11 +6,16 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
+import shutil
+import tempfile
 from typing import Any, Mapping, Protocol, Sequence
 
-from pipeline.external.sts_v2.schema import SCHEMA_VERSION
+from pipeline.external.state_merge import STATE_MERGE_DECISIONS, StateMergeAdapter, fold_state_claims
+from pipeline.external.sts_v2.schema import EDGE_ENDPOINT_TYPES, NODE_TYPES, SCHEMA_VERSION
+from pipeline.external.temporal_grounding import parse_anchor_datetime
 
 from .config import MAX_CLAIMS_PER_CHAPTER, MESSAGE_CHUNK_SIZE, RESOLVER_CANDIDATE_LIMIT
 from .loader import Chapter
@@ -201,6 +206,34 @@ def _scope_id(scope_type: str, value: str) -> str:
     return _stable_id("scope", scope_type, value)
 
 
+def normalized_component(value: object) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", _compact(value).casefold()).strip("-") or "unknown"
+
+
+SINGLE_STATE_DIMENSIONS = {
+    "lives_in": ("location", "residence"),
+    "works_at": ("employment", "primary"),
+    "has_status": ("status", "primary"),
+}
+
+
+def eligible_state_identity(claim: Mapping[str, Any]) -> dict[str, str] | None:
+    predicate = str(claim.get("predicate") or "")
+    if predicate == "episodic_action":
+        return None
+    if predicate in SINGLE_STATE_DIMENSIONS:
+        domain, target = SINGLE_STATE_DIMENSIONS[predicate]
+    elif predicate in {"member_of", "prefers"}:
+        domain, target = predicate, normalized_component(claim.get("value"))
+    else:
+        return None
+    return {
+        "state_domain": domain,
+        "state_target": target,
+        "state_dimension": f"{domain}:{target}",
+    }
+
+
 def _base_graph(chapters: Sequence[Chapter], records: Sequence[Mapping[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
     record_by_id = {int(record["chapter_id"]): record for record in records}
     if set(record_by_id) != {chapter.chapter_id for chapter in chapters}:
@@ -305,11 +338,138 @@ def _base_graph(chapters: Sequence[Chapter], records: Sequence[Mapping[str, Any]
                 "graph_text": f"{raw_claim['subject']} {raw_claim['predicate']} {raw_claim['value']}",
                 "time_ids": list(time_ids),
             }
+            state_identity = eligible_state_identity(claim)
+            if state_identity:
+                claim.update(state_identity)
+            time_value = str(record.get("dates", [{}])[0].get("value") or "") if record.get("dates") else ""
+            parsed_time = parse_anchor_datetime(time_value)
+            claim["event_sort_key"] = (
+                parsed_time.isoformat() if parsed_time else "9999-12-31T23:59:59",
+                chapter.chapter_id,
+            )
             nodes[claim_id] = claim
             claims.append(claim)
             edges.append({"type": "ASSERTS", "from": event_id, "to": claim_id})
             edges.extend({"type": "HAS_TIME", "from": claim_id, "to": time_id} for time_id in time_ids)
     return list(nodes.values()), edges, claims
+
+
+def _merge_decider(client: JsonClient | None):
+    def decide(existing: Mapping[str, Any], incoming: Mapping[str, Any]) -> dict[str, Any]:
+        evidence = [str(existing["source_event_id"]), str(incoming["source_event_id"])]
+        if client is None:
+            if _compact(existing.get("value")).casefold() == _compact(incoming.get("value")).casefold():
+                return {
+                    "decision": "COMPATIBLE",
+                    "winner": "none",
+                    "reason": "same normalized state value",
+                    "evidence_event_ids": evidence,
+                }
+            return {
+                "decision": "SUPERSEDES",
+                "winner": "incoming",
+                "reason": "later chapter updates the same persistent state dimension",
+                "evidence_event_ids": evidence,
+            }
+        raw = dict(
+            client.complete_json(
+                "Resolve two endpoint Claims in one STS v2 state dimension. Use only the supplied endpoints and output JSON.",
+                json.dumps(
+                    {
+                        "existing": dict(existing),
+                        "incoming": dict(incoming),
+                        "allowed_decisions": sorted(STATE_MERGE_DECISIONS),
+                        "required_output": {
+                            "decision": "allowed decision",
+                            "winner": "existing|incoming|none",
+                            "reason": "grounded reason",
+                        },
+                    },
+                    ensure_ascii=False,
+                ),
+            )
+        )
+        raw["decision"] = _compact(raw.get("decision")).upper()
+        if raw["decision"] in {"SUPERSEDES", "CORRECTS"} and raw.get("winner") not in {"existing", "incoming"}:
+            raw["winner"] = "incoming"
+        if raw["decision"] not in {"SUPERSEDES", "CORRECTS"}:
+            raw["winner"] = "none"
+        raw["evidence_event_ids"] = evidence
+        return raw
+
+    return decide
+
+
+def materialize_state_facets(
+    nodes: dict[str, dict[str, Any]],
+    edges: list[dict[str, Any]],
+    claims: Sequence[dict[str, Any]],
+    clusters: Sequence[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    claims_by_id = {str(claim["claim_id"]): claim for claim in claims}
+    facets: list[dict[str, Any]] = []
+    for cluster in clusters:
+        primary_id = str(cluster["primary_claim_id"])
+        support_ids = list(dict.fromkeys(str(value) for value in cluster["support_claim_ids"]))
+        if primary_id not in support_ids:
+            raise ValueError(f"StateFacet primary Claim missing from support: {primary_id}")
+        primary = claims_by_id[primary_id]
+        facet_id = _stable_id(
+            "state",
+            cluster["owner_key"],
+            cluster["dimension_key"],
+            primary_id,
+        )
+        support_event_ids = list(
+            dict.fromkeys(str(claims_by_id[claim_id]["source_event_id"]) for claim_id in support_ids)
+        )
+        facet = {
+            "node_id": facet_id,
+            "facet_id": facet_id,
+            "node_type": "StateFacet",
+            "subject": primary["subject"],
+            "state_domain": cluster["domain_key"],
+            "state_target": primary["state_target"],
+            "state_dimension": cluster["dimension_key"],
+            "value": primary["value"],
+            "status": cluster["status"],
+            "primary_claim_id": primary_id,
+            "support_claim_ids": support_ids,
+            "support_event_ids": support_event_ids,
+            "owner_scope_id": primary["owner_scope_id"],
+            "graph_text": f"{primary['subject']} {primary['state_domain']} {primary['value']}",
+        }
+        nodes[facet_id] = facet
+        facets.append(facet)
+        edges.extend({"type": "SUPPORTS", "from": claim_id, "to": facet_id} for claim_id in support_ids)
+        if primary.get("time_ids"):
+            edges.append({"type": "CURRENT_AFTER", "from": facet_id, "to": primary["time_ids"][0]})
+        edges.append({"type": "CURRENT_STATE_OF", "from": facet_id, "to": primary["owner_scope_id"]})
+    return facets
+
+
+def validate_graph(
+    nodes: Mapping[str, Mapping[str, Any]], edges: Sequence[Mapping[str, Any]]
+) -> list[str]:
+    warnings: list[str] = []
+    node_types = {node_id: str(node.get("node_type") or "") for node_id, node in nodes.items()}
+    for node_id, node_type in node_types.items():
+        if node_type not in NODE_TYPES:
+            warnings.append(f"unsupported_node_type:{node_id}:{node_type}")
+    for index, edge in enumerate(edges):
+        edge_type = str(edge.get("type") or "")
+        source = str(edge.get("from") or "")
+        target = str(edge.get("to") or "")
+        expected = EDGE_ENDPOINT_TYPES.get(edge_type)
+        if expected is None:
+            warnings.append(f"unsupported_edge_type:{index}:{edge_type}")
+        elif source not in node_types or target not in node_types:
+            warnings.append(f"edge_missing_endpoint:{index}:{edge_type}:{source}->{target}")
+        elif (node_types[source], node_types[target]) != expected:
+            warnings.append(
+                f"edge_endpoint_type_mismatch:{index}:{edge_type}:{node_types[source]}->{node_types[target]}"
+            )
+    return warnings
 
 
 def build_graph(
@@ -318,23 +478,106 @@ def build_graph(
     merge_client: JsonClient | None = None,
     resolver_candidate_limit: int = RESOLVER_CANDIDATE_LIMIT,
 ) -> dict[str, Any]:
-    del merge_client, resolver_candidate_limit
     normalized = [
         normalize_extraction(chapter, record)
         for chapter, record in zip(chapters, extraction_records, strict=True)
     ]
-    nodes, edges, _claims = _base_graph(chapters, normalized)
-    return {
+    node_rows, edges, claims = _base_graph(chapters, normalized)
+    nodes = {str(node["node_id"]): node for node in node_rows}
+    adapter = StateMergeAdapter(
+        eligible=lambda claim: bool(claim.get("state_dimension")),
+        owner_key=lambda claim: str(claim.get("owner_scope_id") or ""),
+        domain_key=lambda claim: str(claim.get("state_domain") or ""),
+        dimension_key=lambda claim: str(claim.get("state_dimension") or ""),
+        chronology_key=lambda claim: tuple(claim.get("event_sort_key") or ()),
+        lifecycle_winner_is_valid=lambda old, new, winner: (
+            tuple(new.get("event_sort_key") or ()) >= tuple(old.get("event_sort_key") or ())
+            if winner == "incoming"
+            else tuple(old.get("event_sort_key") or ()) >= tuple(new.get("event_sort_key") or ())
+        ),
+    )
+    clusters, relations = fold_state_claims(
+        claims,
+        adapter,
+        _merge_decider(merge_client),
+        candidate_limit=resolver_candidate_limit,
+    )
+    materialize_state_facets(nodes, edges, claims, clusters)
+    for relation in relations:
+        if relation["type"] in {"SUPERSEDES", "CORRECTS", "CONFLICTS_WITH"}:
+            edges.append(dict(relation))
+    warnings = validate_graph(nodes, edges)
+    graph = {
         "schema_version": SCHEMA_VERSION,
-        "nodes": nodes,
+        "nodes": list(nodes.values()),
         "edges": edges,
-        "warnings": [],
+        "warnings": warnings,
         "manifest": {
             "schema_version": SCHEMA_VERSION,
             "created_at": datetime.now(timezone.utc).isoformat(),
             "leakage_policy": {"graph_build_inputs": ["book.json"], "qa_loaded": False},
         },
     }
+    graph["manifest"]["summary"] = {
+        "node_counts": {
+            node_type: sum(node["node_type"] == node_type for node in graph["nodes"])
+            for node_type in NODE_TYPES
+        },
+        "edge_counts": {
+            edge_type: sum(edge["type"] == edge_type for edge in graph["edges"])
+            for edge_type in EDGE_ENDPOINT_TYPES
+        },
+        "warnings": list(warnings),
+    }
+    return graph
+
+
+def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def write_graph(output_dir: Path, graph: Mapping[str, Any]) -> Path:
+    root = Path(output_dir)
+    target = root / "book1"
+    existing_manifest = target / "manifest.json"
+    if existing_manifest.is_file():
+        existing = json.loads(existing_manifest.read_text(encoding="utf-8"))
+        if existing.get("schema_version") != SCHEMA_VERSION:
+            raise ValueError("incompatible existing graph manifest")
+    root.mkdir(parents=True, exist_ok=True)
+    staging = Path(tempfile.mkdtemp(prefix=".book1-staging-", dir=root))
+    backup = root / ".book1-backup"
+    try:
+        with (staging / "nodes.jsonl").open("w", encoding="utf-8") as handle:
+            for node in graph["nodes"]:
+                handle.write(json.dumps(node, ensure_ascii=False, separators=(",", ":")) + "\n")
+        with (staging / "edges.jsonl").open("w", encoding="utf-8") as handle:
+            for edge in graph["edges"]:
+                handle.write(json.dumps(edge, ensure_ascii=False, separators=(",", ":")) + "\n")
+        _write_json(staging / "manifest.json", graph["manifest"])
+        _write_json(
+            staging / "graph.json",
+            {
+                "schema_version": graph["schema_version"],
+                "nodes": graph["nodes"],
+                "edges": graph["edges"],
+                "warnings": graph.get("warnings", []),
+            },
+        )
+        if backup.exists():
+            shutil.rmtree(backup)
+        if target.exists():
+            os.replace(target, backup)
+        os.replace(staging, target)
+        if backup.exists():
+            shutil.rmtree(backup)
+    except Exception:
+        if staging.exists():
+            shutil.rmtree(staging)
+        if backup.exists() and not target.exists():
+            os.replace(backup, target)
+        raise
+    return target
 
 
 __all__ = [
@@ -342,6 +585,10 @@ __all__ = [
     "build_graph",
     "compact_event_card",
     "extract_chapter_records",
+    "eligible_state_identity",
+    "materialize_state_facets",
     "normalize_extraction",
     "require_span",
+    "validate_graph",
+    "write_graph",
 ]
