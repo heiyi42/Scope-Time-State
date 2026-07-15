@@ -11,7 +11,14 @@ STS_DIR = Path(__file__).resolve().parents[1]
 if str(STS_DIR.parent) not in sys.path:
     sys.path.insert(0, str(STS_DIR.parent))
 
-from STS.graph_builder import EXTRACTION_SYSTEM_PROMPT, build_graph, normalize_extraction, write_graph
+from STS.graph_builder import (
+    EXTRACTION_SYSTEM_PROMPT,
+    _extract_chunk,
+    build_graph,
+    normalize_extraction,
+    write_graph,
+)
+from STS.config import MESSAGE_CHUNK_SIZE
 from STS.loader import Chapter
 
 
@@ -92,12 +99,161 @@ class CompatibleClient:
         return {"decision": "COMPATIBLE", "winner": "none", "reason": "same residence", "evidence_event_ids": []}
 
 
+class RepairClient:
+    def __init__(self, responses):
+        self.responses = list(responses)
+        self.user_prompts = []
+
+    def complete_json(self, _system_prompt, user_prompt):
+        self.user_prompts.append(user_prompt)
+        return self.responses.pop(0)
+
+
 class GraphBuilderTests(unittest.TestCase):
+    def test_epbench_build_defaults_to_one_chapter_per_request(self):
+        self.assertEqual(1, MESSAGE_CHUNK_SIZE)
+
     def test_extraction_prompt_fixes_every_nested_item_shape(self):
         self.assertIn('"dates": [{"value":', EXTRACTION_SYSTEM_PROMPT)
         self.assertIn('"entities": [{"value":', EXTRACTION_SYSTEM_PROMPT)
         self.assertIn('"claims": [{"subject":', EXTRACTION_SYSTEM_PROMPT)
+        self.assertIn('"predicate": "episodic_action"', EXTRACTION_SYSTEM_PROMPT)
+        self.assertNotIn('"predicate": "allowed predicate"', EXTRACTION_SYSTEM_PROMPT)
         self.assertIn("Never return bare strings inside these lists", EXTRACTION_SYSTEM_PROMPT)
+
+    def test_extraction_maps_quote_variation_back_to_exact_source_span(self):
+        chapter = Chapter(
+            1,
+            'Cora Xiong proclaimed "Hoppy and I Know It," and joined the debate.',
+        )
+        raw = {
+            "chapter_id": 1,
+            "concise_summary": "Cora joined the debate.",
+            "dates": [],
+            "locations": [],
+            "entities": [
+                {
+                    "value": "Cora Xiong",
+                    "role": "primary",
+                    "evidence_span": "Cora Xiong proclaimed 'Hoppy and I Know It,'",
+                }
+            ],
+            "event_types": [],
+            "claims": [
+                {
+                    "subject": "Cora Xiong",
+                    "predicate": "has_status",
+                    "value": "joined the debate",
+                    "evidence_span": "Cora Xiong proclaimed 'Hoppy and I Know It,' and joined the debate",
+                }
+            ],
+        }
+        record = normalize_extraction(chapter, raw)
+        self.assertEqual(
+            'Cora Xiong proclaimed "Hoppy and I Know It,"',
+            record["entities"][0]["evidence_span"],
+        )
+        self.assertEqual(
+            'Cora Xiong proclaimed "Hoppy and I Know It," and joined the debate',
+            record["claims"][0]["evidence_span"],
+        )
+
+    def test_scope_falls_back_to_exact_value_when_long_span_is_not_verbatim(self):
+        chapter = Chapter(1, 'Cora Xiong wore a shirt reading "Hoppy and I Know It."')
+        raw = {
+            "chapter_id": 1,
+            "concise_summary": "Cora wore a shirt.",
+            "dates": [],
+            "locations": [],
+            "entities": [
+                {
+                    "value": "Cora Xiong",
+                    "role": "primary",
+                    "evidence_span": "Cora Xiong wore a funny beer shirt",
+                }
+            ],
+            "event_types": [],
+            "claims": [],
+        }
+        record = normalize_extraction(chapter, raw)
+        self.assertEqual("Cora Xiong", record["entities"][0]["evidence_span"])
+
+    def test_repair_prompt_includes_prior_invalid_json_and_rejected_span(self):
+        chapter = Chapter(
+            1,
+            "Noa Middleton, the lead instructor, nodded approvingly.",
+        )
+        invalid = {
+            "chapters": [{
+                "chapter_id": 1,
+                "concise_summary": "Noa approved.",
+                "dates": [],
+                "locations": [],
+                "entities": [{
+                    "value": "Noa Middleton",
+                    "role": "primary",
+                    "evidence_span": "Noa Middleton",
+                }],
+                "event_types": [],
+                "claims": [{
+                    "subject": "Noa Middleton",
+                    "predicate": "episodic_action",
+                    "value": "nodded approvingly",
+                    "evidence_span": "Noa Middleton nodded approvingly",
+                }],
+            }],
+        }
+        repaired = json.loads(json.dumps(invalid))
+        repaired["chapters"][0]["claims"][0]["evidence_span"] = (
+            "Noa Middleton, the lead instructor, nodded approvingly"
+        )
+        client = RepairClient([invalid, repaired])
+
+        records = _extract_chunk([chapter], client, max_claims_per_chapter=8)
+
+        self.assertEqual(2, len(client.user_prompts))
+        self.assertIn("Prior invalid JSON", client.user_prompts[1])
+        self.assertIn("Noa Middleton nodded approvingly", client.user_prompts[1])
+        self.assertIn("evidence_span not found", client.user_prompts[1])
+        self.assertIn("Rejected evidence candidates", client.user_prompts[1])
+        self.assertEqual(
+            "Noa Middleton, the lead instructor, nodded approvingly",
+            records[0]["claims"][0]["evidence_span"],
+        )
+
+    def test_final_repair_drops_only_ungrounded_nested_item(self):
+        chapter = Chapter(
+            1,
+            "Noa Middleton, the lead instructor, nodded approvingly.",
+        )
+        invalid = {
+            "chapters": [{
+                "chapter_id": 1,
+                "concise_summary": "Noa approved.",
+                "dates": [],
+                "locations": [],
+                "entities": [{
+                    "value": "Noa Middleton",
+                    "role": "primary",
+                    "evidence_span": "Noa Middleton",
+                }],
+                "event_types": [],
+                "claims": [{
+                    "subject": "Noa Middleton",
+                    "predicate": "episodic_action",
+                    "value": "nodded approvingly",
+                    "evidence_span": "Noa Middleton nodded approvingly",
+                }],
+            }],
+        }
+        client = RepairClient([invalid, invalid])
+
+        records = _extract_chunk([chapter], client, max_claims_per_chapter=8)
+
+        self.assertEqual([], records[0]["claims"])
+        self.assertEqual("Noa Middleton", records[0]["entities"][0]["value"])
+        self.assertEqual(1, len(records[0]["normalization_warnings"]))
+        self.assertIn("claims[0]", records[0]["normalization_warnings"][0])
 
     def test_extraction_rejects_scope_without_exact_source_evidence(self):
         chapter = Chapter(1, "Julian attended a Tech Hackathon at High Line.")

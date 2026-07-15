@@ -50,37 +50,73 @@ def _stable_id(prefix: str, *parts: object) -> str:
     return f"{prefix}::{digest}"
 
 
-def require_span(chapter: Chapter, span: object) -> str:
-    evidence = _compact(span)
+QUOTE_TRANSLATION = str.maketrans({"'": '"', "‘": '"', "’": '"', "“": '"', "”": '"'})
+
+
+def _locate_source_span(source: str, candidate: str) -> str | None:
+    for source_form, candidate_form in (
+        (source.lower(), candidate.lower()),
+        (source.translate(QUOTE_TRANSLATION).lower(), candidate.translate(QUOTE_TRANSLATION).lower()),
+    ):
+        start = source_form.find(candidate_form)
+        if start >= 0:
+            return source[start : start + len(candidate)]
+    return None
+
+
+def require_span(chapter: Chapter, span: object, *, fallback: object = None) -> str:
     source = _compact(chapter.text)
-    if not evidence or evidence.casefold() not in source.casefold():
-        raise ValueError(f"chapter {chapter.chapter_id}: evidence_span not found")
-    return evidence
+    candidates = [candidate for candidate in (_compact(span), _compact(fallback)) if candidate]
+    for candidate in candidates:
+        matched = _locate_source_span(source, candidate)
+        if matched is not None:
+            return matched
+    rejected = json.dumps(candidates, ensure_ascii=False)
+    raise ValueError(
+        f"chapter {chapter.chapter_id}: evidence_span not found. "
+        f"Rejected evidence candidates: {rejected}"
+    )
 
 
-def _normalize_mentions(chapter: Chapter, raw: object, *, allow_role: bool) -> list[dict[str, str]]:
+def _normalize_mentions(
+    chapter: Chapter,
+    raw: object,
+    *,
+    allow_role: bool,
+    field_name: str,
+    tolerate_invalid_items: bool,
+    warnings: list[str],
+) -> list[dict[str, str]]:
     if raw is None:
         return []
     if not isinstance(raw, list):
+        if tolerate_invalid_items:
+            warnings.append(f"{field_name}: extraction field must be a list")
+            return []
         raise ValueError(f"chapter {chapter.chapter_id}: extraction field must be a list")
     rows: list[dict[str, str]] = []
     seen: set[tuple[str, str]] = set()
-    for item in raw:
-        if not isinstance(item, Mapping):
-            raise ValueError(f"chapter {chapter.chapter_id}: extraction item must be an object")
-        value = _compact(item.get("value"))
-        evidence = require_span(chapter, item.get("evidence_span"))
-        if not value:
-            raise ValueError(f"chapter {chapter.chapter_id}: extraction value is empty")
-        role = _compact(item.get("role")) if allow_role else ""
-        key = (value.casefold(), role.casefold())
-        if key in seen:
-            continue
-        seen.add(key)
-        row = {"value": value, "evidence_span": evidence}
-        if allow_role:
-            row["role"] = role or "mentioned"
-        rows.append(row)
+    for index, item in enumerate(raw):
+        try:
+            if not isinstance(item, Mapping):
+                raise ValueError("extraction item must be an object")
+            value = _compact(item.get("value"))
+            if not value:
+                raise ValueError("extraction value is empty")
+            evidence = require_span(chapter, item.get("evidence_span"), fallback=value)
+            role = _compact(item.get("role")) if allow_role else ""
+            key = (value.casefold(), role.casefold())
+            if key in seen:
+                continue
+            seen.add(key)
+            row = {"value": value, "evidence_span": evidence}
+            if allow_role:
+                row["role"] = role or "mentioned"
+            rows.append(row)
+        except (TypeError, ValueError) as exc:
+            if not tolerate_invalid_items:
+                raise ValueError(f"chapter {chapter.chapter_id}: {exc}") from exc
+            warnings.append(f"{field_name}[{index}]: {exc}")
     return rows
 
 
@@ -89,44 +125,90 @@ def normalize_extraction(
     raw: Mapping[str, Any],
     *,
     max_claims_per_chapter: int = MAX_CLAIMS_PER_CHAPTER,
+    tolerate_invalid_items: bool = False,
 ) -> dict[str, Any]:
     if int(raw.get("chapter_id", -1)) != chapter.chapter_id:
         raise ValueError(f"chapter {chapter.chapter_id}: response chapter_id mismatch")
     summary = _compact(raw.get("concise_summary"))
     if not summary:
         raise ValueError(f"chapter {chapter.chapter_id}: concise_summary is empty")
+    prior_warnings = raw.get("normalization_warnings")
+    warnings = [str(item) for item in prior_warnings] if isinstance(prior_warnings, list) else []
     record: dict[str, Any] = {
         "chapter_id": chapter.chapter_id,
         "concise_summary": summary,
-        "dates": _normalize_mentions(chapter, raw.get("dates"), allow_role=False),
-        "locations": _normalize_mentions(chapter, raw.get("locations"), allow_role=False),
-        "entities": _normalize_mentions(chapter, raw.get("entities"), allow_role=True),
-        "event_types": _normalize_mentions(chapter, raw.get("event_types"), allow_role=False),
+        "dates": _normalize_mentions(
+            chapter,
+            raw.get("dates"),
+            allow_role=False,
+            field_name="dates",
+            tolerate_invalid_items=tolerate_invalid_items,
+            warnings=warnings,
+        ),
+        "locations": _normalize_mentions(
+            chapter,
+            raw.get("locations"),
+            allow_role=False,
+            field_name="locations",
+            tolerate_invalid_items=tolerate_invalid_items,
+            warnings=warnings,
+        ),
+        "entities": _normalize_mentions(
+            chapter,
+            raw.get("entities"),
+            allow_role=True,
+            field_name="entities",
+            tolerate_invalid_items=tolerate_invalid_items,
+            warnings=warnings,
+        ),
+        "event_types": _normalize_mentions(
+            chapter,
+            raw.get("event_types"),
+            allow_role=False,
+            field_name="event_types",
+            tolerate_invalid_items=tolerate_invalid_items,
+            warnings=warnings,
+        ),
         "claims": [],
     }
     raw_claims = raw.get("claims")
     if not isinstance(raw_claims, list):
-        raise ValueError(f"chapter {chapter.chapter_id}: claims must be a list")
+        if not tolerate_invalid_items:
+            raise ValueError(f"chapter {chapter.chapter_id}: claims must be a list")
+        warnings.append("claims: claims must be a list")
+        raw_claims = []
     if len(raw_claims) > max_claims_per_chapter:
-        raise ValueError(f"chapter {chapter.chapter_id}: too many claims")
-    for claim in raw_claims:
-        if not isinstance(claim, Mapping):
-            raise ValueError(f"chapter {chapter.chapter_id}: claim must be an object")
-        predicate = _compact(claim.get("predicate")).lower()
-        if predicate not in ALLOWED_CLAIM_PREDICATES:
-            raise ValueError(f"chapter {chapter.chapter_id}: unsupported claim predicate {predicate!r}")
-        subject = _compact(claim.get("subject"))
-        value = _compact(claim.get("value"))
-        if not subject or not value:
-            raise ValueError(f"chapter {chapter.chapter_id}: claim subject/value is empty")
-        record["claims"].append(
-            {
-                "subject": subject,
-                "predicate": predicate,
-                "value": value,
-                "evidence_span": require_span(chapter, claim.get("evidence_span")),
-            }
+        if not tolerate_invalid_items:
+            raise ValueError(f"chapter {chapter.chapter_id}: too many claims")
+        warnings.append(
+            f"claims: truncated {len(raw_claims)} claims to {max_claims_per_chapter}"
         )
+        raw_claims = raw_claims[:max_claims_per_chapter]
+    for index, claim in enumerate(raw_claims):
+        try:
+            if not isinstance(claim, Mapping):
+                raise ValueError("claim must be an object")
+            predicate = _compact(claim.get("predicate")).lower()
+            if predicate not in ALLOWED_CLAIM_PREDICATES:
+                raise ValueError(f"unsupported claim predicate {predicate!r}")
+            subject = _compact(claim.get("subject"))
+            value = _compact(claim.get("value"))
+            if not subject or not value:
+                raise ValueError("claim subject/value is empty")
+            record["claims"].append(
+                {
+                    "subject": subject,
+                    "predicate": predicate,
+                    "value": value,
+                    "evidence_span": require_span(chapter, claim.get("evidence_span")),
+                }
+            )
+        except (TypeError, ValueError) as exc:
+            if not tolerate_invalid_items:
+                raise ValueError(f"chapter {chapter.chapter_id}: {exc}") from exc
+            warnings.append(f"claims[{index}]: {exc}")
+    if warnings:
+        record["normalization_warnings"] = warnings
     return record
 
 
@@ -139,7 +221,7 @@ EXTRACTION_SYSTEM_PROMPT = """Extract EPBench chapters into this exact STS v2 JS
     "locations": [{"value": "place", "evidence_span": "exact source substring"}],
     "entities": [{"value": "entity", "role": "primary|participant|organization|mentioned", "evidence_span": "exact source substring"}],
     "event_types": [{"value": "event type", "evidence_span": "exact source substring"}],
-    "claims": [{"subject": "entity", "predicate": "allowed predicate", "value": "atomic value", "evidence_span": "exact source substring"}]
+    "claims": [{"subject": "entity", "predicate": "episodic_action", "value": "atomic value", "evidence_span": "exact source substring"}]
   }]
 }
 Return exactly one object per visible chapter_id. Never return bare strings inside these lists.
@@ -156,8 +238,19 @@ def _extract_chunk(
     visible = "\n\n".join(f"<chapter id={row.chapter_id}>\n{row.text}\n</chapter>" for row in chapters)
     prompt = f"Maximum claims per chapter: {max_claims_per_chapter}.\n\n{visible}"
     last_error: Exception | None = None
+    raw: Mapping[str, Any] | None = None
     for attempt in range(2):
-        user_prompt = prompt if attempt == 0 else f"Repair the prior invalid response. {last_error}\n\n{prompt}"
+        if attempt == 0:
+            user_prompt = prompt
+        else:
+            user_prompt = (
+                "Repair the prior invalid JSON with the smallest possible changes.\n"
+                f"Validation error: {last_error}\n"
+                "Prior invalid JSON:\n"
+                f"{json.dumps(raw, ensure_ascii=False, sort_keys=True)}\n\n"
+                "Original extraction task:\n"
+                f"{prompt}"
+            )
         raw = client.complete_json(EXTRACTION_SYSTEM_PROMPT, user_prompt)
         try:
             rows = raw.get("chapters")
@@ -175,7 +268,12 @@ def _extract_chunk(
             if sorted(by_id) != sorted(expected):
                 raise ValueError(f"response chapter IDs must be exactly {expected}")
             return [
-                normalize_extraction(chapter, by_id[chapter.chapter_id], max_claims_per_chapter=max_claims_per_chapter)
+                normalize_extraction(
+                    chapter,
+                    by_id[chapter.chapter_id],
+                    max_claims_per_chapter=max_claims_per_chapter,
+                    tolerate_invalid_items=attempt == 1,
+                )
                 for chapter in chapters
             ]
         except (TypeError, ValueError) as exc:
