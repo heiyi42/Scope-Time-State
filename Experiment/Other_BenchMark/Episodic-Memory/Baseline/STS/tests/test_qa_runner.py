@@ -92,6 +92,7 @@ class QARunnerTests(unittest.TestCase):
                 offset=0,
                 limit=1,
                 resume=False,
+                workers=2,
             )
         prompt = answer_client.user_prompts[0]
         self.assertNotIn("correct_answer", prompt)
@@ -112,6 +113,7 @@ class QARunnerTests(unittest.TestCase):
                 offset=0,
                 limit=1,
                 resume=False,
+                workers=2,
             )
         self.assertEqual([], answer_client.user_prompts)
         self.assertEqual("No matching event is present in the memory.", payload["rows"][0]["answer"])
@@ -138,6 +140,7 @@ class QARunnerTests(unittest.TestCase):
                 output_path=self.root / "judged.json",
                 judge_client=judge_client,
                 resume=False,
+                workers=2,
             )
         qa_row = qa_payload["rows"][0]
         judged_row = judged["rows"][0]

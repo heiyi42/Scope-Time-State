@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
 import os
 from pathlib import Path
@@ -58,18 +59,21 @@ def run_qa(
     offset: int = 0,
     limit: int = 686,
     resume: bool = True,
+    workers: int = 1,
     **retrieval_kwargs: Any,
 ) -> dict[str, Any]:
     if offset < 0 or limit < 0:
         raise ValueError("offset and limit must be non-negative")
+    if workers < 1:
+        raise ValueError("workers must be positive")
     qa_items = load_qa()
     selected = qa_items[offset : offset + limit]
     index = STSGraphIndex.load(Path(graph_dir), embedding_config=embedding_config)
     payload = _read_result(Path(output_path)) if resume else {"rows": []}
     completed = {int(row["row_index"]): row for row in payload["rows"]}
-    for item in selected:
-        if item.row_index in completed:
-            continue
+    pending = [item for item in selected if item.row_index not in completed]
+
+    def answer_item(item: Any) -> dict[str, Any]:
         retrieval = index.retrieve(item.question, frame_client, **retrieval_kwargs)
         context = _answer_context(retrieval)
         if retrieval.ranked_chapters:
@@ -90,7 +94,7 @@ def run_qa(
                 "answer": answer,
                 "retrieval_status": retrieval.retrieval_status,
             }
-        row = {
+        return {
             "row_index": item.row_index,
             "q_idx": item.q_idx,
             "question": item.question,
@@ -104,12 +108,17 @@ def run_qa(
             "answer_model": str(getattr(answer_client, "model", ANSWER_MODEL)),
             "retrieval_trace": retrieval.to_dict(),
         }
-        completed[item.row_index] = row
-        payload = {
-            "answer_model": str(getattr(answer_client, "model", ANSWER_MODEL)),
-            "rows": [completed[key] for key in sorted(completed)],
-        }
-        _write_atomic(Path(output_path), payload)
+
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        futures = {executor.submit(answer_item, item): item.row_index for item in pending}
+        for future in as_completed(futures):
+            row = future.result()
+            completed[int(row["row_index"])] = row
+            payload = {
+                "answer_model": str(getattr(answer_client, "model", ANSWER_MODEL)),
+                "rows": [completed[key] for key in sorted(completed)],
+            }
+            _write_atomic(Path(output_path), payload)
     return payload
 
 
@@ -135,11 +144,15 @@ def run_judge(
     output_path: Path,
     judge_client: Any,
     resume: bool = True,
+    workers: int = 1,
 ) -> dict[str, Any]:
+    if workers < 1:
+        raise ValueError("workers must be positive")
     qa_payload = _read_result(Path(qa_result_path))
     qa_by_index = {item.row_index: item for item in load_qa()}
     payload = _read_result(Path(output_path)) if resume else {"rows": []}
     completed = {int(row["row_index"]): row for row in payload["rows"]}
+    pending = []
     for qa_row in qa_payload["rows"]:
         row_index = int(qa_row["row_index"])
         if row_index in completed:
@@ -147,6 +160,9 @@ def run_judge(
         item = qa_by_index.get(row_index)
         if item is None:
             raise ValueError(f"QA checkpoint references unknown EPBench row {row_index}")
+        pending.append((qa_row, item))
+
+    def judge_item(qa_row: dict[str, Any], item: Any) -> dict[str, Any]:
         user_prompt = json.dumps(
             {
                 "question": qa_row["question"],
@@ -168,14 +184,23 @@ def run_judge(
             "correct": bool(raw.get("correct")),
             "reason": " ".join(str(raw.get("reason") or "").split()),
         }
-        completed[row_index] = judged_row
-        rows = [completed[key] for key in sorted(completed)]
-        payload = {
-            "judge_model": str(getattr(judge_client, "model", JUDGE_MODEL)),
-            "rows": rows,
-            "summary": _judge_summary(rows),
+        return judged_row
+
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        futures = {
+            executor.submit(judge_item, qa_row, item): int(qa_row["row_index"])
+            for qa_row, item in pending
         }
-        _write_atomic(Path(output_path), payload)
+        for future in as_completed(futures):
+            judged_row = future.result()
+            completed[int(judged_row["row_index"])] = judged_row
+            rows = [completed[key] for key in sorted(completed)]
+            payload = {
+                "judge_model": str(getattr(judge_client, "model", JUDGE_MODEL)),
+                "rows": rows,
+                "summary": _judge_summary(rows),
+            }
+            _write_atomic(Path(output_path), payload)
     return payload
 
 

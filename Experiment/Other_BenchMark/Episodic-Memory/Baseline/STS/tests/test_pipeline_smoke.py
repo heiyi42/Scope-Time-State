@@ -68,7 +68,7 @@ class PipelineSmokeTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             code = main(
-                ["--stage", "all", "--chapter-limit", "2", "--question-limit", "2", "--output-root", str(root)],
+                ["--stage", "all", "--workers", "2", "--chapter-limit", "2", "--question-limit", "2", "--output-root", str(root)],
                 clients=FAKE_CLIENTS,
             )
             self.assertEqual(0, code)

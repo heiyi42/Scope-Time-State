@@ -217,6 +217,7 @@ def _qa(args: argparse.Namespace, paths: ArtifactPaths, clients: ClientBundle) -
         offset=args.question_offset,
         limit=args.question_limit,
         resume=not args.no_resume,
+        workers=args.workers,
         **_retrieval_kwargs(args),
     )
     print(f"STS QA: {output_path}")
@@ -230,6 +231,7 @@ def _judge(args: argparse.Namespace, paths: ArtifactPaths, clients: ClientBundle
         output_path=output_path,
         judge_client=clients.judge,
         resume=not args.no_resume,
+        workers=args.workers,
     )
     print(f"STS judge: {output_path}")
     return output_path
