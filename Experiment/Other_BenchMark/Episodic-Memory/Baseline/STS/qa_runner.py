@@ -89,7 +89,7 @@ def run_qa(
                 raise ValueError(f"answer model returned an empty answer for row {item.row_index}")
         else:
             answer = ABSTENTION_ANSWER
-            answer_source = "evidence_gate"
+            answer_source = "empty_retrieval"
             raw = {
                 "answer": answer,
                 "retrieval_status": retrieval.retrieval_status,

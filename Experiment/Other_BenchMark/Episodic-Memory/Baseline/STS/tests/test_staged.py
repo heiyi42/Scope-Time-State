@@ -94,15 +94,16 @@ class StagedRetrievalTests(unittest.TestCase):
         self.assertEqual(20, result.ranked_chapters[0].chapter_id)
         self.assertEqual({"entity", "location", "event_type"}, set(result.ranked_chapters[0].matched_scope_types))
 
-    def test_grounded_anchors_restrict_event_and_claim_candidates(self):
+    def test_scope_event_and_claim_layers_all_contribute_without_scope_gate(self):
         index = STSGraphIndex.from_graph(synthetic_graph())
         index.event_dense = SearchStub(list(index.events))
         index.claim_dense = SearchStub(list(index.claims))
         result = index.retrieve("Julian Ross Tech Hackathon at High Line", FrameClient(), final_chapter_k=2)
-        self.assertEqual("grounded", result.retrieval_status)
-        self.assertEqual([20], [row.chapter_id for row in result.ranked_chapters])
+        self.assertEqual("retrieved", result.retrieval_status)
+        self.assertEqual(20, result.ranked_chapters[0].chapter_id)
+        self.assertEqual({20, 42}, {row.chapter_id for row in result.ranked_chapters})
 
-    def test_dense_only_scope_match_cannot_establish_event_existence(self):
+    def test_dense_scope_candidates_are_ranked_without_exact_admission(self):
         graph = synthetic_graph()
         graph["nodes"].append(
             {
@@ -130,8 +131,8 @@ class StagedRetrievalTests(unittest.TestCase):
             event_type_queries=["3D Printing Workshop"],
         )
         result = index.retrieve("Events related to 3D Printing Workshop", frame, final_chapter_k=2)
-        self.assertEqual("no_grounded_scope", result.retrieval_status)
-        self.assertEqual([], result.ranked_chapters)
+        self.assertEqual("retrieved", result.retrieval_status)
+        self.assertTrue(result.ranked_chapters)
 
     def test_latest_returns_newest_graph_time(self):
         index = STSGraphIndex.from_graph(synthetic_graph())

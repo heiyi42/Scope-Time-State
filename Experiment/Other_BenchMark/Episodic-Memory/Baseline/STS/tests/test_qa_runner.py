@@ -55,8 +55,8 @@ class EmptyIndex:
             question=question,
             frame=QuestionFrame(event_type_queries=["3D Printing Workshop"]),
             ranked_chapters=[],
-            retrieval_status="no_grounded_scope",
-            trace={"unmatched_anchors": [{"scope_type": "event_type", "query": "3D Printing Workshop"}]},
+            retrieval_status="no_candidates",
+            trace={},
         )
 
 
@@ -117,7 +117,7 @@ class QARunnerTests(unittest.TestCase):
             )
         self.assertEqual([], answer_client.user_prompts)
         self.assertEqual("No matching event is present in the memory.", payload["rows"][0]["answer"])
-        self.assertEqual("evidence_gate", payload["rows"][0]["answer_source"])
+        self.assertEqual("empty_retrieval", payload["rows"][0]["answer_source"])
 
     def test_judge_preserves_raw_answer_and_trace(self):
         qa_path = self.root / "qa.json"
