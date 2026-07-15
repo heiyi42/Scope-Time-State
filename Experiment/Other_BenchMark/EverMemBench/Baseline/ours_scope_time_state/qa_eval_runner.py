@@ -19,6 +19,7 @@ for import_path in (PROJECT_DIR, BASELINE_DIR):
 from Experiment.run.common.io import load_dotenv
 from Experiment.run.common.llm_client import LLMClient, provider_config
 from pipeline.external.embedding_retrieval import OpenAIEmbeddingIndex
+from pipeline.external.temporal_grounding import format_temporal_grounding
 from pipeline.external.time_role_selection import select_time_roles
 from ours_scope_time_state.loader import CACHE_DIR, DATA_DIR, EVERMEMBENCH_DIR, GRAPH_OUTPUT_DIR, RESULT_DIR
 from ours_scope_time_state.qa_probe import (
@@ -38,7 +39,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run a small EverMemBench QA evaluation over a built topic graph.")
     parser.add_argument("--topic", default="01")
     parser.add_argument("--qa-path", type=Path, default=None)
-    parser.add_argument("--graph-dir", type=Path, default=GRAPH_OUTPUT_DIR / "evermembench_topic_graph_llm_v1/01")
+    parser.add_argument("--graph-dir", type=Path, default=GRAPH_OUTPUT_DIR / "evermembench_topic_graph_v2_state_merge/01")
     parser.add_argument("--limit-per-task", type=int, default=5, help="Rows per task; 0 means all available rows.")
     parser.add_argument(
         "--task-prefixes",
@@ -64,6 +65,12 @@ def parse_args() -> argparse.Namespace:
         choices=("llm", "none"),
         default="llm",
         help="Question-only time-role routing for Event reranking and StateFacet selection.",
+    )
+    parser.add_argument(
+        "--temporal-grounding",
+        choices=("question-only", "none"),
+        default="question-only",
+        help="Deterministically ground relative time from selected graph evidence; none is the ablation.",
     )
     parser.add_argument("--embedding-retrieval", choices=("none", "hybrid"), default="hybrid")
     parser.add_argument("--embedding-model", default="text-embedding-3-small")
@@ -102,17 +109,17 @@ def parse_args() -> argparse.Namespace:
         "--output",
         type=Path,
         default=RESULT_DIR
-        / "evermembench_topic_graph_llm_v1/qa_eval_gpt4omini_5_per_task_deepseek_v4_flash_judge.sts_scope_first_graph_expansion_top10_max40_question_query.json",
+        / "evermembench_topic_graph_v2_state_merge/qa_eval_gpt4omini_5_per_task_deepseek_v4_flash_judge.sts_scope_first_graph_expansion_top10_max40_question_query.json",
     )
     parser.add_argument(
         "--answer-cache",
         type=Path,
-        default=CACHE_DIR / "evermembench_topic_graph_llm_v1/llm_cache.qa_eval.answer.gpt4omini.official_prompt.json",
+        default=CACHE_DIR / "evermembench_topic_graph_v2_state_merge/llm_cache.qa_eval.answer.gpt4omini.official_prompt.json",
     )
     parser.add_argument(
         "--judge-cache",
         type=Path,
-        default=CACHE_DIR / "evermembench_topic_graph_llm_v1/llm_cache.qa_eval.judge.deepseek_v4_flash.json",
+        default=CACHE_DIR / "evermembench_topic_graph_v2_state_merge/llm_cache.qa_eval.judge.deepseek_v4_flash.json",
     )
     return parser.parse_args()
 
@@ -171,77 +178,15 @@ def parse_task_prefixes(value: str) -> List[str]:
     return [part.strip() for part in value.split(",") if part.strip()]
 
 
-PROFILE_SCOPE_NEGATIVE_RE = re.compile(
-    r"\b(how long|which of the following .*processing|which of the following .*correct|"
-    r"correct processing logic|processing logic is correct|"
-    r"according to system regulations|what is the correct|without waiting|start working on it without|"
-    r"can't delay .* any longer|according to our team's rules|where should .* uploaded|quickly check|"
-    r"go through a change request|what do you think of this solution)\b",
-    re.I,
-)
-PROFILE_SCOPE_ACTOR_RE = re.compile(
-    r"\bI\s*\([^)]+\)|\bme\s*\([^)]+\)|\bI(?:'m| am)\b|\bmy\b|\bmy manager\b|\bmy boss\b|\bmy key clients\b|"
-    r"\bmy presentation\b|\bmy remarks\b|\bmy response\b|\bmy team\b|\bwe\b|\bour team's\b|"
-    r"\bcould you\s*\([^)]+\)\s*please\b|\basked me\b|\bconsulted me\b",
-    re.I,
-)
-PROFILE_SCOPE_REQUEST_RE = re.compile(
-    r"\b(what aspects should I focus|what suggestions should I|what should I suggest|"
-    r"what are your suggestions|what would you suggest|do you have any suggestions|"
-    r"how would you suggest|what kind of .* should I propose|what is my most appropriate next step|"
-    r"what is the most efficient and suitable method|which of the following solutions is most worth adopting|"
-    r"general optimization strategies .* share|asked me .* think of a way|how can I quickly implement|"
-    r"how (?:should I|I should) .*?(?:prepare|respond|approach|integrate|implement)|how should I prepare (?:my )?"
-    r"(?:remarks|presentation|response|integration plan)|how should I respond|from what angles should I approach|"
-    r"from what angle should I approach|how would you approach this|under what circumstances|"
-    r"identify the key aspects|brainstorm some ideas|brainstorm my entry points|organize my thoughts|"
-    r"plan what work we can start)\b|"
-    r"\b(draft|write|summari[sz]e|prepare|brainstorm|identify|propose|suggest|respond|post|outline|organize|compile)\b.*"
-    r"\b(group message|message|reply|summary|outline|response|remarks|presentation|follow-up plan|"
-    r"work plan|sharing outline|deployment plan|integration plan|implementation plan|technical considerations|"
-    r"proposal|criteria|ideas|suggestions|professional responsibilities|progress update|report|speech draft|"
-    r"speech|talking points|key points|sharing points|work priorities|checklist|thoughts)\b",
-    re.I,
-)
-
-
 def scope_type_policy_for_question(item: Mapping[str, Any], configured_scope_types: Sequence[str]) -> Dict[str, Any]:
+    del item
     configured = [str(scope_type) for scope_type in configured_scope_types if scope_type]
-    if "task_object" not in configured:
-        return {
-            "name": "configured_scope_types",
-            "configured_scope_types": configured,
-            "effective_scope_types": configured,
-            "task_object_demoted": False,
-            "task_label_used": False,
-            "reason": "task_object_not_configured",
-        }
-
-    question = str(item.get("Q") or "")
-    negative_match = PROFILE_SCOPE_NEGATIVE_RE.search(question)
-    actor_match = PROFILE_SCOPE_ACTOR_RE.search(question)
-    request_match = PROFILE_SCOPE_REQUEST_RE.search(question)
-    if actor_match and request_match and not negative_match:
-        effective = [scope_type for scope_type in configured if scope_type != "task_object"]
-        return {
-            "name": "question_semantic_profile_scope",
-            "configured_scope_types": configured,
-            "effective_scope_types": effective,
-            "task_object_demoted": True,
-            "task_label_used": False,
-            "reason": "profile_or_advice_request_centers_on_person_group_not_task_object",
-            "matched_actor_cue": actor_match.group(0),
-            "matched_request_cue": request_match.group(0),
-        }
-
     return {
-        "name": "question_semantic_scope",
+        "name": "configured_scope_types",
         "configured_scope_types": configured,
         "effective_scope_types": configured,
-        "task_object_demoted": False,
         "task_label_used": False,
-        "reason": "question_does_not_match_profile_scope_pattern",
-        "blocked_by_negative_cue": negative_match.group(0) if negative_match else None,
+        "reason": "one shared v2 scope policy for every question",
     }
 
 
@@ -250,21 +195,8 @@ def order_routed_scopes_for_policy(
     scope_type_policy: Mapping[str, Any],
     top_k: int,
 ) -> List[Dict[str, Any]]:
-    scopes = [dict(scope) for scope in routed_scopes]
-    if not scopes or not scope_type_policy.get("task_object_demoted"):
-        return scopes
-    if scope_type_policy.get("name") != "question_semantic_profile_scope":
-        return scopes
-
-    type_priority = {"person": 0, "group": 1}
-    scopes.sort(
-        key=lambda scope: (
-            type_priority.get(str(scope.get("scope_type") or ""), 2),
-            -float(scope.get("score") or 0.0),
-            str(scope.get("scope_id") or ""),
-        )
-    )
-    return scopes[:top_k]
+    del scope_type_policy
+    return [dict(scope) for scope in routed_scopes[:top_k]]
 
 
 def truncate_text(text: str, max_chars: int) -> str:
@@ -601,6 +533,7 @@ def run_answer(
     state_final_top: int,
     max_context_events: int,
     time_role_selector: str,
+    temporal_grounding: str,
     embedding_candidate_k: int,
 ) -> Dict[str, Any]:
     retrieval_include_options = bool(include_options_in_query)
@@ -654,7 +587,7 @@ def run_answer(
         "route_query": scope_route_query,
         "scope_type_policy": scope_type_policy,
         "effective_scope_types": effective_scope_types,
-        "scope_order_policy": "profile_person_first" if scope_type_policy.get("task_object_demoted") else "score_order",
+        "scope_order_policy": "score_order",
         "routed_scopes": routed_scopes,
         "scoped_event_count": len(scoped_event_ids),
     }
@@ -667,6 +600,7 @@ def run_answer(
     }
     notes_by_event: Dict[str, List[str]] = {}
     expanded_evidence: Any = None
+    temporal_grounding_rows: List[Dict[str, Any]] = []
     if graph_expansion == "sts":
         if graph_evidence is None:
             raise ValueError("graph_expansion=sts requires STSGraphEvidenceIndex")
@@ -698,9 +632,21 @@ def run_answer(
         ]
         state_lines = [f"- {line}" for line in expanded_evidence.state_summaries]
         relation_lines = [f"- {line}" for line in expanded_evidence.relation_summaries[:12]]
+        if temporal_grounding == "question-only":
+            temporal_grounding_rows = graph_evidence.temporal_grounding_rows(
+                scope_route_query,
+                top_events,
+                time_role_selection["time_roles"],
+            )
+        temporal_lines = [
+            "- " + format_temporal_grounding(row, include_resolved=True)
+            for row in temporal_grounding_rows
+        ]
         preamble_parts = []
         if scope_lines:
             preamble_parts.append("[STS_SCOPE_ROUTING]\n" + "\n".join(scope_lines))
+        if temporal_lines:
+            preamble_parts.append("[STS_TEMPORAL_GROUNDING]\n" + "\n".join(temporal_lines))
         if state_lines:
             preamble_parts.append("[STS_GRAPH_STATE_FACETS]\n" + "\n".join(state_lines))
         if relation_lines:
@@ -715,11 +661,24 @@ def run_answer(
                 "event_time_rerank",
                 "statefacet_validity_selection",
                 "graph_expansion",
+                "temporal_grounding",
             ],
             **expanded_evidence.trace(),
             "scope_routing": scope_trace,
             "seed_retrieval": seed_retrieval_trace,
             "time_role_selection": time_role_selection,
+            "temporal_grounding": {
+                "mode": temporal_grounding,
+                "input_boundary": [
+                    "question_text",
+                    "selected_graph_events",
+                    "claim_time_values",
+                    "source_event_timestamps",
+                ],
+                "uses_task_labels": False,
+                "uses_gold": False,
+                "rows": temporal_grounding_rows,
+            },
         }
     else:
         top_events = seed_events
@@ -855,6 +814,7 @@ def main() -> None:
         f"state_final_top={args.state_final_top} "
         f"max_context_events={args.max_context_events} "
         f"time_role_selector={args.time_role_selector} "
+        f"temporal_grounding={args.temporal_grounding} "
         f"graph_retriever=sts_generic_graphrag "
         f"embedding_retrieval={args.embedding_retrieval} embedding_model={args.embedding_model if args.embedding_retrieval == 'hybrid' else 'none'} "
         f"embedding_targets={sorted(embedding_targets) if args.embedding_retrieval == 'hybrid' else []} "
@@ -885,6 +845,7 @@ def main() -> None:
             args.state_final_top,
             args.max_context_events,
             args.time_role_selector,
+            args.temporal_grounding,
             args.embedding_candidate_k,
         ),
     )
@@ -912,13 +873,14 @@ def main() -> None:
             "scope_routing": args.scope_routing,
             "scope_top_k": args.scope_top_k,
             "scope_types": scope_types,
-            "scope_type_policy": "question_semantic_profile_scope_demotes_task_object_and_orders_person_first_without_task_label",
+            "scope_type_policy": "one_shared_v2_scope_policy_without_task_labels",
             "graph_expansion": args.graph_expansion,
             "include_options_in_query": args.include_options_in_query,
             "top_k": args.top_k,
             "state_final_top": args.state_final_top,
             "max_context_events": args.max_context_events,
             "time_role_selector": args.time_role_selector,
+            "temporal_grounding": args.temporal_grounding,
             "graph_retriever": "sts_generic_graphrag",
             "embedding_retrieval": args.embedding_retrieval,
             "embedding_model": args.embedding_model if args.embedding_retrieval == "hybrid" else None,

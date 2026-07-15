@@ -2,17 +2,23 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass
+import json
 from pathlib import Path
 import re
 from typing import Any, DefaultDict, Dict, List, Mapping, Optional, Sequence
 
 from pipeline.external.embedding_retrieval import OpenAIEmbeddingIndex
+from pipeline.external.sts_v2.schema import SCHEMA_VERSION
+from pipeline.external.temporal_grounding import (
+    ground_explicit_time_value,
+    ground_temporal_expressions,
+    question_requests_temporal_grounding,
+)
 from ours_scope_time_state.qa_probe import BM25Index, qa_query_text, read_jsonl
 
 
 RELATION_EDGE_TYPES = {"SUPERSEDES", "CORRECTS", "CONFLICTS_WITH"}
 EMBEDDING_RETRIEVAL_SCORE_WEIGHT = 8.0
-PERSON_NAME_RE = re.compile(r"\b[A-Z][a-z]+ [A-Z][a-z]+\b")
 
 ENDPOINT_STOP_TERMS = {
     "about",
@@ -91,18 +97,6 @@ ENDPOINT_IMPORTANT_TERMS = {
     "trigger",
     "verify",
     "write",
-}
-NON_PERSON_NAME_TOKENS = {
-    "American",
-    "Backend",
-    "Buyer",
-    "Company",
-    "Department",
-    "Frontend",
-    "Health",
-    "Management",
-    "Project",
-    "System",
 }
 
 
@@ -185,32 +179,6 @@ def _endpoint_terms(text: str) -> List[str]:
             continue
         terms.append(term)
     return terms
-
-
-def _normalize_person_name(value: object) -> str:
-    return re.sub(r"\s+", " ", str(value or "").strip()).lower()
-
-
-def _likely_person_name(value: str) -> bool:
-    tokens = [token for token in str(value or "").split() if token]
-    if len(tokens) != 2:
-        return False
-    if any(token in NON_PERSON_NAME_TOKENS for token in tokens):
-        return False
-    return all(re.fullmatch(r"[A-Z][a-z]+", token) for token in tokens)
-
-
-def _extract_person_names(text: object) -> List[str]:
-    names: List[str] = []
-    seen: set[str] = set()
-    for match in PERSON_NAME_RE.finditer(str(text or "")):
-        name = " ".join(match.group(0).split())
-        key = _normalize_person_name(name)
-        if not key or key in seen or not _likely_person_name(name):
-            continue
-        seen.add(key)
-        names.append(name)
-    return names
 
 
 def _endpoint_content_match_score(query: str, document: str) -> tuple[float, Dict[str, Any]]:
@@ -305,12 +273,8 @@ class STSGraphEvidenceIndex:
         self.claims: Dict[str, Dict[str, Any]] = {}
         self.state_facets: Dict[str, Dict[str, Any]] = {}
         self.time_nodes: Dict[str, Dict[str, Any]] = {}
-        self.person_scope_by_name: Dict[str, str] = {}
-        self.person_name_by_scope: Dict[str, str] = {}
         self.scopes_by_event: DefaultDict[str, List[str]] = defaultdict(list)
         self.events_by_scope: DefaultDict[str, List[str]] = defaultdict(list)
-        self.responsible_people_by_task_scope: DefaultDict[str, set[str]] = defaultdict(set)
-        self.task_scopes_by_responsible_person: DefaultDict[str, set[str]] = defaultdict(set)
         self.claims_by_event: DefaultDict[str, List[str]] = defaultdict(list)
         self.states_by_claim: DefaultDict[str, List[str]] = defaultdict(list)
         self.current_scope_by_state: Dict[str, str] = {}
@@ -444,10 +408,17 @@ class STSGraphEvidenceIndex:
         return ranked[:top_k]
 
     def _load(self) -> None:
+        manifest_path = self.graph_dir / "manifest.json"
         nodes_path = self.graph_dir / "nodes.jsonl"
         edges_path = self.graph_dir / "edges.jsonl"
-        if not nodes_path.exists() or not edges_path.exists():
+        if not manifest_path.exists() or not nodes_path.exists() or not edges_path.exists():
             raise FileNotFoundError(f"missing graph artifact files under {self.graph_dir}")
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        schema_version = str(manifest.get("schema_version") or "")
+        if schema_version != SCHEMA_VERSION:
+            raise ValueError(
+                f"incompatible STS v2 graph schema: {schema_version or 'missing'}; expected {SCHEMA_VERSION}"
+            )
 
         for node in read_jsonl(nodes_path):
             node_type = node.get("node_type")
@@ -456,18 +427,12 @@ class STSGraphEvidenceIndex:
             elif node_type == "Entity/Scope" and node.get("role") == "scope":
                 scope_identifier = str(node["scope_id"])
                 self.scopes[scope_identifier] = node
-                if str(node.get("scope_type") or "") == "person":
-                    label = str(node.get("label") or "")
-                    match = re.fullmatch(r"PersonScope\((.+)\)", label)
-                    person_name = match.group(1) if match else str(node.get("value") or "")
-                    if person_name:
-                        key = _normalize_person_name(person_name)
-                        self.person_scope_by_name[key] = scope_identifier
-                        self.person_name_by_scope[scope_identifier] = " ".join(person_name.split())
             elif node_type == "Claim":
                 self.claims[str(node["claim_id"])] = node
             elif node_type == "StateFacet":
-                self.state_facets[str(node["state_facet_id"])] = node
+                state_id = str(node.get("facet_id") or node.get("state_facet_id") or "")
+                if state_id:
+                    self.state_facets[state_id] = node
             elif node_type == "Time":
                 self.time_nodes[str(node["time_id"])] = node
 
@@ -508,43 +473,9 @@ class STSGraphEvidenceIndex:
                 time_node = self.time_nodes.get(target, {})
                 self.occurred_time_by_event[source] = str(time_node.get("value") or "")
                 self.occurred_time_id_by_event[source] = target
-            elif edge_type == "RESPONSIBLE_FOR":
-                person_name = self.person_name_by_scope.get(source)
-                if person_name and target in self.scopes:
-                    self._add_responsibility(person_name, target)
             elif edge_type in RELATION_EDGE_TYPES:
                 self.relations_by_claim[source].append(edge)
                 self.relations_by_claim[target].append(edge)
-        self._infer_responsibility_from_claims()
-
-    def _add_responsibility(self, person_name: str, task_scope_id: str) -> None:
-        task_scope = self.scopes.get(task_scope_id, {})
-        if str(task_scope.get("scope_type") or "") != "task_object":
-            return
-        normalized = _normalize_person_name(person_name)
-        if not normalized:
-            return
-        display_name = " ".join(str(person_name).split())
-        self.responsible_people_by_task_scope[task_scope_id].add(display_name)
-        self.task_scopes_by_responsible_person[normalized].add(task_scope_id)
-
-    def _infer_responsibility_from_claims(self) -> None:
-        for claim in self.claims.values():
-            if str(claim.get("facet_key") or "").lower() != "owner":
-                continue
-            task_scope_ids = [
-                str(scope_id)
-                for scope_id in claim.get("task_object_scope_ids", []) or []
-                if str(scope_id) in self.scopes
-            ]
-            if not task_scope_ids:
-                continue
-            person_names = _extract_person_names(
-                " ".join(str(claim.get(key) or "") for key in ("object", "value"))
-            )
-            for person_name in person_names:
-                for task_scope_id in task_scope_ids:
-                    self._add_responsibility(person_name, task_scope_id)
 
     def _claim_text(self, claim_id: str) -> str:
         claim = self.claims.get(claim_id, {})
@@ -561,7 +492,6 @@ class STSGraphEvidenceIndex:
                 claim.get("phase_role"),
                 claim.get("time_value_source"),
                 claim.get("time_value"),
-                " ".join(str(value) for value in claim.get("task_object_labels", []) or []),
                 claim.get("metric_type"),
                 claim.get("metric_unit"),
                 claim.get("metric_value_num"),
@@ -634,7 +564,7 @@ class STSGraphEvidenceIndex:
         self._scope_doc_ids = [
             scope_id
             for scope_id, scope in sorted(self.scopes.items())
-            if str(scope.get("scope_type") or "") in {"project", "group", "person", "task_object"}
+            if str(scope.get("scope_type") or "") in {"project", "group", "person"}
         ]
         self._scope_docs = [self._scope_doc(scope_id) for scope_id in self._scope_doc_ids]
         self._scope_doc_by_id = dict(zip(self._scope_doc_ids, self._scope_docs))
@@ -671,9 +601,7 @@ class STSGraphEvidenceIndex:
             )
             label_score, label_trace = _endpoint_content_match_score(query, label_doc)
             doc_score, doc_trace = _endpoint_content_match_score(query, self._scope_doc_by_id.get(scope_id, ""))
-            if scope_type == "task_object":
-                content_score = (2.0 * label_score) + min(doc_score, 8.0)
-            elif scope_type in {"group", "project"}:
+            if scope_type in {"group", "project"}:
                 content_score = label_score + min(doc_score, 12.0)
             else:
                 content_score = label_score + min(doc_score, 6.0)
@@ -700,38 +628,6 @@ class STSGraphEvidenceIndex:
         if not candidates:
             return []
         candidates.sort(key=lambda item: (-float(item.get("score") or 0.0), str(item.get("scope_id") or "")))
-        if "task_object" in allowed_types and top_k > 1:
-            by_type: DefaultDict[str, List[Dict[str, Any]]] = defaultdict(list)
-            for candidate in candidates:
-                by_type[str(candidate.get("scope_type") or "")].append(candidate)
-            selected: List[Dict[str, Any]] = []
-            selected_ids: set[str] = set()
-
-            def add_candidates(scope_type: str, quota: int) -> None:
-                nonlocal selected
-                for candidate in by_type.get(scope_type, []):
-                    if len(selected) >= top_k or quota <= 0:
-                        break
-                    scope_id = str(candidate["scope_id"])
-                    if scope_id in selected_ids:
-                        continue
-                    selected.append(candidate)
-                    selected_ids.add(scope_id)
-                    quota -= 1
-
-            add_candidates("task_object", min(2, top_k))
-            if len(selected) < top_k:
-                add_candidates("group", 1)
-            if len(selected) < top_k:
-                add_candidates("person", 1)
-            for candidate in candidates:
-                if len(selected) >= top_k:
-                    break
-                scope_id = str(candidate["scope_id"])
-                if scope_id not in selected_ids:
-                    selected.append(candidate)
-                    selected_ids.add(scope_id)
-            return selected[:top_k]
         if {"group", "person"}.issubset(allowed_types) and top_k > 1:
             by_type: DefaultDict[str, List[Dict[str, Any]]] = defaultdict(list)
             for candidate in candidates:
@@ -760,37 +656,6 @@ class STSGraphEvidenceIndex:
         for scope_id in scope_ids:
             event_ids.update(self.events_by_scope.get(str(scope_id), []))
         return event_ids
-
-    def candidate_task_object_scope_ids(self, candidate: Mapping[str, Any]) -> List[str]:
-        scope_ids = [
-            str(scope_id)
-            for scope_id in candidate.get("task_object_scope_ids", []) or []
-            if str(scope_id) in self.scopes
-        ]
-        source_id = str(candidate.get("source_id") or "")
-        claim = self.claims.get(source_id, {})
-        for scope_id in claim.get("task_object_scope_ids", []) or []:
-            scope_text = str(scope_id)
-            if scope_text in self.scopes and scope_text not in scope_ids:
-                scope_ids.append(scope_text)
-        return scope_ids
-
-    def candidate_responsible_people(self, candidate: Mapping[str, Any]) -> List[str]:
-        people: List[str] = []
-        seen: set[str] = set()
-        for scope_id in self.candidate_task_object_scope_ids(candidate):
-            for person in sorted(self.responsible_people_by_task_scope.get(scope_id, set())):
-                key = _normalize_person_name(person)
-                if key and key not in seen:
-                    seen.add(key)
-                    people.append(person)
-        speaker = str(candidate.get("speaker") or "").strip()
-        if speaker:
-            key = _normalize_person_name(speaker)
-            if key and key not in seen:
-                seen.add(key)
-                people.append(speaker)
-        return people
 
     def _state_scope_ids(self, state_id: str) -> List[str]:
         state = self.state_facets.get(state_id, {})
@@ -853,6 +718,87 @@ class STSGraphEvidenceIndex:
             "time_ids": list(dict.fromkeys(time_ids)),
             "current_state_facet_ids": list(dict.fromkeys(state_facet_ids)),
         }
+
+    def temporal_grounding_rows(
+        self,
+        question: str,
+        event_ids: Sequence[str],
+        time_roles: Sequence[str],
+        limit: int = 32,
+    ) -> List[Dict[str, Any]]:
+        if not question_requests_temporal_grounding(question):
+            return []
+        requested_roles = {str(role) for role in time_roles if role}
+        rows: List[Dict[str, Any]] = []
+        seen = set()
+        for event_rank, event_id in enumerate(event_ids, start=1):
+            event = self.events.get(str(event_id), {})
+            anchor_value = (
+                self.occurred_time_by_event.get(str(event_id))
+                or event.get("occurred_at")
+                or event.get("time")
+                or event.get("date")
+            )
+            profile = self.event_time_profile(str(event_id))
+            matched_roles = [role for role in profile["time_roles"] if role in requested_roles]
+            event_role = matched_roles[0] if matched_roles else "occurred_at"
+            for grounding in ground_temporal_expressions(event.get("text"), anchor_value):
+                row = dict(grounding)
+                row.update(
+                    {
+                        "event_id": str(event_id),
+                        "event_rank": event_rank,
+                        "time_role": event_role,
+                        "source": "event_text_relative_time",
+                        "claim_id": None,
+                        "time_id": None,
+                    }
+                )
+                key = (row["event_id"], row["time_role"], row["normalized_value"])
+                if key not in seen:
+                    seen.add(key)
+                    rows.append(row)
+            for claim_id in self.claims_by_event.get(str(event_id), []):
+                for time_item in self.times_by_claim.get(claim_id, []):
+                    role = str(time_item.get("time_role") or "")
+                    source = str(time_item.get("time_value_source") or "")
+                    if requested_roles and role not in requested_roles:
+                        continue
+                    if source not in {"relative_text_time", "explicit_text_time", "phase_from_event_time"}:
+                        continue
+                    grounding = ground_explicit_time_value(time_item.get("value"), anchor_value)
+                    if grounding is None:
+                        continue
+                    row = dict(grounding)
+                    row.update(
+                        {
+                            "event_id": str(event_id),
+                            "event_rank": event_rank,
+                            "time_role": role or event_role,
+                            "source": f"graph_{source}",
+                            "claim_id": claim_id,
+                            "time_id": time_item.get("time_id"),
+                        }
+                    )
+                    key = (row["event_id"], row["time_role"], row["normalized_value"])
+                    if key not in seen:
+                        seen.add(key)
+                        rows.append(row)
+        source_priority = {
+            "graph_relative_text_time": 0,
+            "graph_explicit_text_time": 1,
+            "event_text_relative_time": 2,
+            "graph_phase_from_event_time": 3,
+        }
+        rows.sort(
+            key=lambda row: (
+                int(row.get("event_rank") or 10**9),
+                source_priority.get(str(row.get("source") or ""), 10),
+                str(row.get("time_role") or ""),
+                str(row.get("normalized_value") or ""),
+            )
+        )
+        return rows[: max(limit, 0)] if limit > 0 else rows
 
     def _state_relation_profile(self, state_id: str) -> Dict[str, Any]:
         profile: Dict[str, Any] = {

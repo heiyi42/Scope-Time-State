@@ -18,6 +18,7 @@ for import_path in (PROJECT_DIR, BASELINE_DIR):
         sys.path.insert(0, str(import_path))
 
 from ours_scope_time_state.loader import DATA_DIR, GRAPH_OUTPUT_DIR
+from pipeline.external.sts_v2.schema import SCHEMA_VERSION
 
 
 TOKEN_RE = re.compile(r"[A-Za-z0-9_]+")
@@ -36,7 +37,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--graph-dir",
         type=Path,
-        default=GRAPH_OUTPUT_DIR / "evermembench_topic_graph_llm_v1/01",
+        default=GRAPH_OUTPUT_DIR / "evermembench_topic_graph_v2_state_merge/01",
         help="Directory containing nodes.jsonl and edges.jsonl for one topic.",
     )
     parser.add_argument("--mode", choices=("event_text", "graph_context"), default="graph_context")
@@ -107,10 +108,17 @@ def compact_parts(*parts: Any) -> str:
 
 
 def load_graph_documents(graph_dir: Path, mode: str) -> Tuple[List[str], List[str], Dict[str, Dict[str, Any]]]:
+    manifest_path = graph_dir / "manifest.json"
     nodes_path = graph_dir / "nodes.jsonl"
     edges_path = graph_dir / "edges.jsonl"
-    if not nodes_path.exists() or not edges_path.exists():
+    if not manifest_path.exists() or not nodes_path.exists() or not edges_path.exists():
         raise FileNotFoundError(f"missing graph files under {graph_dir}")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    schema_version = str(manifest.get("schema_version") or "")
+    if schema_version != SCHEMA_VERSION:
+        raise ValueError(
+            f"incompatible STS v2 graph schema: expected {SCHEMA_VERSION}, got {schema_version or '<missing>'}"
+        )
 
     events: Dict[str, Dict[str, Any]] = {}
     claims: Dict[str, Dict[str, Any]] = {}
@@ -122,7 +130,9 @@ def load_graph_documents(graph_dir: Path, mode: str) -> Tuple[List[str], List[st
         elif node_type == "Claim":
             claims[str(node["claim_id"])] = node
         elif node_type == "StateFacet":
-            state_facets[str(node["state_facet_id"])] = node
+            facet_id = str(node.get("facet_id") or node.get("state_facet_id") or "")
+            if facet_id:
+                state_facets[facet_id] = node
 
     asserted_claims: Dict[str, List[str]] = defaultdict(list)
     supported_states_by_claim: Dict[str, List[str]] = defaultdict(list)
