@@ -1,6 +1,6 @@
 # STS Graph v3 Design
 
-**Status:** approved in chat; pending written-spec review
+**Status:** approved for implementation
 
 **Date:** 2026-07-15
 
@@ -38,6 +38,7 @@ The implementation must not modify, import runtime code from, or overwrite:
 
 ```text
 Experiment/Other_BenchMark/LoCoMo-QA/Baseline/ours_scope_time_state/
+Experiment/Other_BenchMark/LoCoMo-QA/run_locomo_graph_builder.py
 Graph/output/results/locomo_qa/ours_scope_time_state/
 every pre-existing Graph/output/graph/locomo_qa_sample_graph_*/ root
 every pre-existing LoCoMo cache root under Graph/output/cache/
@@ -45,6 +46,8 @@ Experiment/Other_BenchMark/LoCoMo-QA/tests/test_graph_v2.py
 ```
 
 Existing artifacts remain the frozen A/B baseline even if v3 later becomes the preferred method. Before implementation, code records a checksum manifest for these protected roots; tests compare it after v3 writes. Path guards operate on `Path.resolve()` and reject protected directories and symlink targets.
+
+The protected cache set is frozen from the implementation-start snapshot and explicitly excludes the dedicated `Graph/output/cache/locomo_qa_sts_v3/` root. A later builder/query invocation must not dynamically reclassify v3's own cache as a protected v2 cache.
 
 ### 2.2 New v3 surfaces
 
@@ -154,6 +157,8 @@ is_hard_boundary: bool
 
 Scope represents a visible source boundary. The LLM never creates Scope nodes or topic labels. Semantic Scope retrieval uses an index document derived from the Scope's raw Events, linked Entity aliases, Claim predicates/objects, and normalized Times.
 
+Scope is source-provided structure, not an LLM classification. The adapter copies or deterministically names containers already present in the source, such as a memory, session, channel, thread, or explicit topic ID/title. If the source has no topic metadata, v3 creates no Topic Scope. For LoCoMo specifically, the adapter creates only one hard Memory Scope per `sample_id` and one child Session Scope per `session_N`; speaker is an Entity, session date is Time, and no Speaker or Topic Scope is materialized. Scope `label` comes from the source key/title, while the separate retrieval document is assembled by code from linked evidence.
+
 ### 5.2 Event
 
 ```text
@@ -232,7 +237,7 @@ status: current | ambiguous
 resolution_method: deterministic | pairwise_llm | mixed
 ```
 
-StateFacet is a materialized current-state index. It does not duplicate value, support Claim IDs, Event IDs, Scope IDs, or Time arrays. Its selected value comes from the Claim linked by `SUPPORTS(role=selected)`.
+StateFacet is a materialized current-state index. It does not duplicate value, support Claim IDs, Event IDs, Scope IDs, or Time arrays. Its selected value comes from the Claim linked by `SUPPORTS(support_role=selected)`.
 
 Historical StateFacets are not materialized. Historical values remain Claims connected by lifecycle edges and Time.
 
@@ -410,6 +415,8 @@ Deterministic checks run first. Only unresolved pairs call `gpt-4o-mini`, which 
 
 Invalid resolver output creates no lifecycle edge and leaves one ambiguous StateFacet with both Claims as candidates. It must not silently treat conflicting values as independent current facts.
 
+State folding is incremental rather than all-pairs. Claims are grouped by `(subject_entity_id, predicate_key)` and processed in deterministic state order. A same-`object_key`, same-polarity incoming Claim is merged as compatible evidence without an LLM call. Claims outside that group are never compared. Only a different object or polarity within the same active dimension is compared with its current selected/candidate representative; the resolver decides replacement, correction, conflict, or separation from the two structured Claims and their two raw Events. This keeps resolver work linear in Claims per dimension rather than quadratic.
+
 ### 8.5 State time order and proof closure
 
 Code derives each ongoing Claim's `effective_state_time` in this order:
@@ -425,7 +432,7 @@ Resolver inputs are ordered by source sequence, so `new` and `old` mean later an
 A lifecycle edge does not make the historical Claim a selected facet member. A current supersession proof is the closed bundle:
 
 ```text
-current Claim --SUPPORTS(selected)--> StateFacet
+current Claim --SUPPORTS(support_role=selected)--> StateFacet
 current Claim --SUPERSEDES/CORRECTS--> historical Claim
 raw Event --ASSERTS--> each Claim
 ```
@@ -463,7 +470,7 @@ state_mode: none | current | history | at_time
 count_unit: occurrence | event | entity | value | stated_number | null
 ```
 
-Each binding's `t` is either null or the corresponding time phrase from the question. Intersection is represented by multiple bindings sharing the same answer variable. Comparison and open-domain composition questions use `answer_mode=compose` with every premise or operand represented by a binding. Neither case introduces another retrieval mode or a persisted derived-relation edge.
+Each binding's `t` is either null, the corresponding time phrase from the question, or a variable such as `?answer` when Time is the requested slot. This uses the existing binding field; it does not add a time-answer mode. Intersection is represented by multiple bindings sharing the same answer variable. Comparison and open-domain composition questions use `answer_mode=compose` with every premise or operand represented by a binding. Neither case introduces another retrieval mode or a persisted derived-relation edge.
 
 Frame failure does not trigger an LLM repair call. The fallback is the original question plus exact Entity anchors. It may retrieve diagnostic context, but answer readout proceeds only if code can still construct at least one valid binding; otherwise the result is unavailable.
 
@@ -755,6 +762,8 @@ Inside newly added v3 surfaces:
 - when v3 logic is replaced during implementation, delete the replaced v3 code in the same change;
 - keep LoCoMo wrappers thin and put shared behavior in `pipeline/sts_v3`;
 - do not leave deprecated aliases or no-op flags for unimplemented behavior.
+
+Implementation bugs do not authorize schema growth. The ten model fields, six node roles, typed edge set, compact query frame, and one retrieval chain remain frozen while implementing v3. A bug must first be fixed in an existing adapter, validation, materialization, index, retrieval, verifier, or readout layer, with the replaced v3 logic removed. If a reproducible case truly cannot be represented, implementation pauses and proposes the smallest cross-benchmark schema delta for explicit approval; it must not add a catch-all metadata blob, compatibility mode, or benchmark-specific field on its own.
 
 ## 17. Non-goals
 
