@@ -130,12 +130,22 @@ def normalize_extraction(
     return record
 
 
-EXTRACTION_SYSTEM_PROMPT = """Extract an EPBench chapter into the fixed STS v2 JSON contract.
-Return {\"chapters\": [...]} with exactly one item per visible chapter_id. Each item must contain
-chapter_id, concise_summary, dates, locations, entities, event_types, and claims. Every extracted
-item and claim must include a verbatim evidence_span from its own chapter. Entity items also include
-role (primary, participant, organization, or mentioned). Claim predicates are restricted to:
-episodic_action, lives_in, works_at, member_of, has_status, prefers. Do not infer facts not stated."""
+EXTRACTION_SYSTEM_PROMPT = """Extract EPBench chapters into this exact STS v2 JSON shape:
+{
+  "chapters": [{
+    "chapter_id": 1,
+    "concise_summary": "short chapter summary",
+    "dates": [{"value": "date", "evidence_span": "exact source substring"}],
+    "locations": [{"value": "place", "evidence_span": "exact source substring"}],
+    "entities": [{"value": "entity", "role": "primary|participant|organization|mentioned", "evidence_span": "exact source substring"}],
+    "event_types": [{"value": "event type", "evidence_span": "exact source substring"}],
+    "claims": [{"subject": "entity", "predicate": "allowed predicate", "value": "atomic value", "evidence_span": "exact source substring"}]
+  }]
+}
+Return exactly one object per visible chapter_id. Never return bare strings inside these lists.
+Never rename value to name or omit subject/value from a Claim. Every evidence_span must be copied
+verbatim from its own chapter. Allowed Claim predicates are episodic_action, lives_in, works_at,
+member_of, has_status, and prefers. Use [] when no grounded item exists. Do not infer unstated facts."""
 
 
 def _extract_chunk(

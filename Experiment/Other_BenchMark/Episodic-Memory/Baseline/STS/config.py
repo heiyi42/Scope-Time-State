@@ -4,9 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from pipeline.external.sts_v2.schema import SCHEMA_VERSION
-
-
 STS_DIR = Path(__file__).resolve().parent
 EPBENCH_ROOT = STS_DIR.parents[1]
 REPO_ROOT = STS_DIR.parents[4]

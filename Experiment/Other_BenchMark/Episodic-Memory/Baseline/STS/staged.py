@@ -163,7 +163,7 @@ def build_question_frame(question: str, client: Any | None) -> QuestionFrame:
     raw: Mapping[str, Any] = {}
     if client is not None:
         raw = client.complete_json(
-            "Frame a question for STS retrieval. Use only the question. Return ordering, time_values, entity_queries, location_queries, event_type_queries.",
+            "Frame a question for STS retrieval using only the question. Return one JSON object with ordering, time_values, entity_queries, location_queries, and event_type_queries.",
             question,
         )
         forbidden = {"answer", "correct_answer", "correct_answer_chapters", "gold", "reference"}

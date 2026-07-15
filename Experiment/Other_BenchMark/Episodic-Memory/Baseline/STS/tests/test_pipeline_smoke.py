@@ -75,6 +75,14 @@ class PipelineSmokeTests(unittest.TestCase):
             self.assertEqual(2, len(json.loads((root / "results" / "qa.json").read_text())["rows"]))
             self.assertEqual(2, len(json.loads((root / "results" / "judged.json").read_text())["rows"]))
 
+    def test_sts_runtime_has_no_artem_imports_or_gold_build_inputs(self):
+        source = "\n".join(path.read_text(encoding="utf-8") for path in STS_DIR.glob("*.py"))
+        self.assertNotIn("Baseline.ARTEM", source)
+        self.assertNotIn("artem_epbench", source)
+        builder = (STS_DIR / "graph_builder.py").read_text(encoding="utf-8")
+        self.assertNotIn("df_qa.parquet", builder)
+        self.assertNotIn("df_book_groundtruth.parquet", builder)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -9,7 +9,7 @@ STS_DIR = Path(__file__).resolve().parents[1]
 if str(STS_DIR.parent) not in sys.path:
     sys.path.insert(0, str(STS_DIR.parent))
 
-from STS.staged import STSGraphIndex, hybrid_rank
+from STS.staged import STSGraphIndex, build_question_frame, hybrid_rank
 
 
 class Hit:
@@ -41,6 +41,13 @@ class FrameClient:
         }
 
 
+class JsonModeEnforcingClient(FrameClient):
+    def complete_json(self, system_prompt, user_prompt):
+        if "json" not in f"{system_prompt} {user_prompt}".casefold():
+            raise ValueError("JSON mode requires the prompt to mention JSON")
+        return super().complete_json(system_prompt, user_prompt)
+
+
 def synthetic_graph():
     nodes = []
     edges = []
@@ -64,6 +71,10 @@ def synthetic_graph():
 
 
 class StagedRetrievalTests(unittest.TestCase):
+    def test_question_frame_prompt_is_json_mode_compatible(self):
+        frame = build_question_frame("Who attended?", JsonModeEnforcingClient())
+        self.assertEqual("none", frame.ordering)
+
     def test_embedding_only_candidate_survives_union(self):
         hits = hybrid_rank("query", SearchStub(["lexical"]), SearchStub(["dense"]), top_k=2)
         self.assertEqual({"lexical", "dense"}, {hit.doc_id for hit in hits})

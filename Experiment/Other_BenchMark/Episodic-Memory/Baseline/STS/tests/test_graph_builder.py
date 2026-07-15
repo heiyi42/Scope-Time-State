@@ -11,7 +11,7 @@ STS_DIR = Path(__file__).resolve().parents[1]
 if str(STS_DIR.parent) not in sys.path:
     sys.path.insert(0, str(STS_DIR.parent))
 
-from STS.graph_builder import build_graph, normalize_extraction, write_graph
+from STS.graph_builder import EXTRACTION_SYSTEM_PROMPT, build_graph, normalize_extraction, write_graph
 from STS.loader import Chapter
 
 
@@ -93,6 +93,12 @@ class CompatibleClient:
 
 
 class GraphBuilderTests(unittest.TestCase):
+    def test_extraction_prompt_fixes_every_nested_item_shape(self):
+        self.assertIn('"dates": [{"value":', EXTRACTION_SYSTEM_PROMPT)
+        self.assertIn('"entities": [{"value":', EXTRACTION_SYSTEM_PROMPT)
+        self.assertIn('"claims": [{"subject":', EXTRACTION_SYSTEM_PROMPT)
+        self.assertIn("Never return bare strings inside these lists", EXTRACTION_SYSTEM_PROMPT)
+
     def test_extraction_rejects_scope_without_exact_source_evidence(self):
         chapter = Chapter(1, "Julian attended a Tech Hackathon at High Line.")
         raw = {
