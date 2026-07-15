@@ -28,16 +28,25 @@ class SearchStub:
 
 
 class FrameClient:
-    def __init__(self, ordering="none"):
+    def __init__(
+        self,
+        ordering="none",
+        entity_queries=None,
+        location_queries=None,
+        event_type_queries=None,
+    ):
         self.ordering = ordering
+        self.entity_queries = ["Julian Ross"] if entity_queries is None else entity_queries
+        self.location_queries = ["High Line"] if location_queries is None else location_queries
+        self.event_type_queries = ["Tech Hackathon"] if event_type_queries is None else event_type_queries
 
     def complete_json(self, _system_prompt, _user_prompt):
         return {
             "ordering": self.ordering,
             "time_values": [],
-            "entity_queries": ["Julian Ross"],
-            "location_queries": ["High Line"],
-            "event_type_queries": ["Tech Hackathon"],
+            "entity_queries": self.entity_queries,
+            "location_queries": self.location_queries,
+            "event_type_queries": self.event_type_queries,
         }
 
 
@@ -85,14 +94,61 @@ class StagedRetrievalTests(unittest.TestCase):
         self.assertEqual(20, result.ranked_chapters[0].chapter_id)
         self.assertEqual({"entity", "location", "event_type"}, set(result.ranked_chapters[0].matched_scope_types))
 
+    def test_grounded_anchors_restrict_event_and_claim_candidates(self):
+        index = STSGraphIndex.from_graph(synthetic_graph())
+        index.event_dense = SearchStub(list(index.events))
+        index.claim_dense = SearchStub(list(index.claims))
+        result = index.retrieve("Julian Ross Tech Hackathon at High Line", FrameClient(), final_chapter_k=2)
+        self.assertEqual("grounded", result.retrieval_status)
+        self.assertEqual([20], [row.chapter_id for row in result.ranked_chapters])
+
+    def test_dense_only_scope_match_cannot_establish_event_existence(self):
+        graph = synthetic_graph()
+        graph["nodes"].append(
+            {
+                "node_id": "scope::event_type::generic",
+                "node_type": "Entity/Scope",
+                "scope_type": "event_type",
+                "value": "Workshop",
+                "graph_text": "event_type: Workshop",
+            }
+        )
+        graph["edges"].append(
+            {
+                "type": "IN_SCOPE",
+                "from": "epbench::chapter::42",
+                "to": "scope::event_type::generic",
+            }
+        )
+        index = STSGraphIndex.from_graph(graph)
+        index.scope_dense = SearchStub(list(index.scopes))
+        index.event_dense = SearchStub(list(index.events))
+        index.claim_dense = SearchStub(list(index.claims))
+        frame = FrameClient(
+            entity_queries=[],
+            location_queries=[],
+            event_type_queries=["3D Printing Workshop"],
+        )
+        result = index.retrieve("Events related to 3D Printing Workshop", frame, final_chapter_k=2)
+        self.assertEqual("no_grounded_scope", result.retrieval_status)
+        self.assertEqual([], result.ranked_chapters)
+
     def test_latest_returns_newest_graph_time(self):
         index = STSGraphIndex.from_graph(synthetic_graph())
-        result = index.retrieve("What was the latest Tech Hackathon?", FrameClient(ordering="latest"), final_chapter_k=2)
+        result = index.retrieve(
+            "What was the latest Tech Hackathon?",
+            FrameClient(ordering="latest", entity_queries=[], location_queries=[]),
+            final_chapter_k=2,
+        )
         self.assertEqual([42], [row.chapter_id for row in result.ranked_chapters[:1]])
 
     def test_chronological_orders_selected_chapters_oldest_first(self):
         index = STSGraphIndex.from_graph(synthetic_graph())
-        result = index.retrieve("List the events chronologically", FrameClient(ordering="chronological"), final_chapter_k=2)
+        result = index.retrieve(
+            "List the Tech Hackathon events chronologically",
+            FrameClient(ordering="chronological", entity_queries=[], location_queries=[]),
+            final_chapter_k=2,
+        )
         dates = [row.occurred_at for row in result.ranked_chapters]
         self.assertEqual(sorted(dates), dates)
 

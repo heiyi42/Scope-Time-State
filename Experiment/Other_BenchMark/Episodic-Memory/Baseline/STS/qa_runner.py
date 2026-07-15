@@ -12,8 +12,10 @@ from .loader import load_qa
 from .staged import EmbeddingConfig, STSGraphIndex
 
 
-ANSWER_SYSTEM_PROMPT = """Answer the EPBench question using only the retrieved STS evidence.
-Return JSON with one field: {\"answer\": \"concise answer\"}. Do not mention retrieval."""
+ABSTENTION_ANSWER = "No matching event is present in the memory."
+ANSWER_SYSTEM_PROMPT = f"""Answer the EPBench question using only facts explicitly supported by the retrieved STS evidence.
+Do not infer a requested entity, location, time, event, or detail from semantic similarity alone. If the evidence does not explicitly establish the requested item, answer exactly: {ABSTENTION_ANSWER}
+Return JSON with one field: {{\"answer\": \"concise answer\"}}. Do not mention retrieval."""
 JUDGE_SYSTEM_PROMPT = """Judge a prediction against the reference answer for the supplied question.
 Return JSON only: {\"score\": 0, \"correct\": false, \"reason\": \"short grounded reason\"}.
 Score must be an integer from 0 to 10."""
@@ -70,15 +72,24 @@ def run_qa(
             continue
         retrieval = index.retrieve(item.question, frame_client, **retrieval_kwargs)
         context = _answer_context(retrieval)
-        user_prompt = json.dumps(
-            {"question": item.question, "retrieved_context": context},
-            ensure_ascii=False,
-            indent=2,
-        )
-        raw = dict(answer_client.complete_json(ANSWER_SYSTEM_PROMPT, user_prompt))
-        answer = " ".join(str(raw.get("answer") or "").split())
-        if not answer:
-            raise ValueError(f"answer model returned an empty answer for row {item.row_index}")
+        if retrieval.ranked_chapters:
+            user_prompt = json.dumps(
+                {"question": item.question, "retrieved_context": context},
+                ensure_ascii=False,
+                indent=2,
+            )
+            raw = dict(answer_client.complete_json(ANSWER_SYSTEM_PROMPT, user_prompt))
+            answer = " ".join(str(raw.get("answer") or "").split())
+            answer_source = "llm"
+            if not answer:
+                raise ValueError(f"answer model returned an empty answer for row {item.row_index}")
+        else:
+            answer = ABSTENTION_ANSWER
+            answer_source = "evidence_gate"
+            raw = {
+                "answer": answer,
+                "retrieval_status": retrieval.retrieval_status,
+            }
         row = {
             "row_index": item.row_index,
             "q_idx": item.q_idx,
@@ -88,6 +99,7 @@ def run_qa(
             "selected_chapter_ids": [chapter.chapter_id for chapter in retrieval.ranked_chapters],
             "context": context,
             "answer": answer,
+            "answer_source": answer_source,
             "raw_answer": raw,
             "answer_model": str(getattr(answer_client, "model", ANSWER_MODEL)),
             "retrieval_trace": retrieval.to_dict(),

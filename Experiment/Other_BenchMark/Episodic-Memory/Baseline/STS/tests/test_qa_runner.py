@@ -49,6 +49,17 @@ class FakeIndex:
         )
 
 
+class EmptyIndex:
+    def retrieve(self, question, frame_client, **_kwargs):
+        return RetrievalResult(
+            question=question,
+            frame=QuestionFrame(event_type_queries=["3D Printing Workshop"]),
+            ranked_chapters=[],
+            retrieval_status="no_grounded_scope",
+            trace={"unmatched_anchors": [{"scope_type": "event_type", "query": "3D Printing Workshop"}]},
+        )
+
+
 class CapturingClient:
     def __init__(self, response):
         self.response = response
@@ -85,6 +96,26 @@ class QARunnerTests(unittest.TestCase):
         prompt = answer_client.user_prompts[0]
         self.assertNotIn("correct_answer", prompt)
         self.assertNotIn("correct_answer_chapters", prompt)
+
+    def test_empty_grounded_retrieval_abstains_without_calling_answer_model(self):
+        answer_client = CapturingClient({"answer": "A hallucinated event"})
+        output_path = self.root / "qa.json"
+        with patch("STS.qa_runner.load_qa", return_value=[QA_ITEM]), patch(
+            "STS.qa_runner.STSGraphIndex.load", return_value=EmptyIndex()
+        ):
+            payload = run_qa(
+                graph_dir=self.root / "graph",
+                output_path=output_path,
+                answer_client=answer_client,
+                frame_client=CapturingClient({}),
+                embedding_config=None,
+                offset=0,
+                limit=1,
+                resume=False,
+            )
+        self.assertEqual([], answer_client.user_prompts)
+        self.assertEqual("No matching event is present in the memory.", payload["rows"][0]["answer"])
+        self.assertEqual("evidence_gate", payload["rows"][0]["answer_source"])
 
     def test_judge_preserves_raw_answer_and_trace(self):
         qa_path = self.root / "qa.json"

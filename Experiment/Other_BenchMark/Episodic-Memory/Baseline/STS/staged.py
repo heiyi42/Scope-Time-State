@@ -32,6 +32,16 @@ def _tokens(text: object) -> list[str]:
     return TOKEN_RE.findall(str(text or "").casefold())
 
 
+def _grounded_scope_match(query: object, scope_value: object) -> bool:
+    query_tokens = _tokens(query)
+    scope_tokens = _tokens(scope_value)
+    if not query_tokens or not scope_tokens:
+        return False
+    query_set = set(query_tokens)
+    scope_set = set(scope_tokens)
+    return query_set.issubset(scope_set)
+
+
 @dataclass(frozen=True)
 class RankedHit:
     doc_id: str
@@ -163,7 +173,7 @@ def build_question_frame(question: str, client: Any | None) -> QuestionFrame:
     raw: Mapping[str, Any] = {}
     if client is not None:
         raw = client.complete_json(
-            "Frame a question for STS retrieval using only the question. Return one JSON object with ordering, time_values, entity_queries, location_queries, and event_type_queries.",
+            "Frame a question for STS retrieval using only explicitly named anchors in the question. Do not infer or expand entities, locations, or event types. Return one JSON object with ordering, time_values, entity_queries, location_queries, and event_type_queries.",
             question,
         )
         forbidden = {"answer", "correct_answer", "correct_answer_chapters", "gold", "reference"}
@@ -212,11 +222,13 @@ class RetrievalResult:
     frame: QuestionFrame
     ranked_chapters: list[RankedChapter]
     trace: dict[str, Any]
+    retrieval_status: str = "grounded"
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "question": self.question,
             "frame": asdict(self.frame),
+            "retrieval_status": self.retrieval_status,
             "ranked_chapters": [asdict(row) for row in self.ranked_chapters],
             "trace": self.trace,
         }
@@ -303,21 +315,107 @@ class STSGraphIndex:
             "location": frame.location_queries,
             "event_type": frame.event_type_queries,
         }
+        has_scope_anchors = any(queries for queries in scope_queries.values())
+        matched_scope_ids_by_query: dict[tuple[str, str], set[str]] = {}
+        grounded_event_sets: list[set[str]] = []
+        unmatched_anchors: list[dict[str, str]] = []
         for scope_type, queries in scope_queries.items():
-            allowed = [scope_id for scope_id, scope in self.scopes.items() if scope.get("scope_type") == scope_type]
+            typed_scopes = {
+                scope_id: scope
+                for scope_id, scope in self.scopes.items()
+                if scope.get("scope_type") == scope_type
+            }
             for query in queries:
+                matched_scope_ids = {
+                    scope_id
+                    for scope_id, scope in typed_scopes.items()
+                    if _grounded_scope_match(query, scope.get("value"))
+                }
+                matched_scope_ids_by_query[(scope_type, query)] = matched_scope_ids
+                if not matched_scope_ids:
+                    unmatched_anchors.append({"scope_type": scope_type, "query": query})
+                    continue
+                grounded_event_sets.append(
+                    set().union(*(self.scope_events.get(scope_id, set()) for scope_id in matched_scope_ids))
+                )
+
+        grounded_event_ids: set[str] | None = None
+        if has_scope_anchors:
+            if unmatched_anchors:
+                return RetrievalResult(
+                    question=question,
+                    frame=frame,
+                    ranked_chapters=[],
+                    retrieval_status="no_grounded_scope",
+                    trace={
+                        "scope_top_k": scope_top_k,
+                        "event_candidate_k": event_candidate_k,
+                        "claim_candidate_k": claim_candidate_k,
+                        "final_chapter_k": final_chapter_k,
+                        "unmatched_anchors": unmatched_anchors,
+                        "grounded_scope_ids": sorted(
+                            set().union(*matched_scope_ids_by_query.values())
+                            if matched_scope_ids_by_query
+                            else set()
+                        ),
+                    },
+                )
+            grounded_event_ids = set.intersection(*grounded_event_sets) if grounded_event_sets else set()
+            if not grounded_event_ids:
+                return RetrievalResult(
+                    question=question,
+                    frame=frame,
+                    ranked_chapters=[],
+                    retrieval_status="no_grounded_scope",
+                    trace={
+                        "scope_top_k": scope_top_k,
+                        "event_candidate_k": event_candidate_k,
+                        "claim_candidate_k": claim_candidate_k,
+                        "final_chapter_k": final_chapter_k,
+                        "unmatched_anchors": [],
+                        "grounded_scope_ids": sorted(set().union(*matched_scope_ids_by_query.values())),
+                        "reason": "grounded anchors do not co-occur in one event",
+                    },
+                )
+
+        for scope_type, queries in scope_queries.items():
+            for query in queries:
+                allowed = matched_scope_ids_by_query[(scope_type, query)]
                 for hit in hybrid_rank(query, self.scope_bm25, self.scope_dense, scope_top_k, allowed):
                     for event_id in self.scope_events.get(hit.doc_id, set()):
+                        if grounded_event_ids is not None and event_id not in grounded_event_ids:
+                            continue
                         row = chapter_row(event_id)
                         row["score"] += hit.score
                         row["scope_types"].add(scope_type)
                         row["contributions"].append({"layer": "scope", "scope_type": scope_type, "doc_id": hit.doc_id, "score": hit.score})
 
-        for hit in hybrid_rank(question, self.event_bm25, self.event_dense, event_candidate_k):
+        for hit in hybrid_rank(
+            question,
+            self.event_bm25,
+            self.event_dense,
+            event_candidate_k,
+            grounded_event_ids,
+        ):
             row = chapter_row(hit.doc_id)
             row["score"] += hit.score
             row["contributions"].append({"layer": "event", "doc_id": hit.doc_id, "score": hit.score})
-        for hit in hybrid_rank(question, self.claim_bm25, self.claim_dense, claim_candidate_k):
+        allowed_claim_ids = (
+            {
+                claim_id
+                for claim_id, claim in self.claims.items()
+                if str(claim.get("source_event_id")) in grounded_event_ids
+            }
+            if grounded_event_ids is not None
+            else None
+        )
+        for hit in hybrid_rank(
+            question,
+            self.claim_bm25,
+            self.claim_dense,
+            claim_candidate_k,
+            allowed_claim_ids,
+        ):
             claim = self.claims[hit.doc_id]
             event_id = str(claim["source_event_id"])
             row = chapter_row(event_id)
@@ -365,7 +463,20 @@ class STSGraphIndex:
             question=question,
             frame=frame,
             ranked_chapters=ranked,
-            trace={"scope_top_k": scope_top_k, "event_candidate_k": event_candidate_k, "claim_candidate_k": claim_candidate_k, "final_chapter_k": final_chapter_k},
+            retrieval_status=("grounded" if has_scope_anchors else "unanchored"),
+            trace={
+                "scope_top_k": scope_top_k,
+                "event_candidate_k": event_candidate_k,
+                "claim_candidate_k": claim_candidate_k,
+                "final_chapter_k": final_chapter_k,
+                "unmatched_anchors": [],
+                "grounded_scope_ids": sorted(
+                    set().union(*matched_scope_ids_by_query.values())
+                    if matched_scope_ids_by_query
+                    else set()
+                ),
+                "grounded_event_ids": sorted(grounded_event_ids or []),
+            },
         )
 
 

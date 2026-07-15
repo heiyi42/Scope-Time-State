@@ -13,6 +13,8 @@
 - `COMPATIBLE` 通过多个 Claim 共同 `SUPPORTS` 同一个 StateFacet 表示；`DIFFERENT_TARGET` 不连边；Claim-Claim 只允许 `SUPERSEDES`、`CORRECTS`、`CONFLICTS_WITH`。
 - 构图阶段只读取 `book.json`。`df_qa.parquet` 仅在 retrieve/QA/judge 阶段显式加载，`df_book_groundtruth.parquet` 永不进入流水线。
 - build、QA、judge 默认均为 `gpt-4o-mini`；embedding 默认是 `text-embedding-3-small`。
+- Question Frame 只抽取问题中显式出现的 anchor。具体 anchor 的全部 token 必须由同类型 Scope 覆盖；dense-only 命中和通用短 Scope 不能证明事件存在。
+- 有 anchor 时，Scope 对应 Event 集合取交集，Event/Claim 只在交集内做 BM25+dense 检索。没有可靠 Scope 时记录 `retrieval_status=no_grounded_scope`，不调用回答模型，统一返回 `No matching event is present in the memory.`。
 
 ## 一次跑通
 
