@@ -374,8 +374,8 @@ def merge_decider(
             ),
         )
         result = dict(raw)
-        if str(result.get("decision") or "").upper() in {"SUPERSEDES", "CORRECTS"}:
-            result["winner"] = "incoming"
+        decision = str(result.get("decision") or "").upper()
+        result["winner"] = "incoming" if decision in {"SUPERSEDES", "CORRECTS"} else "none"
         result["evidence_event_ids"] = evidence
         return result
     return decide

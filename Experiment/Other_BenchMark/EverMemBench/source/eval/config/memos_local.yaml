@@ -1,0 +1,26 @@
+# MemOS open-source local server configuration.
+#
+# Real adapter implementation lives in:
+# ../../Baseline/memos_local/adapter.py
+
+name: "memos_local"
+version: "1.0"
+description: "MemOS open-source local server adapter for controlled evaluation"
+
+api_url: "${MEMOS_LOCAL_BASE_URL:http://localhost:8001}"
+api_key: "${MEMOS_LOCAL_API_KEY:}"
+
+batch_size: 30
+max_retries: 5
+requests_per_second: 5
+http_timeout: 300
+
+add:
+  async_mode: "${MEMOS_LOCAL_ASYNC_MODE:sync}"
+  mode: "${MEMOS_LOCAL_ADD_MODE:}"
+
+search:
+  top_k: 10
+  relativity: 0
+  dedup: "mmr"
+  mode: "fast"

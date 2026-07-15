@@ -17,6 +17,14 @@ for import_path in (PROJECT_DIR, BASELINE_DIR):
 from ours_scope_time_state import graph_builder
 
 
+class StubJsonClient:
+    def __init__(self, payload):
+        self.payload = payload
+
+    def complete_json(self, _system_prompt, _user_prompt):
+        return self.payload
+
+
 class UnifiedEverMemBenchGraphTests(unittest.TestCase):
     def _data_root(self, root: Path) -> Path:
         topic_dir = root / "01"
@@ -107,6 +115,25 @@ class UnifiedEverMemBenchGraphTests(unittest.TestCase):
             self.assertIn(facet["primary_claim_id"], facet["support_claim_ids"])
             self.assertTrue(facet["state_dimension"])
             self.assertNotIn("resolver_mode", facet)
+
+    def test_llm_merge_decider_clears_winner_for_non_lifecycle_decisions(self) -> None:
+        existing = {"source_event_id": "event-old", "value": "old value"}
+        incoming = {"source_event_id": "event-new", "value": "new value"}
+
+        for decision in ("COMPATIBLE", "DIFFERENT_TARGET", "CONFLICTS_WITH"):
+            with self.subTest(decision=decision):
+                client = StubJsonClient(
+                    {
+                        "decision": decision,
+                        "winner": "incoming",
+                        "reason": "synthetic malformed model output",
+                    }
+                )
+
+                result = graph_builder.merge_decider("llm", client)(existing, incoming)
+
+                self.assertEqual(result["winner"], "none")
+                self.assertEqual(result["evidence_event_ids"], ["event-old", "event-new"])
 
 
 if __name__ == "__main__":

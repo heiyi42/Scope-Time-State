@@ -1,0 +1,25 @@
+# EverMemBench evaluation runner dependencies.
+#
+# This file is for the benchmark/client environment. If you start Mem0, MemOS,
+# or Memobase from their official repositories, install those services with
+# their own Docker/requirements files.
+
+# Core eval pipeline.
+aiohttp>=3.9
+aiolimiter>=1.1
+openai>=1.0
+python-dotenv>=1.0
+PyYAML>=6.0
+rich>=13.0
+
+# Fair local/self-host baseline matrix.
+graphiti-core>=0.29.2
+memobase>=0.0.27
+neo4j>=5.26
+
+# mem0_local and memos_local use REST APIs, so the eval environment does not
+# need mem0ai or a MemOS Python package for the fair local/self-host runs.
+#
+# Hosted/cloud adapters are intentionally not required for the fair matrix:
+# mem0ai
+# zep-cloud

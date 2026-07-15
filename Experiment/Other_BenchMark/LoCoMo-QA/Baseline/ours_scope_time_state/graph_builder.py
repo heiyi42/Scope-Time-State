@@ -923,8 +923,8 @@ def normalize_v2_merge_decision(
     if decision in {"SUPERSEDES", "CORRECTS"}:
         if winner not in {"existing", "incoming"}:
             raise ValueError(f"{decision} requires winner=existing|incoming")
-    elif winner != "none":
-        raise ValueError(f"{decision} requires winner=none")
+    else:
+        winner = "none"
     if not reason:
         raise ValueError("v2 state merge decision requires a non-empty reason")
     raw_evidence = raw.get("evidence_event_ids", [])

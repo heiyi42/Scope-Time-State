@@ -509,6 +509,25 @@ class RoleAwareGraphBuilderTests(unittest.TestCase):
             graph_builder.validate_graph(nodes, [], "v2"),
         )
 
+    def test_v2_merge_normalizer_clears_winner_for_non_lifecycle_decisions(self) -> None:
+        existing = {"dialog_id": "D1:1", "source_event_id": "D1:1"}
+        incoming = {"dialog_id": "D2:1", "source_event_id": "D2:1"}
+
+        for decision in ("COMPATIBLE", "DIFFERENT_TARGET", "CONFLICTS_WITH"):
+            with self.subTest(decision=decision):
+                result = graph_builder.normalize_v2_merge_decision(
+                    {
+                        "decision": decision,
+                        "winner": "incoming",
+                        "reason": "synthetic malformed model output",
+                        "evidence_event_ids": ["D1:1", "D2:1"],
+                    },
+                    existing,
+                    incoming,
+                )
+
+                self.assertEqual(result["winner"], "none")
+
     def test_v2_fold_merges_support_and_tracks_lifecycle(self) -> None:
         claims = [
             {
