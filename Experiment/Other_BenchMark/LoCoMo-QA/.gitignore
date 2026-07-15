@@ -2,3 +2,4 @@ data/*.json
 data/*.jsonl
 __pycache__/
 adapters/**/__pycache__/
+tests/__pycache__/

@@ -1,0 +1,10 @@
+# ARTEM runtime dependencies (Python >= 3.10).
+# For CUDA execution, install the appropriate PyTorch build for your driver
+# first (https://pytorch.org/get-started/locally/), then install this file.
+numpy>=1.24,<3.0
+pandas>=2.0,<3.0
+tqdm>=4.66,<5.0
+torch>=2.1
+transformers>=4.41,<5.0
+sentence-transformers>=3.0,<6.0
+accelerate>=0.30,<2.0

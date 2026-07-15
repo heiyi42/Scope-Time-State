@@ -23,32 +23,19 @@ tmp/
 **/.locks/
 **/row_checkpoints/
 
-# Generated benchmark artifacts are local by default. Commit only curated,
-# reproducibility-relevant snapshots listed below.
-stamb_state_benchmark/output/*
-!stamb_state_benchmark/output/
-!stamb_state_benchmark/output/results_v1_oracle_facet.json
-!stamb_state_benchmark/output/results_v1_end_to_end.json
-!stamb_state_benchmark/output/results_v1_1_public_e2e_staged_full_20260617.json
-!stamb_state_benchmark/output/validation_report.json
-!stamb_state_benchmark/output/validation_report_v1_1.json
-!stamb_state_benchmark/output/validation_report_v1_2.json
-!stamb_state_benchmark/output/validation_report_v1_3.json
-!stamb_state_benchmark/output/quality_report_v1_3.json
-!stamb_state_benchmark/output/semantic_duplicate_report_v1_3.json
-!stamb_state_benchmark/output/openai_embedding_duplicate_report_v1_3.json
-
 # Local graph/image exports.
 Design/Graph/
 Graph/output/
 
 # Downloaded external benchmark corpora and upstream source checkouts.
 Experiment/Other_BenchMark/Episodic-Memory/data/
+Experiment/Other_BenchMark/Episodic-Memory/adapters/artem_epbench/output/
+Experiment/Other_BenchMark/Episodic-Memory/Baseline/ARTEM/output/
 Experiment/Other_BenchMark/EverMemBench/dataset/
-
-Experiment/Other_BenchMark/GroupMemBench/dataset/
-Experiment/Other_BenchMark/GroupMemBench/source/
+Experiment/Other_BenchMark/LoCoMo-QA/result
+Experiment/Other_BenchMark/LoCoMo-QA/qwen_baseline
 
 # Locally collected related-work PDFs. Existing tracked PDFs remain tracked.
 Relatedwork/*.pdf
-output/pdf/*pdf
+output/
+docs/

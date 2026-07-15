@@ -13,6 +13,7 @@ benchmark-visible chronological memory source
   -> question-only Time-role selection
   -> Time-aware Event rerank
   -> StateFacet validity resolution and graph expansion
+  -> deterministic temporal readout over selected graph evidence
   -> answer
   -> optional judge and summary
 ```
@@ -23,12 +24,8 @@ benchmark-visible chronological memory source
 
 ### 共享实验工具
 
-- `run/common/`：LLM client、模型配置、IO、缓存、指标和通用工具；
-- `common.py`、`registry.py`：仍被部分 baseline 和外部 runner 复用的共享定义；
-- `Main_Baseline/`：TSM、Graphiti/Zep、validity-aware 等 baseline 实现，以及 LoCoMo/其他外部 benchmark 需要的兼容实现；
+- `run/common/`：当前 benchmark 复用的 LLM client 与环境加载工具；
 - `Other_BenchMark/`：当前 benchmark 的入口、数据镜像、服务说明和 adapter。
-
-`run/run_llm_benchmark.py`、`run/run_public_benchmark.py` 及其 Oracle/Public prompt 目录属于早期 STAMB prompt-runner 代码。它们保留用于兼容和历史复现实验，不是当前 EverMemBench、GroupMemBench 或 LoCoMo 主流程的入口。
 
 ## 当前 benchmark 入口
 
@@ -69,37 +66,6 @@ conda run -n py311 \
   --graph-expansion sts
 ```
 
-### GroupMemBench
-
-GroupMemBench 的真实代码在 `pipeline/external/groupmembench/`，`Experiment/Other_BenchMark/GroupMemBench/` 主要保存数据和上游源码。
-
-当前规范流程是域级离线图：
-
-```text
-domain corpus
-  -> per-scope claim extraction
-  -> per-scope StateFacet consolidation
-  -> domain graph merge
-  -> graph_query_runner
-```
-
-主要入口：
-
-- `pipeline.external.groupmembench.domain_graph_builder`：构建可复用的域级 graph；
-- `pipeline.external.groupmembench.domain_graph_merge`：合并 scope checkpoint；
-- `pipeline.external.groupmembench.graph_query_runner`：复用 graph 进行查询、状态扩展和 judge；
-- `pipeline.external.groupmembench.domain_graph_recipes`：生成可复现的构图命令。
-
-`pipeline.external.groupmembench.graph_builder` 只保留为 query-conditioned smoke path，不作为域级主图构建入口。
-
-```bash
-conda run -n py311 \
-  python -m pipeline.external.groupmembench.domain_graph_recipes \
-  --domain Finance
-```
-
-GroupMemBench 的 embedding 只用于 query-time 的事件或 scope 候选重排；claim extraction、StateFacet consolidation 和 validity relation 是图构建阶段的独立步骤。
-
 ### LoCoMo-QA
 
 目录：`Experiment/Other_BenchMark/LoCoMo-QA/`
@@ -107,10 +73,93 @@ GroupMemBench 的 embedding 只用于 query-time 的事件或 scope 候选重排
 当前 LoCoMo 使用 graph-first 路径：每个 `sample_id` 构建一个持久化 graph，再回答该 sample 的全部问题。
 
 - `run_locomo_graph_builder.py`：sample-level graph build；
-- `run_locomo_graph_query.py`：graph retrieval、StateFacet expansion 和回答；
-- `run_locomo_memory_baselines.py`：full-text、RAG、TSM、MemoryBank、A-mem、MemGPT/Letta 和官方 service baseline。
+- `run_locomo_graph_query.py`：graph retrieval、StateFacet expansion、相对时间 grounding 和回答；
+- `run_locomo_memory_baselines.py`：full-text、RAG、MemoryBank、A-mem、MemGPT/Letta 和官方 service baseline。
 
 图构建器只使用 `sample_id` 和 `conversation`。QA、答案、证据和类别字段不进入记忆构建或 retrieval/controller prompt。
+当前主路径的 ingest/构图与 QA 均使用 OpenAI `gpt-4o-mini`；embedding 模型只服务于 query-time 稠密召回，不替代 ingest 或答案 LLM。
+当前使用 v2 state-merge 图：Claim 以稳定的 `subject_key + state_dimension` 路由，局部有序 fold 负责合并兼容状态并保留 primary/support provenance。查询统一从 Scope 路由到 Event，再沿图边扩展到 Claim 和 StateFacet；不按 benchmark 题型分支。
+默认 Scope 语义召回只使用 `speaker,entity,topic`。Session Scope 与 Event 边仍保留用于分段和 provenance，但 `S1` 等裸编号不再竞争共享的 Scope top-k；sample Event backoff 继续提供全 conversation 的小规模召回兜底。
+运行前需在 `.env` 或环境中配置 `OPENAI_API_KEY` 与 `OPENAI_API_BASE`（或
+`OPENAI_BASE_URL`）。下面的命令同时设置 `OPENAI_MODEL=gpt-4o-mini` 并显式传入
+provider、model 与关键运行参数，以冻结可复验配置。
+
+```bash
+env \
+  PYTHONDONTWRITEBYTECODE=1 \
+  OPENAI_MODEL=gpt-4o-mini \
+  LLM_PARSE_RETRIES=3 \
+  LLM_SEMANTIC_RETRIES=3 \
+  LLM_REQUEST_TIMEOUT=120 \
+  LLM_MAX_RETRIES=3 \
+  LLM_RETRY_BASE_DELAY_SECONDS=2 \
+  LLM_RETRY_MAX_DELAY_SECONDS=120 \
+  conda run --no-capture-output -n py311 \
+  python Experiment/Other_BenchMark/LoCoMo-QA/run_locomo_graph_builder.py \
+  --data Experiment/Other_BenchMark/LoCoMo-QA/data/locomo10.json \
+  --sample-id conv-26 \
+  --graph-schema v2 \
+  --claim-mode llm \
+  --resolver-mode llm \
+  --provider openai \
+  --model gpt-4o-mini \
+  --max-tokens 4096 \
+  --message-chunk-size 4 \
+  --claim-workers 4 \
+  --resolver-workers 4 \
+  --resolver-candidate-limit 24 \
+  --max-claims-per-turn 2 \
+  --event-limit 0 \
+  --output-dir Graph/output/graph/locomo_qa_sample_graph_v2_state_merge \
+  --cache Graph/output/cache/llm_cache.locomo_qa_graph_builder.v2_state_merge.json
+
+env \
+  PYTHONDONTWRITEBYTECODE=1 \
+  OPENAI_MODEL=gpt-4o-mini \
+  LLM_PARSE_RETRIES=3 \
+  LLM_SEMANTIC_RETRIES=3 \
+  LLM_REQUEST_TIMEOUT=120 \
+  LLM_MAX_RETRIES=3 \
+  LLM_RETRY_BASE_DELAY_SECONDS=2 \
+  LLM_RETRY_MAX_DELAY_SECONDS=120 \
+  LLM_MAX_TOKENS=2048 \
+  conda run --no-capture-output -n py311 \
+  python Experiment/Other_BenchMark/LoCoMo-QA/run_locomo_graph_query.py \
+  --data Experiment/Other_BenchMark/LoCoMo-QA/data/locomo10.json \
+  --sample-id conv-26 \
+  --graph-dir Graph/output/graph/locomo_qa_sample_graph_v2_state_merge/conv-26 \
+  --provider openai \
+  --model gpt-4o-mini \
+  --variants graph_embedding_scope_event \
+  --limit-cases 0 \
+  --limit-per-type 0 \
+  --top-k 12 \
+  --scope-top-k 10 \
+  --scope-backoff-k 8 \
+  --scope-types speaker,entity,topic \
+  --candidate-k 80 \
+  --embedding-candidate-k 80 \
+  --max-context-events 24 \
+  --max-state-lines 16 \
+  --max-ledger-claims 12 \
+  --max-ledger-states 8 \
+  --max-ledger-events 8 \
+  --ledger-fallback-events 2 \
+  --time-role-selector llm \
+  --event-time-routing rerank \
+  --graph-expansion relation-aware \
+  --evidence-citation-source answer \
+  --embedding-model text-embedding-3-small \
+  --embedding-batch-size 64 \
+  --answer-workers 4 \
+  --output Graph/output/results/locomo_qa/ours_scope_time_state/results_locomo_qa_graph_conv26_v2_state_merge_gpt4omini.json \
+  --cache Graph/output/cache/llm_cache.locomo_qa_graph_query.conv-26.v2_state_merge_gpt4omini.json \
+  --embedding-cache Graph/output/cache/embedding_cache.locomo_qa_graph_query.conv-26.v2_state_merge.text_embedding_3_small.json
+```
+
+完整 STS 召回参数、输出安全语义和三个 sample 的重建方式见 [`LoCoMo-QA/README.md`](Other_BenchMark/LoCoMo-QA/README.md)。
+v2 默认图扩展从 Event 进入 Claim/StateFacet；Claim 关系链按问题相关性选择入口，并沿同 subject、同状态组扩展到闭包，
+证据闭包只保留实际访问或 StateFacet/关系闭包必需的 Claim，StateFacet 在最终截断前按路径相关性排序。
 
 ```bash
 conda run -n py311 \
@@ -121,23 +170,6 @@ conda run -n py311 \
   --limit-cases 1 \
   --dry-run
 ```
-
-### LongMemEval-S
-
-目录：`Experiment/Other_BenchMark/LongMemEval-S/`，真实 runner 在 `pipeline/external/longmemeval_s/`。
-
-它用于验证 session retrieval、时间推理、knowledge update 和 abstention，不替代当前图 pipeline 的主实验。
-
-```bash
-conda run -n py311 \
-  python Experiment/Other_BenchMark/LongMemEval-S/run_longmemeval_s.py \
-  --provider deepseek \
-  --variants bm25_session scope_time_state_task_adapter \
-  --limit-per-type 1 \
-  --dry-run
-```
-
-`oracle_sessions` 只用于 sanity upper bound，不应作为公平主结果。
 
 ## Baseline 边界
 
@@ -167,5 +199,4 @@ Experiment/Other_BenchMark/EverMemBench/log/  EverMemBench stage logs
 ```bash
 conda run -n py311 python Experiment/Other_BenchMark/EverMemBench/run_evermembench_service_readiness.py --help
 conda run -n py311 python Experiment/Other_BenchMark/LoCoMo-QA/run_locomo_memory_baselines.py --help
-conda run -n py311 python Experiment/Other_BenchMark/LongMemEval-S/run_longmemeval_s.py --help
 ```

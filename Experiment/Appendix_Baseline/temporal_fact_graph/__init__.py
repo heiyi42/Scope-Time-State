@@ -1,1 +1,0 @@
-"""Temporal fact graph baseline."""

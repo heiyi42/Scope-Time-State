@@ -1,1 +1,0 @@
-"""Latest-event-only baseline."""

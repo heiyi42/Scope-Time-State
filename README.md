@@ -2,7 +2,7 @@
 
 本仓库用于研究长期记忆中的 Scope-Time-State（STS）问题：系统不只是检索与问题相关的历史片段，而是要在长时间、多主题、带有状态更新和时间变化的事件流中，构造当前仍然有效的状态，并据此回答问题。输入可以是对话、群组消息、日志，或 EPBench 一类按时间展开的合成长文本/小说。
 
-当前代码已经从早期的 standalone benchmark 文档转向以外部 benchmark 为载体的可运行图记忆 pipeline。主要工作集中在 EverMemBench、GroupMemBench 和 LoCoMo-QA，LongMemEval-S 用于跨数据集验证。
+当前代码已经从早期的 standalone benchmark 文档转向以外部 benchmark 为载体的可运行图记忆 pipeline。当前实验集中在 EverMemBench 和 LoCoMo-QA。
 
 ## 当前 solution
 
@@ -17,6 +17,7 @@ benchmark-visible chronological memory source
   -> question-only Time-role selection
   -> Time-aware Event rerank
   -> StateFacet validity selection and graph expansion
+  -> deterministic grounding of relative time against source Event timestamps
   -> evidence-backed answer
 ```
 
@@ -37,20 +38,19 @@ benchmark-visible chronological memory source
 3. 只根据问题文本选择通用 Time role；
 4. 用图中的 `OCCURRED_AT`、`HAS_TIME` 和 `CURRENT_AFTER` 对候选 Event 做时间重排；
 5. 按 Time role、`CURRENT_AFTER` 和 validity relation 选择 StateFacet，再沿图扩展证据；
-6. 只根据锁定的状态和证据生成答案。
+6. 只根据已选图证据和源 Event 时间戳，将相对时间确定性地解析为规范化时间；
+7. 只根据锁定的状态和证据生成答案。
 
 Scope 和 Event 都采用 BM25 与 embedding 的独立召回并集，不再只用 embedding 重排 BM25 候选池。Time 是结构化图语义重排，不再做一套独立的文本 embedding；embedding 也不替代后续的状态有效性判断。
 
-图构建只读取 benchmark 允许作为记忆的原始来源：对话 benchmark 读取 dialogue/message，叙事 benchmark 读取小说的段落、章节或事件流；不读取 QA、答案、gold evidence 或问题类型标签。time-role selector 也只读取问题文本，不读取 benchmark/task 标签、选项、答案或 gold evidence；问题查询阶段复用已经构建好的持久化图，避免把每个问题的答案信息带入图构建。
+图构建只读取 benchmark 允许作为记忆的原始来源：对话 benchmark 读取 dialogue/message，叙事 benchmark 读取小说的段落、章节或事件流；不读取 QA、答案、gold evidence 或问题类型标签。time-role selector 也只读取问题文本，不读取 benchmark/task 标签、选项、答案或 gold evidence；temporal grounding 只读取问题已选中的图证据、相对时间表达和源 Event 时间戳。问题查询阶段复用已经构建好的持久化图，避免把每个问题的答案信息带入图构建。
 
 ## 当前 benchmark 运行面
 
 | Benchmark | 当前运行路径 | 作用 |
 | --- | --- | --- |
 | EverMemBench | `Experiment/Other_BenchMark/EverMemBench/` | 主题级对话图、STS QA 和本地/self-host baseline 矩阵 |
-| GroupMemBench | `pipeline/external/groupmembench/` | 域级持久化图、scope/time/state 检索和状态 facet 解析 |
 | LoCoMo-QA | `Experiment/Other_BenchMark/LoCoMo-QA/` | sample 级持久化图、多跳/开放域/时间问答和 memory baselines |
-| LongMemEval-S | `pipeline/external/longmemeval_s/` | session retrieval、时间推理和知识更新的外部验证 |
 
 ### EverMemBench
 
@@ -69,36 +69,9 @@ llm mem0_local memobase graphiti_local memos_local
 
 云端或 hosted adapter 不属于默认公平矩阵。具体服务依赖、模型固定和服务器运行顺序见 [`Experiment/Other_BenchMark/EverMemBench/README.md`](Experiment/Other_BenchMark/EverMemBench/README.md) 和 [`SERVER_COMMANDS.md`](Experiment/Other_BenchMark/EverMemBench/SERVER_COMMANDS.md)。
 
-### GroupMemBench
-
-当前规范路径是离线域级图：
-
-```text
-domain dialogue corpus
-  -> per-scope claim extraction
-  -> per-scope StateFacet consolidation
-  -> domain graph merge
-  -> graph query runner
-```
-
-使用 `pipeline.external.groupmembench.domain_graph_builder` 构建可复用的域图，再由 `graph_query_runner` 查询。`graph_builder.py` 保留为 query-conditioned smoke path，不作为域级主图构建路径。
-
-GroupMemBench 的检索链是：
-
-```text
-scope routing
-  -> lexical/BM25 candidate filtering
-  -> optional event/scope embedding rerank
-  -> graph expansion
-  -> StateFacet readout
-  -> answer and optional judge
-```
-
-可复现的域图命令由下面的 recipe 生成：
-
-```bash
-conda run -n py311 python -m pipeline.external.groupmembench.domain_graph_recipes --domain Finance
-```
+EverMemBench 的统一 STS QA 在 graph expansion 后执行 question-only temporal grounding：只使用已选
+Event/Claim 的时间表达和源时间戳，将相对时间确定性地转换为日期或区间，再交给统一 answer 阶段；
+不设置 F_MH 专用分支。
 
 ### LoCoMo-QA
 
@@ -116,31 +89,14 @@ Scope routing (BM25 ∪ embedding)
 
 `open-domain mapping` 只在回答阶段使用，不把推断出的常识写回图中。图构建器只读取 `sample_id` 和 `conversation`，不会使用答案、证据或问题类型。
 
-### LongMemEval-S
-
-LongMemEval-S 作为外部验证使用，当前入口是：
-
-```bash
-conda run -n py311 \
-  python Experiment/Other_BenchMark/LongMemEval-S/run_longmemeval_s.py \
-  --provider deepseek \
-  --variants bm25_session scope_time_state_task_adapter \
-  --limit-per-type 1
-```
-
-其中 `oracle_sessions` 只用于 sanity upper bound，不能作为公平主结果。
-
 ## 仓库结构
 
 - `pipeline/external/`：外部 benchmark 的真实 pipeline；
 - `Experiment/Other_BenchMark/EverMemBench/`：EverMemBench 数据、入口和 baseline adapter；
-- `Experiment/Other_BenchMark/GroupMemBench/`：GroupMemBench 数据和上游源码位置；
 - `Experiment/Other_BenchMark/LoCoMo-QA/`：LoCoMo 图构建、图查询和 memory baseline 入口；
-- `Experiment/Other_BenchMark/LongMemEval-S/`：LongMemEval-S 薄封装和数据位置；
-- `Experiment/Main_Baseline/`：仍被外部 benchmark 复用的 baseline 实现；
 - `Graph/output/`：图、缓存、baseline store、结果和运行产物；
 - `Relatedwork/`：相关论文 PDF；
-- `scripts/`：数据校验、审计和辅助脚本。
+- `scripts/`：当前 solution 文档的可复现生成脚本。
 
 ## 环境与运行约定
 
@@ -167,7 +123,7 @@ Graph/output/
 
 ## 当前边界
 
-- EverMemBench、GroupMemBench 和 LoCoMo-QA 的主 pipeline 需要分别遵守各自的数据边界，不能把一个 benchmark 的 gold 字段带入另一个 benchmark；
+- EverMemBench 和 LoCoMo-QA 的主 pipeline 需要分别遵守各自的数据边界，不能把一个 benchmark 的 gold 字段带入另一个 benchmark；
 - 官方 service baseline 只有在 LLM、embedding 和服务依赖都明确固定后，才进入公平比较；
 - smoke、cache 和中间 graph artifact 不能直接当作最终论文结果；
 - 结果汇总应以对应 benchmark 的实际 runner 输出为准，不再依赖已经移出当前工程的旧 benchmark 结果文档。
@@ -177,7 +133,6 @@ Graph/output/
 ```bash
 conda run -n py311 python Experiment/Other_BenchMark/EverMemBench/run_evermembench_service_readiness.py --check-llm
 conda run -n py311 python Experiment/Other_BenchMark/LoCoMo-QA/run_locomo_memory_baselines.py --sample-id conv-26 --variants full_text rag --question-types temporal --limit-cases 1 --dry-run
-conda run -n py311 python Experiment/Other_BenchMark/LongMemEval-S/run_longmemeval_s.py --provider deepseek --variants bm25_session scope_time_state_task_adapter --limit-per-type 1 --dry-run
 ```
 
 更完整的服务器上传、环境配置和 EverMemBench 全流程见 [`SERVER_COMMANDS.md`](Experiment/Other_BenchMark/EverMemBench/SERVER_COMMANDS.md)。

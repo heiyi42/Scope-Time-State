@@ -97,7 +97,7 @@ If v2 behavior is needed, callers use the preserved v2 runner.
 
 The first implementation includes the shared v3 core, the LoCoMo adapter, contract tests, and a `conv-26` construction/retrieval smoke path.
 
-EverMemBench, GroupMemBench, and LongMemEval-S runners are not migrated in the first implementation. Their existing paths stay unchanged. Generalization is enforced through the core adapter contract and synthetic contract tests so later adapters do not change the v3 schema or retrieval algorithm.
+EverMemBench is not migrated in the first implementation. Its existing path stays unchanged. Generalization is enforced through the core adapter contract and synthetic contract tests so later adapters do not change the v3 schema or retrieval algorithm.
 
 ## 4. Core adapter boundary
 

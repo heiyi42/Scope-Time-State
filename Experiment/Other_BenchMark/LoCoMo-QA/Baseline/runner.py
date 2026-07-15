@@ -16,6 +16,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+import threading
 import time
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
@@ -31,14 +32,6 @@ from Experiment.run.common.io import load_dotenv  # noqa: E402
 from Experiment.run.common.llm_client import LLMClient, LLMRequestError, parse_json_object, provider_config  # noqa: E402
 from adapter_registry import create_adapter, supported_adapters  # noqa: E402
 from common.official_eval.data_models import Dataset, GroupChatDay, GroupChatMessage, SearchResult  # noqa: E402
-from Experiment.Main_Baseline.tsm.tsm_memory import (  # noqa: E402
-    DurativeMemory,
-    EntityNode,
-    TSMIndex,
-    TemporalFact,
-    build_tsm_index,
-    build_tsm_prompt_spec_from_index,
-)
 from ours_scope_time_state.graph_query_runner import (  # noqa: E402
     LLMRuntimeConfig,
     exact_match_score,
@@ -78,7 +71,6 @@ SUPPORTED_VARIANTS = (
     "full_text",
     "rag",
     *LEGACY_OFFICIAL_VARIANTS,
-    "tsm",
     *OFFICIAL_SERVICE_VARIANTS,
 )
 
@@ -90,36 +82,6 @@ class BaselineContext:
     trace: Dict[str, Any]
     direct_answer: Optional[str] = None
     direct_evidence_dialog_ids: Tuple[str, ...] = ()
-
-
-@dataclass(frozen=True)
-class LoCoMoTSMEvent:
-    event_id: str
-    scope_id: str
-    content: str
-    event_type: str
-    occurred_at: str
-    mentioned_at: str
-    updated_at: str
-    planned_for: Optional[str] = None
-    deadline_at: Optional[str] = None
-    source_id: Optional[str] = None
-    metadata: Optional[Dict[str, object]] = None
-    has_status_annotation: bool = False
-    has_relation_annotations: bool = False
-    has_state_relevant_annotation: bool = False
-    status: str = "valid"
-    corrects: Tuple[str, ...] = ()
-    supersedes: Tuple[str, ...] = ()
-    state_relevant: bool = True
-
-
-@dataclass(frozen=True)
-class LoCoMoTSMCase:
-    query: str
-    operation: str = "locomo_qa"
-    scope_id: Optional[str] = None
-    output_slots: Optional[Tuple[str, ...]] = None
 
 
 @dataclass(frozen=True)
@@ -200,59 +162,6 @@ class EmbeddingRAGCorpus:
                     }
                     for hit in hits
                 ],
-            },
-        )
-
-
-class TSMSampleIndex:
-    def __init__(self, sample: LoCoMoSample, args: argparse.Namespace, runtime: LLMRuntimeConfig) -> None:
-        self.sample = sample
-        self.runtime = runtime
-        self.construction_calls = 0
-        store_dir = Path(args.baseline_store_dir) / "tsm" / sample.sample_id
-        index_path = store_dir / "index.json"
-        if args.reuse_baseline_store and index_path.exists():
-            self.index = load_tsm_index(index_path)
-            print(f"[tsm-construction] load_index {index_path}", flush=True)
-            return
-        events = [tsm_event_from_turn(sample.sample_id, turn) for turn in sample.turns]
-        print(f"[tsm-construction] build_index sample_id={sample.sample_id} events={len(events)} mode=llm", flush=True)
-        self.index = build_tsm_index(events, construction_llm=self._construction_llm, construction_mode="llm")
-        store_dir.mkdir(parents=True, exist_ok=True)
-        save_tsm_index(self.index, index_path)
-        print(
-            f"[tsm-construction] done events={len(events)} facts={len(self.index.temporal_facts)} "
-            f"durative={len(self.index.durative_memories)} calls={self.construction_calls} index={index_path}",
-            flush=True,
-        )
-
-    def _construction_llm(self, system_prompt: str, user_prompt: str) -> Dict[str, object]:
-        self.construction_calls += 1
-        if self.construction_calls == 1 or self.construction_calls % 25 == 0:
-            print(f"[tsm-construction] llm_call={self.construction_calls}", flush=True)
-        client = make_sharded_client(
-            self.runtime,
-            "tsm_construction",
-            short_hash(system_prompt + "\n" + user_prompt),
-        )
-        return client.complete_json(system_prompt, user_prompt)
-
-    def retrieve(self, row: LoCoMoQAItem) -> BaselineContext:
-        case = LoCoMoTSMCase(query=row.question)
-        spec = build_tsm_prompt_spec_from_index(self.index, case)
-        candidate_dialog_ids = [
-            str(item.get("event_id"))
-            for item in spec.visible_events
-            if isinstance(item, Mapping) and re.match(r"D\d+:\d+", str(item.get("event_id", "")))
-        ]
-        return BaselineContext(
-            candidate_dialog_ids=ordered_unique(candidate_dialog_ids),
-            context=tsm_context_from_spec(spec),
-            trace={
-                "retriever": "tsm",
-                "construction_mode": self.index.construction_mode,
-                "visible_event_ids": candidate_dialog_ids,
-                "n_visible_events": len(spec.visible_events),
             },
         )
 
@@ -448,7 +357,33 @@ class OfficialLettaMemGPTSampleIndex:
                 time.sleep(min(2 ** (attempt - 1), 5))
                 continue
             if proc.returncode == 0:
-                break
+                try:
+                    parsed = json.loads(proc.stdout)
+                except json.JSONDecodeError:
+                    try:
+                        parsed = parse_json_object(proc.stdout)
+                    except (TypeError, ValueError) as exc:
+                        if attempt == attempts:
+                            raise RuntimeError(
+                                "official Letta command returned invalid JSON after retries; "
+                                f"stdout_tail={proc.stdout[-2000:]!r}"
+                            ) from exc
+                        print(
+                            f"[letta-memgpt] request_retry {attempt}/{attempts} reason=invalid_json",
+                            flush=True,
+                        )
+                        time.sleep(min(2 ** (attempt - 1), 5))
+                        continue
+                if not isinstance(parsed, dict):
+                    if attempt == attempts:
+                        raise RuntimeError("official Letta command did not return a JSON object")
+                    print(
+                        f"[letta-memgpt] request_retry {attempt}/{attempts} reason=non_object_json",
+                        flush=True,
+                    )
+                    time.sleep(min(2 ** (attempt - 1), 5))
+                    continue
+                return parsed
             if attempt < attempts:
                 print(
                     f"[letta-memgpt] request_retry {attempt}/{attempts} returncode={proc.returncode}",
@@ -463,13 +398,7 @@ class OfficialLettaMemGPTSampleIndex:
                 "official Letta command failed; "
                 f"returncode={returncode}; stdout_tail={stdout!r}; stderr_tail={stderr!r}"
             )
-        try:
-            parsed = json.loads(proc.stdout)
-        except json.JSONDecodeError:
-            parsed = parse_json_object(proc.stdout)
-        if not isinstance(parsed, dict):
-            raise RuntimeError("official Letta command did not return a JSON object")
-        return parsed
+        raise RuntimeError("official Letta command failed after retries")
 
     def retrieve(self, row: LoCoMoQAItem) -> BaselineContext:
         result = self._run_letta_prompt(
@@ -1478,91 +1407,6 @@ def parse_session_date(value: str) -> Optional[datetime]:
         return None
 
 
-def tsm_event_from_turn(sample_id: str, turn: DialogTurn) -> LoCoMoTSMEvent:
-    content = f"{turn.speaker}: {turn.text}"
-    if turn.image_caption:
-        content += f"\nImage caption: {turn.image_caption}"
-    if turn.image_query:
-        content += f"\nImage search query: {turn.image_query}"
-    event_time = locomo_session_time_iso(turn.session_date_time)
-    return LoCoMoTSMEvent(
-        event_id=turn.dia_id,
-        scope_id=sample_id,
-        content=content,
-        event_type="dialog_turn",
-        occurred_at=event_time,
-        mentioned_at=event_time,
-        updated_at=event_time,
-        source_id=turn.dia_id,
-        metadata={
-            "sample_id": sample_id,
-            "session_id": turn.session_id,
-            "session_index": turn.session_index,
-            "session_date_time": turn.session_date_time,
-            "speaker": turn.speaker,
-        },
-    )
-
-
-def locomo_session_time_iso(value: str) -> str:
-    text = str(value or "").strip()
-    for fmt in ("%I:%M %p on %d %B, %Y", "%I:%M%p on %d %B, %Y"):
-        try:
-            return datetime.strptime(text, fmt).isoformat()
-        except ValueError:
-            continue
-    return "1970-01-01T00:00:00"
-
-
-def tsm_context_from_spec(spec: object) -> str:
-    visible_events = getattr(spec, "visible_events", [])
-    return (
-        "TSM instruction:\n"
-        f"{getattr(spec, 'instruction', '')}\n\n"
-        "TSM visible events:\n"
-        f"{json.dumps(visible_events, ensure_ascii=False, indent=2)}"
-    )
-
-
-def save_tsm_index(index: TSMIndex, path: Path) -> None:
-    payload = {
-        "construction_mode": index.construction_mode,
-        "events": [asdict(event) for event in index.events],
-        "temporal_facts": [asdict(fact) for fact in index.temporal_facts],
-        "durative_memories": [asdict(memory) for memory in index.durative_memories],
-        "entity_nodes": [asdict(node) for node in index.entity_nodes.values()],
-        "fact_event_index": index.fact_event_index,
-        "construction_notes": list(index.construction_notes),
-    }
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
-
-
-def load_tsm_index(path: Path) -> TSMIndex:
-    payload = json.loads(path.read_text())
-    events = [LoCoMoTSMEvent(**item) for item in payload.get("events", [])]
-    temporal_facts = [TemporalFact(**item) for item in payload.get("temporal_facts", [])]
-    durative_memories = [DurativeMemory(**item) for item in payload.get("durative_memories", [])]
-    entity_nodes = {
-        str(node.name): node
-        for node in (EntityNode(**item) for item in payload.get("entity_nodes", []))
-    }
-    return TSMIndex(
-        events=events,
-        events_by_id={event.event_id: event for event in events},
-        entity_nodes=entity_nodes,
-        temporal_facts=temporal_facts,
-        durative_memories=durative_memories,
-        fact_event_index={
-            str(key): [str(item) for item in value]
-            for key, value in dict(payload.get("fact_event_index", {})).items()
-            if isinstance(value, list)
-        },
-        construction_mode=str(payload.get("construction_mode", "llm")),
-        construction_notes=[str(item) for item in payload.get("construction_notes", [])],
-    )
-
-
 def format_turn_context(turns: Sequence[DialogTurn]) -> str:
     chunks: List[str] = []
     for rank, turn in enumerate(turns, start=1):
@@ -1657,10 +1501,37 @@ def run_variant(
     answer_runtime: LLMRuntimeConfig,
     args: argparse.Namespace,
 ) -> Dict[str, object]:
-    if variant == "tsm":
-        tsm_index: Optional[TSMSampleIndex] = TSMSampleIndex(sample, args, answer_runtime)
-    else:
-        tsm_index = None
+    qa_checkpoint_path: Optional[Path] = None
+    qa_checkpoint_rows: Dict[str, Dict[str, object]] = {}
+    qa_checkpoint_lock = threading.Lock()
+    if variant == "memgpt" and args.reuse_baseline_store:
+        qa_checkpoint_path = Path(args.baseline_store_dir) / "letta_memgpt" / sample.sample_id / "qa_rows.jsonl"
+        if qa_checkpoint_path.exists():
+            for line in qa_checkpoint_path.read_text(encoding="utf-8").splitlines():
+                try:
+                    payload = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                question_id = payload.get("question_id")
+                if isinstance(question_id, str) and question_id:
+                    qa_checkpoint_rows[question_id] = payload
+        if qa_checkpoint_rows:
+            print(
+                f"[memgpt] load_qa_checkpoint {qa_checkpoint_path} "
+                f"rows={len(qa_checkpoint_rows)}",
+                flush=True,
+            )
+
+    def save_qa_checkpoint(result: Dict[str, object]) -> None:
+        if qa_checkpoint_path is None:
+            return
+        qa_checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
+        with qa_checkpoint_lock:
+            with qa_checkpoint_path.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(result, ensure_ascii=False) + "\n")
+                handle.flush()
+                os.fsync(handle.fileno())
+
     if variant == "memgpt":
         letta_memgpt_index: Optional[OfficialLettaMemGPTSampleIndex] = OfficialLettaMemGPTSampleIndex(sample, args)
     else:
@@ -1691,10 +1562,6 @@ def run_variant(
             if rag_corpus is None:
                 raise RuntimeError("rag corpus was not initialized")
             return rag_corpus.retrieve(row.question, args.top_k)
-        if variant == "tsm":
-            if tsm_index is None:
-                raise RuntimeError("tsm index was not initialized")
-            return tsm_index.retrieve(row)
         if variant == "memgpt":
             if letta_memgpt_index is None:
                 raise RuntimeError("official letta memgpt index was not initialized")
@@ -1735,10 +1602,16 @@ def run_variant(
             "gold_answer": row.answer,
             "hypothesis": hypothesis,
             "candidate_dialog_ids": list(context.candidate_dialog_ids),
+            "locked_dialog_ids": list(context.candidate_dialog_ids),
+            "ledger_dialog_ids": list(context.candidate_dialog_ids),
             "evidence_dialog_ids": evidence_dialog_ids,
             "gold_evidence_dialog_ids": list(row.evidence_dialog_ids),
             "candidate_dialog_recall": recall(context.candidate_dialog_ids, row.evidence_dialog_ids),
             "candidate_dialog_precision": precision(context.candidate_dialog_ids, row.evidence_dialog_ids),
+            "locked_dialog_recall": recall(context.candidate_dialog_ids, row.evidence_dialog_ids),
+            "locked_dialog_precision": precision(context.candidate_dialog_ids, row.evidence_dialog_ids),
+            "ledger_dialog_recall": recall(context.candidate_dialog_ids, row.evidence_dialog_ids),
+            "ledger_dialog_precision": precision(context.candidate_dialog_ids, row.evidence_dialog_ids),
             "evidence_dialog_recall": evidence_recall,
             "evidence_dialog_precision": evidence_precision,
             "evidence_dialog_f1": f1_from_precision_recall(evidence_precision, evidence_recall),
@@ -1748,21 +1621,30 @@ def run_variant(
             "retrieval_trace": context.trace,
         }
 
-    eval_rows: List[Dict[str, object]] = []
+    pending_rows = [row for row in rows if row.question_id not in qa_checkpoint_rows]
+    eval_rows: List[Dict[str, object]] = list(qa_checkpoint_rows.values())
+    if qa_checkpoint_rows:
+        print(
+            f"[memgpt] qa_checkpoint_resume pending={len(pending_rows)}/{len(rows)}",
+            flush=True,
+        )
     if args.answer_workers <= 1:
-        for index, row in enumerate(rows, start=1):
+        for index, row in enumerate(pending_rows, start=1):
             _index, result = run_row(index, row)
             eval_rows.append(result)
-            print(f"[{variant}] {index}/{len(rows)} {row.question_id} {row.question_type}", flush=True)
+            save_qa_checkpoint(result)
+            print(f"[{variant}] {index}/{len(pending_rows)} {row.question_id} {row.question_type}", flush=True)
     else:
         results: Dict[int, Dict[str, object]] = {}
         with ThreadPoolExecutor(max_workers=max(1, args.answer_workers)) as executor:
-            futures = {executor.submit(run_row, index, row): index for index, row in enumerate(rows, start=1)}
+            futures = {executor.submit(run_row, index, row): index for index, row in enumerate(pending_rows, start=1)}
             for future in as_completed(futures):
                 index, result = future.result()
                 results[index] = result
-                print(f"[{variant}] {index}/{len(rows)} {result['question_id']} {result['question_type']}", flush=True)
+                save_qa_checkpoint(result)
+                print(f"[{variant}] {index}/{len(pending_rows)} {result['question_id']} {result['question_type']}", flush=True)
         eval_rows = [results[index] for index in sorted(results)]
+        eval_rows = list(qa_checkpoint_rows.values()) + eval_rows
     return {"variant": variant, "summary": summarize(eval_rows), "rows": eval_rows}
 
 
@@ -1921,7 +1803,6 @@ def main() -> int:
             "amem_evo_threshold": args.amem_evo_threshold,
             "amem_agentic_search": args.amem_agentic_search,
             "amem_ingest_limit": args.amem_ingest_limit,
-            "tsm_construction_mode": "llm",
             "official_service_variants": list(OFFICIAL_SERVICE_VARIANTS),
             "official_adapter_interface": "EverMemBench Baseline BaseAdapter.add/search",
             "official_user_id": args.official_user_id,
