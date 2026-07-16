@@ -26,6 +26,14 @@ from .config import (
 
 
 TOKEN_RE = re.compile(r"[A-Za-z0-9]+")
+GENERIC_SCOPE_QUERIES = {
+    "entities",
+    "events",
+    "key events",
+    "locations",
+    "protagonists",
+    "unique locations",
+}
 
 
 def _tokens(text: object) -> list[str]:
@@ -305,40 +313,91 @@ class STSGraphIndex:
             "location": frame.location_queries,
             "event_type": frame.event_type_queries,
         }
+        reliable_event_sets: list[set[str]] = []
+        reliable_scope_ids: set[str] = set()
+        active_scope_queries: list[tuple[str, str]] = []
         for scope_type, queries in scope_queries.items():
-            typed_scope_ids = {
-                scope_id: scope
-                for scope_id, scope in self.scopes.items()
-                if scope.get("scope_type") == scope_type
-            }
             for query in queries:
-                for hit in hybrid_rank(
-                    query,
-                    self.scope_bm25,
-                    self.scope_dense,
-                    scope_top_k,
-                    typed_scope_ids,
-                ):
-                    for event_id in self.scope_events.get(hit.doc_id, set()):
-                        row = chapter_row(event_id)
-                        row["score"] += hit.score
-                        row["scope_types"].add(scope_type)
-                        row["contributions"].append({"layer": "scope", "scope_type": scope_type, "doc_id": hit.doc_id, "score": hit.score})
+                if query.casefold() in GENERIC_SCOPE_QUERIES:
+                    continue
+                active_scope_queries.append((scope_type, query))
+                query_tokens = set(_tokens(query))
+                exact_scope_ids = {
+                    scope_id
+                    for scope_id, scope in self.scopes.items()
+                    if query_tokens and query_tokens.issubset(set(_tokens(scope.get("value"))))
+                }
+                if exact_scope_ids:
+                    reliable_scope_ids.update(exact_scope_ids)
+                    event_ids = set().union(
+                        *(self.scope_events.get(scope_id, set()) for scope_id in exact_scope_ids)
+                    )
+                    if event_ids:
+                        reliable_event_sets.append(event_ids)
+
+        reliable_time_values: list[str] = []
+        for query in frame.time_values:
+            parsed_query = parse_anchor_datetime(query)
+            if parsed_query is None:
+                continue
+            event_ids = {
+                event_id
+                for event_id, values in self.event_times.items()
+                if any(parse_anchor_datetime(value) == parsed_query for value in values)
+            }
+            if event_ids:
+                reliable_time_values.append(query)
+                reliable_event_sets.append(event_ids)
+
+        constrained_event_ids = (
+            set.intersection(*reliable_event_sets) if reliable_event_sets else set()
+        )
+        candidate_event_ids = constrained_event_ids or None
+        if candidate_event_ids is not None:
+            for event_id in candidate_event_ids:
+                chapter_row(event_id)
+
+        for scope_type, query in active_scope_queries:
+            for hit in hybrid_rank(
+                query,
+                self.scope_bm25,
+                self.scope_dense,
+                scope_top_k,
+            ):
+                for event_id in self.scope_events.get(hit.doc_id, set()):
+                    if candidate_event_ids is not None and event_id not in candidate_event_ids:
+                        continue
+                    row = chapter_row(event_id)
+                    row["score"] += hit.score
+                    actual_scope_type = str(self.scopes[hit.doc_id].get("scope_type") or scope_type)
+                    row["scope_types"].add(actual_scope_type)
+                    row["contributions"].append({"layer": "scope", "scope_type": actual_scope_type, "doc_id": hit.doc_id, "score": hit.score})
 
         for hit in hybrid_rank(
             question,
             self.event_bm25,
             self.event_dense,
             event_candidate_k,
+            candidate_event_ids,
         ):
             row = chapter_row(hit.doc_id)
             row["score"] += hit.score
             row["contributions"].append({"layer": "event", "doc_id": hit.doc_id, "score": hit.score})
+        candidate_claim_ids = (
+            {
+                claim_id
+                for claim_id, claim in self.claims.items()
+                if str(claim.get("source_event_id")) in candidate_event_ids
+            }
+            if candidate_event_ids is not None
+            else None
+        )
         for hit in hybrid_rank(
             question,
             self.claim_bm25,
             self.claim_dense,
             claim_candidate_k,
+            candidate_claim_ids,
         ):
             claim = self.claims[hit.doc_id]
             event_id = str(claim["source_event_id"])
@@ -388,12 +447,15 @@ class STSGraphIndex:
             question=question,
             frame=frame,
             ranked_chapters=ranked,
-            retrieval_status="retrieved",
+            retrieval_status=("anchor_constrained" if candidate_event_ids is not None else "retrieved"),
             trace={
                 "scope_top_k": scope_top_k,
                 "event_candidate_k": event_candidate_k,
                 "claim_candidate_k": claim_candidate_k,
                 "final_chapter_k": final_chapter_k,
+                "reliable_scope_ids": sorted(reliable_scope_ids),
+                "reliable_time_values": reliable_time_values,
+                "constrained_event_ids": sorted(candidate_event_ids or []),
             },
         )
 

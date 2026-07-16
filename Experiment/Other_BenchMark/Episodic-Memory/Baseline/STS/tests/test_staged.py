@@ -31,11 +31,13 @@ class FrameClient:
     def __init__(
         self,
         ordering="none",
+        time_values=None,
         entity_queries=None,
         location_queries=None,
         event_type_queries=None,
     ):
         self.ordering = ordering
+        self.time_values = [] if time_values is None else time_values
         self.entity_queries = ["Julian Ross"] if entity_queries is None else entity_queries
         self.location_queries = ["High Line"] if location_queries is None else location_queries
         self.event_type_queries = ["Tech Hackathon"] if event_type_queries is None else event_type_queries
@@ -43,7 +45,7 @@ class FrameClient:
     def complete_json(self, _system_prompt, _user_prompt):
         return {
             "ordering": self.ordering,
-            "time_values": [],
+            "time_values": self.time_values,
             "entity_queries": self.entity_queries,
             "location_queries": self.location_queries,
             "event_type_queries": self.event_type_queries,
@@ -99,9 +101,9 @@ class StagedRetrievalTests(unittest.TestCase):
         index.event_dense = SearchStub(list(index.events))
         index.claim_dense = SearchStub(list(index.claims))
         result = index.retrieve("Julian Ross Tech Hackathon at High Line", FrameClient(), final_chapter_k=2)
-        self.assertEqual("retrieved", result.retrieval_status)
+        self.assertEqual("anchor_constrained", result.retrieval_status)
         self.assertEqual(20, result.ranked_chapters[0].chapter_id)
-        self.assertEqual({20, 42}, {row.chapter_id for row in result.ranked_chapters})
+        self.assertEqual([20], [row.chapter_id for row in result.ranked_chapters])
 
     def test_dense_scope_candidates_are_ranked_without_exact_admission(self):
         graph = synthetic_graph()
@@ -133,6 +135,18 @@ class StagedRetrievalTests(unittest.TestCase):
         result = index.retrieve("Events related to 3D Printing Workshop", frame, final_chapter_k=2)
         self.assertEqual("retrieved", result.retrieval_status)
         self.assertTrue(result.ranked_chapters)
+
+    def test_exact_time_anchor_constrains_events(self):
+        index = STSGraphIndex.from_graph(synthetic_graph())
+        frame = FrameClient(
+            time_values=["April 2, 2024"],
+            entity_queries=[],
+            location_queries=[],
+            event_type_queries=[],
+        )
+        result = index.retrieve("What happened on April 2, 2024?", frame, final_chapter_k=2)
+        self.assertEqual("anchor_constrained", result.retrieval_status)
+        self.assertEqual([42], [row.chapter_id for row in result.ranked_chapters])
 
     def test_latest_returns_newest_graph_time(self):
         index = STSGraphIndex.from_graph(synthetic_graph())
