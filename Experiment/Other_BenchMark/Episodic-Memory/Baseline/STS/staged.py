@@ -212,6 +212,7 @@ class RankedChapter:
     evidence_spans: list[str]
     raw_text: str
     contributions: list[dict[str, Any]]
+    scope_values: dict[str, list[str]] = field(default_factory=dict)
 
 
 @dataclass
@@ -242,11 +243,14 @@ class STSGraphIndex:
         self.scopes = {node_id: node for node_id, node in self.nodes.items() if node["node_type"] == "Entity/Scope" and node.get("scope_type") != "book"}
         self.claims = {node_id: node for node_id, node in self.nodes.items() if node["node_type"] == "Claim"}
         self.scope_events: dict[str, set[str]] = {scope_id: set() for scope_id in self.scopes}
+        self.event_scopes: dict[str, set[str]] = {event_id: set() for event_id in self.events}
         self.event_claims: dict[str, list[str]] = {event_id: [] for event_id in self.events}
         self.event_times: dict[str, list[str]] = {event_id: [] for event_id in self.events}
         for edge in self.edges:
             if edge["type"] in {"IN_SCOPE", "MENTIONS"} and edge["to"] in self.scope_events:
                 self.scope_events[edge["to"]].add(str(edge["from"]))
+                if edge["from"] in self.event_scopes:
+                    self.event_scopes[str(edge["from"])].add(str(edge["to"]))
             elif edge["type"] == "ASSERTS" and edge["from"] in self.event_claims:
                 self.event_claims[edge["from"]].append(str(edge["to"]))
             elif edge["type"] == "OCCURRED_AT" and edge["from"] in self.event_times:
@@ -325,8 +329,32 @@ class STSGraphIndex:
                 exact_scope_ids = {
                     scope_id
                     for scope_id, scope in self.scopes.items()
-                    if query_tokens and query_tokens.issubset(set(_tokens(scope.get("value"))))
+                    if query_tokens
+                    and (
+                        query_tokens.issubset(set(_tokens(scope.get("value"))))
+                        or (
+                            len(set(_tokens(scope.get("value")))) >= 2
+                            and set(_tokens(scope.get("value"))).issubset(query_tokens)
+                        )
+                    )
                 }
+                if any(self.scopes[scope_id].get("scope_type") == "event_type" for scope_id in exact_scope_ids):
+                    event_type_ids = {
+                        scope_id
+                        for scope_id, scope in self.scopes.items()
+                        if scope.get("scope_type") == "event_type"
+                    }
+                    exact_scope_ids.update(
+                        hit.doc_id
+                        for hit in hybrid_rank(
+                            query,
+                            self.scope_bm25,
+                            self.scope_dense,
+                            scope_top_k,
+                            event_type_ids,
+                        )
+                        if hit.embedding_score >= 0.65
+                    )
                 if exact_scope_ids:
                     reliable_scope_ids.update(exact_scope_ids)
                     event_ids = set().union(
@@ -352,6 +380,23 @@ class STSGraphIndex:
         constrained_event_ids = (
             set.intersection(*reliable_event_sets) if reliable_event_sets else set()
         )
+        has_explicit_anchor = bool(active_scope_queries or frame.time_values)
+        if has_explicit_anchor and not reliable_event_sets:
+            return RetrievalResult(
+                question=question,
+                frame=frame,
+                ranked_chapters=[],
+                retrieval_status="no_reliable_anchor",
+                trace={
+                    "scope_top_k": scope_top_k,
+                    "event_candidate_k": event_candidate_k,
+                    "claim_candidate_k": claim_candidate_k,
+                    "final_chapter_k": final_chapter_k,
+                    "reliable_scope_ids": [],
+                    "reliable_time_values": [],
+                    "constrained_event_ids": [],
+                },
+            )
         candidate_event_ids = constrained_event_ids or None
         if candidate_event_ids is not None:
             for event_id in candidate_event_ids:
@@ -435,6 +480,15 @@ class STSGraphIndex:
                     evidence_spans=sorted(row["evidence"]),
                     raw_text=str(event.get("raw_text") or ""),
                     contributions=row["contributions"],
+                    scope_values={
+                        scope_type: sorted(
+                            str(self.scopes[scope_id].get("value") or "")
+                            for scope_id in self.event_scopes.get(row["event_id"], set())
+                            if self.scopes[scope_id].get("scope_type") == scope_type
+                            and self.scopes[scope_id].get("value")
+                        )
+                        for scope_type in ("entity", "location", "event_type")
+                    },
                 )
             )
         ranked.sort(key=lambda row: (-row.score, row.chapter_id))

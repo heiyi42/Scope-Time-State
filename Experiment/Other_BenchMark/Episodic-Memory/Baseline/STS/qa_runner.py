@@ -42,10 +42,15 @@ def _answer_context(result: Any, *, max_raw_chars: int = 2400) -> str:
     blocks: list[str] = []
     for row in result.ranked_chapters:
         evidence = "\n".join(f"- Evidence: {span}" for span in row.evidence_spans)
+        scopes = "\n".join(
+            f"- {scope_type.title()} scopes: {', '.join(values)}"
+            for scope_type, values in row.scope_values.items()
+            if values
+        )
         raw_excerpt = row.raw_text[:max_raw_chars]
         blocks.append(
             f"[Chapter {row.chapter_id}; time={row.occurred_at or 'unknown'}]\n"
-            f"{evidence}\n- Source excerpt: {raw_excerpt}"
+            f"{scopes}\n{evidence}\n- Source excerpt: {raw_excerpt}"
         )
     return "\n\n".join(blocks)
 

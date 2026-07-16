@@ -133,8 +133,8 @@ class StagedRetrievalTests(unittest.TestCase):
             event_type_queries=["3D Printing Workshop"],
         )
         result = index.retrieve("Events related to 3D Printing Workshop", frame, final_chapter_k=2)
-        self.assertEqual("retrieved", result.retrieval_status)
-        self.assertTrue(result.ranked_chapters)
+        self.assertEqual("no_reliable_anchor", result.retrieval_status)
+        self.assertEqual([], result.ranked_chapters)
 
     def test_exact_time_anchor_constrains_events(self):
         index = STSGraphIndex.from_graph(synthetic_graph())
