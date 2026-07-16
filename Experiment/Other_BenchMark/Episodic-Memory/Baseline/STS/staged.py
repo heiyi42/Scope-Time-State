@@ -213,6 +213,7 @@ class RankedChapter:
     raw_text: str
     contributions: list[dict[str, Any]]
     scope_values: dict[str, list[str]] = field(default_factory=dict)
+    entity_roles: dict[str, list[str]] = field(default_factory=dict)
 
 
 @dataclass
@@ -244,6 +245,9 @@ class STSGraphIndex:
         self.claims = {node_id: node for node_id, node in self.nodes.items() if node["node_type"] == "Claim"}
         self.scope_events: dict[str, set[str]] = {scope_id: set() for scope_id in self.scopes}
         self.event_scopes: dict[str, set[str]] = {event_id: set() for event_id in self.events}
+        self.event_entity_roles: dict[str, dict[str, set[str]]] = {
+            event_id: {} for event_id in self.events
+        }
         self.event_claims: dict[str, list[str]] = {event_id: [] for event_id in self.events}
         self.event_times: dict[str, list[str]] = {event_id: [] for event_id in self.events}
         for edge in self.edges:
@@ -251,6 +255,12 @@ class STSGraphIndex:
                 self.scope_events[edge["to"]].add(str(edge["from"]))
                 if edge["from"] in self.event_scopes:
                     self.event_scopes[str(edge["from"])].add(str(edge["to"]))
+                    scope = self.scopes[str(edge["to"])]
+                    if scope.get("scope_type") == "entity":
+                        role = str(edge.get("role") or "mentioned")
+                        self.event_entity_roles[str(edge["from"])].setdefault(role, set()).add(
+                            str(scope.get("value") or "")
+                        )
             elif edge["type"] == "ASSERTS" and edge["from"] in self.event_claims:
                 self.event_claims[edge["from"]].append(str(edge["to"]))
             elif edge["type"] == "OCCURRED_AT" and edge["from"] in self.event_times:
@@ -488,6 +498,10 @@ class STSGraphIndex:
                             and self.scopes[scope_id].get("value")
                         )
                         for scope_type in ("entity", "location", "event_type")
+                    },
+                    entity_roles={
+                        role: sorted(value for value in values if value)
+                        for role, values in self.event_entity_roles.get(row["event_id"], {}).items()
                     },
                 )
             )

@@ -60,6 +60,16 @@ class EmptyIndex:
         )
 
 
+class RoleIndex:
+    def retrieve(self, question, frame_client, **_kwargs):
+        result = FakeIndex().retrieve(question, frame_client)
+        result.ranked_chapters[0].entity_roles = {
+            "primary": ["Julian Ross"],
+            "participant": ["Morgan Lee"],
+        }
+        return result
+
+
 class CapturingClient:
     def __init__(self, response):
         self.response = response
@@ -118,6 +128,25 @@ class QARunnerTests(unittest.TestCase):
         self.assertEqual([], answer_client.user_prompts)
         self.assertEqual("No matching event is present in the memory.", payload["rows"][0]["answer"])
         self.assertEqual("empty_retrieval", payload["rows"][0]["answer_source"])
+
+    def test_entities_are_composed_from_primary_role_without_answer_model(self):
+        answer_client = CapturingClient({"answer": "wrong"})
+        with patch("STS.qa_runner.load_qa", return_value=[QA_ITEM]), patch(
+            "STS.qa_runner.STSGraphIndex.load", return_value=RoleIndex()
+        ):
+            payload = run_qa(
+                graph_dir=self.root / "graph",
+                output_path=self.root / "qa.json",
+                answer_client=answer_client,
+                frame_client=CapturingClient({}),
+                embedding_config=None,
+                limit=1,
+                resume=False,
+                workers=2,
+            )
+        self.assertEqual([], answer_client.user_prompts)
+        self.assertEqual("Julian Ross", payload["rows"][0]["answer"])
+        self.assertEqual("graph_entity_roles", payload["rows"][0]["answer_source"])
 
     def test_judge_preserves_raw_answer_and_trace(self):
         qa_path = self.root / "qa.json"

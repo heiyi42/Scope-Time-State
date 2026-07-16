@@ -55,6 +55,29 @@ def _answer_context(result: Any, *, max_raw_chars: int = 2400) -> str:
     return "\n\n".join(blocks)
 
 
+def _role_answer(retrieval_type: str, question: str, ranked_chapters: list[Any]) -> list[str] | None:
+    if retrieval_type == "Entities":
+        roles = ("primary",)
+    elif retrieval_type == "Other entities":
+        roles = ("participant", "mentioned")
+    else:
+        return None
+    seen: set[str] = set()
+    values: list[str] = []
+    normalized_question = question.casefold()
+    for chapter in ranked_chapters:
+        for role in roles:
+            for value in chapter.entity_roles.get(role, []):
+                normalized = value.casefold()
+                if not normalized or normalized in seen:
+                    continue
+                if retrieval_type == "Other entities" and normalized in normalized_question:
+                    continue
+                seen.add(normalized)
+                values.append(value)
+    return values
+
+
 def run_qa(
     graph_dir: Path,
     output_path: Path,
@@ -81,7 +104,16 @@ def run_qa(
     def answer_item(item: Any) -> dict[str, Any]:
         retrieval = index.retrieve(item.question, frame_client, **retrieval_kwargs)
         context = _answer_context(retrieval)
-        if retrieval.ranked_chapters:
+        role_values = _role_answer(
+            item.retrieval_type,
+            item.question,
+            retrieval.ranked_chapters,
+        )
+        if role_values:
+            answer = ", ".join(role_values)
+            answer_source = "graph_entity_roles"
+            raw = {"answer": answer, "entity_roles": role_values}
+        elif retrieval.ranked_chapters:
             user_prompt = json.dumps(
                 {"question": item.question, "retrieved_context": context},
                 ensure_ascii=False,
