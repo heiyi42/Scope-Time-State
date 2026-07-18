@@ -272,7 +272,7 @@ Supported variants:
   worker and are not imported by the main runner.
 - `a_mem`: official `agiresearch/A-mem` `AgenticMemorySystem.add_note/search(_agentic)` path.
 - `memgpt`: official Letta Code CLI path, used as the current MemGPT/Letta implementation.
-- `mem0_local`, `memos_local`, `memobase`, `graphiti_local`: official-service baselines using the same `BaseAdapter.add/search` interface and adapter layout as `Experiment/Other_BenchMark/EverMemBench/Baseline/`.
+- `memos_local`, `memobase`, `graphiti_local`: official-service baselines using the same `BaseAdapter.add/search` interface and adapter layout as `Experiment/Other_BenchMark/EverMemBench/Baseline/`.
 
 The memory baseline runner builds memory only from `sample.conversation`. It does not expose gold
 answers, gold evidence IDs, official categories, or question-type labels to retrieval/controller/answer
@@ -309,7 +309,6 @@ instructions. Docker Compose is only a launcher, not part of the benchmark logic
 stores are required:
 
 ```text
-mem0_local      -> official Mem0 server, Postgres + pgvector
 memos_local     -> official MemOS server, Neo4j + Qdrant
 memobase        -> official Memobase server, Postgres + Redis
 graphiti_local  -> graphiti-core, Neo4j
@@ -318,7 +317,6 @@ graphiti_local  -> graphiti-core, Neo4j
 Set service URLs and model endpoints through environment variables or `.env`:
 
 ```bash
-MEM0_LOCAL_BASE_URL=http://localhost:8888
 MEMOS_LOCAL_BASE_URL=http://localhost:8001
 MEMOBASE_BASE_URL=http://localhost:8019
 MEMOBASE_API_TOKEN=your_memobase_token
@@ -344,7 +342,7 @@ env PYTHONDONTWRITEBYTECODE=1 TOKENIZERS_PARALLELISM=false LLM_PARSE_RETRIES=6 \
   --sample-id conv-26 \
   --provider deepseek \
   --model deepseek-v4-flash \
-  --variants mem0_local memos_local memobase graphiti_local \
+  --variants memos_local memobase graphiti_local \
   --question-types multi-hop open-domain \
   --top-k 24 \
   --official-search-concurrency 1 \
@@ -377,7 +375,7 @@ env PYTHONDONTWRITEBYTECODE=1 \
   conda run -n py311 \
   python Experiment/Other_BenchMark/LoCoMo-QA/run_locomo_memory_baselines.py \
   --sample-id conv-26 \
-  --variants memory_bank a_mem memgpt mem0_local memos_local memobase graphiti_local \
+  --variants memory_bank a_mem memgpt memos_local memobase graphiti_local \
   --question-types temporal \
   --limit-cases 1 \
   --dry-run

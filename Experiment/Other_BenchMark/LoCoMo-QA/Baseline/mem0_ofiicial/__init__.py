@@ -1,4 +1,4 @@
-"""Mem0's official LoCoMo evaluation protocol, kept separate from mem0_local."""
+"""Mem0's official LoCoMo evaluation protocol."""
 
 __all__ = ["Mem0OfficialOSSClient"]
 

@@ -4,7 +4,6 @@ This directory is an isolated implementation of the public
 [`mem0ai/memory-benchmarks`](https://github.com/mem0ai/memory-benchmarks) Mem0 ingest/retrieval protocol,
 with QA scored by the original [`snap-research/locomo`](https://github.com/snap-research/locomo)
 `task_eval/evaluation.py` semantics.
-It does not replace `Baseline/mem0_local`.
 
 Pinned upstream reference:
 

@@ -17,7 +17,6 @@ from common.official_eval.imports import BaseAdapter, load_yaml  # noqa: E402
 
 
 ADAPTERS: Dict[str, Tuple[str, str, Path]] = {
-    "mem0_local": ("mem0_local.adapter", "Mem0LocalAdapter", BASELINE_DIR / "mem0_local/config.yaml"),
     "memos_local": ("memos_local.adapter", "MemosLocalAdapter", BASELINE_DIR / "memos_local/config.yaml"),
     "memobase": ("memobase.adapter", "MemobaseAdapter", BASELINE_DIR / "memobase/config.yaml"),
     "graphiti_local": (
@@ -37,7 +36,7 @@ def load_adapter_config(system_name: str, *, base_url: str = "") -> Dict[str, An
     del module_name, class_name
     config = load_yaml(str(config_path))
     if base_url:
-        if system_name in {"mem0_local", "memos_local"}:
+        if system_name == "memos_local":
             config["api_url"] = base_url
         elif system_name == "memobase":
             config["project_url"] = base_url
@@ -65,8 +64,6 @@ def create_adapter(
             os.environ["MEMOBASE_BASE_URL"] = base_url
         elif system_name == "memos_local":
             os.environ["MEMOS_LOCAL_BASE_URL"] = base_url
-        elif system_name == "mem0_local":
-            os.environ["MEM0_LOCAL_BASE_URL"] = base_url
     config = load_adapter_config(system_name, base_url=base_url)
     if config_overrides:
         config.update(config_overrides)

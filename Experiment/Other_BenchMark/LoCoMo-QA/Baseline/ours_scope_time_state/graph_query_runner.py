@@ -3802,8 +3802,8 @@ def print_summary(provider: str, model: str, results: Sequence[Dict[str, object]
         )
 
 
-def main() -> int:
-    args = parse_args()
+def main(argv: Optional[Sequence[str]] = None) -> int:
+    args = parse_args(argv)
     args.graph_dir = str(Path(args.graph_dir) if args.graph_dir else default_query_graph_dir(args.sample_id))
     load_dotenv()
     rows = select_rows(

@@ -204,7 +204,7 @@ class LLMRuntimeConfig:
     use_cache: bool
 
 
-def parse_args() -> argparse.Namespace:
+def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build one offline LoCoMo sample-level STS graph.")
     parser.add_argument("--data", default=str(DATA_PATH))
     parser.add_argument("--sample-id", default="conv-26")
@@ -248,7 +248,7 @@ def parse_args() -> argparse.Namespace:
         help="Defaults to 2 Claims per turn.",
     )
     parser.add_argument("--event-limit", type=int, default=0, help="Debug limit only; 0 builds the full sample.")
-    return parser.parse_args()
+    return parser.parse_args(argv)
 
 
 def default_output_dir(graph_schema: str) -> Path:
@@ -2877,8 +2877,8 @@ def write_sample_graph(output_dir: Path, sample_id: str, graph: Mapping[str, Any
     return sample_dir
 
 
-def main() -> int:
-    args = parse_args()
+def main(argv: Optional[Sequence[str]] = None) -> int:
+    args = parse_args(argv)
     max_claims_per_turn = args.max_claims_per_turn if args.max_claims_per_turn is not None else 2
     output_dir = Path(args.output_dir) if args.output_dir else default_output_dir(args.graph_schema)
     cache_path = Path(args.cache) if args.cache else default_cache_path(args.graph_schema)

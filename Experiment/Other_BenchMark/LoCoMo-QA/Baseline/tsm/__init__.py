@@ -1,1 +1,0 @@
-"""TSM LoCoMo QA baseline."""

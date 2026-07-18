@@ -869,7 +869,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--official-base-url",
         default=os.environ.get("LOCOMO_OFFICIAL_BASE_URL", ""),
-        help="Optional one-off base URL override for mem0_local/memos_local/memobase.",
+        help="Optional one-off base URL override for memos_local/memobase.",
     )
     parser.add_argument(
         "--official-config-json",
@@ -1241,7 +1241,6 @@ def seed_official_adapter_env(system_name: str, runtime: LLMRuntimeConfig) -> No
 
 def official_env_snapshot() -> Dict[str, str]:
     names = [
-        "MEM0_LOCAL_BASE_URL",
         "MEMOS_LOCAL_BASE_URL",
         "MEMOBASE_BASE_URL",
         "GRAPHITI_LLM_BASE_URL",
