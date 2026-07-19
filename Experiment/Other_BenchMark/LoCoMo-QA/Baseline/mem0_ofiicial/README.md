@@ -77,5 +77,5 @@ evidence IDs, and question categories are not passed to the QA model.
 Outputs are written under:
 
 ```text
-Graph/output/results/locomo_qa/mem0_ofiicial/predicted_<project-name>/
+Graph/results/locomo_qa/mem0_ofiicial/predicted_<project-name>/
 ```

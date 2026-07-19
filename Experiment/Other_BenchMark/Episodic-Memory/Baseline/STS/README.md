@@ -56,8 +56,8 @@ conda run --no-capture-output -n py311 python \
 
 ## 默认产物
 
-- 图：`Graph/output/graph/epbench_long_book_sts_v2/book1/{manifest.json,graph.json,nodes.jsonl,edges.jsonl}`
-- 缓存：`Graph/output/cache/epbench_long_book_sts_v2/`
-- 检索与评测：`Graph/output/results/epbench_long_book_sts_v2/{retrieval.json,qa.json,judged.json}`
+- 图：`Graph/graph/epbench_long_book_sts_v2/book1/{manifest.json,graph.json,nodes.jsonl,edges.jsonl}`
+- 缓存：`Graph/cache/epbench_long_book_sts_v2/`
+- 检索与评测：`Graph/results/epbench_long_book_sts_v2/{retrieval.json,qa.json,judged.json}`
 
 `qa.json` 不保存 gold answer；judge 阶段再按 `row_index` 从 QA parquet 读取 reference，并完整保留 QA answer 和 retrieval trace。

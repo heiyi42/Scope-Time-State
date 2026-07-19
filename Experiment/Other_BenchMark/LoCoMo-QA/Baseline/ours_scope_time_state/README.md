@@ -66,4 +66,4 @@ python Experiment/Other_BenchMark/LoCoMo-QA/Baseline/ours_scope_time_state/run_s
   --limit-cases 1
 ```
 
-Outputs are isolated by model under `Graph/output/locomo_qa/ours_scope_time_state/` and are ignored by Git. Override `--graph-root`, `--result-dir`, or cache paths when running multiple experimental profiles.
+Outputs are isolated by model under `Graph/locomo_qa/ours_scope_time_state/` and are ignored by Git. Override `--graph-root`, `--result-dir`, or cache paths when running multiple experimental profiles.

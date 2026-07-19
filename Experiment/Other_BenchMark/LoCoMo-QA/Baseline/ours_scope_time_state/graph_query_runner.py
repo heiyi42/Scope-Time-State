@@ -43,6 +43,8 @@ from pipeline.external.sts_v2.schema import SCHEMA_VERSION  # noqa: E402
 
 
 ACTIVE_GRAPH_SCHEMA_V2 = SCHEMA_VERSION
+LEGACY_GRAPH_SCHEMA_V2 = "locomo-qa-sample-sts-graph-v2-state-merge"
+STATE_MERGE_GRAPH_SCHEMAS = frozenset({ACTIVE_GRAPH_SCHEMA_V2, LEGACY_GRAPH_SCHEMA_V2})
 SEMANTIC_SCOPE_TYPES = ("speaker", "entity", "topic")
 SUPPORTED_VARIANTS = (
     "graph_bm25",
@@ -51,6 +53,7 @@ SUPPORTED_VARIANTS = (
     "graph_embedding_scope_statefacet",
 )
 GRAPH_EXPANSIONS = ("auto", "legacy", "relation-aware", "scope-coverage")
+RETRIEVAL_POLICIES = ("event-rag", "scope-event", "scope-event-time", "sts")
 TOKEN_RE = re.compile(r"[A-Za-z0-9_']+")
 EMBEDDING_RETRIEVAL_SCORE_WEIGHT = 8.0
 TIME_ROLE_MATCH_BOOST = 0.25
@@ -332,6 +335,11 @@ class GraphEvidenceIndex:
             self.state_doc_ids,
             self.state_documents,
         ) = self._build_documents()
+        self.raw_event_documents = [
+            event_document(self.events[doc_id[len("event::") :]])
+            for doc_id in self.event_doc_ids
+        ]
+        self.raw_event_bm25 = BM25Index(self.event_doc_ids, self.raw_event_documents)
         self.event_bm25 = BM25Index(self.event_doc_ids, self.event_documents)
         self.scope_bm25 = BM25Index(self.scope_doc_ids, self.scope_documents)
         self.state_bm25 = BM25Index(self.state_doc_ids, self.state_documents)
@@ -349,7 +357,10 @@ class GraphEvidenceIndex:
         if manifest_path.exists():
             self.manifest = json.loads(manifest_path.read_text())
             self.schema_version = str(self.manifest.get("schema_version") or "")
-            if self.schema_version and self.schema_version not in {"locomo-qa-sample-sts-graph-v1", ACTIVE_GRAPH_SCHEMA_V2}:
+            if self.schema_version and self.schema_version not in {
+                "locomo-qa-sample-sts-graph-v1",
+                *STATE_MERGE_GRAPH_SCHEMAS,
+            }:
                 raise ValueError(
                     "incompatible graph schema; rebuild with the shared STS v2 schema: "
                     f"{self.schema_version}"
@@ -406,7 +417,7 @@ class GraphEvidenceIndex:
         self._validate_state_merge_query_contract()
 
     def _validate_state_merge_query_contract(self) -> None:
-        if self.schema_version != ACTIVE_GRAPH_SCHEMA_V2:
+        if self.schema_version not in STATE_MERGE_GRAPH_SCHEMAS:
             return
         errors: List[str] = []
         resolution = self.manifest.get("state_resolution")
@@ -556,7 +567,7 @@ class GraphEvidenceIndex:
 
     def _state_evidence_policy(self) -> str:
         resolution = getattr(self, "manifest", {}).get("state_resolution", {})
-        primary_centered = getattr(self, "schema_version", "") == ACTIVE_GRAPH_SCHEMA_V2 or (
+        primary_centered = getattr(self, "schema_version", "") in STATE_MERGE_GRAPH_SCHEMAS or (
             isinstance(resolution, Mapping)
             and str(resolution.get("query_evidence_policy") or "")
             == "primary_claim_plus_relation_witnesses"
@@ -605,7 +616,7 @@ class GraphEvidenceIndex:
             and str(state.get("status") or "current") == "current"
         )
 
-    def _event_time_profile(self, event_id: str) -> Dict[str, Any]:
+    def _event_time_profile(self, event_id: str, *, include_state: bool = True) -> Dict[str, Any]:
         event = self.events.get(event_id, {})
         roles: List[str] = []
         time_values: List[str] = []
@@ -642,15 +653,16 @@ class GraphEvidenceIndex:
                     time_values.append(str(time_item["value"]))
                 if time_item.get("time_id"):
                     time_ids.append(str(time_item["time_id"]))
-            for state_id in self.states_by_claim.get(claim_id, []):
-                state = self.states.get(state_id, {})
-                if (
-                    self._state_is_current(state_id)
-                    and claim_id == self._state_primary_claim_id(state_id)
-                    and (state.get("current_after") or self.current_time_by_state.get(state_id))
-                ):
-                    roles.append("CURRENT_AFTER")
-                    current_state_ids.append(state_id)
+            if include_state:
+                for state_id in self.states_by_claim.get(claim_id, []):
+                    state = self.states.get(state_id, {})
+                    if (
+                        self._state_is_current(state_id)
+                        and claim_id == self._state_primary_claim_id(state_id)
+                        and (state.get("current_after") or self.current_time_by_state.get(state_id))
+                    ):
+                        roles.append("CURRENT_AFTER")
+                        current_state_ids.append(state_id)
         return {
             "time_roles": ordered_unique(roles),
             "time_values": ordered_unique(time_values),
@@ -661,21 +673,28 @@ class GraphEvidenceIndex:
             "time_role_sources": ordered_unique(time_role_sources),
         }
 
-    def _event_recency_key(self, event_id: str, requested_roles: Sequence[str]) -> Tuple[str, int, Tuple[int, int]]:
+    def _event_recency_key(
+        self,
+        event_id: str,
+        requested_roles: Sequence[str],
+        *,
+        include_state: bool = True,
+    ) -> Tuple[str, int, Tuple[int, int]]:
         selected_roles = {str(role) for role in requested_roles if role}
         requested = selected_roles - {"CURRENT_AFTER"}
         if selected_roles == {"CURRENT_AFTER"}:
-            current_after_times = [
-                temporal_sort_value(
-                    self.states.get(state_id, {}).get("current_after") or self.current_time_by_state.get(state_id)
-                )
-                for claim_id in self.claims_by_event.get(event_id, [])
-                for state_id in self.states_by_claim.get(claim_id, [])
-                if self._state_is_current(state_id) and claim_id == self._state_primary_claim_id(state_id)
-            ]
-            current_after_times = [value for value in current_after_times if value]
-            if current_after_times:
-                return (max(current_after_times), 1, dialog_sort_key(event_id))
+            if include_state:
+                current_after_times = [
+                    temporal_sort_value(
+                        self.states.get(state_id, {}).get("current_after") or self.current_time_by_state.get(state_id)
+                    )
+                    for claim_id in self.claims_by_event.get(event_id, [])
+                    for state_id in self.states_by_claim.get(claim_id, [])
+                    if self._state_is_current(state_id) and claim_id == self._state_primary_claim_id(state_id)
+                ]
+                current_after_times = [value for value in current_after_times if value]
+                if current_after_times:
+                    return (max(current_after_times), 1, dialog_sort_key(event_id))
             report_time = temporal_sort_value(
                 self.events.get(event_id, {}).get("occurred_at") or self.occurred_time_by_event.get(event_id)
             )
@@ -696,8 +715,8 @@ class GraphEvidenceIndex:
         )
         return (report_time, 0 if report_time else -1, dialog_sort_key(event_id))
 
-    def _event_routing_time_roles(self, event_id: str) -> List[str]:
-        """Return semantic roles linked through Claims/Times/StateFacets, excluding the universal dialog timestamp."""
+    def _event_routing_time_roles(self, event_id: str, *, include_state: bool = True) -> List[str]:
+        """Return semantic roles linked through Claims/Times and, optionally, StateFacets."""
         roles: List[str] = []
         for claim_id in self.claims_by_event.get(event_id, []):
             claim = self.claims.get(claim_id, {})
@@ -708,14 +727,15 @@ class GraphEvidenceIndex:
                 time_role = str(time_item.get("time_role") or "")
                 if time_role:
                     roles.append(time_role)
-            for state_id in self.states_by_claim.get(claim_id, []):
-                state = self.states.get(state_id, {})
-                if (
-                    self._state_is_current(state_id)
-                    and claim_id == self._state_primary_claim_id(state_id)
-                    and (state.get("current_after") or self.current_time_by_state.get(state_id))
-                ):
-                    roles.append("CURRENT_AFTER")
+            if include_state:
+                for state_id in self.states_by_claim.get(claim_id, []):
+                    state = self.states.get(state_id, {})
+                    if (
+                        self._state_is_current(state_id)
+                        and claim_id == self._state_primary_claim_id(state_id)
+                        and (state.get("current_after") or self.current_time_by_state.get(state_id))
+                    ):
+                        roles.append("CURRENT_AFTER")
         return ordered_unique(roles)
 
     def _rerank_event_rows(
@@ -724,6 +744,8 @@ class GraphEvidenceIndex:
         time_roles: Sequence[str],
         limit: int,
         ordering: str = "",
+        *,
+        include_state: bool = True,
     ) -> List[Dict[str, Any]]:
         requested_roles = {str(role) for role in time_roles if role}
         candidate_event_ids = [
@@ -731,7 +753,14 @@ class GraphEvidenceIndex:
             for candidate in event_rows
             if str(candidate.get("doc_id") or "").startswith("event::")
         ]
-        chronological = sorted(set(candidate_event_ids), key=lambda event_id: self._event_recency_key(event_id, time_roles))
+        chronological = sorted(
+            set(candidate_event_ids),
+            key=lambda event_id: self._event_recency_key(
+                event_id,
+                time_roles,
+                include_state=include_state,
+            ),
+        )
         recency_by_event = {
             event_id: (rank / max(1, len(chronological) - 1)) * RECENCY_RANK_BOOST
             for rank, event_id in enumerate(chronological)
@@ -742,7 +771,7 @@ class GraphEvidenceIndex:
             if not doc_id.startswith("event::"):
                 continue
             event_id = doc_id[len("event::") :]
-            profile = self._event_time_profile(event_id)
+            profile = self._event_time_profile(event_id, include_state=include_state)
             matched_roles = sorted(requested_roles.intersection(profile["time_roles"]))
             time_role_score = TIME_ROLE_MATCH_BOOST if matched_roles else 0.0
             recency_score = recency_by_event.get(event_id, 0.0) if ordering == "newest_first" else 0.0
@@ -939,9 +968,102 @@ class GraphEvidenceIndex:
         readout_operation: str = "lookup",
         query_entities: Sequence[object] = (),
         scope_anchor_routing: str = "off",
+        retrieval_policy: str = "sts",
     ) -> RetrievalResult:
-        targets = embedding_targets_for_variant(variant)
+        if retrieval_policy not in RETRIEVAL_POLICIES:
+            raise ValueError(f"unsupported retrieval_policy={retrieval_policy}")
+        if retrieval_policy != "sts" and variant == "graph_embedding_scope_statefacet":
+            raise ValueError(
+                "graph_embedding_scope_statefacet is available only for retrieval_policy=sts"
+            )
+        targets = embedding_targets_for_policy(variant, retrieval_policy)
         queries = ordered_unique([question, *retrieval_queries])[:MAX_RETRIEVAL_QUERIES]
+        event_bm25 = self.event_bm25 if retrieval_policy == "sts" else self.raw_event_bm25
+
+        if retrieval_policy == "event-rag":
+            event_bm25_hits = bm25_search_queries(event_bm25, queries, candidate_k)
+            event_embedding_hits: Sequence[Any] = []
+            if "event" in targets:
+                event_index = embedding_indices.get("event")
+                if event_index is None:
+                    raise ValueError(f"{variant} requires an event embedding index")
+                event_embedding_hits = embedding_search_queries(
+                    event_index,
+                    queries,
+                    embedding_candidate_k,
+                )
+            event_candidate_rows = rrf_union_rows(event_bm25_hits, event_embedding_hits)
+            selected_event_rows = event_candidate_rows[:top_k]
+            seed_event_ids = [
+                str(row["doc_id"])[len("event::") :]
+                for row in selected_event_rows
+                if str(row.get("doc_id") or "").startswith("event::")
+            ]
+            event_ids, state_ids, expanded_claim_ids, _relation_lines, expansion_trace = (
+                self._expand_event_seeds(
+                    seed_event_ids,
+                    event_candidate_rows=event_candidate_rows,
+                    graph_expansion=graph_expansion,
+                    max_context_events=max_context_events,
+                    max_state_lines=max_state_lines,
+                    retrieval_queries=queries,
+                    query_subject_ids=query_subject_ids,
+                    readout_operation=readout_operation,
+                )
+            )
+            disabled_time = disabled_time_role_selection(time_role_selector)
+            trace = {
+                "graph_schema_version": self.schema_version,
+                "retrieval_policy": retrieval_policy,
+                "retrieval_queries": queries,
+                "pipeline_order": [
+                    "question_semantic_frame",
+                    "sample_wide_event_candidate_retrieval",
+                    "event_claim_statefacet_graph_expansion",
+                ],
+                "embedding_targets": sorted(targets),
+                "scope_routing": {
+                    "mode": "disabled_by_retrieval_policy",
+                    "scope_ids": [],
+                    "uses_task_labels": False,
+                    "uses_gold": False,
+                },
+                "event_retrieval": {
+                    "routing": "sample-wide-events",
+                    "routed_scope_ids": [],
+                    "time_routing_mode": "disabled",
+                    "bm25_hits": [
+                        {"doc_id": doc_id, "score": score}
+                        for doc_id, score in event_bm25_hits[: min(candidate_k, 30)]
+                    ],
+                    "embedding_hits": [
+                        {"doc_id": hit.doc_id, "score": hit.score}
+                        for hit in event_embedding_hits[:30]
+                    ],
+                    "pre_time_role_union_hits": event_candidate_rows[:30],
+                    "selected_event_hits": selected_event_rows,
+                },
+                "time_role_selection": disabled_time,
+                "graph_expansion": expansion_trace,
+                "selected_state_ids": state_ids,
+                "expanded_claim_ids": expanded_claim_ids,
+                "statefacet_access": {
+                    "mode": "event-claim-graph-expansion-raw-event-readout",
+                    "path": ["Event", "Claim", "StateFacet"],
+                    "state_evidence_policy": self._state_evidence_policy(),
+                },
+                "answer_evidence": {"mode": "raw-events-only"},
+            }
+            return RetrievalResult(
+                candidate_dialog_ids=event_ids,
+                temporal_lines=[],
+                claim_lines=[],
+                state_lines=[],
+                relation_lines=[],
+                context=self._context_text(event_ids),
+                trace=trace,
+            )
+
         scope_allowed_doc_ids = [
             f"scope::{scope_id}"
             for scope_id, scope in self.scopes.items()
@@ -1035,7 +1157,12 @@ class GraphEvidenceIndex:
         else:
             event_routing = "explicit-sample-backoff-only" if sample_backoff_enabled else "no-routed-scope"
 
-        time_role_selection = select_time_roles(question, time_role_client, time_role_selector)
+        time_enabled = retrieval_policy in {"scope-event-time", "sts"}
+        time_role_selection = (
+            select_time_roles(question, time_role_client, time_role_selector)
+            if time_enabled
+            else disabled_time_role_selection(time_role_selector)
+        )
         if variant == "graph_embedding_scope_statefacet":
             allowed_state_doc_ids = [
                 f"state::{state_id}"
@@ -1089,6 +1216,7 @@ class GraphEvidenceIndex:
             expansion_trace["state_evidence_policy"] = self._state_evidence_policy()
             trace = {
                 "graph_schema_version": self.schema_version,
+                "retrieval_policy": retrieval_policy,
                 "retrieval_queries": queries,
                 "pipeline_order": [
                     "question_semantic_frame",
@@ -1155,17 +1283,22 @@ class GraphEvidenceIndex:
             time_routed_event_ids = [
                 event_id
                 for event_id in sorted(scoped_event_ids)
-                if requested_roles.intersection(self._event_routing_time_roles(event_id))
+                if requested_roles.intersection(
+                    self._event_routing_time_roles(
+                        event_id,
+                        include_state=retrieval_policy == "sts",
+                    )
+                )
             ]
             allowed_event_doc_ids = [f"event::{event_id}" for event_id in time_routed_event_ids]
         scoped_event_bm25_hits = bm25_search_queries(
-            self.event_bm25,
+            event_bm25,
             queries,
             candidate_k,
             allowed_doc_ids=allowed_event_doc_ids,
         )
         sample_event_bm25_hits = (
-            bm25_search_queries(self.event_bm25, queries, scope_backoff_k)
+            bm25_search_queries(event_bm25, queries, scope_backoff_k)
             if scope_backoff_k > 0 and event_time_routing == "rerank"
             else []
         )
@@ -1189,11 +1322,16 @@ class GraphEvidenceIndex:
             )
             event_embedding_hits = merge_embedding_hits(scoped_event_embedding_hits, sample_event_embedding_hits)
         event_candidate_rows = rrf_union_rows(event_bm25_hits, event_embedding_hits)
-        selected_event_rows = self._rerank_event_rows(
-            event_candidate_rows,
-            time_role_selection["time_roles"],
-            top_k,
-            str(time_role_selection.get("ordering") or ""),
+        selected_event_rows = (
+            self._rerank_event_rows(
+                event_candidate_rows,
+                time_role_selection["time_roles"],
+                top_k,
+                str(time_role_selection.get("ordering") or ""),
+                include_state=retrieval_policy == "sts",
+            )
+            if time_enabled
+            else [dict(row) for row in event_candidate_rows[:top_k]]
         )
         selected_event_hits = [(str(row["doc_id"]), float(row["score"])) for row in selected_event_rows]
         seed_event_ids: List[str] = []
@@ -1203,73 +1341,100 @@ class GraphEvidenceIndex:
             event_id = doc_id[len("event::") :]
             seed_event_ids.append(event_id)
 
-        resolved_expansion = self.resolve_graph_expansion(graph_expansion)
-        expansion_trace: Dict[str, Any]
-        if resolved_expansion == "scope-coverage":
-            event_ids, state_ids, relation_lines, expansion_trace = self._expand_scope_coverage(
-                seed_event_ids,
-                event_candidate_rows=event_candidate_rows,
-                max_context_events=max_context_events,
-                max_state_lines=max_state_lines,
-                retrieval_queries=queries,
+        if retrieval_policy in {"scope-event", "scope-event-time"}:
+            event_ids, state_ids, expanded_claim_ids, _relation_lines, expansion_trace = (
+                self._expand_event_seeds(
+                    seed_event_ids,
+                    event_candidate_rows=event_candidate_rows,
+                    graph_expansion=graph_expansion,
+                    max_context_events=max_context_events,
+                    max_state_lines=max_state_lines,
+                    retrieval_queries=queries,
+                    query_subject_ids=query_subject_ids,
+                    readout_operation=readout_operation,
+                )
             )
-        elif resolved_expansion == "relation-aware":
-            event_ids, state_ids, relation_lines, expansion_trace = self._expand_relation_aware(
-                seed_event_ids,
-                max_context_events=max_context_events,
-                max_state_lines=max_state_lines,
-                retrieval_queries=queries,
-                query_subject_ids=query_subject_ids,
-                readout_operation=readout_operation,
-            )
-        else:
-            event_ids = list(seed_event_ids)
-            state_ids: List[str] = []
-            for event_id in seed_event_ids:
-                for claim_id in self.claims_by_event.get(event_id, []):
-                    state_ids.extend(self.states_by_claim.get(claim_id, []))
-            event_ids = ordered_unique(event_ids)
-            if max_context_events > 0:
-                event_ids = event_ids[:max_context_events]
-            state_ids = ordered_unique(state_ids)
-            expansion_trace = {
-                "mode": "legacy",
-                "seed_event_ids": seed_event_ids,
+            trace = {
+                "graph_schema_version": self.schema_version,
+                "retrieval_policy": retrieval_policy,
+                "retrieval_queries": queries,
+                "pipeline_order": [
+                    "question_semantic_frame",
+                    "scope_routing",
+                    "time_role_selection" if time_enabled else "time_role_selection_disabled",
+                    "event_candidate_retrieval",
+                    "event_time_rerank" if time_enabled else "event_rank_without_time",
+                    "event_claim_statefacet_graph_expansion",
+                ],
+                "embedding_targets": sorted(targets),
+                "scope_routing": scope_trace,
+                "event_retrieval": {
+                    "routing": event_routing,
+                    "routed_scope_ids": routed_scope_ids,
+                    "time_routing_mode": event_time_routing if time_enabled else "disabled",
+                    "time_prefilter_applied": bool(
+                        time_enabled
+                        and event_time_routing == "prefilter"
+                        and time_role_selection["time_roles"]
+                    ),
+                    "time_routed_event_count": len(time_routed_event_ids),
+                    "time_routed_event_ids": time_routed_event_ids,
+                    "scoped_bm25_hits": [
+                        {"doc_id": doc_id, "score": score}
+                        for doc_id, score in scoped_event_bm25_hits[: min(candidate_k, 30)]
+                    ],
+                    "sample_scope_bm25_hits": [
+                        {"doc_id": doc_id, "score": score}
+                        for doc_id, score in sample_event_bm25_hits
+                    ],
+                    "bm25_hits": [
+                        {"doc_id": doc_id, "score": score}
+                        for doc_id, score in event_bm25_hits[: min(candidate_k, 30)]
+                    ],
+                    "embedding_hits": [
+                        {"doc_id": hit.doc_id, "score": hit.score}
+                        for hit in event_embedding_hits[:30]
+                    ],
+                    "pre_time_role_union_hits": event_candidate_rows[:30],
+                    "selected_event_hits": selected_event_rows,
+                },
+                "time_role_selection": time_role_selection,
+                "graph_expansion": expansion_trace,
                 "selected_state_ids": state_ids,
-                "expanded_event_ids": event_ids,
+                "expanded_claim_ids": expanded_claim_ids,
+                "statefacet_access": {
+                    "mode": "event-claim-graph-expansion-raw-event-readout",
+                    "path": ["Scope", "Event", "Claim", "StateFacet"],
+                    "state_evidence_policy": self._state_evidence_policy(),
+                },
+                "answer_evidence": {"mode": "raw-events-only"},
             }
-        event_ids, state_ids, expanded_claim_ids, relation_lines, closure_trace = self._closed_evidence_pack(
-            event_ids,
-            state_ids,
-            max_state_lines=max_state_lines,
-            candidate_claim_ids=expansion_trace.get("visited_claim_ids"),
-        )
-        expanded_claim_set = set(expanded_claim_ids)
-        expanded_event_set = set(event_ids)
-        unreachable_state_ids: List[str] = []
-        for state_id in state_ids:
-            evidence_claim_ids = self._state_evidence_claim_ids(state_id)
-            if not evidence_claim_ids or not all(
-                claim_id in expanded_claim_set
-                and self._claim_source_event_id(claim_id) in expanded_event_set
-                for claim_id in evidence_claim_ids
-            ):
-                unreachable_state_ids.append(state_id)
-        if unreachable_state_ids:
-            raise ValueError(
-                "StateFacet graph-expansion invariant failed; facets lack their primary/relation proof path: "
-                f"{unreachable_state_ids}"
+            return RetrievalResult(
+                candidate_dialog_ids=event_ids,
+                temporal_lines=[],
+                claim_lines=[],
+                state_lines=[],
+                relation_lines=[],
+                context=self._context_text(event_ids),
+                trace=trace,
             )
-        expansion_trace["evidence_closure"] = closure_trace
-        expansion_trace["expanded_event_ids"] = event_ids
-        expansion_trace["selected_state_ids"] = state_ids
-        expansion_trace["statefacet_origin"] = "event-claim-graph-expansion"
-        expansion_trace["state_evidence_policy"] = self._state_evidence_policy()
+
+        event_ids, state_ids, expanded_claim_ids, relation_lines, expansion_trace = self._expand_event_seeds(
+            seed_event_ids,
+            event_candidate_rows=event_candidate_rows,
+            graph_expansion=graph_expansion,
+            max_context_events=max_context_events,
+            max_state_lines=max_state_lines,
+            retrieval_queries=queries,
+            query_subject_ids=query_subject_ids,
+            readout_operation=readout_operation,
+        )
         claim_lines = [format_claim_line(self.claims[claim_id]) for claim_id in expanded_claim_ids]
         state_lines = [format_state_line(self.states[state_id]) for state_id in state_ids if state_id in self.states]
         context = self._context_text(event_ids)
         trace = {
             "graph_schema_version": self.schema_version,
+            "retrieval_policy": retrieval_policy,
             "retrieval_queries": queries,
             "pipeline_order": [
                 "question_semantic_frame",
@@ -1316,12 +1481,94 @@ class GraphEvidenceIndex:
             trace=trace,
         )
 
+    def _expand_event_seeds(
+        self,
+        seed_event_ids: Sequence[str],
+        *,
+        event_candidate_rows: Sequence[Mapping[str, Any]],
+        graph_expansion: str,
+        max_context_events: int,
+        max_state_lines: int,
+        retrieval_queries: Sequence[str],
+        query_subject_ids: Sequence[str],
+        readout_operation: str,
+    ) -> Tuple[List[str], List[str], List[str], List[str], Dict[str, Any]]:
+        """Expand Event seeds with the shared graph policy and retain closed proof paths."""
+        resolved_expansion = self.resolve_graph_expansion(graph_expansion)
+        if resolved_expansion == "scope-coverage":
+            event_ids, state_ids, relation_lines, expansion_trace = self._expand_scope_coverage(
+                seed_event_ids,
+                event_candidate_rows=event_candidate_rows,
+                max_context_events=max_context_events,
+                max_state_lines=max_state_lines,
+                retrieval_queries=retrieval_queries,
+            )
+        elif resolved_expansion == "relation-aware":
+            event_ids, state_ids, relation_lines, expansion_trace = self._expand_relation_aware(
+                seed_event_ids,
+                max_context_events=max_context_events,
+                max_state_lines=max_state_lines,
+                retrieval_queries=retrieval_queries,
+                query_subject_ids=query_subject_ids,
+                readout_operation=readout_operation,
+            )
+        else:
+            event_ids = ordered_unique(seed_event_ids)
+            if max_context_events > 0:
+                event_ids = event_ids[:max_context_events]
+            state_ids = ordered_unique(
+                state_id
+                for event_id in event_ids
+                for claim_id in self.claims_by_event.get(event_id, [])
+                for state_id in self.states_by_claim.get(claim_id, [])
+            )
+            relation_lines = []
+            expansion_trace = {
+                "mode": "legacy",
+                "seed_event_ids": list(seed_event_ids),
+                "selected_state_ids": state_ids,
+                "expanded_event_ids": event_ids,
+            }
+        event_ids, state_ids, claim_ids, relation_lines, closure_trace = self._closed_evidence_pack(
+            event_ids,
+            state_ids,
+            max_state_lines=max_state_lines,
+            candidate_claim_ids=expansion_trace.get("visited_claim_ids"),
+        )
+        expanded_claim_set = set(claim_ids)
+        expanded_event_set = set(event_ids)
+        unreachable_state_ids = [
+            state_id
+            for state_id in state_ids
+            if not self._state_evidence_claim_ids(state_id)
+            or not all(
+                claim_id in expanded_claim_set
+                and self._claim_source_event_id(claim_id) in expanded_event_set
+                for claim_id in self._state_evidence_claim_ids(state_id)
+            )
+        ]
+        if unreachable_state_ids:
+            raise ValueError(
+                "StateFacet graph-expansion invariant failed; facets lack their primary/relation proof path: "
+                f"{unreachable_state_ids}"
+            )
+        expansion_trace.update(
+            {
+                "evidence_closure": closure_trace,
+                "expanded_event_ids": event_ids,
+                "selected_state_ids": state_ids,
+                "statefacet_origin": "event-claim-graph-expansion",
+                "state_evidence_policy": self._state_evidence_policy(),
+            }
+        )
+        return event_ids, state_ids, claim_ids, relation_lines, expansion_trace
+
     def resolve_graph_expansion(self, requested: str) -> str:
         if requested not in GRAPH_EXPANSIONS:
             raise ValueError(f"unsupported graph_expansion={requested}")
         if requested != "auto":
             return requested
-        if self.schema_version == ACTIVE_GRAPH_SCHEMA_V2:
+        if self.schema_version in STATE_MERGE_GRAPH_SCHEMAS:
             return "relation-aware"
         return "legacy"
 
@@ -2026,7 +2273,12 @@ class GraphEvidenceIndex:
             f"reason={edge.get('reason', '')}"
         )
 
-    def finalize_temporal_readout(self, retrieval: RetrievalResult) -> RetrievalResult:
+    def finalize_temporal_readout(
+        self,
+        retrieval: RetrievalResult,
+        *,
+        include_state: bool = True,
+    ) -> RetrievalResult:
         direct_delivery = (
             retrieval.trace.get("evidence_delivery", {}).get("mode")
             == "direct_graph_expansion"
@@ -2035,6 +2287,7 @@ class GraphEvidenceIndex:
         temporal_rows = self._legacy_temporal_grounding_rows(
             final_answer_event_ids(retrieval),
             requested_time_roles,
+            include_state=include_state,
         )
         mode = "query_time_grounding"
         recalculates_time = True
@@ -2053,6 +2306,7 @@ class GraphEvidenceIndex:
             "uses_task_labels": False,
             "uses_gold": False,
             "recalculates_time": recalculates_time,
+            "state_time_features_enabled": include_state,
             "rows": temporal_rows,
         }
         return RetrievalResult(
@@ -2324,6 +2578,8 @@ class GraphEvidenceIndex:
         self,
         event_ids: Sequence[str],
         requested_time_roles: Sequence[str],
+        *,
+        include_state: bool = True,
     ) -> List[Dict[str, Any]]:
         requested_roles = {str(role) for role in requested_time_roles if role}
         rows: List[Dict[str, Any]] = []
@@ -2331,7 +2587,7 @@ class GraphEvidenceIndex:
         for event_rank, event_id in enumerate(event_ids, start=1):
             event = self.events.get(event_id, {})
             anchor_value = event.get("occurred_at")
-            profile = self._event_time_profile(event_id)
+            profile = self._event_time_profile(event_id, include_state=include_state)
             matched_roles = [role for role in profile["time_roles"] if role in requested_roles]
             event_role = matched_roles[0] if matched_roles else "occurred_at"
             event_text = " ".join(
@@ -2519,6 +2775,15 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
         nargs="+",
         default=["graph_embedding_scope_event"],
         choices=SUPPORTED_VARIANTS,
+    )
+    parser.add_argument(
+        "--retrieval-policy",
+        choices=RETRIEVAL_POLICIES,
+        default="sts",
+        help=(
+            "Independent query-time ablation: event-rag disables Scope/Time/State; scope-event adds Scope; "
+            "scope-event-time adds question-only Time reranking; sts enables the full Claim/State graph path."
+        ),
     )
     parser.add_argument(
         "--question-types",
@@ -2785,11 +3050,44 @@ def embedding_targets_for_variant(variant: str) -> set[str]:
     raise ValueError(f"unsupported variant={variant}")
 
 
-def embedding_targets_for_run(variants: Sequence[str]) -> set[str]:
+def embedding_targets_for_policy(variant: str, retrieval_policy: str) -> set[str]:
+    if retrieval_policy not in RETRIEVAL_POLICIES:
+        raise ValueError(f"unsupported retrieval_policy={retrieval_policy}")
+    targets = embedding_targets_for_variant(variant)
+    if retrieval_policy == "event-rag":
+        return targets.intersection({"event"})
+    if retrieval_policy in {"scope-event", "scope-event-time"}:
+        if variant == "graph_embedding_scope_statefacet":
+            raise ValueError(
+                "graph_embedding_scope_statefacet is available only for retrieval_policy=sts"
+            )
+        return targets.intersection({"scope", "event"})
+    return targets
+
+
+def embedding_targets_for_run(
+    variants: Sequence[str],
+    retrieval_policy: str = "sts",
+) -> set[str]:
     targets: set[str] = set()
     for variant in variants:
-        targets.update(embedding_targets_for_variant(variant))
+        targets.update(embedding_targets_for_policy(variant, retrieval_policy))
     return targets
+
+
+def disabled_time_role_selection(configured_selector: str) -> Dict[str, Any]:
+    return {
+        "time_applicable": False,
+        "time_roles": [],
+        "primary_roles": [],
+        "compatible_roles": [],
+        "ordering": "",
+        "source": "disabled_by_retrieval_policy",
+        "reason": "Time routing is disabled for this retrieval-policy ablation.",
+        "configured_selector": configured_selector,
+        "uses_task_labels": False,
+        "uses_gold": False,
+    }
 
 
 def format_state_line(state: Mapping[str, Any]) -> str:
@@ -3561,6 +3859,7 @@ def run_variant(
             readout_operation=str(frame.get("operation") or "lookup"),
             query_entities=frame.get("entities", []),
             scope_anchor_routing=args.scope_anchor_routing,
+            retrieval_policy=args.retrieval_policy,
         )
         retrieval.trace["retrieval_query"] = row.question
         retrieval.trace["question_frame"] = {
@@ -3661,7 +3960,19 @@ def run_variant(
                     fallback_on_failure=True,
                 )
                 retrieval.trace["evidence_ledger"]["initial_attempt"] = ledger_trace
-        retrieval = graph.finalize_temporal_readout(retrieval)
+        if args.retrieval_policy in {"scope-event-time", "sts"}:
+            retrieval = graph.finalize_temporal_readout(
+                retrieval,
+                include_state=args.retrieval_policy == "sts",
+            )
+        else:
+            retrieval.trace["temporal_readout"] = {
+                "mode": "disabled_by_retrieval_policy",
+                "rows": [],
+                "uses_task_labels": False,
+                "uses_gold": False,
+                "recalculates_time": False,
+            }
         client = make_sharded_client(answer_runtime, f"answer_{variant}", f"{row.question_id}_{short_hash(row.question)}")
         raw_output = client.complete_json(
             answer_system_prompt(),
@@ -3865,14 +4176,22 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         cache_path=Path(args.cache),
         use_cache=not args.no_cache,
     )
-    needed_embedding_targets = embedding_targets_for_run(args.variants)
+    needed_embedding_targets = embedding_targets_for_run(
+        args.variants,
+        args.retrieval_policy,
+    )
     embedding_indices: Dict[str, OpenAIEmbeddingIndex] = {}
-    event_document_version = "state-enriched-v1" if args.event_state_enrichment else "base"
+    raw_event_retrieval = args.retrieval_policy != "sts"
+    event_document_version = (
+        "raw-event-v1"
+        if raw_event_retrieval
+        else ("state-enriched-v1" if args.event_state_enrichment else "base")
+    )
     embedding_namespace = f"locomo-qa:{Path(args.graph_dir).resolve()}"
     if "event" in needed_embedding_targets:
         embedding_indices["event"] = OpenAIEmbeddingIndex(
             graph.event_doc_ids,
-            graph.event_documents,
+            graph.raw_event_documents if raw_event_retrieval else graph.event_documents,
             model=args.embedding_model,
             cache_path=Path(args.embedding_cache),
             namespace=f"{embedding_namespace}:events:{event_document_version}",
@@ -3928,10 +4247,15 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "data_path": str(Path(args.data)),
         "graph_dir": str(Path(args.graph_dir)),
         "graph_schema_version": graph.schema_version,
-        "graph_expansion": graph.resolve_graph_expansion(args.graph_expansion),
+        "graph_expansion": (
+            graph.resolve_graph_expansion(args.graph_expansion)
+            if args.retrieval_policy == "sts"
+            else None
+        ),
         "provider": args.provider,
         "model": model,
         "variants": list(args.variants),
+        "retrieval_policy": args.retrieval_policy,
         "question_types": [normalize_question_type(item) for item in args.question_types],
         "top_k": args.top_k,
         "scope_top_k": args.scope_top_k,
@@ -3940,23 +4264,32 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "scope_anchor_routing": args.scope_anchor_routing,
         "binding_gate": args.binding_gate,
         "statefacet_access": (
-            "scoped-statefacet-direct-retrieval"
-            if set(args.variants) == {"graph_embedding_scope_statefacet"}
+            "disabled_by_retrieval_policy"
+            if args.retrieval_policy != "sts"
             else (
-                "event-claim-graph-expansion-only"
-                if "graph_embedding_scope_statefacet" not in args.variants
-                else "variant-specific"
+                "scoped-statefacet-direct-retrieval"
+                if set(args.variants) == {"graph_embedding_scope_statefacet"}
+                else (
+                    "event-claim-graph-expansion-only"
+                    if "graph_embedding_scope_statefacet" not in args.variants
+                    else "variant-specific"
+                )
             )
         ),
         "statefacet_access_by_variant": {
             variant: (
-                "scoped-statefacet-direct-retrieval"
-                if variant == "graph_embedding_scope_statefacet"
-                else "event-claim-graph-expansion-only"
+                "disabled_by_retrieval_policy"
+                if args.retrieval_policy != "sts"
+                else (
+                    "scoped-statefacet-direct-retrieval"
+                    if variant == "graph_embedding_scope_statefacet"
+                    else "event-claim-graph-expansion-only"
+                )
             )
             for variant in args.variants
         },
         "time_role_selector": args.time_role_selector,
+        "time_role_routing_enabled": args.retrieval_policy in {"scope-event-time", "sts"},
         "event_time_routing": args.event_time_routing,
         "candidate_k": args.candidate_k,
         "embedding_candidate_k": args.embedding_candidate_k,
@@ -3982,9 +4315,13 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "event_fusion": "max_rrf_with_overlap_bonus",
         "event_fusion_overlap_weight": RRF_OVERLAP_WEIGHT,
         "event_document_enrichment": (
-            ["claim_summaries", "scope_labels", "linked_statefacet_dimension_value_status"]
-            if args.event_state_enrichment
-            else ["claim_summaries", "scope_labels"]
+            ["raw_event_text", "speaker", "source_timestamp", "image_metadata"]
+            if raw_event_retrieval
+            else (
+                ["claim_summaries", "scope_labels", "linked_statefacet_dimension_value_status"]
+                if args.event_state_enrichment
+                else ["claim_summaries", "scope_labels"]
+            )
         ),
         "statefacet_document_fields": [
             "canonical_subject",

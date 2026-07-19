@@ -34,7 +34,7 @@ class EmbeddingRAGAdapter(BaseAdapter):
         self.console = get_console()
         self.embedding_model = str(config.get("embedding_model") or "text-embedding-3-small")
         self.embedding_base_url = str(config.get("embedding_base_url") or "") or None
-        self.embedding_cache = Path(str(config.get("embedding_cache") or "Graph/output/cache/evermembench_embedding_rag"))
+        self.embedding_cache = Path(str(config.get("embedding_cache") or "Graph/cache/evermembench_embedding_rag"))
         if not self.embedding_cache.is_absolute():
             self.embedding_cache = PROJECT_DIR / self.embedding_cache
         self.embedding_batch_size = max(1, int(config.get("embedding_batch_size", 48)))

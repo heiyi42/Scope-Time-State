@@ -19,9 +19,9 @@ BOOK_PATH = CORPUS_DIR / "book.json"
 QA_PATH = CORPUS_DIR / "df_qa.parquet"
 
 ARTIFACT_NAME = "epbench_long_book_sts_v2"
-GRAPH_DIR = REPO_ROOT / "Graph" / "output" / "graph" / ARTIFACT_NAME
-CACHE_DIR = REPO_ROOT / "Graph" / "output" / "cache" / ARTIFACT_NAME
-RESULT_DIR = REPO_ROOT / "Graph" / "output" / "results" / ARTIFACT_NAME
+GRAPH_DIR = REPO_ROOT / "Graph" / "graph" / ARTIFACT_NAME
+CACHE_DIR = REPO_ROOT / "Graph" / "cache" / ARTIFACT_NAME
+RESULT_DIR = REPO_ROOT / "Graph" / "results" / ARTIFACT_NAME
 
 BUILD_MODEL = "gpt-4o-mini"
 ANSWER_MODEL = "gpt-4o-mini"

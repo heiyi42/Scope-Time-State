@@ -820,7 +820,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--cache", default=str(EXTERNAL_CACHE_DIR / "llm_cache.locomo_qa_memory_baselines.json"))
     parser.add_argument("--no-cache", action="store_true")
     parser.add_argument("--output", default="")
-    parser.add_argument("--baseline-store-dir", default=str(PROJECT_DIR / "Graph/output/baseline_store/locomo_qa"))
+    parser.add_argument("--baseline-store-dir", default=str(PROJECT_DIR / "Graph/baseline_store/locomo_qa"))
     parser.add_argument("--reuse-baseline-store", action="store_true")
     parser.add_argument("--dry-run", action="store_true", help="Validate selected rows and variants without LLM or embedding calls.")
     parser.add_argument("--rag-chunk-target-chars", type=int, default=900)
@@ -856,7 +856,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--memory-bank-timeout-seconds", type=int, default=int(os.environ.get("MEMORY_BANK_TIMEOUT_SECONDS", "7200")))
     parser.add_argument(
         "--amem-repo-dir",
-        default=os.environ.get("AMEM_REPO_DIR", str(PROJECT_DIR / "Graph/output/service_repos/locomo_smoke/A-mem")),
+        default=os.environ.get("AMEM_REPO_DIR", str(PROJECT_DIR / "Graph/service_repos/locomo_smoke/A-mem")),
     )
     parser.add_argument("--amem-llm-backend", choices=("openai", "ollama"), default=os.environ.get("AMEM_LLM_BACKEND", "ollama"))
     parser.add_argument("--amem-llm-model", default=os.environ.get("AMEM_LLM_MODEL", ""))

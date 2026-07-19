@@ -1264,12 +1264,24 @@ class RelationAwareExpansionTests(unittest.TestCase):
         graph.states = {"state": {"fact_type": "state", "temporal_status": "ongoing", "intent": "none", "current_after": "2025-01-01"}}
         graph.claims_by_event = defaultdict(list, {"D1:1": ["claim"]})
         graph.states_by_claim = defaultdict(list, {"claim": ["state"]})
+        graph.times_by_claim = defaultdict(list)
         graph.current_time_by_state = {}
         graph.occurred_time_by_event = {}
 
         key = graph._event_recency_key("D1:1", ["CURRENT_AFTER"])
+        no_state_key = graph._event_recency_key(
+            "D1:1",
+            ["CURRENT_AFTER"],
+            include_state=False,
+        )
 
         self.assertEqual(key[0], "2025-01-01T00:00:00")
+        self.assertEqual(no_state_key[0], "2020-01-01T00:00:00")
+        self.assertIn("CURRENT_AFTER", graph._event_routing_time_roles("D1:1"))
+        self.assertNotIn(
+            "CURRENT_AFTER",
+            graph._event_routing_time_roles("D1:1", include_state=False),
+        )
 
     def test_relation_expansion_reaches_related_claim_event_and_state(self) -> None:
         graph = graph_query_runner.GraphEvidenceIndex.__new__(graph_query_runner.GraphEvidenceIndex)
@@ -1638,10 +1650,35 @@ class RetrievalPipelineTests(unittest.TestCase):
         )
         args = graph_query_runner.parse_args([])
         self.assertEqual(args.scope_backoff_k, 0)
+        self.assertIn(
+            graph_query_runner.LEGACY_GRAPH_SCHEMA_V2,
+            graph_query_runner.STATE_MERGE_GRAPH_SCHEMAS,
+        )
+        self.assertEqual(args.retrieval_policy, "sts")
+        self.assertEqual(
+            graph_query_runner.parse_args(
+                ["--retrieval-policy", "event-rag"]
+            ).retrieval_policy,
+            "event-rag",
+        )
         self.assertFalse(hasattr(args, "state_search_k"))
         self.assertEqual(
             graph_query_runner.embedding_targets_for_variant("graph_embedding_scope_statefacet"),
             {"scope", "state"},
+        )
+        self.assertEqual(
+            graph_query_runner.embedding_targets_for_policy(
+                "graph_embedding_scope_event",
+                "event-rag",
+            ),
+            {"event"},
+        )
+        self.assertEqual(
+            graph_query_runner.embedding_targets_for_policy(
+                "graph_embedding_scope_event",
+                "scope-event",
+            ),
+            {"scope", "event"},
         )
         for variant in set(graph_query_runner.SUPPORTED_VARIANTS) - {"graph_embedding_scope_statefacet"}:
             self.assertNotIn("state", graph_query_runner.embedding_targets_for_variant(variant))
@@ -1862,6 +1899,13 @@ class RetrievalPipelineTests(unittest.TestCase):
             (graph_dir / "edges.jsonl").write_text("\n".join(json.dumps(edge) for edge in edges) + "\n")
             graph = graph_query_runner.GraphEvidenceIndex.load(graph_dir)
             self.assertTrue(hasattr(graph, "state_bm25"))
+            self.assertEqual(
+                graph.raw_event_documents,
+                [
+                    graph_query_runner.event_document(graph.events["D1:1"]),
+                    graph_query_runner.event_document(graph.events["D2:1"]),
+                ],
+            )
             question = "What pottery does Alice like?"
             result = graph.retrieve(
                 question,
@@ -1920,6 +1964,62 @@ class RetrievalPipelineTests(unittest.TestCase):
                 event_time_routing="rerank",
                 query_subject_ids=graph.resolve_query_subject_ids(["Alice"]),
             )
+            event_rag_result = graph.retrieve(
+                question,
+                retrieval_queries=[question],
+                variant="graph_bm25",
+                top_k=2,
+                candidate_k=4,
+                scope_top_k=1,
+                scope_backoff_k=0,
+                max_context_events=4,
+                max_state_lines=4,
+                embedding_indices={},
+                embedding_candidate_k=4,
+                scope_types=["topic"],
+                time_role_client=None,
+                time_role_selector="none",
+                event_time_routing="rerank",
+                retrieval_policy="event-rag",
+            )
+            scope_event_result = graph.retrieve(
+                question,
+                retrieval_queries=[question],
+                variant="graph_bm25",
+                top_k=2,
+                candidate_k=4,
+                scope_top_k=1,
+                scope_backoff_k=0,
+                max_context_events=4,
+                max_state_lines=4,
+                embedding_indices={},
+                embedding_candidate_k=4,
+                scope_types=["entity"],
+                time_role_client=None,
+                time_role_selector="none",
+                event_time_routing="rerank",
+                query_subject_ids=graph.resolve_query_subject_ids(["Alice"]),
+                retrieval_policy="scope-event",
+            )
+            scope_event_time_result = graph.retrieve(
+                question,
+                retrieval_queries=[question],
+                variant="graph_bm25",
+                top_k=2,
+                candidate_k=4,
+                scope_top_k=1,
+                scope_backoff_k=0,
+                max_context_events=4,
+                max_state_lines=4,
+                embedding_indices={},
+                embedding_candidate_k=4,
+                scope_types=["entity"],
+                time_role_client=None,
+                time_role_selector="none",
+                event_time_routing="rerank",
+                query_subject_ids=graph.resolve_query_subject_ids(["Alice"]),
+                retrieval_policy="scope-event-time",
+            )
 
         self.assertEqual(result.trace["event_retrieval"]["routed_scope_ids"], ["scope-alice"])
         self.assertNotIn("state_search", result.trace)
@@ -1943,6 +2043,26 @@ class RetrievalPipelineTests(unittest.TestCase):
             state_first_result.trace["statefacet_access"]["path"],
             ["Scope", "StateFacet", "Claim", "Event"],
         )
+        self.assertEqual(event_rag_result.trace["retrieval_policy"], "event-rag")
+        self.assertEqual(event_rag_result.trace["scope_routing"]["mode"], "disabled_by_retrieval_policy")
+        self.assertEqual(set(event_rag_result.candidate_dialog_ids), {"D1:1", "D2:1"})
+        self.assertEqual(event_rag_result.claim_lines, [])
+        self.assertEqual(event_rag_result.state_lines, [])
+        self.assertEqual(scope_event_result.candidate_dialog_ids, ["D1:1"])
+        self.assertEqual(scope_event_result.trace["time_role_selection"]["source"], "disabled_by_retrieval_policy")
+        self.assertEqual(scope_event_result.trace["selected_state_ids"], ["state-alice"])
+        self.assertEqual(
+            scope_event_result.trace["statefacet_access"]["mode"],
+            "event-claim-graph-expansion-raw-event-readout",
+        )
+        self.assertEqual(scope_event_result.trace["answer_evidence"]["mode"], "raw-events-only")
+        self.assertEqual(scope_event_result.claim_lines, [])
+        self.assertEqual(scope_event_result.state_lines, [])
+        self.assertEqual(scope_event_result.relation_lines, [])
+        self.assertEqual(scope_event_time_result.candidate_dialog_ids, ["D1:1"])
+        self.assertEqual(scope_event_time_result.trace["retrieval_policy"], "scope-event-time")
+        self.assertEqual(scope_event_time_result.trace["selected_state_ids"], ["state-alice"])
+        self.assertEqual(scope_event_time_result.trace["answer_evidence"]["mode"], "raw-events-only")
         self.assertEqual(
             state_first_result.trace["statefacet_access"]["mode"],
             "scoped-statefacet-direct-retrieval",

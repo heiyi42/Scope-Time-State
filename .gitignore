@@ -25,7 +25,8 @@ tmp/
 
 # Local graph/image exports.
 Design/Graph/
-Graph/output/
+Graph/
+Graph.zip
 
 # Downloaded external benchmark corpora and upstream source checkouts.
 Experiment/Other_BenchMark/Episodic-Memory/data/

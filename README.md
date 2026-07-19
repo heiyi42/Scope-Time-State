@@ -94,7 +94,7 @@ Scope routing (BM25 ∪ embedding)
 - `pipeline/external/`：外部 benchmark 的真实 pipeline；
 - `Experiment/Other_BenchMark/EverMemBench/`：EverMemBench 数据、入口和 baseline adapter；
 - `Experiment/Other_BenchMark/LoCoMo-QA/`：LoCoMo 图构建、图查询和 memory baseline 入口；
-- `Graph/output/`：图、缓存、baseline store、结果和运行产物；
+- `Graph/`：图、缓存、baseline store、结果和运行产物；
 - `Relatedwork/`：相关论文 PDF；
 - `scripts/`：当前 solution 文档的可复现生成脚本。
 
@@ -118,7 +118,7 @@ Experiment/Other_BenchMark/EverMemBench/log/
 图和实验输出默认写入：
 
 ```text
-Graph/output/
+Graph/
 ```
 
 ## 当前边界

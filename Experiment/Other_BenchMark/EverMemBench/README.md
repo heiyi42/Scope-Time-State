@@ -58,7 +58,7 @@ wrappers so `python -m eval.cli` can still run the benchmark.
 - Embeddings are not local by default. Use `OPENAI_EMBEDDING_MODEL=text-embedding-3-small`
   and `OPENAI_EMBEDDING_DIM=1536`; Graphiti local defaults to the same model/dimension.
 - Embedding RAG caches document and query vectors under
-  `Graph/output/cache/evermembench_embedding_rag`; override it with
+  `Graph/cache/evermembench_embedding_rag`; override it with
   `EVERMEMBENCH_EMBEDDING_RAG_CACHE`.
 - For Mem0/MemOS/Memobase, embedding happens inside the local service when that
   service owns retrieval, so configure each service with the same embedding model/dimension.
@@ -82,14 +82,14 @@ conda run -n py311 \
   --resolver-mode llm \
   --provider deepseek \
   --model deepseek-v4-flash \
-  --output-dir Graph/output/graph/evermembench_topic_graph_v2_state_merge
+  --output-dir Graph/graph/evermembench_topic_graph_v2_state_merge
 ```
 
 ```bash
 conda run -n py311 \
   python Experiment/Other_BenchMark/EverMemBench/run_evermembench_qa_eval.py \
   --topic 01 \
-  --graph-dir Graph/output/graph/evermembench_topic_graph_v2_state_merge/01 \
+  --graph-dir Graph/graph/evermembench_topic_graph_v2_state_merge/01 \
   --scope-routing sts \
   --graph-expansion sts \
   --time-role-selector llm \

@@ -63,14 +63,14 @@ env \
   --resolver-candidate-limit 24 \
   --max-claims-per-turn 2 \
   --event-limit 0 \
-  --output-dir Graph/output/graph/locomo_qa_sample_graph_v2_state_merge \
-  --cache Graph/output/cache/llm_cache.locomo_qa_graph_builder.v2_state_merge.json
+  --output-dir Graph/graph/locomo_qa_sample_graph_v2_state_merge \
+  --cache Graph/cache/llm_cache.locomo_qa_graph_builder.v2_state_merge.json
 ```
 
 Output layout:
 
 ```text
-Graph/output/graph/locomo_qa_sample_graph_v2_state_merge/<sample_id>/
+Graph/graph/locomo_qa_sample_graph_v2_state_merge/<sample_id>/
   manifest.json
   graph_summary.json
   nodes.jsonl
@@ -82,8 +82,8 @@ The active v2 builder uses stable `subject_key + state_dimension` routing, an or
 proof closure uses the primary Claim plus only the relation witnesses required for lifecycle or ambiguity.
 
 Without overrides, the active v2 state-merge builder writes to
-`Graph/output/graph/locomo_qa_sample_graph_v2_state_merge/<sample_id>/` and uses
-`Graph/output/cache/llm_cache.locomo_qa_graph_builder.v2_state_merge.json`. The CLI default is v2.
+`Graph/graph/locomo_qa_sample_graph_v2_state_merge/<sample_id>/` and uses
+`Graph/cache/llm_cache.locomo_qa_graph_builder.v2_state_merge.json`. The CLI default is v2.
 That default path replaces the same sample/schema only after a fully validated atomic write. Use the explicit isolated
 `--output-dir` and per-sample `--cache` shown above for candidate rebuilds so retained graphs are not overwritten.
 Pass `--graph-schema v1` only for legacy reproduction and A/B comparison.
@@ -113,7 +113,7 @@ env \
   python Experiment/Other_BenchMark/LoCoMo-QA/run_locomo_graph_query.py \
   --data Experiment/Other_BenchMark/LoCoMo-QA/data/locomo10.json \
   --sample-id conv-26 \
-  --graph-dir Graph/output/graph/locomo_qa_sample_graph_v2_state_merge/conv-26 \
+  --graph-dir Graph/graph/locomo_qa_sample_graph_v2_state_merge/conv-26 \
   --provider openai \
   --model gpt-4o-mini \
   --variants graph_embedding_scope_event \
@@ -138,9 +138,9 @@ env \
   --embedding-model text-embedding-3-small \
   --embedding-batch-size 64 \
   --answer-workers 4 \
-  --output Graph/output/results/locomo_qa/ours_scope_time_state/results_locomo_qa_graph_conv26_v2_state_merge_gpt4omini.json \
-  --cache Graph/output/cache/llm_cache.locomo_qa_graph_query.conv-26.v2_state_merge_gpt4omini.json \
-  --embedding-cache Graph/output/cache/embedding_cache.locomo_qa_graph_query.conv-26.v2_state_merge.text_embedding_3_small.json
+  --output Graph/results/locomo_qa/ours_scope_time_state/results_locomo_qa_graph_conv26_v2_state_merge_gpt4omini.json \
+  --cache Graph/cache/llm_cache.locomo_qa_graph_query.conv-26.v2_state_merge_gpt4omini.json \
+  --embedding-cache Graph/cache/embedding_cache.locomo_qa_graph_query.conv-26.v2_state_merge.text_embedding_3_small.json
 ```
 
 The embedding cache is stored under the same-named `.json.d/` directory. The
@@ -300,8 +300,8 @@ env PYTHONDONTWRITEBYTECODE=1 LLM_PARSE_RETRIES=6 \
   --rag-chunk-target-chars 900 \
   --rag-chunk-overlap-turns 1 \
   --answer-workers 2 \
-  --output Graph/output/results/locomo_qa/mixed/results_locomo_qa_memory_baselines_conv26_multi_open.json \
-  --cache Graph/output/cache/llm_cache.locomo_qa_memory_baselines.conv-26.deepseek_v4_flash.json
+  --output Graph/results/locomo_qa/mixed/results_locomo_qa_memory_baselines_conv26_multi_open.json \
+  --cache Graph/cache/llm_cache.locomo_qa_memory_baselines.conv-26.deepseek_v4_flash.json
 ```
 
 Official-service storage should be started from each upstream project's official local/self-host
@@ -347,12 +347,12 @@ env PYTHONDONTWRITEBYTECODE=1 TOKENIZERS_PARALLELISM=false LLM_PARSE_RETRIES=6 \
   --top-k 24 \
   --official-search-concurrency 1 \
   --answer-workers 2 \
-  --output Graph/output/results/locomo_qa/mixed/results_locomo_qa_official_services_conv26_multi_open.json \
-  --cache Graph/output/cache/llm_cache.locomo_qa_official_services.conv-26.deepseek_v4_flash.json
+  --output Graph/results/locomo_qa/mixed/results_locomo_qa_official_services_conv26_multi_open.json \
+  --cache Graph/cache/llm_cache.locomo_qa_official_services.conv-26.deepseek_v4_flash.json
 ```
 
 The first run writes an ingest state under
-`Graph/output/baseline_store/locomo_qa/official_services/<variant>/<sample_id>/`.
+`Graph/baseline_store/locomo_qa/official_services/<variant>/<sample_id>/`.
 Use `--reuse-baseline-store` to skip repeated `add()` calls with the same local state, and use
 `--force-official-ingest` when the service store was reset or when a fresh official-service ingest is
 intended. Use `--official-user-id` only when intentionally querying an existing service-side namespace.
@@ -360,9 +360,9 @@ intended. Use `--official-user-id` only when intentionally querying an existing 
 Official-source/CLI variants need their upstream repo paths or CLI entrypoints:
 
 ```bash
---memory-bank-official-repo Graph/output/service_repos/locomo_smoke/MemoryBank-SiliconFriend
---amem-repo-dir Graph/output/service_repos/locomo_smoke/A-mem
---letta-code-repo Graph/output/service_repos/locomo_smoke/letta-code
+--memory-bank-official-repo Graph/service_repos/locomo_smoke/MemoryBank-SiliconFriend
+--amem-repo-dir Graph/service_repos/locomo_smoke/A-mem
+--letta-code-repo Graph/service_repos/locomo_smoke/letta-code
 ```
 
 For local Ollama smoke tests with Letta Code, pass the provider-qualified model handle, for example

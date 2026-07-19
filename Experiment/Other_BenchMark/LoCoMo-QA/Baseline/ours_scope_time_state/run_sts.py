@@ -20,7 +20,7 @@ from Experiment.run.common.io import load_dotenv  # noqa: E402
 
 
 DEFAULT_DATA = BENCHMARK_DIR / "data" / "locomo10.json"
-ARTIFACT_DIR = PROJECT_DIR / "Graph" / "output" / "locomo_qa" / "ours_scope_time_state"
+ARTIFACT_DIR = PROJECT_DIR / "Graph" / "locomo_qa" / "ours_scope_time_state"
 STATE_MERGE_SCHEMA = "scope-time-state-graph-v2-state-merge"
 EMBEDDING_MODEL = "text-embedding-3-small"
 DEFAULT_EMBEDDING_BASE_URL = "https://api.openai.com/v1"

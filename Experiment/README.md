@@ -18,7 +18,7 @@ benchmark-visible chronological memory source
   -> optional judge and summary
 ```
 
-图构建阶段只读取 benchmark 允许作为记忆的原始来源：对话 benchmark 使用对话、消息或日志；EPBench 一类叙事 benchmark 使用合成长文本/小说的段落、章节或事件流。不读取 QA、答案、gold evidence 或问题类型标签。查询阶段复用已经构建好的图；缓存、图文件、日志和结果统一放在 `Graph/output/` 或对应 benchmark 的日志目录下。
+图构建阶段只读取 benchmark 允许作为记忆的原始来源：对话 benchmark 使用对话、消息或日志；EPBench 一类叙事 benchmark 使用合成长文本/小说的段落、章节或事件流。不读取 QA、答案、gold evidence 或问题类型标签。查询阶段复用已经构建好的图；缓存、图文件、日志和结果统一放在 `Graph/` 或对应 benchmark 的日志目录下。
 
 ## 目录和职责
 
@@ -61,7 +61,7 @@ conda run -n py311 \
 conda run -n py311 \
   python Experiment/Other_BenchMark/EverMemBench/run_evermembench_qa_eval.py \
   --topic 01 \
-  --graph-dir Graph/output/evermembench_topic_graph_llm_v6_endpoint_lifecycle/01 \
+  --graph-dir Graph/evermembench_topic_graph_llm_v6_endpoint_lifecycle/01 \
   --scope-routing sts \
   --graph-expansion sts
 ```
@@ -110,8 +110,8 @@ env \
   --resolver-candidate-limit 24 \
   --max-claims-per-turn 2 \
   --event-limit 0 \
-  --output-dir Graph/output/graph/locomo_qa_sample_graph_v2_state_merge \
-  --cache Graph/output/cache/llm_cache.locomo_qa_graph_builder.v2_state_merge.json
+  --output-dir Graph/graph/locomo_qa_sample_graph_v2_state_merge \
+  --cache Graph/cache/llm_cache.locomo_qa_graph_builder.v2_state_merge.json
 
 env \
   PYTHONDONTWRITEBYTECODE=1 \
@@ -127,7 +127,7 @@ env \
   python Experiment/Other_BenchMark/LoCoMo-QA/run_locomo_graph_query.py \
   --data Experiment/Other_BenchMark/LoCoMo-QA/data/locomo10.json \
   --sample-id conv-26 \
-  --graph-dir Graph/output/graph/locomo_qa_sample_graph_v2_state_merge/conv-26 \
+  --graph-dir Graph/graph/locomo_qa_sample_graph_v2_state_merge/conv-26 \
   --provider openai \
   --model gpt-4o-mini \
   --variants graph_embedding_scope_event \
@@ -152,9 +152,9 @@ env \
   --embedding-model text-embedding-3-small \
   --embedding-batch-size 64 \
   --answer-workers 4 \
-  --output Graph/output/results/locomo_qa/ours_scope_time_state/results_locomo_qa_graph_conv26_v2_state_merge_gpt4omini.json \
-  --cache Graph/output/cache/llm_cache.locomo_qa_graph_query.conv-26.v2_state_merge_gpt4omini.json \
-  --embedding-cache Graph/output/cache/embedding_cache.locomo_qa_graph_query.conv-26.v2_state_merge.text_embedding_3_small.json
+  --output Graph/results/locomo_qa/ours_scope_time_state/results_locomo_qa_graph_conv26_v2_state_merge_gpt4omini.json \
+  --cache Graph/cache/llm_cache.locomo_qa_graph_query.conv-26.v2_state_merge_gpt4omini.json \
+  --embedding-cache Graph/cache/embedding_cache.locomo_qa_graph_query.conv-26.v2_state_merge.text_embedding_3_small.json
 ```
 
 完整 STS 召回参数、输出安全语义和三个 sample 的重建方式见 [`LoCoMo-QA/README.md`](Other_BenchMark/LoCoMo-QA/README.md)。
@@ -190,7 +190,7 @@ pip install -r requirements.txt
 默认输出位置：
 
 ```text
-Graph/output/                         graph、cache、baseline store、result
+Graph/                         graph、cache、baseline store、result
 Experiment/Other_BenchMark/EverMemBench/log/  EverMemBench stage logs
 ```
 
