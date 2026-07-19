@@ -87,6 +87,14 @@ attribute, reason, list, or descriptive questions.
 Return JSON only: {"time_applicable": true, "primary_roles": ["role"], "compatible_roles": ["role"],
 "reason": "short semantic explanation"}. This routes evidence retrieval only. Do not answer the question."""
 
+TIME_ROLE_TOP2_SELECTOR_SYSTEM_PROMPT = """You are a generic time-semantics router for long-term memory retrieval.
+Read only the user question. Do not use benchmark names, task labels, answer options, answers, evidence, or outside facts.
+Choose zero to two roles from this fixed ontology: CURRENT_AFTER, occurred_at, mentioned_at, updated_at, planned_for,
+deadline_at, valid_from, started_at, completed_at, finalized_at. Use an empty list when time or current-state validity
+is not needed. Assign each selected role a confidence from 0 to 1 and order roles from highest to lowest confidence.
+Return JSON only: {"time_applicable": true, "time_roles": ["role"],
+"time_role_confidences": {"role": 0.95}, "reason": "short semantic explanation"}."""
+
 
 class JsonCompletionClient(Protocol):
     def complete_json(self, system_prompt: str, user_prompt: str) -> Dict[str, object]: ...
@@ -244,11 +252,17 @@ def select_time_roles(question: object, client: JsonCompletionClient, selector: 
             "reason": "Time-role selection is disabled.",
         }
     deterministic = deterministic_question_time_roles(normalized_question)
-    if deterministic is not None:
+    if deterministic is not None and selector != "llm-top2":
         return deterministic
     try:
         raw = client.complete_json(
-            TIME_ROLE_COMPATIBLE_SELECTOR_SYSTEM_PROMPT if selector == "llm-compatible" else TIME_ROLE_SELECTOR_SYSTEM_PROMPT,
+            (
+                TIME_ROLE_COMPATIBLE_SELECTOR_SYSTEM_PROMPT
+                if selector == "llm-compatible"
+                else TIME_ROLE_TOP2_SELECTOR_SYSTEM_PROMPT
+                if selector == "llm-top2"
+                else TIME_ROLE_SELECTOR_SYSTEM_PROMPT
+            ),
             f"Question:\n{normalized_question}",
         )
     except Exception as exc:
@@ -277,6 +291,26 @@ def select_time_roles(question: object, client: JsonCompletionClient, selector: 
         ]
         compatible_roles = candidate_compatible_roles[: min(2, max(0, 3 - len(primary_roles)))]
         time_roles = primary_roles + compatible_roles
+    elif selector == "llm-top2":
+        raw_roles = normalize_time_roles(raw.get("time_roles"))
+        raw_confidences = raw.get("time_role_confidences")
+        confidence_by_role: Dict[str, float] = {}
+        if isinstance(raw_confidences, Mapping):
+            for role in raw_roles:
+                try:
+                    confidence_by_role[role] = max(
+                        0.0,
+                        min(1.0, float(raw_confidences.get(role, 0.0))),
+                    )
+                except (TypeError, ValueError):
+                    confidence_by_role[role] = 0.0
+        original_order = {role: index for index, role in enumerate(raw_roles)}
+        raw_roles.sort(
+            key=lambda role: (-confidence_by_role.get(role, 0.0), original_order[role])
+        )
+        primary_roles = raw_roles[:2]
+        compatible_roles = []
+        time_roles = primary_roles
     else:
         primary_roles = normalize_time_roles(raw.get("time_roles"))[:3]
         compatible_roles = []
@@ -295,7 +329,18 @@ def select_time_roles(question: object, client: JsonCompletionClient, selector: 
         "time_roles": time_roles,
         "primary_roles": primary_roles if time_applicable else [],
         "compatible_roles": compatible_roles if time_applicable else [],
-        "source": "llm_compatible_question_only" if selector == "llm-compatible" else "llm_question_only",
+        "time_role_confidences": (
+            {role: confidence_by_role.get(role, 0.0) for role in time_roles}
+            if selector == "llm-top2" and time_applicable
+            else {}
+        ),
+        "source": (
+            "llm_compatible_question_only"
+            if selector == "llm-compatible"
+            else "llm_top2_confidence_question_only"
+            if selector == "llm-top2"
+            else "llm_question_only"
+        ),
         "reason": str(raw.get("reason") or "")[:400] if isinstance(raw, Mapping) else "",
         "question": normalized_question,
         "raw": raw,

@@ -79,6 +79,27 @@ class TimeRoleSelectionTests(unittest.TestCase):
         self.assertEqual(result["time_roles"], ["completed_at"])
         self.assertTrue(result["source"].startswith("deterministic_high_precision_question_rule:"))
 
+    def test_top2_selector_uses_confidence_order_even_for_explicit_time_question(self) -> None:
+        result = select_time_roles(
+            "When was the project completed?",
+            StubJsonClient(
+                {
+                    "time_applicable": True,
+                    "time_roles": ["occurred_at", "completed_at", "updated_at"],
+                    "time_role_confidences": {
+                        "occurred_at": 0.35,
+                        "completed_at": 0.98,
+                        "updated_at": 0.62,
+                    },
+                    "reason": "Completion is primary and update time is the next-best interpretation.",
+                }
+            ),
+            "llm-top2",
+        )
+
+        self.assertEqual(result["time_roles"], ["completed_at", "updated_at"])
+        self.assertEqual(result["source"], "llm_top2_confidence_question_only")
+
 
 class SharedSTSGraphSchemaTests(unittest.TestCase):
     def test_builder_and_query_use_shared_v2_schema(self) -> None:

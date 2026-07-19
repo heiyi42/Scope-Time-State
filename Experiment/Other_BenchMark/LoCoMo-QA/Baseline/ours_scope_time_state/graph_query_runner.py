@@ -50,10 +50,19 @@ SUPPORTED_VARIANTS = (
     "graph_bm25",
     "graph_embedding_event",
     "graph_embedding_scope_event",
+    "graph_embedding_scope_claim",
     "graph_embedding_scope_statefacet",
 )
 GRAPH_EXPANSIONS = ("auto", "legacy", "relation-aware", "scope-coverage")
-RETRIEVAL_POLICIES = ("event-rag", "scope-event", "scope-event-time", "sts")
+EVENT_RETRIEVAL_POLICIES = ("event-rag", "scope-event", "scope-event-time", "sts")
+CLAIM_RETRIEVAL_POLICIES = (
+    "claim",
+    "scope-claim",
+    "scope-claim-time",
+    "scope-claim-time-state",
+)
+RETRIEVAL_POLICIES = EVENT_RETRIEVAL_POLICIES
+ALL_RETRIEVAL_POLICIES = (*EVENT_RETRIEVAL_POLICIES, *CLAIM_RETRIEVAL_POLICIES)
 TOKEN_RE = re.compile(r"[A-Za-z0-9_']+")
 EMBEDDING_RETRIEVAL_SCORE_WEIGHT = 8.0
 TIME_ROLE_MATCH_BOOST = 0.25
@@ -318,6 +327,7 @@ class GraphEvidenceIndex:
         self.states_by_claim: DefaultDict[str, List[str]] = defaultdict(list)
         self.scopes_by_event: DefaultDict[str, List[str]] = defaultdict(list)
         self.events_by_scope: DefaultDict[str, List[str]] = defaultdict(list)
+        self.claims_by_scope: DefaultDict[str, List[str]] = defaultdict(list)
         self.scopes_by_state: DefaultDict[str, List[str]] = defaultdict(list)
         self.states_by_scope: DefaultDict[str, List[str]] = defaultdict(list)
         self.relations_by_claim: DefaultDict[str, List[Dict[str, Any]]] = defaultdict(list)
@@ -327,6 +337,9 @@ class GraphEvidenceIndex:
         self.occurred_time_id_by_event: Dict[str, str] = {}
         self.event_state_enrichment = False
         self._load()
+        for event_id, claim_ids in self.claims_by_event.items():
+            for scope_id in self.scopes_by_event.get(event_id, []):
+                self.claims_by_scope[scope_id].extend(claim_ids)
         (
             self.event_doc_ids,
             self.event_documents,
@@ -335,12 +348,14 @@ class GraphEvidenceIndex:
             self.state_doc_ids,
             self.state_documents,
         ) = self._build_documents()
+        self.claim_doc_ids, self.claim_documents = self._build_claim_documents()
         self.raw_event_documents = [
             event_document(self.events[doc_id[len("event::") :]])
             for doc_id in self.event_doc_ids
         ]
         self.raw_event_bm25 = BM25Index(self.event_doc_ids, self.raw_event_documents)
         self.event_bm25 = BM25Index(self.event_doc_ids, self.event_documents)
+        self.claim_bm25 = BM25Index(self.claim_doc_ids, self.claim_documents)
         self.scope_bm25 = BM25Index(self.scope_doc_ids, self.scope_documents)
         self.state_bm25 = BM25Index(self.state_doc_ids, self.state_documents)
 
@@ -472,7 +487,9 @@ class GraphEvidenceIndex:
             suffix = f" (+{remainder} more)" if remainder else ""
             raise ValueError(f"invalid active v2 state-merge query contract: {preview}{suffix}")
 
-    def _build_documents(self) -> Tuple[List[str], List[str], List[str], List[str], List[str], List[str]]:
+    def _build_documents(
+        self,
+    ) -> Tuple[List[str], List[str], List[str], List[str], List[str], List[str]]:
         event_doc_ids: List[str] = []
         event_documents: List[str] = []
         for event_id, event in sorted(self.events.items(), key=lambda item: dialog_sort_key(item[0])):
@@ -500,6 +517,14 @@ class GraphEvidenceIndex:
             state_doc_ids,
             state_documents,
         )
+
+    def _build_claim_documents(self) -> Tuple[List[str], List[str]]:
+        claim_doc_ids: List[str] = []
+        claim_documents: List[str] = []
+        for claim_id, claim in sorted(self.claims.items()):
+            claim_doc_ids.append(f"claim::{claim_id}")
+            claim_documents.append(claim_summary(claim))
+        return claim_doc_ids, claim_documents
 
     def _enhanced_event_document(self, event_id: str, event: Mapping[str, Any]) -> str:
         claim_text = " ".join(
@@ -945,6 +970,338 @@ class GraphEvidenceIndex:
             "uses_gold": False,
         }
 
+    def _retrieve_claim_policy(
+        self,
+        question: str,
+        *,
+        retrieval_queries: Sequence[str],
+        variant: str,
+        top_k: int,
+        candidate_k: int,
+        scope_top_k: int,
+        scope_backoff_k: int,
+        max_claim_lines: int = 24,
+        max_context_events: int,
+        embedding_indices: Mapping[str, OpenAIEmbeddingIndex],
+        embedding_candidate_k: int,
+        scope_types: Sequence[str],
+        time_role_client: Any,
+        time_role_selector: str,
+        query_subject_ids: Sequence[str],
+        readout_operation: str,
+        query_entities: Sequence[object],
+        scope_anchor_routing: str,
+        retrieval_policy: str,
+    ) -> RetrievalResult:
+        """Run the strict Claim -> Scope -> Time -> State ablation."""
+        queries = ordered_unique([question, *retrieval_queries])[:MAX_RETRIEVAL_QUERIES]
+        targets = embedding_targets_for_policy(variant, retrieval_policy)
+        scope_enabled = retrieval_policy != "claim"
+        time_enabled = retrieval_policy in {"scope-claim-time", "scope-claim-time-state"}
+        state_enabled = retrieval_policy == "scope-claim-time-state"
+
+        routed_scope_ids: List[str] = []
+        scope_trace: Dict[str, Any]
+        if not scope_enabled:
+            scope_trace = {
+                "mode": "disabled_by_retrieval_policy",
+                "scope_ids": [],
+                "uses_task_labels": False,
+                "uses_gold": False,
+            }
+        else:
+            allowed_scope_doc_ids = [
+                f"scope::{scope_id}"
+                for scope_id, scope in self.scopes.items()
+                if not scope_types or str(scope.get("scope_type") or "") in set(scope_types)
+            ]
+            scope_bm25_hits = bm25_search_queries(
+                self.scope_bm25,
+                queries,
+                candidate_k,
+                allowed_doc_ids=allowed_scope_doc_ids,
+            )
+            scope_embedding_hits: Sequence[Any] = []
+            if "scope" in targets:
+                scope_index = embedding_indices.get("scope")
+                if scope_index is None:
+                    raise ValueError(f"{variant} requires a scope embedding index")
+                scope_embedding_hits = embedding_search_queries(
+                    scope_index,
+                    queries,
+                    embedding_candidate_k,
+                    allowed_doc_ids=allowed_scope_doc_ids,
+                )
+            scope_rows = hybrid_union_rows(scope_bm25_hits, scope_embedding_hits)
+            if scope_anchor_routing not in {"off", "reserve"}:
+                raise ValueError(f"unsupported scope_anchor_routing={scope_anchor_routing}")
+            anchor_doc_ids = (
+                self.resolve_anchor_scope_doc_ids(query_entities, scope_types)
+                if scope_anchor_routing == "reserve"
+                else []
+            )
+            rows_by_doc_id = {str(row.get("doc_id") or ""): row for row in scope_rows}
+            anchor_rows = [
+                {
+                    **dict(
+                        rows_by_doc_id.get(
+                            doc_id,
+                            {
+                                "doc_id": doc_id,
+                                "lexical_score": 0.0,
+                                "embedding_score": 0.0,
+                                "score": 0.0,
+                                "retrieval_source": "exact-anchor",
+                            },
+                        )
+                    ),
+                    "anchor_match": True,
+                }
+                for doc_id in anchor_doc_ids
+            ]
+            anchor_keys = {
+                self._scope_semantic_key(
+                    self.scopes.get(doc_id[len("scope::") :] if doc_id.startswith("scope::") else "", {})
+                )
+                for doc_id in anchor_doc_ids
+            }
+            semantic_rows = [
+                row
+                for row in scope_rows
+                if self._scope_semantic_key(
+                    self.scopes.get(str(row.get("doc_id") or "")[len("scope::") :], {})
+                )
+                not in anchor_keys
+            ]
+            selected_scope_rows = [*anchor_rows, *semantic_rows][:scope_top_k]
+            routed_scope_ids = [
+                str(row["doc_id"])[len("scope::") :]
+                for row in selected_scope_rows
+                if str(row.get("doc_id") or "").startswith("scope::")
+            ]
+            scope_trace = {
+                "mode": "bm25_dense_scope_routing",
+                "anchor_routing": scope_anchor_routing,
+                "anchor_scope_doc_ids": anchor_doc_ids,
+                "bm25_hits": [{"doc_id": doc_id, "score": score} for doc_id, score in scope_bm25_hits[:20]],
+                "embedding_hits": [
+                    {"doc_id": hit.doc_id, "score": hit.score} for hit in scope_embedding_hits[:20]
+                ],
+                "selected_scope_hits": selected_scope_rows,
+                "scope_ids": routed_scope_ids,
+                "uses_task_labels": False,
+                "uses_gold": False,
+            }
+
+        time_selection = (
+            select_time_roles(question, time_role_client, time_role_selector)
+            if time_enabled
+            else disabled_time_role_selection(time_role_selector)
+        )
+        selected_time_roles = ordered_unique(time_selection.get("time_roles", []))[:2]
+        time_selection = {
+            **time_selection,
+            "time_roles": selected_time_roles,
+            "selected_role_limit": 2,
+            "selection_policy": "highest_confidence_first",
+        }
+
+        scoped_claim_doc_ids = (
+            self._claim_doc_ids_for_scopes(routed_scope_ids)
+            if scope_enabled
+            else list(self.claim_doc_ids)
+        )
+        if time_enabled and selected_time_roles:
+            requested_roles = set(selected_time_roles)
+            time_filtered_claim_doc_ids = [
+                doc_id
+                for doc_id in scoped_claim_doc_ids
+                if requested_roles.intersection(
+                    self._claim_time_roles(doc_id[len("claim::") :])
+                )
+            ]
+        else:
+            time_filtered_claim_doc_ids = list(scoped_claim_doc_ids)
+
+        claim_index = embedding_indices.get("claim") if "claim" in targets else None
+        if "claim" in targets and claim_index is None:
+            raise ValueError(f"{variant} requires a Claim embedding index")
+
+        def rank_claims(allowed_doc_ids: Sequence[str], limit: int) -> Tuple[List[Dict[str, Any]], Any, Any]:
+            bm25_hits = bm25_search_queries(
+                self.claim_bm25,
+                queries,
+                limit,
+                allowed_doc_ids=allowed_doc_ids,
+            )
+            embedding_hits: Sequence[Any] = []
+            if claim_index is not None:
+                embedding_hits = embedding_search_queries(
+                    claim_index,
+                    queries,
+                    limit,
+                    allowed_doc_ids=allowed_doc_ids,
+                )
+            return rrf_union_rows(bm25_hits, embedding_hits), bm25_hits, embedding_hits
+
+        claim_rows, claim_bm25_hits, claim_embedding_hits = rank_claims(
+            time_filtered_claim_doc_ids,
+            max(candidate_k, embedding_candidate_k),
+        )
+        backoff_claim_doc_ids: List[str] = []
+        if scope_enabled and scope_backoff_k > 0:
+            global_claim_doc_ids = list(self.claim_doc_ids)
+            if time_enabled and selected_time_roles:
+                requested_roles = set(selected_time_roles)
+                global_claim_doc_ids = [
+                    doc_id
+                    for doc_id in global_claim_doc_ids
+                    if requested_roles.intersection(
+                        self._claim_time_roles(doc_id[len("claim::") :])
+                    )
+                ]
+            backoff_rows, _backoff_bm25_hits, _backoff_embedding_hits = rank_claims(
+                global_claim_doc_ids,
+                scope_backoff_k,
+            )
+            backoff_claim_doc_ids = [str(row["doc_id"]) for row in backoff_rows[:scope_backoff_k]]
+            combined_claim_doc_ids = ordered_unique(
+                [*time_filtered_claim_doc_ids, *backoff_claim_doc_ids]
+            )
+            claim_rows, claim_bm25_hits, claim_embedding_hits = rank_claims(
+                combined_claim_doc_ids,
+                max(candidate_k, embedding_candidate_k),
+            )
+        direct_limit = top_k if state_enabled else max_claim_lines
+        direct_rows = claim_rows[:direct_limit]
+        seed_claim_ids = [
+            str(row["doc_id"])[len("claim::") :]
+            for row in direct_rows
+            if str(row.get("doc_id") or "").startswith("claim::")
+        ]
+
+        expansion_trace: Dict[str, Any] = {"mode": "disabled_by_retrieval_policy"}
+        selected_claim_ids = list(seed_claim_ids)
+        if state_enabled:
+            _event_ids, _state_ids, _relation_lines, expansion_trace = self._expand_relation_aware(
+                [],
+                seed_claim_ids=seed_claim_ids,
+                max_context_events=0,
+                max_state_lines=0,
+                retrieval_queries=queries,
+                query_subject_ids=query_subject_ids,
+                readout_operation=readout_operation,
+            )
+            expanded_claim_ids = ordered_unique(
+                [*seed_claim_ids, *expansion_trace.get("visited_claim_ids", [])]
+            )
+            expanded_doc_ids = [f"claim::{claim_id}" for claim_id in expanded_claim_ids]
+            final_rows, _final_bm25, _final_embedding = rank_claims(
+                expanded_doc_ids,
+                max(len(expanded_doc_ids), max_claim_lines),
+            )
+            selected_claim_ids = [
+                str(row["doc_id"])[len("claim::") :]
+                for row in final_rows[:max_claim_lines]
+                if str(row.get("doc_id") or "").startswith("claim::")
+            ]
+            expansion_trace["expanded_claim_candidate_ids"] = expanded_claim_ids
+            expansion_trace["final_claim_ranking"] = final_rows[:max_claim_lines]
+
+        selected_claim_ids = ordered_unique(selected_claim_ids)[:max_claim_lines]
+        selected_claim_set = set(selected_claim_ids)
+        event_ids = ordered_unique(
+            self._claim_source_event_id(claim_id)
+            for claim_id in selected_claim_ids
+            if self._claim_source_event_id(claim_id)
+        )[:max_context_events]
+        retained_event_set = set(event_ids)
+        selected_claim_ids = [
+            claim_id
+            for claim_id in selected_claim_ids
+            if self._claim_source_event_id(claim_id) in retained_event_set
+        ]
+        selected_claim_set = set(selected_claim_ids)
+
+        state_ids: List[str] = []
+        relation_lines: List[str] = []
+        if state_enabled:
+            candidate_state_ids = ordered_unique(
+                state_id
+                for claim_id in selected_claim_ids
+                for state_id in self.states_by_claim.get(claim_id, [])
+                if state_id in self.states
+            )
+            state_ids = [
+                state_id
+                for state_id in candidate_state_ids
+                if set(self._state_evidence_claim_ids(state_id)).issubset(selected_claim_set)
+            ]
+            seen_edges: set[Tuple[str, str, str]] = set()
+            for claim_id in selected_claim_ids:
+                for edge in self.relations_by_claim.get(claim_id, []):
+                    source = str(edge.get("from") or "")
+                    target = str(edge.get("to") or "")
+                    key = (str(edge.get("type") or ""), source, target)
+                    if source in selected_claim_set and target in selected_claim_set and key not in seen_edges:
+                        seen_edges.add(key)
+                        relation_lines.append(self._format_relation_edge(edge))
+
+        claim_lines = [format_claim_line(self.claims[claim_id]) for claim_id in selected_claim_ids]
+        state_lines = [format_state_line(self.states[state_id]) for state_id in state_ids]
+        trace = {
+            "graph_schema_version": self.schema_version,
+            "retrieval_policy": retrieval_policy,
+            "retrieval_queries": queries,
+            "pipeline_order": [
+                "question_semantic_frame",
+                "scope_routing" if scope_enabled else "scope_routing_disabled",
+                "top2_time_role_hard_filter" if time_enabled else "time_role_selection_disabled",
+                "claim_bm25_dense_rrf",
+                "state_aware_relation_expansion" if state_enabled else "state_aware_relation_expansion_disabled",
+                "final_claim_rrf" if state_enabled else "direct_claim_topk",
+                "claim_event_evidence_closure",
+            ],
+            "embedding_targets": sorted(targets),
+            "scope_routing": scope_trace,
+            "time_role_selection": time_selection,
+            "claim_retrieval": {
+                "routed_scope_ids": routed_scope_ids,
+                "scope_candidate_count": len(scoped_claim_doc_ids),
+                "time_filtered_candidate_count": len(time_filtered_claim_doc_ids),
+                "scope_backoff_k": scope_backoff_k if scope_enabled else 0,
+                "backoff_claim_doc_ids": backoff_claim_doc_ids,
+                "hard_filter_applied": bool(time_enabled and selected_time_roles),
+                "bm25_hits": [{"doc_id": doc_id, "score": score} for doc_id, score in claim_bm25_hits[:30]],
+                "embedding_hits": [
+                    {"doc_id": hit.doc_id, "score": hit.score} for hit in claim_embedding_hits[:30]
+                ],
+                "rrf_hits": claim_rows[:30],
+                "seed_claim_ids": seed_claim_ids,
+                "selected_claim_ids": selected_claim_ids,
+                "max_claim_lines": max_claim_lines,
+            },
+            "graph_expansion": expansion_trace,
+            "selected_state_ids": state_ids,
+            "expanded_claim_ids": selected_claim_ids,
+            "statefacet_access": {
+                "mode": "claim-support-state-relation-closure" if state_enabled else "disabled_by_retrieval_policy",
+                "path": ["Scope", "Claim", "StateFacet", "Claim"] if state_enabled else [],
+            },
+            "answer_evidence": {
+                "mode": "claim-event-state-relation" if state_enabled else "claim-and-source-event-only"
+            },
+        }
+        return RetrievalResult(
+            candidate_dialog_ids=event_ids,
+            temporal_lines=[],
+            claim_lines=claim_lines,
+            state_lines=state_lines,
+            relation_lines=relation_lines,
+            context=self._context_text(event_ids),
+            trace=trace,
+        )
+
     def retrieve(
         self,
         question: str,
@@ -955,6 +1312,7 @@ class GraphEvidenceIndex:
         candidate_k: int,
         scope_top_k: int,
         scope_backoff_k: int,
+        max_claim_lines: int = 24,
         max_context_events: int,
         max_state_lines: int,
         embedding_indices: Mapping[str, OpenAIEmbeddingIndex],
@@ -970,8 +1328,30 @@ class GraphEvidenceIndex:
         scope_anchor_routing: str = "off",
         retrieval_policy: str = "sts",
     ) -> RetrievalResult:
-        if retrieval_policy not in RETRIEVAL_POLICIES:
+        if retrieval_policy not in ALL_RETRIEVAL_POLICIES:
             raise ValueError(f"unsupported retrieval_policy={retrieval_policy}")
+        if retrieval_policy in CLAIM_RETRIEVAL_POLICIES:
+            return self._retrieve_claim_policy(
+                question,
+                retrieval_queries=retrieval_queries,
+                variant=variant,
+                top_k=top_k,
+                candidate_k=candidate_k,
+                scope_top_k=scope_top_k,
+                scope_backoff_k=scope_backoff_k,
+                max_claim_lines=max_claim_lines,
+                max_context_events=max_context_events,
+                embedding_indices=embedding_indices,
+                embedding_candidate_k=embedding_candidate_k,
+                scope_types=scope_types,
+                time_role_client=time_role_client,
+                time_role_selector=time_role_selector,
+                query_subject_ids=query_subject_ids,
+                readout_operation=readout_operation,
+                query_entities=query_entities,
+                scope_anchor_routing=scope_anchor_routing,
+                retrieval_policy=retrieval_policy,
+            )
         if retrieval_policy != "sts" and variant == "graph_embedding_scope_statefacet":
             raise ValueError(
                 "graph_embedding_scope_statefacet is available only for retrieval_policy=sts"
@@ -1816,6 +2196,7 @@ class GraphEvidenceIndex:
         self,
         seed_event_ids: Sequence[str],
         *,
+        seed_claim_ids: Sequence[str] = (),
         seed_state_ids: Sequence[str] = (),
         max_context_events: int,
         max_state_lines: int,
@@ -1963,6 +2344,16 @@ class GraphEvidenceIndex:
                 relevance=1.0 / rank,
             )
 
+        for rank, claim_id in enumerate(seed_claim_ids, start=1):
+            enqueue_claim(
+                claim_id,
+                f"seed_claim_rank={rank}",
+                relation_hops=0,
+                seed_rank=rank,
+                relevance=claim_relevance.get(str(claim_id), 0.0),
+                allow_relations=True,
+            )
+
         for rank, event_id in enumerate(seed_event_ids, start=1):
             add_event(event_id, f"seed_event_rank={rank}")
             event_claim_ids = [
@@ -2085,6 +2476,7 @@ class GraphEvidenceIndex:
             {
                 "mode": "relation-aware",
                 "seed_event_ids": list(seed_event_ids),
+                "seed_claim_ids": list(seed_claim_ids),
                 "seed_state_ids": list(seed_state_ids),
                 "expanded_event_ids": event_ids,
                 "selected_state_ids": state_ids,
@@ -2264,6 +2656,21 @@ class GraphEvidenceIndex:
         for scope_id in scope_ids:
             event_ids.extend(self.events_by_scope.get(scope_id, []))
         return [f"event::{event_id}" for event_id in ordered_unique(event_ids)]
+
+    def _claim_doc_ids_for_scopes(self, scope_ids: Sequence[str]) -> List[str]:
+        claim_ids: List[str] = []
+        for scope_id in scope_ids:
+            claim_ids.extend(self.claims_by_scope.get(scope_id, []))
+        return [f"claim::{claim_id}" for claim_id in ordered_unique(claim_ids)]
+
+    def _claim_time_roles(self, claim_id: str) -> List[str]:
+        claim = self.claims.get(claim_id, {})
+        roles = [str(claim.get("time_role") or "")]
+        roles.extend(
+            str(item.get("time_role") or "")
+            for item in self.times_by_claim.get(claim_id, [])
+        )
+        return ordered_unique(role for role in roles if role)
 
     def _format_relation_edge(self, edge: Mapping[str, Any]) -> str:
         source = self.claims.get(str(edge.get("from") or ""), {})
@@ -2778,11 +3185,11 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     )
     parser.add_argument(
         "--retrieval-policy",
-        choices=RETRIEVAL_POLICIES,
+        choices=ALL_RETRIEVAL_POLICIES,
         default="sts",
         help=(
-            "Independent query-time ablation: event-rag disables Scope/Time/State; scope-event adds Scope; "
-            "scope-event-time adds question-only Time reranking; sts enables the full Claim/State graph path."
+            "Event ablations remain available unchanged. The additive Claim ablation uses claim, scope-claim, "
+            "scope-claim-time, and scope-claim-time-state."
         ),
     )
     parser.add_argument(
@@ -2817,6 +3224,7 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     )
     parser.add_argument("--candidate-k", type=int, default=80)
     parser.add_argument("--embedding-candidate-k", type=int, default=80)
+    parser.add_argument("--max-claim-lines", type=positive_int_argument, default=24)
     parser.add_argument("--max-context-events", type=int, default=24)
     parser.add_argument("--max-state-lines", type=int, default=8)
     parser.add_argument("--max-ledger-claims", type=positive_int_argument, default=12)
@@ -2849,7 +3257,7 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     )
     parser.add_argument(
         "--time-role-selector",
-        choices=("llm", "llm-compatible", "none"),
+        choices=("llm", "llm-compatible", "llm-top2", "none"),
         default="llm",
         help=(
             "Question-only Time routing; llm-compatible separately requests primary and compatible evidence roles."
@@ -3045,14 +3453,22 @@ def embedding_targets_for_variant(variant: str) -> set[str]:
         return {"event"}
     if variant == "graph_embedding_scope_event":
         return {"scope", "event"}
+    if variant == "graph_embedding_scope_claim":
+        return {"scope", "claim"}
     if variant == "graph_embedding_scope_statefacet":
         return {"scope", "state"}
     raise ValueError(f"unsupported variant={variant}")
 
 
 def embedding_targets_for_policy(variant: str, retrieval_policy: str) -> set[str]:
-    if retrieval_policy not in RETRIEVAL_POLICIES:
+    if retrieval_policy not in ALL_RETRIEVAL_POLICIES:
         raise ValueError(f"unsupported retrieval_policy={retrieval_policy}")
+    if retrieval_policy in CLAIM_RETRIEVAL_POLICIES:
+        if variant == "graph_bm25":
+            return set()
+        if retrieval_policy == "claim":
+            return {"claim"}
+        return {"scope", "claim"}
     targets = embedding_targets_for_variant(variant)
     if retrieval_policy == "event-rag":
         return targets.intersection({"event"})
@@ -3799,6 +4215,7 @@ def summarize_flat(rows: Sequence[Dict[str, object]]) -> Dict[str, object]:
         "exact_match": mean(1.0 if row["exact_match"] else 0.0 for row in rows if row["category"] != 5),
         "candidate_dialog_recall": mean(row["candidate_dialog_recall"] for row in rows),
         "candidate_dialog_precision": mean(row["candidate_dialog_precision"] for row in rows),
+        "candidate_dialog_f1": mean(row["candidate_dialog_f1"] for row in rows),
         "evidence_dialog_recall": mean(row["evidence_dialog_recall"] for row in rows),
         "evidence_dialog_precision": mean(row["evidence_dialog_precision"] for row in rows),
         "evidence_dialog_f1": mean(row["evidence_dialog_f1"] for row in rows),
@@ -3846,6 +4263,7 @@ def run_variant(
             candidate_k=args.candidate_k,
             scope_top_k=args.scope_top_k,
             scope_backoff_k=args.scope_backoff_k,
+            max_claim_lines=args.max_claim_lines,
             max_context_events=args.max_context_events,
             max_state_lines=args.max_state_lines,
             embedding_indices=embedding_indices,
@@ -4045,6 +4463,8 @@ def run_variant(
         evidence_precision = precision(evidence_dialog_ids, row.evidence_dialog_ids)
         evidence_recall = recall(evidence_dialog_ids, row.evidence_dialog_ids)
         ledger_dialog_ids = list(retrieval.trace.get("evidence_ledger", {}).get("selected_event_ids", []))
+        candidate_precision = precision(retrieved_candidate_dialog_ids, row.evidence_dialog_ids)
+        candidate_recall = recall(retrieved_candidate_dialog_ids, row.evidence_dialog_ids)
         result = {
             "question_id": row.question_id,
             "sample_id": row.sample_id,
@@ -4058,8 +4478,9 @@ def run_variant(
             "ledger_dialog_ids": ledger_dialog_ids,
             "evidence_dialog_ids": evidence_dialog_ids,
             "gold_evidence_dialog_ids": list(row.evidence_dialog_ids),
-            "candidate_dialog_recall": recall(retrieved_candidate_dialog_ids, row.evidence_dialog_ids),
-            "candidate_dialog_precision": precision(retrieved_candidate_dialog_ids, row.evidence_dialog_ids),
+            "candidate_dialog_recall": candidate_recall,
+            "candidate_dialog_precision": candidate_precision,
+            "candidate_dialog_f1": f1_from_precision_recall(candidate_precision, candidate_recall),
             "ledger_dialog_recall": recall(ledger_dialog_ids, row.evidence_dialog_ids),
             "ledger_dialog_precision": precision(ledger_dialog_ids, row.evidence_dialog_ids),
             "evidence_dialog_recall": evidence_recall,
@@ -4093,8 +4514,8 @@ def print_summary(provider: str, model: str, results: Sequence[Dict[str, object]
     print("LoCoMo QA graph benchmark")
     print(f"answer_provider={provider} answer_model={model}")
     print()
-    print(f"{'variant':<35} {'n':>4} {'ans_f1':>8} {'task_f1':>8} {'bleu1':>8} {'task_b1':>8} {'exact':>8} {'cand_r':>8} {'cand_p':>8} {'ev_r':>8} {'ev_p':>8} {'ev_f1':>8}")
-    print("-" * 140)
+    print(f"{'variant':<35} {'n':>4} {'ans_f1':>8} {'task_f1':>8} {'bleu1':>8} {'task_b1':>8} {'exact':>8} {'cand_r':>8} {'cand_p':>8} {'cand_f1':>8} {'ev_r':>8} {'ev_p':>8} {'ev_f1':>8}")
+    print("-" * 150)
     for result in results:
         summary = result["summary"]
         print(
@@ -4107,6 +4528,7 @@ def print_summary(provider: str, model: str, results: Sequence[Dict[str, object]
             f"{format_metric(summary['exact_match']):>8} "
             f"{format_metric(summary['candidate_dialog_recall']):>8} "
             f"{format_metric(summary['candidate_dialog_precision']):>8} "
+            f"{format_metric(summary['candidate_dialog_f1']):>8} "
             f"{format_metric(summary['evidence_dialog_recall']):>8} "
             f"{format_metric(summary['evidence_dialog_precision']):>8} "
             f"{format_metric(summary['evidence_dialog_f1']):>8}"
@@ -4208,6 +4630,16 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             batch_size=args.embedding_batch_size,
             base_url=args.embedding_base_url or None,
         )
+    if "claim" in needed_embedding_targets:
+        embedding_indices["claim"] = OpenAIEmbeddingIndex(
+            graph.claim_doc_ids,
+            graph.claim_documents,
+            model=args.embedding_model,
+            cache_path=Path(args.embedding_cache),
+            namespace=f"{embedding_namespace}:claims:semantic-v1",
+            batch_size=args.embedding_batch_size,
+            base_url=args.embedding_base_url or None,
+        )
     if "state" in needed_embedding_targets:
         embedding_indices["state"] = OpenAIEmbeddingIndex(
             graph.state_doc_ids,
@@ -4249,7 +4681,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "graph_schema_version": graph.schema_version,
         "graph_expansion": (
             graph.resolve_graph_expansion(args.graph_expansion)
-            if args.retrieval_policy == "sts"
+            if args.retrieval_policy in {"sts", "scope-claim-time-state"}
             else None
         ),
         "provider": args.provider,
@@ -4264,7 +4696,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "scope_anchor_routing": args.scope_anchor_routing,
         "binding_gate": args.binding_gate,
         "statefacet_access": (
-            "disabled_by_retrieval_policy"
+            "claim-relation-expansion-only"
+            if args.retrieval_policy == "scope-claim-time-state"
+            else "disabled_by_retrieval_policy"
             if args.retrieval_policy != "sts"
             else (
                 "scoped-statefacet-direct-retrieval"
@@ -4278,7 +4712,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         ),
         "statefacet_access_by_variant": {
             variant: (
-                "disabled_by_retrieval_policy"
+                "claim-relation-expansion-only"
+                if args.retrieval_policy == "scope-claim-time-state"
+                else "disabled_by_retrieval_policy"
                 if args.retrieval_policy != "sts"
                 else (
                     "scoped-statefacet-direct-retrieval"
@@ -4289,9 +4725,15 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             for variant in args.variants
         },
         "time_role_selector": args.time_role_selector,
-        "time_role_routing_enabled": args.retrieval_policy in {"scope-event-time", "sts"},
+        "time_role_routing_enabled": args.retrieval_policy in {
+            "scope-event-time",
+            "sts",
+            "scope-claim-time",
+            "scope-claim-time-state",
+        },
         "event_time_routing": args.event_time_routing,
         "candidate_k": args.candidate_k,
+        "max_claim_lines": args.max_claim_lines,
         "embedding_candidate_k": args.embedding_candidate_k,
         "embedding_model": args.embedding_model if needed_embedding_targets else None,
         "evidence_selector": args.evidence_selector,
