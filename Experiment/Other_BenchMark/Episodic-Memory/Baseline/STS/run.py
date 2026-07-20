@@ -22,7 +22,6 @@ if __package__ in {None, ""}:
         BUILD_MODEL,
         CACHE_DIR,
         CLAIM_CANDIDATE_K,
-        CLAIM_SEED_K,
         EMBEDDING_MODEL,
         FINAL_CLAIM_K,
         FINAL_CHAPTER_K,
@@ -34,6 +33,7 @@ if __package__ in {None, ""}:
         RESULT_DIR,
         SCOPE_BACKOFF_K,
         SCOPE_TOP_K,
+        STATE_ANCHOR_CLAIM_K,
     )
     from STS.graph_builder import (  # type: ignore
         EXTRACTION_SCHEMA_VERSION,
@@ -50,7 +50,6 @@ else:
         BUILD_MODEL,
         CACHE_DIR,
         CLAIM_CANDIDATE_K,
-        CLAIM_SEED_K,
         EMBEDDING_MODEL,
         FINAL_CLAIM_K,
         FINAL_CHAPTER_K,
@@ -62,6 +61,7 @@ else:
         RESULT_DIR,
         SCOPE_BACKOFF_K,
         SCOPE_TOP_K,
+        STATE_ANCHOR_CLAIM_K,
     )
     from .graph_builder import EXTRACTION_SCHEMA_VERSION, build_graph, extract_chapter_records, write_graph
     from .loader import load_chapters, load_qa
@@ -208,7 +208,7 @@ def _retrieval_kwargs(args: argparse.Namespace) -> dict[str, Any]:
         "scope_top_k": args.scope_top_k,
         "claim_candidate_k": args.claim_candidate_k,
         "scope_backoff_k": args.scope_backoff_k,
-        "claim_seed_k": args.claim_seed_k,
+        "state_anchor_k": args.state_anchor_k,
         "final_claim_k": args.final_claim_k,
         "final_chapter_k": args.final_chapter_k,
         "time_role_selector": args.time_role_selector,
@@ -286,7 +286,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--scope-top-k", type=int, default=SCOPE_TOP_K)
     parser.add_argument("--claim-candidate-k", type=int, default=CLAIM_CANDIDATE_K)
     parser.add_argument("--scope-backoff-k", type=int, default=SCOPE_BACKOFF_K)
-    parser.add_argument("--claim-seed-k", type=int, default=CLAIM_SEED_K)
+    parser.add_argument("--state-anchor-k", type=int, default=STATE_ANCHOR_CLAIM_K)
     parser.add_argument("--final-claim-k", type=int, default=FINAL_CLAIM_K)
     parser.add_argument("--final-chapter-k", type=int, default=FINAL_CHAPTER_K)
     parser.add_argument(

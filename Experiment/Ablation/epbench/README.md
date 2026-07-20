@@ -8,12 +8,13 @@ uses one fixed STS graph and one fixed answer model for all policies.
 | `claim` | all Claims | no | no | Claim + source Event |
 | `scope-claim` | routed Scope Claims + 8 global back-off Claims | no | no | Claim + source Event |
 | `scope-claim-time` | routed Scope Claims + 8 global back-off Claims | top-2 roles, before RRF | no | Claim + source Event |
-| `scope-claim-time-state` | same as above | top-2 roles, before RRF | top-16 seeds only | Claim + source Event + closed StateFacet + Claim relations |
+| `scope-claim-time-state` | same as above | top-2 roles, before RRF | top-16 Claim anchors to StateFacet only | Claim + source Event + closed StateFacet |
 
 All policies use BM25 and dense Claim retrieval with RRF. The fixed budget is
 80 lexical candidates, 80 dense candidates, 14 Scope routes, 8 global back-off
 Claims, 24 final Claims, and at most 24 deduplicated source Events. Only the
-full policy reads `SUPPORTS`, `SUPERSEDES`, `CORRECTS`, or `CONFLICTS_WITH`.
+full policy reads `SUPPORTS` from its top-16 Claim anchors; it never traverses
+Claim--Claim state relations or lets StateFacets change Claim ranking.
 StateFacets have no numerical cap, but are included only when every supporting
 Claim survives the final 24-Claim selection.
 

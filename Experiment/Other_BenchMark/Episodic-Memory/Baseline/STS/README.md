@@ -36,7 +36,7 @@ conda run --no-capture-output -n py311 python \
   --scope-top-k 14 \
   --claim-candidate-k 80 \
   --scope-backoff-k 8 \
-  --claim-seed-k 16 \
+  --state-anchor-k 16 \
   --final-claim-k 24 \
   --final-chapter-k 24 \
   --time-role-selector llm-top2

@@ -213,35 +213,33 @@ class StagedRetrievalTests(unittest.TestCase):
         self.assertTrue(result.trace["time_hard_filter_applied"])
         self.assertEqual([20], [row.chapter_id for row in result.ranked_chapters])
 
-    def test_claim_trace_records_rrf_and_relation_closure(self):
+    def test_statefacet_support_does_not_expand_or_rerank_claims(self):
         graph = synthetic_graph()
         facet_id = "facet::julian"
         graph["nodes"].append({"node_id": facet_id, "node_type": "StateFacet", "graph_text": "Julian attendance"})
         graph["edges"].extend(
             [
                 {"type": "SUPPORTS", "from": "claim::20", "to": facet_id},
-                {"type": "SUPPORTS", "from": "claim::42", "to": facet_id},
                 {"type": "SUPERSEDES", "from": "claim::20", "to": "claim::42"},
             ]
         )
         index = STSGraphIndex.from_graph(graph)
         result = index.retrieve(
-            "What happened at the Tech Hackathon?",
+            "What did Julian attend?",
             FrameClient(entity_queries=[], location_queries=[], event_type_queries=[]),
             final_chapter_k=2,
+            final_claim_k=1,
         )
         trace = result.trace
         self.assertEqual(
-            "scope_time_hard_filter_bm25_dense_rrf_relation_closure",
+            "scope_time_hard_filter_bm25_dense_rrf_statefacet_support",
             trace["claim_retrieval_mode"],
         )
-        self.assertIn("claim::20", trace["claim_seed_ids"])
-        self.assertIn("claim::42", trace["claim_closure_ids"])
+        self.assertEqual(["claim::20"], trace["state_anchor_claim_ids"])
+        self.assertEqual(["claim::20"], trace["claim_reranked_ids"])
+        self.assertEqual([], trace["selected_relation_edges"])
         self.assertEqual([facet_id], trace["selected_state_ids"])
-        self.assertEqual(
-            {"epbench::chapter::20", "epbench::chapter::42"},
-            set(trace["source_event_ids"]),
-        )
+        self.assertEqual({"epbench::chapter::20"}, set(trace["source_event_ids"]))
         self.assertTrue(all(row.raw_text for row in result.ranked_chapters))
 
     def test_ablation_policies_gate_time_and_state_access(self):

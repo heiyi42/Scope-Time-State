@@ -16,7 +16,6 @@ from pipeline.external.time_role_selection import select_time_roles
 
 from .config import (
     CLAIM_CANDIDATE_K,
-    CLAIM_SEED_K,
     EMBEDDING_MODEL,
     EMBEDDING_SCORE_WEIGHT,
     FINAL_CLAIM_K,
@@ -24,6 +23,7 @@ from .config import (
     SCOPE_BACKOFF_K,
     SCOPE_TOP_K,
     SCOPE_TYPE_COVERAGE_WEIGHT,
+    STATE_ANCHOR_CLAIM_K,
     TIME_COMPATIBILITY_WEIGHT,
 )
 
@@ -37,7 +37,6 @@ GENERIC_SCOPE_QUERIES = {
     "protagonists",
     "unique locations",
 }
-STATE_RELATION_TYPES = {"SUPERSEDES", "CORRECTS", "CONFLICTS_WITH"}
 CLAIM_RRF_K = 60
 CLAIM_RETRIEVAL_POLICIES = (
     "claim",
@@ -306,10 +305,6 @@ class STSGraphIndex:
         self.event_times: dict[str, list[str]] = {event_id: [] for event_id in self.events}
         self.claim_facets: dict[str, set[str]] = {claim_id: set() for claim_id in self.claims}
         self.facet_claims: dict[str, set[str]] = {facet_id: set() for facet_id in self.facets}
-        self.claim_relations: dict[str, set[str]] = {claim_id: set() for claim_id in self.claims}
-        self.claim_relation_edges: dict[str, list[dict[str, Any]]] = {
-            claim_id: [] for claim_id in self.claims
-        }
         self.claim_time_roles: dict[str, set[str]] = {claim_id: set() for claim_id in self.claims}
         self.claim_time_values: dict[str, dict[str, list[str]]] = {
             claim_id: {} for claim_id in self.claims
@@ -347,13 +342,6 @@ class STSGraphIndex:
                 facet_id = str(edge["to"])
                 self.claim_facets[claim_id].add(facet_id)
                 self.facet_claims[facet_id].add(claim_id)
-            elif edge["type"] in STATE_RELATION_TYPES and edge["from"] in self.claim_relations and edge["to"] in self.claim_relations:
-                source = str(edge["from"])
-                target = str(edge["to"])
-                self.claim_relations[source].add(target)
-                self.claim_relations[target].add(source)
-                self.claim_relation_edges[source].append(dict(edge))
-                self.claim_relation_edges[target].append(dict(edge))
         for facet_id, facet in self.facets.items():
             primary_claim_id = str(facet.get("primary_claim_id") or "")
             if primary_claim_id in self.claim_time_roles:
@@ -426,41 +414,19 @@ class STSGraphIndex:
             if value
         )
 
-    def _expand_claim_closure(
+    def _state_facets_for_anchor_claims(
         self,
-        seed_claim_ids: Sequence[str],
-    ) -> tuple[list[str], list[str], list[dict[str, Any]]]:
-        """Expand Claim seeds through StateFacet witnesses and explicit state relations."""
-        expanded: list[str] = []
+        anchor_claim_ids: Sequence[str],
+    ) -> list[str]:
+        """Fetch StateFacets directly supported by high-ranked Claim anchors only."""
         discovered_facets: list[str] = []
-        relation_edges: list[dict[str, Any]] = []
-        pending = [str(claim_id) for claim_id in seed_claim_ids]
-        seen: set[str] = set()
-        seen_relations: set[tuple[str, str, str]] = set()
-        while pending:
-            claim_id = pending.pop(0)
-            if claim_id in seen or claim_id not in self.claims:
+        for claim_id in dict.fromkeys(str(value) for value in anchor_claim_ids):
+            if claim_id not in self.claims:
                 continue
-            seen.add(claim_id)
-            expanded.append(claim_id)
-            neighbours = set(self.claim_relations.get(claim_id, set()))
             for facet_id in self.claim_facets.get(claim_id, set()):
                 if facet_id not in discovered_facets:
                     discovered_facets.append(facet_id)
-                neighbours.update(self.facet_claims.get(facet_id, set()))
-            for edge in self.claim_relation_edges.get(claim_id, []):
-                key = (
-                    str(edge.get("type") or ""),
-                    str(edge.get("from") or ""),
-                    str(edge.get("to") or ""),
-                )
-                if key not in seen_relations:
-                    seen_relations.add(key)
-                    relation_edges.append(dict(edge))
-            for neighbour_id in sorted(neighbours):
-                if neighbour_id not in seen:
-                    pending.append(neighbour_id)
-        return expanded, discovered_facets, relation_edges
+        return discovered_facets
 
     def _claim_ids_for_events(self, event_ids: Iterable[str]) -> set[str]:
         selected_events = {str(event_id) for event_id in event_ids}
@@ -547,7 +513,7 @@ class STSGraphIndex:
         scope_top_k: int = SCOPE_TOP_K,
         claim_candidate_k: int = CLAIM_CANDIDATE_K,
         scope_backoff_k: int = SCOPE_BACKOFF_K,
-        claim_seed_k: int = CLAIM_SEED_K,
+        state_anchor_k: int = STATE_ANCHOR_CLAIM_K,
         final_claim_k: int = FINAL_CLAIM_K,
         final_chapter_k: int = FINAL_CHAPTER_K,
         time_role_selector: str = "llm-top2",
@@ -768,59 +734,33 @@ class STSGraphIndex:
             claim_candidate_k,
             candidate_claim_ids,
         )
-        seed_claim_ids = [
-            hit.doc_id for hit in initial_claim_hits[: min(claim_seed_k, claim_candidate_k)]
+        # Claim ranking is finalized before StateFacet access. State evidence is
+        # supplementary: it must never add or rerank Claims.
+        claim_hits = initial_claim_hits[:final_claim_k]
+        state_anchor_claim_ids = [
+            hit.doc_id for hit in claim_hits[: min(state_anchor_k, final_claim_k)]
         ] if use_state else []
         if use_state:
-            closure_claim_ids, discovered_facet_ids, discovered_relation_edges = (
-                self._expand_claim_closure(seed_claim_ids)
+            discovered_facet_ids = self._state_facets_for_anchor_claims(
+                state_anchor_claim_ids
             )
-            expanded_claim_ids = list(dict.fromkeys([*seed_claim_ids, *closure_claim_ids]))
         else:
-            closure_claim_ids, discovered_facet_ids, discovered_relation_edges = [], [], []
-            expanded_claim_ids = [hit.doc_id for hit in initial_claim_hits]
-        reranked_claim_hits = rrf_rank(
-            question,
-            self.claim_bm25,
-            self.claim_dense,
-            final_claim_k,
-            expanded_claim_ids,
-        )
-        claim_hits = reranked_claim_hits[:final_claim_k]
+            discovered_facet_ids = []
         claim_hits = self._sort_claim_hits_by_time_roles(
             claim_hits,
             selected_time_roles,
             time_ordering,
         )
         selected_claim_ids = [hit.doc_id for hit in claim_hits]
-        selected_claim_set = set(selected_claim_ids)
         selected_facet_ids = self._closed_state_facets(
             discovered_facet_ids,
             selected_claim_ids,
         )
-        selected_relation_edges = [
-            edge
-            for edge in discovered_relation_edges
-            if str(edge.get("from") or "") in selected_claim_set
-            and str(edge.get("to") or "") in selected_claim_set
-        ]
 
         state_lines = {
             facet_id: str(self.facets[facet_id].get("graph_text") or "").strip()
             for facet_id in selected_facet_ids
         }
-        relation_lines_by_claim: dict[str, set[str]] = {
-            claim_id: set() for claim_id in selected_claim_ids
-        }
-        for edge in selected_relation_edges:
-            source_id = str(edge.get("from") or "")
-            target_id = str(edge.get("to") or "")
-            source_text = str(self.claims.get(source_id, {}).get("graph_text") or source_id)
-            target_text = str(self.claims.get(target_id, {}).get("graph_text") or target_id)
-            line = f"{edge.get('type')}: {source_text} -> {target_text}"
-            relation_lines_by_claim[source_id].add(line)
-            relation_lines_by_claim[target_id].add(line)
-
         for temporal_rank, hit in enumerate(claim_hits):
             claim = self.claims[hit.doc_id]
             event_id = str(claim["source_event_id"])
@@ -839,7 +779,6 @@ class STSGraphIndex:
                     row["states"].add(facet_id)
                     if state_lines.get(facet_id):
                         row["state_evidence"].add(state_lines[facet_id])
-            row["relation_evidence"].update(relation_lines_by_claim.get(hit.doc_id, set()))
 
         for row in chapter_rows.values():
             for scope_id, actual_scope_type, scope_score in scope_hits_by_event.get(
@@ -928,11 +867,11 @@ class STSGraphIndex:
                 "event_retrieval_mode": "source_event_evidence_only",
                 "claim_candidate_k": claim_candidate_k,
                 "scope_backoff_k": scope_backoff_k,
-                "claim_seed_k": claim_seed_k,
+                "state_anchor_k": state_anchor_k,
                 "final_claim_k": final_claim_k,
                 "final_chapter_k": final_chapter_k,
                 "claim_retrieval_mode": (
-                    "scope_time_hard_filter_bm25_dense_rrf_relation_closure"
+                    "scope_time_hard_filter_bm25_dense_rrf_statefacet_support"
                     if use_state
                     else "global_claim_bm25_dense_rrf"
                     if not use_scope
@@ -954,11 +893,10 @@ class STSGraphIndex:
                 "scope_candidate_claim_count": len(scoped_claim_ids),
                 "time_filtered_scope_claim_count": len(time_filtered_scoped_claim_ids),
                 "backoff_claim_ids": backoff_claim_ids,
-                "claim_seed_ids": seed_claim_ids,
-                "claim_closure_ids": closure_claim_ids,
+                "state_anchor_claim_ids": state_anchor_claim_ids,
                 "claim_reranked_ids": selected_claim_ids,
                 "selected_state_ids": selected_facet_ids,
-                "selected_relation_edges": selected_relation_edges,
+                "selected_relation_edges": [],
                 "source_event_ids": sorted(
                     {
                         str(self.claims[claim_id].get("source_event_id") or "")

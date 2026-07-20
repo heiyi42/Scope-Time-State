@@ -69,7 +69,7 @@ def _sts_args(args: argparse.Namespace, policy: str) -> list[str]:
         "--scope-top-k", "14",
         "--scope-backoff-k", "8",
         "--claim-candidate-k", "80",
-        "--claim-seed-k", "16",
+        "--state-anchor-k", "16",
         "--final-claim-k", "24",
         "--final-chapter-k", "24",
         "--time-role-selector", "llm-top2",
