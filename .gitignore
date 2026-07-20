@@ -32,6 +32,7 @@ Graph.zip
 Experiment/Other_BenchMark/Episodic-Memory/data/
 Experiment/Other_BenchMark/Episodic-Memory/adapters/artem_epbench/output/
 Experiment/Other_BenchMark/Episodic-Memory/Baseline/ARTEM/output/
+Experiment/Other_BenchMark/Episodic-Memory/artifacts/
 Experiment/Other_BenchMark/EverMemBench/dataset/
 Experiment/Other_BenchMark/LoCoMo-QA/result
 Experiment/Other_BenchMark/LoCoMo-QA/qwen_baseline
