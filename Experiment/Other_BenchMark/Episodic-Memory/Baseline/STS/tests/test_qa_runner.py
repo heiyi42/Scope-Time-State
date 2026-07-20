@@ -113,11 +113,13 @@ class QARunnerTests(unittest.TestCase):
         chapter = result.ranked_chapters[0]
         chapter.raw_text = "source-start " + ("x" * 3000) + " source-end"
         chapter.state_evidence = ["workshop status completed"]
+        chapter.claim_evidence = ["Julian Ross attended the workshop"]
         chapter.relation_evidence = ["SUPERSEDES: planned -> completed"]
         context = _answer_context(result)
         self.assertIn("source-start", context)
         self.assertIn("source-end", context)
         self.assertIn("StateFacet: workshop status completed", context)
+        self.assertIn("Claim: Julian Ross attended the workshop", context)
         self.assertIn("State relation: SUPERSEDES: planned -> completed", context)
 
     def test_empty_grounded_retrieval_abstains_without_calling_answer_model(self):
@@ -141,8 +143,8 @@ class QARunnerTests(unittest.TestCase):
         self.assertEqual("No matching event is present in the memory.", payload["rows"][0]["answer"])
         self.assertEqual("empty_retrieval", payload["rows"][0]["answer_source"])
 
-    def test_entities_are_composed_from_primary_role_without_answer_model(self):
-        answer_client = CapturingClient({"answer": "wrong"})
+    def test_entities_use_the_same_answer_model_as_other_question_types(self):
+        answer_client = CapturingClient({"answer": "Julian Ross"})
         with patch("STS.qa_runner.load_qa", return_value=[QA_ITEM]), patch(
             "STS.qa_runner.STSGraphIndex.load", return_value=RoleIndex()
         ):
@@ -156,9 +158,9 @@ class QARunnerTests(unittest.TestCase):
                 resume=False,
                 workers=2,
             )
-        self.assertEqual([], answer_client.user_prompts)
+        self.assertEqual(1, len(answer_client.user_prompts))
         self.assertEqual("Julian Ross", payload["rows"][0]["answer"])
-        self.assertEqual("graph_entity_roles", payload["rows"][0]["answer_source"])
+        self.assertEqual("llm", payload["rows"][0]["answer_source"])
 
     def test_official_evaluation_preserves_raw_answer_and_trace(self):
         qa_path = self.root / "qa.json"

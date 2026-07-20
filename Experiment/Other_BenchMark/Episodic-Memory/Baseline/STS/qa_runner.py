@@ -65,12 +65,8 @@ def _read_result(path: Path) -> dict[str, Any]:
 def _answer_context(result: Any, *, max_raw_chars: int | None = None) -> str:
     blocks: list[str] = []
     for row in result.ranked_chapters:
+        claims = "\n".join(f"- Claim: {value}" for value in row.claim_evidence)
         evidence = "\n".join(f"- Evidence: {span}" for span in row.evidence_spans)
-        scopes = "\n".join(
-            f"- {scope_type.title()} scopes: {', '.join(values)}"
-            for scope_type, values in row.scope_values.items()
-            if values
-        )
         states = "\n".join(f"- StateFacet: {value}" for value in row.state_evidence)
         relations = "\n".join(
             f"- State relation: {value}" for value in row.relation_evidence
@@ -78,33 +74,10 @@ def _answer_context(result: Any, *, max_raw_chars: int | None = None) -> str:
         raw_excerpt = row.raw_text if max_raw_chars is None else row.raw_text[:max_raw_chars]
         blocks.append(
             f"[Chapter {row.chapter_id}; time={row.occurred_at or 'unknown'}]\n"
-            f"{scopes}\n{evidence}\n{states}\n{relations}\n"
+            f"{claims}\n{evidence}\n{states}\n{relations}\n"
             f"- Source Event (raw chapter text): {raw_excerpt}"
         )
     return "\n\n".join(blocks)
-
-
-def _role_answer(retrieval_type: str, question: str, ranked_chapters: list[Any]) -> list[str] | None:
-    if retrieval_type == "Entities":
-        roles = ("primary",)
-    elif retrieval_type == "Other entities":
-        roles = ("participant", "mentioned")
-    else:
-        return None
-    seen: set[str] = set()
-    values: list[str] = []
-    normalized_question = question.casefold()
-    for chapter in ranked_chapters:
-        for role in roles:
-            for value in chapter.entity_roles.get(role, []):
-                normalized = value.casefold()
-                if not normalized or normalized in seen:
-                    continue
-                if retrieval_type == "Other entities" and normalized in normalized_question:
-                    continue
-                seen.add(normalized)
-                values.append(value)
-    return values
 
 
 def run_qa(
@@ -141,16 +114,7 @@ def run_qa(
     def answer_item(item: Any) -> dict[str, Any]:
         retrieval = index.retrieve(item.question, frame_client, **retrieval_kwargs)
         context = _answer_context(retrieval)
-        role_values = _role_answer(
-            item.retrieval_type,
-            item.question,
-            retrieval.ranked_chapters,
-        )
-        if role_values:
-            answer = ", ".join(role_values)
-            answer_source = "graph_entity_roles"
-            raw = {"answer": answer, "entity_roles": role_values}
-        elif retrieval.ranked_chapters:
+        if retrieval.ranked_chapters:
             user_prompt = json.dumps(
                 {"question": item.question, "retrieved_context": context},
                 ensure_ascii=False,

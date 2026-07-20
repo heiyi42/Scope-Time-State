@@ -35,7 +35,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("policy", choices=(*CLAIM_RETRIEVAL_POLICIES, "all"))
     parser.add_argument("--stage", choices=("retrieve", "qa", "official"), default="qa")
     parser.add_argument("--graph-dir", type=Path, default=DEFAULT_GRAPH_DIR)
-    parser.add_argument("--result-root", type=Path, default=ABLATION_ROOT / "results")
+    parser.add_argument(
+        "--result-root",
+        type=Path,
+        default=ABLATION_ROOT / "results" / "clean_v2",
+    )
     parser.add_argument("--model", default="gpt-4o-mini")
     parser.add_argument("--answer-model", default="gpt-4o-mini")
     parser.add_argument("--judge-model", default="gpt-4o-mini")

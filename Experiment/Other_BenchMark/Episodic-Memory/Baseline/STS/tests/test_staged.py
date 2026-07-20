@@ -113,6 +113,16 @@ class StagedRetrievalTests(unittest.TestCase):
         hits = rrf_rank("query", SearchStub(["lexical"]), SearchStub(["dense"]), top_k=2)
         self.assertEqual({"lexical", "dense"}, {hit.doc_id for hit in hits})
 
+    def test_policy_specific_claim_documents_mask_scope_and_event_fields(self):
+        index = STSGraphIndex.from_graph(synthetic_graph())
+        base = index.claim_documents["claim::20"]
+        enriched = index.time_claim_documents["claim::20"]
+        self.assertEqual("Julian Ross attended Tech Hackathon", base)
+        self.assertNotIn("High Line", base)
+        self.assertNotIn("March 23, 2024", base)
+        self.assertIn("March 23, 2024", enriched)
+        self.assertNotIn("High Line", enriched)
+
     def test_distinct_scope_type_coverage_beats_one_coarse_scope(self):
         index = STSGraphIndex.from_graph(synthetic_graph())
         result = index.retrieve("Julian Ross Tech Hackathon at High Line", FrameClient(), final_chapter_k=2)
@@ -154,7 +164,12 @@ class StagedRetrievalTests(unittest.TestCase):
             location_queries=[],
             event_type_queries=["3D Printing Workshop"],
         )
-        result = index.retrieve("Events related to 3D Printing Workshop", frame, final_chapter_k=2)
+        result = index.retrieve(
+            "Events related to 3D Printing Workshop",
+            frame,
+            final_chapter_k=2,
+            retrieval_policy="scope-claim",
+        )
         self.assertEqual("scope_routed", result.retrieval_status)
         self.assertTrue(result.ranked_chapters)
 
@@ -169,6 +184,23 @@ class StagedRetrievalTests(unittest.TestCase):
         result = index.retrieve("What happened on April 2, 2024?", frame, final_chapter_k=2)
         self.assertEqual("anchor_constrained", result.retrieval_status)
         self.assertEqual([42], [row.chapter_id for row in result.ranked_chapters])
+
+    def test_scope_claim_does_not_leak_explicit_time_constraints(self):
+        index = STSGraphIndex.from_graph(synthetic_graph())
+        frame = FrameClient(
+            time_values=["April 2, 2024"],
+            entity_queries=[],
+            location_queries=[],
+            event_type_queries=[],
+        )
+        result = index.retrieve(
+            "Tech Hackathon on April 2, 2024",
+            frame,
+            retrieval_policy="scope-claim",
+            final_chapter_k=2,
+        )
+        self.assertEqual([20, 42], sorted(row.chapter_id for row in result.ranked_chapters))
+        self.assertEqual([], result.trace["reliable_time_values"])
 
     def test_latest_returns_newest_graph_time(self):
         index = STSGraphIndex.from_graph(synthetic_graph())
@@ -198,7 +230,7 @@ class StagedRetrievalTests(unittest.TestCase):
         dates = [row.occurred_at for row in result.ranked_chapters]
         self.assertEqual(sorted(dates), dates)
 
-    def test_top2_time_roles_hard_filter_claims_before_rrf(self):
+    def test_top2_time_roles_do_not_hard_filter_claims(self):
         graph = synthetic_graph()
         for edge in graph["edges"]:
             if edge["type"] == "HAS_TIME" and edge["from"] == "claim::42":
@@ -210,8 +242,8 @@ class StagedRetrievalTests(unittest.TestCase):
             final_chapter_k=2,
         )
         self.assertEqual(["occurred_at", "mentioned_at"], result.trace["time_role_selection"]["time_roles"])
-        self.assertTrue(result.trace["time_hard_filter_applied"])
-        self.assertEqual([20], [row.chapter_id for row in result.ranked_chapters])
+        self.assertFalse(result.trace["time_hard_filter_applied"])
+        self.assertEqual([20, 42], sorted(row.chapter_id for row in result.ranked_chapters))
 
     def test_statefacet_support_does_not_expand_or_rerank_claims(self):
         graph = synthetic_graph()
@@ -232,7 +264,7 @@ class StagedRetrievalTests(unittest.TestCase):
         )
         trace = result.trace
         self.assertEqual(
-            "scope_time_hard_filter_bm25_dense_rrf_statefacet_support",
+            "scope_time_enriched_bm25_dense_rrf_event_time_statefacet_support",
             trace["claim_retrieval_mode"],
         )
         self.assertEqual(["claim::20"], trace["state_anchor_claim_ids"])

@@ -261,6 +261,7 @@ class RankedChapter:
     evidence_spans: list[str]
     raw_text: str
     contributions: list[dict[str, Any]]
+    claim_evidence: list[str] = field(default_factory=list)
     selected_state_ids: list[str] = field(default_factory=list)
     state_evidence: list[str] = field(default_factory=list)
     relation_evidence: list[str] = field(default_factory=list)
@@ -347,12 +348,21 @@ class STSGraphIndex:
             if primary_claim_id in self.claim_time_roles:
                 self.claim_time_roles[primary_claim_id].add("CURRENT_AFTER")
         self.claim_documents = {
-            claim_id: self._claim_document(claim_id)
+            claim_id: self._claim_document(claim_id, time_enriched=False)
+            for claim_id in self.claims
+        }
+        self.time_claim_documents = {
+            claim_id: self._claim_document(claim_id, time_enriched=True)
             for claim_id in self.claims
         }
         self.scope_bm25 = BM25Index(list(self.scopes), [row.get("graph_text", "") for row in self.scopes.values()])
         self.claim_bm25 = BM25Index(list(self.claims), list(self.claim_documents.values()))
-        self.scope_dense, self.claim_dense = self._dense_indexes(embedding_config)
+        self.time_claim_bm25 = BM25Index(
+            list(self.claims), list(self.time_claim_documents.values())
+        )
+        self.scope_dense, self.claim_dense, self.time_claim_dense = self._dense_indexes(
+            embedding_config
+        )
 
     @classmethod
     def from_graph(cls, graph: Mapping[str, Any], embedding_config: EmbeddingConfig | None = None) -> "STSGraphIndex":
@@ -368,24 +378,32 @@ class STSGraphIndex:
     def _dense_indexes(self, config: EmbeddingConfig | None):
         if config is None:
             empty = _EmptyDenseIndex()
-            return empty, empty
+            return empty, empty, empty
         indexes = []
-        for name, rows in (("scope", self.scopes), ("claim", self.claims)):
-            documents = (
-                [self.claim_documents[node_id] for node_id in rows]
-                if name == "claim"
-                else [str(row.get("graph_text") or "") for row in rows.values()]
-            )
+        sources = (
+            (
+                "scope",
+                self.scopes,
+                [str(row.get("graph_text") or "") for row in self.scopes.values()],
+            ),
+            (
+                "claim_base",
+                self.claims,
+                [self.claim_documents[node_id] for node_id in self.claims],
+            ),
+            (
+                "claim_time",
+                self.claims,
+                [self.time_claim_documents[node_id] for node_id in self.claims],
+            ),
+        )
+        for name, rows, documents in sources:
             index = OpenAIEmbeddingIndex(
                 list(rows),
                 documents,
                 model=config.model,
                 cache_path=Path(config.cache_dir) / f"{name}.json",
-                namespace=(
-                    "epbench-sts-v2-claim-scope-time-state-v1"
-                    if name == "claim"
-                    else f"epbench-sts-v2-{name}"
-                ),
+                namespace=f"epbench-ablation-v2-{name}",
                 batch_size=config.batch_size,
                 base_url=config.base_url,
             )
@@ -393,26 +411,40 @@ class STSGraphIndex:
             indexes.append(index)
         return tuple(indexes)
 
-    def _claim_document(self, claim_id: str) -> str:
+    def _claim_document(self, claim_id: str, *, time_enriched: bool) -> str:
         claim = self.claims[claim_id]
-        event_id = str(claim.get("source_event_id") or "")
-        event = self.events.get(event_id, {})
-        scope_values = [
-            str(self.scopes[scope_id].get("value") or "")
-            for scope_id in self.event_scopes.get(event_id, set())
-            if str(self.scopes[scope_id].get("value") or "")
-        ]
-        return " | ".join(
-            value
-            for value in (
-                str(claim.get("graph_text") or ""),
-                str(event.get("graph_text") or ""),
-                " ".join(self.event_times.get(event_id, [])),
-                " ".join(scope_values),
-                " ".join(sorted(self.claim_time_roles.get(claim_id, set()))),
+        graph_text = str(claim.get("graph_text") or "").strip()
+        if not time_enriched:
+            return graph_text
+
+        time_values = list(
+            dict.fromkeys(
+                str(value).strip()
+                for values in self.claim_time_values.get(claim_id, {}).values()
+                for value in values
+                if str(value).strip()
             )
-            if value
         )
+        sort_key = claim.get("event_sort_key")
+        normalized_time = (
+            str(sort_key[0]).strip()
+            if isinstance(sort_key, list) and sort_key and str(sort_key[0]).strip()
+            else ""
+        )
+        fields = [
+            f"subject: {claim.get('subject')}" if claim.get("subject") else "",
+            f"predicate: {claim.get('predicate')}" if claim.get("predicate") else "",
+            f"value: {claim.get('value')}" if claim.get("value") else "",
+            f"claim: {graph_text}" if graph_text else "",
+            *(
+                f"evidence: {str(span).strip()}"
+                for span in claim.get("evidence_spans", [])
+                if str(span).strip()
+            ),
+            *(f"time: {value}" for value in time_values),
+            f"event_sort_time: {normalized_time}" if normalized_time else "",
+        ]
+        return " | ".join(value for value in fields if value)
 
     def _state_facets_for_anchor_claims(
         self,
@@ -436,61 +468,42 @@ class STSGraphIndex:
             if str(claim.get("source_event_id") or "") in selected_events
         }
 
-    def _filter_claims_by_time_roles(
-        self,
-        claim_ids: Iterable[str],
-        time_roles: Sequence[str],
-    ) -> set[str]:
-        selected = {str(role) for role in time_roles if str(role)}
-        candidates = {str(claim_id) for claim_id in claim_ids if str(claim_id) in self.claims}
-        if not selected:
-            return candidates
-        return {
-            claim_id
-            for claim_id in candidates
-            if selected.intersection(self.claim_time_roles.get(claim_id, set()))
-        }
+    def _claim_event_timestamp(self, claim_id: str) -> float | None:
+        claim = self.claims.get(claim_id, {})
+        sort_key = claim.get("event_sort_key")
+        candidates: list[str] = []
+        if isinstance(sort_key, list) and sort_key:
+            candidates.append(str(sort_key[0]))
+        event_id = str(claim.get("source_event_id") or "")
+        candidates.extend(self.event_times.get(event_id, []))
+        for value in candidates:
+            parsed = parse_anchor_datetime(value)
+            if parsed is not None:
+                return parsed.timestamp()
+        return None
 
-    def _time_role_rank_key(
-        self,
-        claim_id: str,
-        time_roles: Sequence[str],
-        ordering: str,
-        fallback_rank: int,
-    ) -> tuple[int, float, int]:
-        """Rank Claims within their selected time-role group using normalized timestamps."""
-        role_values = self.claim_time_values.get(claim_id, {})
-        for role_rank, role in enumerate(time_roles):
-            values = role_values.get(str(role), [])
-            timestamps = [
-                parsed.timestamp()
-                for value in values
-                if (parsed := parse_anchor_datetime(value)) is not None
-            ]
-            if timestamps:
-                timestamp = max(timestamps) if ordering == "latest" else min(timestamps)
-                return role_rank, -timestamp if ordering == "latest" else timestamp, fallback_rank
-            if role in self.claim_time_roles.get(claim_id, set()):
-                return role_rank, math.inf, fallback_rank
-        return len(time_roles), math.inf, fallback_rank
-
-    def _sort_claim_hits_by_time_roles(
+    def _sort_claim_hits_by_event_time(
         self,
         claim_hits: Sequence[RankedHit],
-        time_roles: Sequence[str],
         ordering: str,
     ) -> list[RankedHit]:
-        if ordering not in {"latest", "chronological"} or not time_roles:
+        if ordering not in {"latest", "chronological"}:
             return list(claim_hits)
         original_ranks = {hit.doc_id: rank for rank, hit in enumerate(claim_hits)}
+
+        def key(hit: RankedHit) -> tuple[bool, float, int]:
+            timestamp = self._claim_event_timestamp(hit.doc_id)
+            return (
+                timestamp is None,
+                (-timestamp if ordering == "latest" else timestamp)
+                if timestamp is not None
+                else math.inf,
+                original_ranks[hit.doc_id],
+            )
+
         return sorted(
             claim_hits,
-            key=lambda item: self._time_role_rank_key(
-                item.doc_id,
-                time_roles,
-                ordering,
-                original_ranks[item.doc_id],
-            ),
+            key=key,
         )
 
     def _closed_state_facets(
@@ -561,6 +574,7 @@ class STSGraphIndex:
                     "score": 0.0,
                     "scope_types": set(),
                     "claims": set(),
+                    "claim_evidence": set(),
                     "states": set(),
                     "evidence": set(),
                     "state_evidence": set(),
@@ -671,7 +685,7 @@ class STSGraphIndex:
 
         reliable_time_values: list[str] = []
         reliable_time_event_sets: list[set[str]] = []
-        for query in frame.time_values:
+        for query in frame.time_values if use_time else ():
             parsed_query = parse_anchor_datetime(query)
             if parsed_query is None:
                 continue
@@ -688,7 +702,7 @@ class STSGraphIndex:
         reliable_constrained_event_ids = (
             set.intersection(*reliable_event_sets) if reliable_event_sets else set()
         )
-        has_explicit_anchor = bool(active_scope_queries or frame.time_values)
+        has_explicit_anchor = bool(active_scope_queries or (use_time and frame.time_values))
         scope_routed_event_ids = set().union(
             *(self.scope_events.get(scope_id, set()) for scope_id in routed_scope_ids)
         ) if routed_scope_ids else set()
@@ -696,10 +710,8 @@ class STSGraphIndex:
         scoped_claim_ids = (
             self._claim_ids_for_events(candidate_event_ids) if use_scope else set(self.claims)
         )
-        time_filtered_scoped_claim_ids = self._filter_claims_by_time_roles(
-            scoped_claim_ids,
-            selected_time_roles,
-        )
+        active_claim_bm25 = self.time_claim_bm25 if use_time else self.claim_bm25
+        active_claim_dense = self.time_claim_dense if use_time else self.claim_dense
         exact_time_event_ids = (
             set.intersection(*reliable_time_event_sets)
             if reliable_time_event_sets
@@ -710,29 +722,29 @@ class STSGraphIndex:
             if use_scope and exact_time_event_ids
             else set(self.claims)
         )
-        global_time_filtered_claim_ids = self._filter_claims_by_time_roles(
-            backoff_base_claim_ids,
-            selected_time_roles,
-        )
         backoff_hits = (
             rrf_rank(
                 question,
-                self.claim_bm25,
-                self.claim_dense,
+                active_claim_bm25,
+                active_claim_dense,
                 scope_backoff_k,
-                global_time_filtered_claim_ids,
+                backoff_base_claim_ids,
             )
             if use_scope
             else []
         )
         backoff_claim_ids = [hit.doc_id for hit in backoff_hits]
-        candidate_claim_ids = set(time_filtered_scoped_claim_ids).union(backoff_claim_ids)
+        candidate_claim_ids = set(scoped_claim_ids).union(backoff_claim_ids)
         initial_claim_hits = rrf_rank(
             question,
-            self.claim_bm25,
-            self.claim_dense,
+            active_claim_bm25,
+            active_claim_dense,
             claim_candidate_k,
             candidate_claim_ids,
+        )
+        initial_claim_hits = self._sort_claim_hits_by_event_time(
+            initial_claim_hits,
+            time_ordering if use_time else "none",
         )
         # Claim ranking is finalized before StateFacet access. State evidence is
         # supplementary: it must never add or rerank Claims.
@@ -746,11 +758,6 @@ class STSGraphIndex:
             )
         else:
             discovered_facet_ids = []
-        claim_hits = self._sort_claim_hits_by_time_roles(
-            claim_hits,
-            selected_time_roles,
-            time_ordering,
-        )
         selected_claim_ids = [hit.doc_id for hit in claim_hits]
         selected_facet_ids = self._closed_state_facets(
             discovered_facet_ids,
@@ -769,6 +776,9 @@ class STSGraphIndex:
             row = chapter_row(event_id)
             row["score"] += hit.score
             row["claims"].add(hit.doc_id)
+            claim_text = str(claim.get("graph_text") or "").strip()
+            if claim_text:
+                row["claim_evidence"].add(claim_text)
             row["temporal_rank"] = min(row["temporal_rank"], temporal_rank)
             for evidence_span in claim.get("evidence_spans", []):
                 if evidence_span:
@@ -800,7 +810,7 @@ class STSGraphIndex:
             if coverage_bonus:
                 row["contributions"].append({"layer": "scope_type_coverage", "score": coverage_bonus})
             event_times = self.event_times.get(row["event_id"], [])
-            if frame.time_values and any(query.casefold() in value.casefold() for query in frame.time_values for value in event_times):
+            if use_time and frame.time_values and any(query.casefold() in value.casefold() for query in frame.time_values for value in event_times):
                 row["score"] += TIME_COMPATIBILITY_WEIGHT
                 row["contributions"].append({"layer": "time", "score": TIME_COMPATIBILITY_WEIGHT})
 
@@ -817,21 +827,14 @@ class STSGraphIndex:
                     occurred_at=occurred_at,
                     matched_scope_types=sorted(row["scope_types"]),
                     selected_claim_ids=sorted(row["claims"]),
+                    claim_evidence=sorted(row["claim_evidence"]),
                     selected_state_ids=sorted(row["states"]),
                     evidence_spans=sorted(row["evidence"]),
                     state_evidence=sorted(row["state_evidence"]),
                     relation_evidence=sorted(row["relation_evidence"]),
                     raw_text=str(event.get("raw_text") or ""),
                     contributions=row["contributions"],
-                    scope_values={
-                        scope_type: sorted(
-                            str(self.scopes[scope_id].get("value") or "")
-                            for scope_id in self.event_scopes.get(row["event_id"], set())
-                            if self.scopes[scope_id].get("scope_type") == scope_type
-                            and self.scopes[scope_id].get("value")
-                        )
-                        for scope_type in ("entity", "location", "event_type")
-                    },
+                    scope_values={},
                     entity_roles={
                         role: sorted(value for value in values if value)
                         for role, values in self.event_entity_roles.get(row["event_id"], {}).items()
@@ -840,7 +843,7 @@ class STSGraphIndex:
             )
         ranked.sort(key=lambda row: (-row.score, row.chapter_id))
         ranked = ranked[:final_chapter_k]
-        if time_ordering in {"latest", "chronological"} and selected_time_roles:
+        if use_time and time_ordering in {"latest", "chronological"}:
             chapter_temporal_ranks = {
                 chapter_id: int(row["temporal_rank"])
                 for chapter_id, row in chapter_rows.items()
@@ -871,27 +874,27 @@ class STSGraphIndex:
                 "final_claim_k": final_claim_k,
                 "final_chapter_k": final_chapter_k,
                 "claim_retrieval_mode": (
-                    "scope_time_hard_filter_bm25_dense_rrf_statefacet_support"
+                    "scope_time_enriched_bm25_dense_rrf_event_time_statefacet_support"
                     if use_state
                     else "global_claim_bm25_dense_rrf"
                     if not use_scope
-                    else "scope_claim_time_hard_filter_bm25_dense_rrf"
+                    else "scope_claim_time_enriched_bm25_dense_rrf_event_time"
                     if use_time
                     else "scope_claim_bm25_dense_rrf"
                 ),
                 "claim_rrf_k": CLAIM_RRF_K,
+                "claim_document_mode": "time_enriched_claim_fields" if use_time else "claim_graph_text_only",
                 "time_role_selection": time_selection,
-                "time_hard_filter_applied": bool(selected_time_roles),
+                "time_hard_filter_applied": False,
                 "time_role_sorting": {
-                    "applied": bool(selected_time_roles)
-                    and time_ordering in {"latest", "chronological"},
+                    "applied": use_time and time_ordering in {"latest", "chronological"},
                     "ordering": time_ordering,
-                    "role_priority": selected_time_roles,
+                    "role_priority": [],
                     "claim_ids": selected_claim_ids,
                 },
                 "routed_scope_ids": sorted(routed_scope_ids),
                 "scope_candidate_claim_count": len(scoped_claim_ids),
-                "time_filtered_scope_claim_count": len(time_filtered_scoped_claim_ids),
+                "time_filtered_scope_claim_count": len(scoped_claim_ids),
                 "backoff_claim_ids": backoff_claim_ids,
                 "state_anchor_claim_ids": state_anchor_claim_ids,
                 "claim_reranked_ids": selected_claim_ids,
