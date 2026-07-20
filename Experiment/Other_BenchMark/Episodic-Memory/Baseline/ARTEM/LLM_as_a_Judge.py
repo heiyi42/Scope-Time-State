@@ -11,8 +11,12 @@ import logging
 from pathlib import Path
 from datetime import datetime
 import os
-import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
+try:
+    import torch
+    from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
+except ImportError:
+    torch = None
+    AutoModelForCausalLM = AutoTokenizer = pipeline = None
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -86,6 +90,11 @@ class DeepseekR1Wrapper(LLMWrapper):
 
     def _initialize_model(self):
         """Initialize the model and tokenizer"""
+        if torch is None or AutoTokenizer is None or AutoModelForCausalLM is None or pipeline is None:
+            raise RuntimeError(
+                "DeepseekR1Wrapper requires torch and transformers; "
+                "the official GPT-based evaluator does not."
+            )
         try:
             logger.info(f"Loading model from {self.model_path}")
 

@@ -1,0 +1,22 @@
+{
+  "baseline": "graphiti",
+  "book_path": "/Users/mac/Desktop/EpisodicMemory/Experiment/Other_BenchMark/Episodic-Memory/data/Udefault_Sdefault_seed0/books/model_claude-3-5-sonnet-20240620_itermax_10_Idefault_nbchapters_196_nbtokens_102870/book.json",
+  "qa_path": "/Users/mac/Desktop/EpisodicMemory/Experiment/Other_BenchMark/Episodic-Memory/data/Udefault_Sdefault_seed0/books/model_claude-3-5-sonnet-20240620_itermax_10_Idefault_nbchapters_196_nbtokens_102870/df_qa.parquet",
+  "predictions_path": "Experiment/Other_BenchMark/Episodic-Memory/artifacts/baselines/graphiti_gpt4omini_epbench/graphiti_predictions.jsonl",
+  "answering_model": "gpt-4o-mini",
+  "embedding_model": "text-embedding-3-small",
+  "embedding_dim": 1536,
+  "neo4j_database": "bd047243",
+  "top_k": 10,
+  "num_available_episodes": 1084,
+  "num_ingested_episodes_this_run": 192,
+  "gold_used_for_retrieval_or_generation": false,
+  "graph_modified": false,
+  "runtime_graph_clean_modified": false,
+  "judge_used": false,
+  "notes": [
+    "Only canonical EPBench book text is indexed.",
+    "QA questions and gold answers are used only after generation for judge-compatible output rows.",
+    "No question-specific or answer-specific hard rules are applied."
+  ]
+}

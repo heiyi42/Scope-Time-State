@@ -12,13 +12,16 @@ from typing import Any, Iterable, Mapping, Protocol, Sequence
 from pipeline.external.embedding_retrieval import OpenAIEmbeddingIndex
 from pipeline.external.sts_v2.schema import SCHEMA_VERSION
 from pipeline.external.temporal_grounding import parse_anchor_datetime
+from pipeline.external.time_role_selection import select_time_roles
 
 from .config import (
     CLAIM_CANDIDATE_K,
+    CLAIM_SEED_K,
     EMBEDDING_MODEL,
     EMBEDDING_SCORE_WEIGHT,
-    EVENT_CANDIDATE_K,
+    FINAL_CLAIM_K,
     FINAL_CHAPTER_K,
+    SCOPE_BACKOFF_K,
     SCOPE_TOP_K,
     SCOPE_TYPE_COVERAGE_WEIGHT,
     TIME_COMPATIBILITY_WEIGHT,
@@ -34,6 +37,14 @@ GENERIC_SCOPE_QUERIES = {
     "protagonists",
     "unique locations",
 }
+STATE_RELATION_TYPES = {"SUPERSEDES", "CORRECTS", "CONFLICTS_WITH"}
+CLAIM_RRF_K = 60
+CLAIM_RETRIEVAL_POLICIES = (
+    "claim",
+    "scope-claim",
+    "scope-claim-time",
+    "scope-claim-time-state",
+)
 
 
 def _tokens(text: object) -> list[str]:
@@ -152,9 +163,57 @@ def hybrid_rank(
     return hits[:top_k]
 
 
+def rrf_rank(
+    query: str,
+    bm25: SearchIndex,
+    dense: SearchIndex,
+    top_k: int,
+    allowed_doc_ids: Iterable[str] | None = None,
+    *,
+    rrf_k: int = CLAIM_RRF_K,
+) -> list[RankedHit]:
+    """Rank the BM25--dense union without mixing incomparable score scales."""
+    lexical_rows = bm25.search(query, top_k, allowed_doc_ids=allowed_doc_ids)
+    dense_rows = dense.search(query, top_k, allowed_doc_ids=allowed_doc_ids)
+    combined: dict[str, dict[str, Any]] = {}
+    for rank, row in enumerate(lexical_rows, 1):
+        combined.setdefault(str(row.doc_id), {}).update(
+            lexical_score=float(row.score), lexical_rank=rank
+        )
+    for rank, row in enumerate(dense_rows, 1):
+        combined.setdefault(str(row.doc_id), {}).update(
+            embedding_score=float(row.score), embedding_rank=rank
+        )
+    hits: list[RankedHit] = []
+    for doc_id, values in combined.items():
+        lexical_rank = values.get("lexical_rank")
+        embedding_rank = values.get("embedding_rank")
+        score = sum(
+            1.0 / (rrf_k + rank)
+            for rank in (lexical_rank, embedding_rank)
+            if rank is not None
+        )
+        hits.append(
+            RankedHit(
+                doc_id=doc_id,
+                score=score,
+                lexical_score=float(values.get("lexical_score", 0.0)),
+                embedding_score=float(values.get("embedding_score", 0.0)),
+                lexical_rank=lexical_rank,
+                embedding_rank=embedding_rank,
+                retrieval_sources=tuple(
+                    name
+                    for name, rank in (("bm25", lexical_rank), ("embedding", embedding_rank))
+                    if rank is not None
+                ),
+            )
+        )
+    hits.sort(key=lambda row: (-row.score, row.doc_id))
+    return hits[:top_k]
+
+
 @dataclass(frozen=True)
 class QuestionFrame:
-    ordering: str = "none"
     time_values: list[str] = field(default_factory=list)
     entity_queries: list[str] = field(default_factory=list)
     location_queries: list[str] = field(default_factory=list)
@@ -171,22 +230,13 @@ def build_question_frame(question: str, client: Any | None) -> QuestionFrame:
     raw: Mapping[str, Any] = {}
     if client is not None:
         raw = client.complete_json(
-            "Frame a question for STS retrieval using only explicitly named anchors in the question. Do not infer or expand entities, locations, or event types. Return one JSON object with ordering, time_values, entity_queries, location_queries, and event_type_queries.",
+            "Frame a question for STS retrieval using only explicitly named anchors in the question. Do not infer or expand entities, locations, or event types. Return one JSON object with time_values, entity_queries, location_queries, and event_type_queries.",
             question,
         )
         forbidden = {"answer", "correct_answer", "correct_answer_chapters", "gold", "reference"}
         if forbidden.intersection(raw):
             raise ValueError("question frame contains evaluator-only fields")
-    ordering = str(raw.get("ordering") or "none").strip().lower()
-    if ordering not in {"none", "latest", "chronological"}:
-        ordering = "none"
-    normalized_question = question.casefold()
-    if re.search(r"\b(latest|most recent|newest)\b", normalized_question):
-        ordering = "latest"
-    elif re.search(r"\b(chronological|in (?:time )?order)\b", normalized_question):
-        ordering = "chronological"
     return QuestionFrame(
-        ordering=ordering,
         time_values=_string_list(raw.get("time_values")),
         entity_queries=_string_list(raw.get("entity_queries")),
         location_queries=_string_list(raw.get("location_queries")),
@@ -212,6 +262,9 @@ class RankedChapter:
     evidence_spans: list[str]
     raw_text: str
     contributions: list[dict[str, Any]]
+    selected_state_ids: list[str] = field(default_factory=list)
+    state_evidence: list[str] = field(default_factory=list)
+    relation_evidence: list[str] = field(default_factory=list)
     scope_values: dict[str, list[str]] = field(default_factory=dict)
     entity_roles: dict[str, list[str]] = field(default_factory=dict)
 
@@ -243,6 +296,7 @@ class STSGraphIndex:
         self.events = {node_id: node for node_id, node in self.nodes.items() if node["node_type"] == "Episode/Event"}
         self.scopes = {node_id: node for node_id, node in self.nodes.items() if node["node_type"] == "Entity/Scope" and node.get("scope_type") != "book"}
         self.claims = {node_id: node for node_id, node in self.nodes.items() if node["node_type"] == "Claim"}
+        self.facets = {node_id: node for node_id, node in self.nodes.items() if node["node_type"] == "StateFacet"}
         self.scope_events: dict[str, set[str]] = {scope_id: set() for scope_id in self.scopes}
         self.event_scopes: dict[str, set[str]] = {event_id: set() for event_id in self.events}
         self.event_entity_roles: dict[str, dict[str, set[str]]] = {
@@ -250,6 +304,16 @@ class STSGraphIndex:
         }
         self.event_claims: dict[str, list[str]] = {event_id: [] for event_id in self.events}
         self.event_times: dict[str, list[str]] = {event_id: [] for event_id in self.events}
+        self.claim_facets: dict[str, set[str]] = {claim_id: set() for claim_id in self.claims}
+        self.facet_claims: dict[str, set[str]] = {facet_id: set() for facet_id in self.facets}
+        self.claim_relations: dict[str, set[str]] = {claim_id: set() for claim_id in self.claims}
+        self.claim_relation_edges: dict[str, list[dict[str, Any]]] = {
+            claim_id: [] for claim_id in self.claims
+        }
+        self.claim_time_roles: dict[str, set[str]] = {claim_id: set() for claim_id in self.claims}
+        self.claim_time_values: dict[str, dict[str, list[str]]] = {
+            claim_id: {} for claim_id in self.claims
+        }
         for edge in self.edges:
             if edge["type"] in {"IN_SCOPE", "MENTIONS"} and edge["to"] in self.scope_events:
                 self.scope_events[edge["to"]].add(str(edge["from"]))
@@ -267,10 +331,40 @@ class STSGraphIndex:
                 value = self.nodes.get(str(edge["to"]), {}).get("value")
                 if value:
                     self.event_times[edge["from"]].append(str(value))
+            elif edge["type"] == "HAS_TIME" and edge["from"] in self.claim_time_roles:
+                claim_id = str(edge["from"])
+                role = str(
+                    edge.get("time_role")
+                    or self.nodes.get(str(edge.get("to") or ""), {}).get("time_role")
+                    or "occurred_at"
+                )
+                self.claim_time_roles[claim_id].add(role)
+                value = str(self.nodes.get(str(edge.get("to") or ""), {}).get("value") or "").strip()
+                if value:
+                    self.claim_time_values[claim_id].setdefault(role, []).append(value)
+            elif edge["type"] == "SUPPORTS" and edge["from"] in self.claim_facets and edge["to"] in self.facet_claims:
+                claim_id = str(edge["from"])
+                facet_id = str(edge["to"])
+                self.claim_facets[claim_id].add(facet_id)
+                self.facet_claims[facet_id].add(claim_id)
+            elif edge["type"] in STATE_RELATION_TYPES and edge["from"] in self.claim_relations and edge["to"] in self.claim_relations:
+                source = str(edge["from"])
+                target = str(edge["to"])
+                self.claim_relations[source].add(target)
+                self.claim_relations[target].add(source)
+                self.claim_relation_edges[source].append(dict(edge))
+                self.claim_relation_edges[target].append(dict(edge))
+        for facet_id, facet in self.facets.items():
+            primary_claim_id = str(facet.get("primary_claim_id") or "")
+            if primary_claim_id in self.claim_time_roles:
+                self.claim_time_roles[primary_claim_id].add("CURRENT_AFTER")
+        self.claim_documents = {
+            claim_id: self._claim_document(claim_id)
+            for claim_id in self.claims
+        }
         self.scope_bm25 = BM25Index(list(self.scopes), [row.get("graph_text", "") for row in self.scopes.values()])
-        self.event_bm25 = BM25Index(list(self.events), [row.get("graph_text", "") for row in self.events.values()])
-        self.claim_bm25 = BM25Index(list(self.claims), [row.get("graph_text", "") for row in self.claims.values()])
-        self.scope_dense, self.event_dense, self.claim_dense = self._dense_indexes(embedding_config)
+        self.claim_bm25 = BM25Index(list(self.claims), list(self.claim_documents.values()))
+        self.scope_dense, self.claim_dense = self._dense_indexes(embedding_config)
 
     @classmethod
     def from_graph(cls, graph: Mapping[str, Any], embedding_config: EmbeddingConfig | None = None) -> "STSGraphIndex":
@@ -286,15 +380,24 @@ class STSGraphIndex:
     def _dense_indexes(self, config: EmbeddingConfig | None):
         if config is None:
             empty = _EmptyDenseIndex()
-            return empty, empty, empty
+            return empty, empty
         indexes = []
-        for name, rows in (("scope", self.scopes), ("event", self.events), ("claim", self.claims)):
+        for name, rows in (("scope", self.scopes), ("claim", self.claims)):
+            documents = (
+                [self.claim_documents[node_id] for node_id in rows]
+                if name == "claim"
+                else [str(row.get("graph_text") or "") for row in rows.values()]
+            )
             index = OpenAIEmbeddingIndex(
                 list(rows),
-                [str(row.get("graph_text") or "") for row in rows.values()],
+                documents,
                 model=config.model,
                 cache_path=Path(config.cache_dir) / f"{name}.json",
-                namespace=f"epbench-sts-v2-{name}",
+                namespace=(
+                    "epbench-sts-v2-claim-scope-time-state-v1"
+                    if name == "claim"
+                    else f"epbench-sts-v2-{name}"
+                ),
                 batch_size=config.batch_size,
                 base_url=config.base_url,
             )
@@ -302,16 +405,184 @@ class STSGraphIndex:
             indexes.append(index)
         return tuple(indexes)
 
+    def _claim_document(self, claim_id: str) -> str:
+        claim = self.claims[claim_id]
+        event_id = str(claim.get("source_event_id") or "")
+        event = self.events.get(event_id, {})
+        scope_values = [
+            str(self.scopes[scope_id].get("value") or "")
+            for scope_id in self.event_scopes.get(event_id, set())
+            if str(self.scopes[scope_id].get("value") or "")
+        ]
+        return " | ".join(
+            value
+            for value in (
+                str(claim.get("graph_text") or ""),
+                str(event.get("graph_text") or ""),
+                " ".join(self.event_times.get(event_id, [])),
+                " ".join(scope_values),
+                " ".join(sorted(self.claim_time_roles.get(claim_id, set()))),
+            )
+            if value
+        )
+
+    def _expand_claim_closure(
+        self,
+        seed_claim_ids: Sequence[str],
+    ) -> tuple[list[str], list[str], list[dict[str, Any]]]:
+        """Expand Claim seeds through StateFacet witnesses and explicit state relations."""
+        expanded: list[str] = []
+        discovered_facets: list[str] = []
+        relation_edges: list[dict[str, Any]] = []
+        pending = [str(claim_id) for claim_id in seed_claim_ids]
+        seen: set[str] = set()
+        seen_relations: set[tuple[str, str, str]] = set()
+        while pending:
+            claim_id = pending.pop(0)
+            if claim_id in seen or claim_id not in self.claims:
+                continue
+            seen.add(claim_id)
+            expanded.append(claim_id)
+            neighbours = set(self.claim_relations.get(claim_id, set()))
+            for facet_id in self.claim_facets.get(claim_id, set()):
+                if facet_id not in discovered_facets:
+                    discovered_facets.append(facet_id)
+                neighbours.update(self.facet_claims.get(facet_id, set()))
+            for edge in self.claim_relation_edges.get(claim_id, []):
+                key = (
+                    str(edge.get("type") or ""),
+                    str(edge.get("from") or ""),
+                    str(edge.get("to") or ""),
+                )
+                if key not in seen_relations:
+                    seen_relations.add(key)
+                    relation_edges.append(dict(edge))
+            for neighbour_id in sorted(neighbours):
+                if neighbour_id not in seen:
+                    pending.append(neighbour_id)
+        return expanded, discovered_facets, relation_edges
+
+    def _claim_ids_for_events(self, event_ids: Iterable[str]) -> set[str]:
+        selected_events = {str(event_id) for event_id in event_ids}
+        return {
+            claim_id
+            for claim_id, claim in self.claims.items()
+            if str(claim.get("source_event_id") or "") in selected_events
+        }
+
+    def _filter_claims_by_time_roles(
+        self,
+        claim_ids: Iterable[str],
+        time_roles: Sequence[str],
+    ) -> set[str]:
+        selected = {str(role) for role in time_roles if str(role)}
+        candidates = {str(claim_id) for claim_id in claim_ids if str(claim_id) in self.claims}
+        if not selected:
+            return candidates
+        return {
+            claim_id
+            for claim_id in candidates
+            if selected.intersection(self.claim_time_roles.get(claim_id, set()))
+        }
+
+    def _time_role_rank_key(
+        self,
+        claim_id: str,
+        time_roles: Sequence[str],
+        ordering: str,
+        fallback_rank: int,
+    ) -> tuple[int, float, int]:
+        """Rank Claims within their selected time-role group using normalized timestamps."""
+        role_values = self.claim_time_values.get(claim_id, {})
+        for role_rank, role in enumerate(time_roles):
+            values = role_values.get(str(role), [])
+            timestamps = [
+                parsed.timestamp()
+                for value in values
+                if (parsed := parse_anchor_datetime(value)) is not None
+            ]
+            if timestamps:
+                timestamp = max(timestamps) if ordering == "latest" else min(timestamps)
+                return role_rank, -timestamp if ordering == "latest" else timestamp, fallback_rank
+            if role in self.claim_time_roles.get(claim_id, set()):
+                return role_rank, math.inf, fallback_rank
+        return len(time_roles), math.inf, fallback_rank
+
+    def _sort_claim_hits_by_time_roles(
+        self,
+        claim_hits: Sequence[RankedHit],
+        time_roles: Sequence[str],
+        ordering: str,
+    ) -> list[RankedHit]:
+        if ordering not in {"latest", "chronological"} or not time_roles:
+            return list(claim_hits)
+        original_ranks = {hit.doc_id: rank for rank, hit in enumerate(claim_hits)}
+        return sorted(
+            claim_hits,
+            key=lambda item: self._time_role_rank_key(
+                item.doc_id,
+                time_roles,
+                ordering,
+                original_ranks[item.doc_id],
+            ),
+        )
+
+    def _closed_state_facets(
+        self,
+        discovered_facet_ids: Sequence[str],
+        retained_claim_ids: Sequence[str],
+    ) -> list[str]:
+        retained = set(retained_claim_ids)
+        return [
+            facet_id
+            for facet_id in dict.fromkeys(discovered_facet_ids)
+            if self.facet_claims.get(facet_id)
+            and self.facet_claims[facet_id].issubset(retained)
+        ]
+
     def retrieve(
         self,
         question: str,
         frame_client: Any | None,
         scope_top_k: int = SCOPE_TOP_K,
-        event_candidate_k: int = EVENT_CANDIDATE_K,
         claim_candidate_k: int = CLAIM_CANDIDATE_K,
+        scope_backoff_k: int = SCOPE_BACKOFF_K,
+        claim_seed_k: int = CLAIM_SEED_K,
+        final_claim_k: int = FINAL_CLAIM_K,
         final_chapter_k: int = FINAL_CHAPTER_K,
+        time_role_selector: str = "llm-top2",
+        retrieval_policy: str = "scope-claim-time-state",
     ) -> RetrievalResult:
+        if retrieval_policy not in CLAIM_RETRIEVAL_POLICIES:
+            raise ValueError(
+                f"unknown retrieval policy {retrieval_policy!r}; "
+                f"expected one of {', '.join(CLAIM_RETRIEVAL_POLICIES)}"
+            )
+        use_scope = retrieval_policy != "claim"
+        use_time = retrieval_policy in {"scope-claim-time", "scope-claim-time-state"}
+        use_state = retrieval_policy == "scope-claim-time-state"
         frame = build_question_frame(question, frame_client)
+        if not use_time or frame_client is None or time_role_selector == "none":
+            time_selection: dict[str, Any] = {
+                "time_applicable": False,
+                "time_roles": [],
+                "source": "selector_disabled",
+                "reason": "Time-role selection is disabled.",
+            }
+        else:
+            time_selection = dict(
+                select_time_roles(question, frame_client, time_role_selector)
+            )
+        selected_time_roles = list(dict.fromkeys(time_selection.get("time_roles", [])))[:2]
+        time_selection["time_roles"] = selected_time_roles
+        time_selection["selected_role_limit"] = 2
+        time_selection["selection_policy"] = "highest_confidence_first"
+        time_ordering = {
+            "newest_first": "latest",
+            "oldest_first": "chronological",
+        }.get(str(time_selection.get("ordering") or ""), "none")
+        time_selection["ordering"] = time_ordering
+
         chapter_rows: dict[int, dict[str, Any]] = {}
 
         def chapter_row(event_id: str) -> dict[str, Any]:
@@ -319,7 +590,18 @@ class STSGraphIndex:
             chapter_id = int(event["chapter_id"])
             return chapter_rows.setdefault(
                 chapter_id,
-                {"event_id": event_id, "score": 0.0, "scope_types": set(), "claims": set(), "evidence": set(), "contributions": []},
+                {
+                    "event_id": event_id,
+                    "score": 0.0,
+                    "scope_types": set(),
+                    "claims": set(),
+                    "states": set(),
+                    "evidence": set(),
+                    "state_evidence": set(),
+                    "relation_evidence": set(),
+                    "temporal_rank": math.inf,
+                    "contributions": [],
+                },
             )
 
         scope_queries = {
@@ -329,13 +611,21 @@ class STSGraphIndex:
         }
         reliable_event_sets: list[set[str]] = []
         reliable_scope_ids: set[str] = set()
+        routed_scope_ids: set[str] = set()
+        scope_hits_by_event: dict[str, list[tuple[str, str, float]]] = {}
+        semantic_scope_hits: dict[str, tuple[str, float]] = {}
         active_scope_queries: list[tuple[str, str]] = []
-        for scope_type, queries in scope_queries.items():
+        for scope_type, queries in scope_queries.items() if use_scope else ():
             for query in queries:
                 if query.casefold() in GENERIC_SCOPE_QUERIES:
                     continue
                 active_scope_queries.append((scope_type, query))
                 query_tokens = set(_tokens(query))
+                allowed_scope_ids = {
+                    scope_id
+                    for scope_id, scope in self.scopes.items()
+                    if str(scope.get("scope_type") or "") == scope_type
+                }
                 exact_scope_ids = {
                     scope_id
                     for scope_id, scope in self.scopes.items()
@@ -349,10 +639,10 @@ class STSGraphIndex:
                     )
                 }
                 if any(self.scopes[scope_id].get("scope_type") == "event_type" for scope_id in exact_scope_ids):
-                    event_type_ids = {
+                    event_type_scope_ids = {
                         scope_id
                         for scope_id, scope in self.scopes.items()
-                        if scope.get("scope_type") == "event_type"
+                        if str(scope.get("scope_type") or "") == "event_type"
                     }
                     exact_scope_ids.update(
                         hit.doc_id
@@ -361,7 +651,7 @@ class STSGraphIndex:
                             self.scope_bm25,
                             self.scope_dense,
                             scope_top_k,
-                            event_type_ids,
+                            event_type_scope_ids,
                         )
                         if hit.embedding_score >= 0.65
                     )
@@ -373,7 +663,48 @@ class STSGraphIndex:
                     if event_ids:
                         reliable_event_sets.append(event_ids)
 
+                scope_hits = hybrid_rank(
+                    query,
+                    self.scope_bm25,
+                    self.scope_dense,
+                    scope_top_k,
+                    allowed_scope_ids,
+                )
+                for hit in scope_hits:
+                    actual_scope_type = str(
+                        self.scopes[hit.doc_id].get("scope_type") or scope_type
+                    )
+                    previous = semantic_scope_hits.get(hit.doc_id)
+                    if previous is None or float(hit.score) > previous[1]:
+                        semantic_scope_hits[hit.doc_id] = (
+                            actual_scope_type,
+                            float(hit.score),
+                        )
+
+        ordered_scope_ids = [
+            *sorted(reliable_scope_ids),
+            *(
+                scope_id
+                for scope_id, _row in sorted(
+                    semantic_scope_hits.items(),
+                    key=lambda item: (-item[1][1], item[0]),
+                )
+                if scope_id not in reliable_scope_ids
+            ),
+        ][:scope_top_k]
+        routed_scope_ids.update(ordered_scope_ids)
+        for scope_id in ordered_scope_ids:
+            actual_scope_type, semantic_score = semantic_scope_hits.get(
+                scope_id,
+                (str(self.scopes[scope_id].get("scope_type") or ""), 1.0),
+            )
+            for event_id in self.scope_events.get(scope_id, set()):
+                scope_hits_by_event.setdefault(event_id, []).append(
+                    (scope_id, actual_scope_type, semantic_score)
+                )
+
         reliable_time_values: list[str] = []
+        reliable_time_event_sets: list[set[str]] = []
         for query in frame.time_values:
             parsed_query = parse_anchor_datetime(query)
             if parsed_query is None:
@@ -386,83 +717,143 @@ class STSGraphIndex:
             if event_ids:
                 reliable_time_values.append(query)
                 reliable_event_sets.append(event_ids)
+                reliable_time_event_sets.append(event_ids)
 
-        constrained_event_ids = (
+        reliable_constrained_event_ids = (
             set.intersection(*reliable_event_sets) if reliable_event_sets else set()
         )
         has_explicit_anchor = bool(active_scope_queries or frame.time_values)
-        if has_explicit_anchor and not reliable_event_sets:
-            return RetrievalResult(
-                question=question,
-                frame=frame,
-                ranked_chapters=[],
-                retrieval_status="no_reliable_anchor",
-                trace={
-                    "scope_top_k": scope_top_k,
-                    "event_candidate_k": event_candidate_k,
-                    "claim_candidate_k": claim_candidate_k,
-                    "final_chapter_k": final_chapter_k,
-                    "reliable_scope_ids": [],
-                    "reliable_time_values": [],
-                    "constrained_event_ids": [],
-                },
-            )
-        candidate_event_ids = constrained_event_ids or None
-        if candidate_event_ids is not None:
-            for event_id in candidate_event_ids:
-                chapter_row(event_id)
-
-        for scope_type, query in active_scope_queries:
-            for hit in hybrid_rank(
-                query,
-                self.scope_bm25,
-                self.scope_dense,
-                scope_top_k,
-            ):
-                for event_id in self.scope_events.get(hit.doc_id, set()):
-                    if candidate_event_ids is not None and event_id not in candidate_event_ids:
-                        continue
-                    row = chapter_row(event_id)
-                    row["score"] += hit.score
-                    actual_scope_type = str(self.scopes[hit.doc_id].get("scope_type") or scope_type)
-                    row["scope_types"].add(actual_scope_type)
-                    row["contributions"].append({"layer": "scope", "scope_type": actual_scope_type, "doc_id": hit.doc_id, "score": hit.score})
-
-        for hit in hybrid_rank(
-            question,
-            self.event_bm25,
-            self.event_dense,
-            event_candidate_k,
-            candidate_event_ids,
-        ):
-            row = chapter_row(hit.doc_id)
-            row["score"] += hit.score
-            row["contributions"].append({"layer": "event", "doc_id": hit.doc_id, "score": hit.score})
-        candidate_claim_ids = (
-            {
-                claim_id
-                for claim_id, claim in self.claims.items()
-                if str(claim.get("source_event_id")) in candidate_event_ids
-            }
-            if candidate_event_ids is not None
-            else None
+        scope_routed_event_ids = set().union(
+            *(self.scope_events.get(scope_id, set()) for scope_id in routed_scope_ids)
+        ) if routed_scope_ids else set()
+        candidate_event_ids = reliable_constrained_event_ids or scope_routed_event_ids
+        scoped_claim_ids = (
+            self._claim_ids_for_events(candidate_event_ids) if use_scope else set(self.claims)
         )
-        for hit in hybrid_rank(
+        time_filtered_scoped_claim_ids = self._filter_claims_by_time_roles(
+            scoped_claim_ids,
+            selected_time_roles,
+        )
+        exact_time_event_ids = (
+            set.intersection(*reliable_time_event_sets)
+            if reliable_time_event_sets
+            else set()
+        )
+        backoff_base_claim_ids = (
+            self._claim_ids_for_events(exact_time_event_ids)
+            if use_scope and exact_time_event_ids
+            else set(self.claims)
+        )
+        global_time_filtered_claim_ids = self._filter_claims_by_time_roles(
+            backoff_base_claim_ids,
+            selected_time_roles,
+        )
+        backoff_hits = (
+            rrf_rank(
+                question,
+                self.claim_bm25,
+                self.claim_dense,
+                scope_backoff_k,
+                global_time_filtered_claim_ids,
+            )
+            if use_scope
+            else []
+        )
+        backoff_claim_ids = [hit.doc_id for hit in backoff_hits]
+        candidate_claim_ids = set(time_filtered_scoped_claim_ids).union(backoff_claim_ids)
+        initial_claim_hits = rrf_rank(
             question,
             self.claim_bm25,
             self.claim_dense,
             claim_candidate_k,
             candidate_claim_ids,
-        ):
+        )
+        seed_claim_ids = [
+            hit.doc_id for hit in initial_claim_hits[: min(claim_seed_k, claim_candidate_k)]
+        ] if use_state else []
+        if use_state:
+            closure_claim_ids, discovered_facet_ids, discovered_relation_edges = (
+                self._expand_claim_closure(seed_claim_ids)
+            )
+            expanded_claim_ids = list(dict.fromkeys([*seed_claim_ids, *closure_claim_ids]))
+        else:
+            closure_claim_ids, discovered_facet_ids, discovered_relation_edges = [], [], []
+            expanded_claim_ids = [hit.doc_id for hit in initial_claim_hits]
+        reranked_claim_hits = rrf_rank(
+            question,
+            self.claim_bm25,
+            self.claim_dense,
+            final_claim_k,
+            expanded_claim_ids,
+        )
+        claim_hits = reranked_claim_hits[:final_claim_k]
+        claim_hits = self._sort_claim_hits_by_time_roles(
+            claim_hits,
+            selected_time_roles,
+            time_ordering,
+        )
+        selected_claim_ids = [hit.doc_id for hit in claim_hits]
+        selected_claim_set = set(selected_claim_ids)
+        selected_facet_ids = self._closed_state_facets(
+            discovered_facet_ids,
+            selected_claim_ids,
+        )
+        selected_relation_edges = [
+            edge
+            for edge in discovered_relation_edges
+            if str(edge.get("from") or "") in selected_claim_set
+            and str(edge.get("to") or "") in selected_claim_set
+        ]
+
+        state_lines = {
+            facet_id: str(self.facets[facet_id].get("graph_text") or "").strip()
+            for facet_id in selected_facet_ids
+        }
+        relation_lines_by_claim: dict[str, set[str]] = {
+            claim_id: set() for claim_id in selected_claim_ids
+        }
+        for edge in selected_relation_edges:
+            source_id = str(edge.get("from") or "")
+            target_id = str(edge.get("to") or "")
+            source_text = str(self.claims.get(source_id, {}).get("graph_text") or source_id)
+            target_text = str(self.claims.get(target_id, {}).get("graph_text") or target_id)
+            line = f"{edge.get('type')}: {source_text} -> {target_text}"
+            relation_lines_by_claim[source_id].add(line)
+            relation_lines_by_claim[target_id].add(line)
+
+        for temporal_rank, hit in enumerate(claim_hits):
             claim = self.claims[hit.doc_id]
             event_id = str(claim["source_event_id"])
+            if event_id not in self.events:
+                continue
             row = chapter_row(event_id)
             row["score"] += hit.score
             row["claims"].add(hit.doc_id)
+            row["temporal_rank"] = min(row["temporal_rank"], temporal_rank)
             for evidence_span in claim.get("evidence_spans", []):
                 if evidence_span:
                     row["evidence"].add(str(evidence_span))
             row["contributions"].append({"layer": "claim", "doc_id": hit.doc_id, "score": hit.score})
+            for facet_id in self.claim_facets.get(hit.doc_id, set()):
+                if facet_id in selected_facet_ids:
+                    row["states"].add(facet_id)
+                    if state_lines.get(facet_id):
+                        row["state_evidence"].add(state_lines[facet_id])
+            row["relation_evidence"].update(relation_lines_by_claim.get(hit.doc_id, set()))
+
+        for row in chapter_rows.values():
+            for scope_id, actual_scope_type, scope_score in scope_hits_by_event.get(
+                row["event_id"], []
+            ):
+                row["scope_types"].add(actual_scope_type)
+                row["contributions"].append(
+                    {
+                        "layer": "scope",
+                        "scope_type": actual_scope_type,
+                        "doc_id": scope_id,
+                        "score": scope_score,
+                    }
+                )
 
         for row in chapter_rows.values():
             coverage_bonus = len(row["scope_types"]) * SCOPE_TYPE_COVERAGE_WEIGHT
@@ -487,7 +878,10 @@ class STSGraphIndex:
                     occurred_at=occurred_at,
                     matched_scope_types=sorted(row["scope_types"]),
                     selected_claim_ids=sorted(row["claims"]),
+                    selected_state_ids=sorted(row["states"]),
                     evidence_spans=sorted(row["evidence"]),
+                    state_evidence=sorted(row["state_evidence"]),
+                    relation_evidence=sorted(row["relation_evidence"]),
                     raw_text=str(event.get("raw_text") or ""),
                     contributions=row["contributions"],
                     scope_values={
@@ -507,29 +901,83 @@ class STSGraphIndex:
             )
         ranked.sort(key=lambda row: (-row.score, row.chapter_id))
         ranked = ranked[:final_chapter_k]
-        if frame.ordering == "latest":
-            ranked.sort(key=lambda row: (row.occurred_at, row.score), reverse=True)
-        elif frame.ordering == "chronological":
-            ranked.sort(key=lambda row: (row.occurred_at or "9999", -row.score, row.chapter_id))
+        if time_ordering in {"latest", "chronological"} and selected_time_roles:
+            chapter_temporal_ranks = {
+                chapter_id: int(row["temporal_rank"])
+                for chapter_id, row in chapter_rows.items()
+            }
+            ranked.sort(
+                key=lambda row: (chapter_temporal_ranks[row.chapter_id], row.chapter_id)
+            )
         return RetrievalResult(
             question=question,
             frame=frame,
             ranked_chapters=ranked,
-            retrieval_status=("anchor_constrained" if candidate_event_ids is not None else "retrieved"),
+            retrieval_status=(
+                "anchor_constrained"
+                if reliable_constrained_event_ids
+                else "scope_routed"
+                if scope_routed_event_ids
+                else "scope_backoff"
+                if backoff_claim_ids
+                else "no_candidates"
+            ),
             trace={
+                "retrieval_policy": retrieval_policy,
                 "scope_top_k": scope_top_k,
-                "event_candidate_k": event_candidate_k,
+                "event_retrieval_mode": "source_event_evidence_only",
                 "claim_candidate_k": claim_candidate_k,
+                "scope_backoff_k": scope_backoff_k,
+                "claim_seed_k": claim_seed_k,
+                "final_claim_k": final_claim_k,
                 "final_chapter_k": final_chapter_k,
+                "claim_retrieval_mode": (
+                    "scope_time_hard_filter_bm25_dense_rrf_relation_closure"
+                    if use_state
+                    else "global_claim_bm25_dense_rrf"
+                    if not use_scope
+                    else "scope_claim_time_hard_filter_bm25_dense_rrf"
+                    if use_time
+                    else "scope_claim_bm25_dense_rrf"
+                ),
+                "claim_rrf_k": CLAIM_RRF_K,
+                "time_role_selection": time_selection,
+                "time_hard_filter_applied": bool(selected_time_roles),
+                "time_role_sorting": {
+                    "applied": bool(selected_time_roles)
+                    and time_ordering in {"latest", "chronological"},
+                    "ordering": time_ordering,
+                    "role_priority": selected_time_roles,
+                    "claim_ids": selected_claim_ids,
+                },
+                "routed_scope_ids": sorted(routed_scope_ids),
+                "scope_candidate_claim_count": len(scoped_claim_ids),
+                "time_filtered_scope_claim_count": len(time_filtered_scoped_claim_ids),
+                "backoff_claim_ids": backoff_claim_ids,
+                "claim_seed_ids": seed_claim_ids,
+                "claim_closure_ids": closure_claim_ids,
+                "claim_reranked_ids": selected_claim_ids,
+                "selected_state_ids": selected_facet_ids,
+                "selected_relation_edges": selected_relation_edges,
+                "source_event_ids": sorted(
+                    {
+                        str(self.claims[claim_id].get("source_event_id") or "")
+                        for claim_id in selected_claim_ids
+                        if str(self.claims[claim_id].get("source_event_id") or "")
+                    }
+                ),
                 "reliable_scope_ids": sorted(reliable_scope_ids),
                 "reliable_time_values": reliable_time_values,
-                "constrained_event_ids": sorted(candidate_event_ids or []),
+                "exact_time_event_ids": sorted(exact_time_event_ids),
+                "constrained_event_ids": sorted(reliable_constrained_event_ids),
+                "has_explicit_anchor": has_explicit_anchor,
             },
         )
 
 
 __all__ = [
     "BM25Index",
+    "CLAIM_RETRIEVAL_POLICIES",
     "EmbeddingConfig",
     "QuestionFrame",
     "RankedChapter",
@@ -538,4 +986,5 @@ __all__ = [
     "STSGraphIndex",
     "build_question_frame",
     "hybrid_rank",
+    "rrf_rank",
 ]

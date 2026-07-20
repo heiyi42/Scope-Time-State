@@ -13,7 +13,7 @@ if str(STS_DIR.parent) not in sys.path:
     sys.path.insert(0, str(STS_DIR.parent))
 
 from STS.loader import QAItem
-from STS.qa_runner import run_judge, run_qa
+from STS.qa_runner import _answer_context, run_official_artem_evaluation, run_qa
 from STS.staged import QuestionFrame, RankedChapter, RetrievalResult
 
 
@@ -108,6 +108,18 @@ class QARunnerTests(unittest.TestCase):
         self.assertNotIn("correct_answer", prompt)
         self.assertNotIn("correct_answer_chapters", prompt)
 
+    def test_answer_context_keeps_full_source_event_and_state_evidence(self):
+        result = FakeIndex().retrieve(QA_ITEM.question, None)
+        chapter = result.ranked_chapters[0]
+        chapter.raw_text = "source-start " + ("x" * 3000) + " source-end"
+        chapter.state_evidence = ["workshop status completed"]
+        chapter.relation_evidence = ["SUPERSEDES: planned -> completed"]
+        context = _answer_context(result)
+        self.assertIn("source-start", context)
+        self.assertIn("source-end", context)
+        self.assertIn("StateFacet: workshop status completed", context)
+        self.assertIn("State relation: SUPERSEDES: planned -> completed", context)
+
     def test_empty_grounded_retrieval_abstains_without_calling_answer_model(self):
         answer_client = CapturingClient({"answer": "A hallucinated event"})
         output_path = self.root / "qa.json"
@@ -148,7 +160,7 @@ class QARunnerTests(unittest.TestCase):
         self.assertEqual("Julian Ross", payload["rows"][0]["answer"])
         self.assertEqual("graph_entity_roles", payload["rows"][0]["answer_source"])
 
-    def test_judge_preserves_raw_answer_and_trace(self):
+    def test_official_evaluation_preserves_raw_answer_and_trace(self):
         qa_path = self.root / "qa.json"
         qa_payload = {
             "rows": [
@@ -157,17 +169,30 @@ class QARunnerTests(unittest.TestCase):
                     "q_idx": 11,
                     "question": QA_ITEM.question,
                     "answer": "Julian Ross",
+                    "selected_chapter_ids": [1],
                     "retrieval_trace": {"ranked_chapters": [1]},
                 }
             ]
         }
         qa_path.write_text(json.dumps(qa_payload), encoding="utf-8")
-        judge_client = CapturingClient({"score": 10, "correct": True, "reason": "exact"})
-        with patch("STS.qa_runner.load_qa", return_value=[QA_ITEM]):
-            judged = run_judge(
+        official_metric = {
+            "predicted_items": ["Julian Ross"],
+            "groundtruth_items": ["Julian Ross"],
+            "matching_groundtruth_items_score": [{"Julian Ross": 1.0}],
+            "explanation": "exact",
+            "precision_lenient": 1.0,
+            "precision_harsh": 1.0,
+            "recall": 1.0,
+            "f1_score_lenient": 1.0,
+            "f1_score_harsh": 1.0,
+        }
+        with patch("STS.qa_runner.load_qa", return_value=[QA_ITEM]), patch(
+            "STS.qa_runner._official_artem_evaluator", return_value=lambda **_kwargs: official_metric
+        ):
+            judged = run_official_artem_evaluation(
                 qa_result_path=qa_path,
-                output_path=self.root / "judged.json",
-                judge_client=judge_client,
+                output_path=self.root / "official_artem.json",
+                judge_client=CapturingClient({}),
                 resume=False,
                 workers=2,
             )
@@ -175,6 +200,8 @@ class QARunnerTests(unittest.TestCase):
         judged_row = judged["rows"][0]
         self.assertEqual(qa_row["answer"], judged_row["answer"])
         self.assertEqual(qa_row["retrieval_trace"], judged_row["retrieval_trace"])
+        self.assertEqual(1.0, judged_row["candidate_f1"])
+        self.assertEqual(1.0, judged["summary"]["overall"]["mean_candidate_f1"])
 
 
 if __name__ == "__main__":

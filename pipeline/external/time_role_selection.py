@@ -93,7 +93,9 @@ Choose zero to two roles from this fixed ontology: CURRENT_AFTER, occurred_at, m
 deadline_at, valid_from, started_at, completed_at, finalized_at. Use an empty list when time or current-state validity
 is not needed. Assign each selected role a confidence from 0 to 1 and order roles from highest to lowest confidence.
 Return JSON only: {"time_applicable": true, "time_roles": ["role"],
-"time_role_confidences": {"role": 0.95}, "reason": "short semantic explanation"}."""
+"time_role_confidences": {"role": 0.95}, "ordering": "newest_first|oldest_first|none",
+"reason": "short semantic explanation"}. Set ordering to newest_first only when the question asks for
+the most recent result, oldest_first only when it asks for chronological order, and none otherwise."""
 
 
 class JsonCompletionClient(Protocol):
@@ -324,6 +326,13 @@ def select_time_roles(question: object, client: JsonCompletionClient, selector: 
     time_applicable = raw.get("time_applicable") is True and bool(time_roles)
     if not time_applicable:
         time_roles = []
+    raw_ordering = str(raw.get("ordering") or "none").strip().lower()
+    ordering = {
+        "newest_first": "newest_first",
+        "latest": "newest_first",
+        "oldest_first": "oldest_first",
+        "chronological": "oldest_first",
+    }.get(raw_ordering, "none")
     return {
         "time_applicable": time_applicable,
         "time_roles": time_roles,
@@ -334,6 +343,7 @@ def select_time_roles(question: object, client: JsonCompletionClient, selector: 
             if selector == "llm-top2" and time_applicable
             else {}
         ),
+        "ordering": ordering if time_applicable else "none",
         "source": (
             "llm_compatible_question_only"
             if selector == "llm-compatible"

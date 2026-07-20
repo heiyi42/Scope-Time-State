@@ -527,6 +527,7 @@ def _base_graph(chapters: Sequence[Chapter], records: Sequence[Mapping[str, Any]
                 "evidence_spans": raw_claim["evidence_spans"],
                 "graph_text": f"{raw_claim['subject']} {raw_claim['predicate']} {raw_claim['value']}",
                 "time_ids": list(time_ids),
+                "time_role": "occurred_at",
             }
             state_identity = eligible_state_identity(claim)
             if state_identity:
@@ -540,7 +541,15 @@ def _base_graph(chapters: Sequence[Chapter], records: Sequence[Mapping[str, Any]
             nodes[claim_id] = claim
             claims.append(claim)
             edges.append({"type": "ASSERTS", "from": event_id, "to": claim_id})
-            edges.extend({"type": "HAS_TIME", "from": claim_id, "to": time_id} for time_id in time_ids)
+            edges.extend(
+                {
+                    "type": "HAS_TIME",
+                    "from": claim_id,
+                    "to": time_id,
+                    "time_role": "occurred_at",
+                }
+                for time_id in time_ids
+            )
     return list(nodes.values()), edges, claims
 
 

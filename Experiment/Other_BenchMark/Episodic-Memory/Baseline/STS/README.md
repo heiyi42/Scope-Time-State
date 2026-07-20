@@ -13,8 +13,12 @@
 - `COMPATIBLE` 通过多个 Claim 共同 `SUPPORTS` 同一个 StateFacet 表示；`DIFFERENT_TARGET` 不连边；Claim-Claim 只允许 `SUPERSEDES`、`CORRECTS`、`CONFLICTS_WITH`。
 - 构图阶段只读取 `book.json`。`df_qa.parquet` 仅在 retrieve/QA/judge 阶段显式加载，`df_book_groundtruth.parquet` 永不进入流水线。
 - build、QA、judge 默认均为 `gpt-4o-mini`；embedding 默认是 `text-embedding-3-small`。
-- Question Frame 只抽取问题中显式出现的 anchor。具体 anchor 的全部 token 必须由同类型 Scope 覆盖；dense-only 命中和通用短 Scope 不能证明事件存在。
-- 有 anchor 时，Scope 对应 Event 集合取交集，Event/Claim 只在交集内做 BM25+dense 检索。没有可靠 Scope 时记录 `retrieval_status=no_grounded_scope`，不调用回答模型，统一返回 `No matching event is present in the memory.`。
+- 检索策略固定为 `scope-claim-time-state`。Question Frame 只抽取问题中显式出现的 anchor；精确 Scope anchor 可跨类型纠正 frame 分类误差，语义 Scope 扩展仍限制在预测类型内。
+- Scope 取 top-14，并允许加入最多 8 个全局 Claim back-off 候选；精确日期仍是硬约束，back-off 不得跨越该日期。
+- question-only Time selector 选择置信度最高的至多两个 time roles，并在 RRF 前硬筛 Scope 与 back-off Claim 候选。
+- Claim 使用 BM25+dense RRF：候选池 80，前 16 个 Claim 作为 relation-aware seeds，扩展 Claim/StateFacet/状态关系后再次对 query 做 RRF，最终最多保留 24 个 Claims。
+- StateFacet 不设数量上限，但仅保留其全部 SUPPORTS Claims 都进入最终 Claim 集合的闭包；StateFacet 只能由 relation-aware 扩展得到。
+- Event 不作为独立检索种子。最终 Claim 的 source Events 作为原始证据闭包进入回答上下文，LLM 接收完整 `raw_text`，同时接收 Claim evidence spans、StateFacet 和状态关系。
 
 ## 一次跑通
 
@@ -29,10 +33,13 @@ conda run --no-capture-output -n py311 python \
   --judge-model gpt-4o-mini \
   --embedding-model text-embedding-3-small \
   --message-chunk-size 4 \
-  --scope-top-k 32 \
-  --event-candidate-k 64 \
-  --claim-candidate-k 64 \
-  --final-chapter-k 20
+  --scope-top-k 14 \
+  --claim-candidate-k 80 \
+  --scope-backoff-k 8 \
+  --claim-seed-k 16 \
+  --final-claim-k 24 \
+  --final-chapter-k 24 \
+  --time-role-selector llm-top2
 ```
 
 也可以分阶段运行：

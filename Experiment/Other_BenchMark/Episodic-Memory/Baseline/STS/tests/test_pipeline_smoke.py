@@ -40,7 +40,7 @@ class FrameClient:
     model = "gpt-4o-mini"
 
     def complete_json(self, _system_prompt, _user_prompt):
-        return {"ordering": "none", "time_values": [], "entity_queries": [], "location_queries": [], "event_type_queries": []}
+        return {"time_values": [], "entity_queries": [], "location_queries": [], "event_type_queries": []}
 
 
 class StaticClient:
@@ -58,13 +58,17 @@ FAKE_CLIENTS = ClientBundle(
     merge=StaticClient({"decision": "COMPATIBLE", "winner": "none", "reason": "same"}),
     frame=FrameClient(),
     answer=StaticClient({"answer": "Not enough retrieved evidence."}),
-    judge=StaticClient({"score": 0, "correct": False, "reason": "smoke"}),
+    judge=StaticClient({
+        "identified_items_in_AI_answer": [],
+        "matching_score": [],
+        "explanation": "smoke",
+    }),
     embedding_config=None,
 )
 
 
 class PipelineSmokeTests(unittest.TestCase):
-    def test_all_stage_builds_retrieves_answers_and_judges(self):
+    def test_all_stage_builds_retrieves_answers_and_runs_official_evaluation(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             code = main(
@@ -78,7 +82,9 @@ class PipelineSmokeTests(unittest.TestCase):
             self.assertEqual(EXTRACTION_SCHEMA_VERSION, extraction_cache["schema_version"])
             self.assertEqual("sentence_id", manifest["runtime"]["evidence_mode"])
             self.assertEqual(2, len(json.loads((root / "results" / "qa.json").read_text())["rows"]))
-            self.assertEqual(2, len(json.loads((root / "results" / "judged.json").read_text())["rows"]))
+            official = json.loads((root / "results" / "official_artem.json").read_text())
+            self.assertEqual("official_artem", official["evaluator"])
+            self.assertEqual(2, len(official["rows"]))
 
     def test_sts_runtime_has_no_artem_imports_or_gold_build_inputs(self):
         source = "\n".join(path.read_text(encoding="utf-8") for path in STS_DIR.glob("*.py"))

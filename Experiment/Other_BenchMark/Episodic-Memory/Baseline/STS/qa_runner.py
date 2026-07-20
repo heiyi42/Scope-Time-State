@@ -1,4 +1,4 @@
-"""Resumable EPBench STS answer and LLM-judge stages."""
+"""Resumable EPBench STS answer and official ARTEM evaluation stages."""
 
 from __future__ import annotations
 
@@ -6,9 +6,10 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
 import os
 from pathlib import Path
+import sys
 from typing import Any, Mapping
 
-from .config import ANSWER_MODEL, JUDGE_MODEL
+from .config import ANSWER_MODEL
 from .loader import load_qa
 from .staged import EmbeddingConfig, STSGraphIndex
 
@@ -17,9 +18,32 @@ ABSTENTION_ANSWER = "No matching event is present in the memory."
 ANSWER_SYSTEM_PROMPT = f"""Answer the EPBench question using only facts explicitly supported by the retrieved STS evidence.
 Do not infer a requested entity, location, time, event, or detail from semantic similarity alone. If the evidence does not explicitly establish the requested item, answer exactly: {ABSTENTION_ANSWER}
 Return JSON with one field: {{\"answer\": \"concise answer\"}}. Do not mention retrieval."""
-JUDGE_SYSTEM_PROMPT = """Judge a prediction against the reference answer for the supplied question.
-Return JSON only: {\"score\": 0, \"correct\": false, \"reason\": \"short grounded reason\"}.
-Score must be an integer from 0 to 10."""
+
+
+def _official_artem_evaluator() -> Any:
+    """Load EPBench's ARTEM evaluator rather than using a local surrogate judge."""
+    artem_dir = Path(__file__).resolve().parent.parent / "ARTEM"
+    if str(artem_dir) not in sys.path:
+        sys.path.insert(0, str(artem_dir))
+    from LLM_as_a_Judge import evaluate_answer_with_art  # type: ignore
+
+    return evaluate_answer_with_art
+
+
+class _OfficialJudgeWrapper:
+    """Expose the official evaluator's LLM wrapper interface over our cached client."""
+
+    def __init__(self, client: Any) -> None:
+        self.client = client
+
+    def generate(
+        self,
+        user_prompt: str,
+        system_prompt: str = "",
+        max_new_tokens: int = 4096,
+    ) -> str:
+        del max_new_tokens
+        return json.dumps(self.client.complete_json(system_prompt, user_prompt), ensure_ascii=False)
 
 
 def _write_atomic(path: Path, payload: Mapping[str, Any]) -> None:
@@ -38,7 +62,7 @@ def _read_result(path: Path) -> dict[str, Any]:
     return payload
 
 
-def _answer_context(result: Any, *, max_raw_chars: int = 2400) -> str:
+def _answer_context(result: Any, *, max_raw_chars: int | None = None) -> str:
     blocks: list[str] = []
     for row in result.ranked_chapters:
         evidence = "\n".join(f"- Evidence: {span}" for span in row.evidence_spans)
@@ -47,10 +71,15 @@ def _answer_context(result: Any, *, max_raw_chars: int = 2400) -> str:
             for scope_type, values in row.scope_values.items()
             if values
         )
-        raw_excerpt = row.raw_text[:max_raw_chars]
+        states = "\n".join(f"- StateFacet: {value}" for value in row.state_evidence)
+        relations = "\n".join(
+            f"- State relation: {value}" for value in row.relation_evidence
+        )
+        raw_excerpt = row.raw_text if max_raw_chars is None else row.raw_text[:max_raw_chars]
         blocks.append(
             f"[Chapter {row.chapter_id}; time={row.occurred_at or 'unknown'}]\n"
-            f"{scopes}\n{evidence}\n- Source excerpt: {raw_excerpt}"
+            f"{scopes}\n{evidence}\n{states}\n{relations}\n"
+            f"- Source Event (raw chapter text): {raw_excerpt}"
         )
     return "\n\n".join(blocks)
 
@@ -87,6 +116,8 @@ def run_qa(
     offset: int = 0,
     limit: int = 686,
     resume: bool = True,
+    question_gets: tuple[str, ...] = (),
+    refresh_existing: bool = False,
     workers: int = 1,
     **retrieval_kwargs: Any,
 ) -> dict[str, Any]:
@@ -96,9 +127,15 @@ def run_qa(
         raise ValueError("workers must be positive")
     qa_items = load_qa()
     selected = qa_items[offset : offset + limit]
+    selected_gets = {value.strip().lower() for value in question_gets if value.strip()}
+    if selected_gets:
+        selected = [item for item in selected if item.get in selected_gets]
     index = STSGraphIndex.load(Path(graph_dir), embedding_config=embedding_config)
     payload = _read_result(Path(output_path)) if resume else {"rows": []}
     completed = {int(row["row_index"]): row for row in payload["rows"]}
+    if refresh_existing:
+        for item in selected:
+            completed.pop(item.row_index, None)
     pending = [item for item in selected if item.row_index not in completed]
 
     def answer_item(item: Any) -> dict[str, Any]:
@@ -159,13 +196,22 @@ def run_qa(
     return payload
 
 
-def _judge_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
+def _official_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
     def summarize(group: list[dict[str, Any]]) -> dict[str, Any]:
-        scores = [float(row["judge"]["score"]) for row in group]
+        def mean(key: str) -> float | None:
+            values = [float(row[key]) for row in group if row.get(key) is not None]
+            return sum(values) / len(values) if values else None
+
         return {
             "count": len(group),
-            "mean_score": sum(scores) / len(scores) if scores else 0.0,
-            "accuracy": sum(bool(row["judge"]["correct"]) for row in group) / len(group) if group else 0.0,
+            "mean_candidate_precision": mean("candidate_precision"),
+            "mean_candidate_recall": mean("candidate_recall"),
+            "mean_candidate_f1": mean("candidate_f1"),
+            "mean_f1_lenient": mean("f1_score_lenient"),
+            "mean_f1_harsh": mean("f1_score_harsh"),
+            "mean_precision_lenient": mean("precision_lenient"),
+            "mean_precision_harsh": mean("precision_harsh"),
+            "mean_recall": mean("recall"),
         }
 
     return {
@@ -176,11 +222,31 @@ def _judge_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
-def run_judge(
+def _candidate_metrics(
+    predicted_chapter_ids: list[Any], gold_chapter_ids: list[Any]
+) -> dict[str, float]:
+    """Score retrieved source Events as EPBench chapter candidates after QA completes."""
+    predicted = {int(value) for value in predicted_chapter_ids}
+    gold = {int(value) for value in gold_chapter_ids}
+    overlap = len(predicted.intersection(gold))
+    precision = overlap / len(predicted) if predicted else 0.0
+    recall = overlap / len(gold) if gold else 0.0
+    return {
+        "candidate_precision": precision,
+        "candidate_recall": recall,
+        "candidate_f1": 2 * precision * recall / (precision + recall)
+        if precision + recall
+        else 0.0,
+    }
+
+
+def run_official_artem_evaluation(
     qa_result_path: Path,
     output_path: Path,
     judge_client: Any,
     resume: bool = True,
+    question_gets: tuple[str, ...] = (),
+    refresh_existing: bool = False,
     workers: int = 1,
 ) -> dict[str, Any]:
     if workers < 1:
@@ -189,8 +255,15 @@ def run_judge(
     qa_by_index = {item.row_index: item for item in load_qa()}
     payload = _read_result(Path(output_path)) if resume else {"rows": []}
     completed = {int(row["row_index"]): row for row in payload["rows"]}
+    selected_gets = {value.strip().lower() for value in question_gets if value.strip()}
+    if refresh_existing:
+        for qa_row in qa_payload["rows"]:
+            if not selected_gets or str(qa_row.get("get") or "").lower() in selected_gets:
+                completed.pop(int(qa_row["row_index"]), None)
     pending = []
     for qa_row in qa_payload["rows"]:
+        if selected_gets and str(qa_row.get("get") or "").lower() not in selected_gets:
+            continue
         row_index = int(qa_row["row_index"])
         if row_index in completed:
             continue
@@ -199,46 +272,45 @@ def run_judge(
             raise ValueError(f"QA checkpoint references unknown EPBench row {row_index}")
         pending.append((qa_row, item))
 
-    def judge_item(qa_row: dict[str, Any], item: Any) -> dict[str, Any]:
-        user_prompt = json.dumps(
-            {
-                "question": qa_row["question"],
-                "reference_answer": item.correct_answer,
-                "prediction": qa_row["answer"],
-            },
-            ensure_ascii=False,
-            indent=2,
+    evaluate_answer_with_art = _official_artem_evaluator()
+    official_judge = _OfficialJudgeWrapper(judge_client)
+
+    def evaluate_item(qa_row: dict[str, Any], item: Any) -> dict[str, Any]:
+        metric = evaluate_answer_with_art(
+            llm_answer=qa_row["answer"],
+            correct_answer=item.correct_answer,
+            retrieval_type=item.retrieval_type,
+            judge_model=official_judge,
         )
-        raw = dict(judge_client.complete_json(JUDGE_SYSTEM_PROMPT, user_prompt))
-        try:
-            score = int(round(float(raw.get("score", 0))))
-        except (TypeError, ValueError):
-            score = 0
-        score = min(10, max(0, score))
-        judged_row = dict(qa_row)
-        judged_row["judge"] = {
-            "score": score,
-            "correct": bool(raw.get("correct")),
-            "reason": " ".join(str(raw.get("reason") or "").split()),
+        return {
+            **qa_row,
+            **metric,
+            **_candidate_metrics(
+                list(qa_row.get("selected_chapter_ids") or []),
+                list(item.correct_answer_chapters or []),
+            ),
+            "correct_answer": item.correct_answer,
+            "correct_answer_chapters": item.correct_answer_chapters,
+            "official_evaluator": "ARTEM",
         }
-        return judged_row
 
     with ThreadPoolExecutor(max_workers=workers) as executor:
         futures = {
-            executor.submit(judge_item, qa_row, item): int(qa_row["row_index"])
+            executor.submit(evaluate_item, qa_row, item): int(qa_row["row_index"])
             for qa_row, item in pending
         }
         for future in as_completed(futures):
-            judged_row = future.result()
-            completed[int(judged_row["row_index"])] = judged_row
+            evaluated_row = future.result()
+            completed[int(evaluated_row["row_index"])] = evaluated_row
             rows = [completed[key] for key in sorted(completed)]
             payload = {
-                "judge_model": str(getattr(judge_client, "model", JUDGE_MODEL)),
+                "judge_model": str(getattr(judge_client, "model", "unknown")),
+                "evaluator": "official_artem",
                 "rows": rows,
-                "summary": _judge_summary(rows),
+                "summary": _official_summary(rows),
             }
             _write_atomic(Path(output_path), payload)
     return payload
 
 
-__all__ = ["run_judge", "run_qa"]
+__all__ = ["run_official_artem_evaluation", "run_qa"]

@@ -1,0 +1,18 @@
+{
+  "baseline": "official_a_mem",
+  "official_runtime": "agiresearch/A-mem AgenticMemorySystem",
+  "official_repo": "/Users/mac/Desktop/EpisodicMemory/Graph/service_repos/epbench/A-mem",
+  "book_path": "/Users/mac/Desktop/EpisodicMemory/Experiment/Other_BenchMark/Episodic-Memory/data/Udefault_Sdefault_seed0/books/model_claude-3-5-sonnet-20240620_itermax_10_Idefault_nbchapters_196_nbtokens_102870/book.json",
+  "qa_path": "/Users/mac/Desktop/EpisodicMemory/Experiment/Other_BenchMark/Episodic-Memory/data/Udefault_Sdefault_seed0/books/model_claude-3-5-sonnet-20240620_itermax_10_Idefault_nbchapters_196_nbtokens_102870/df_qa.parquet",
+  "predictions_path": "Experiment/Other_BenchMark/Episodic-Memory/artifacts/baselines/a_mem_gpt4omini_epbench/a_mem_predictions.jsonl",
+  "amem_llm_backend": "openai",
+  "amem_llm_model": "gpt-4o-mini",
+  "amem_embedding_model": "all-MiniLM-L6-v2",
+  "amem_evo_threshold": 1000000,
+  "top_k": 24,
+  "num_available_episodes": 1084,
+  "num_ingest_targets": 1084,
+  "ingest_checkpoint_path": "Experiment/Other_BenchMark/Episodic-Memory/artifacts/baselines/a_mem_gpt4omini_epbench/a_mem_ingest_checkpoint.jsonl",
+  "gold_used_for_retrieval_or_generation": false,
+  "judge_used": false
+}
