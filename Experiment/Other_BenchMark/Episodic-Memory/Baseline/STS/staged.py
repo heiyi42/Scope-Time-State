@@ -23,7 +23,6 @@ from .config import (
     SCOPE_BACKOFF_K,
     SCOPE_TOP_K,
     SCOPE_TYPE_COVERAGE_WEIGHT,
-    STATE_ANCHOR_CLAIM_K,
     TIME_COMPATIBILITY_WEIGHT,
 )
 
@@ -526,7 +525,6 @@ class STSGraphIndex:
         scope_top_k: int = SCOPE_TOP_K,
         claim_candidate_k: int = CLAIM_CANDIDATE_K,
         scope_backoff_k: int = SCOPE_BACKOFF_K,
-        state_anchor_k: int = STATE_ANCHOR_CLAIM_K,
         final_claim_k: int = FINAL_CLAIM_K,
         final_chapter_k: int = FINAL_CHAPTER_K,
         time_role_selector: str = "llm-top2",
@@ -537,8 +535,15 @@ class STSGraphIndex:
                 f"unknown retrieval policy {retrieval_policy!r}; "
                 f"expected one of {', '.join(CLAIM_RETRIEVAL_POLICIES)}"
             )
-        use_scope = retrieval_policy != "claim"
-        use_time = retrieval_policy in {"scope-claim-time", "scope-claim-time-state"}
+        use_scope = retrieval_policy in {
+            "scope-claim",
+            "scope-claim-time",
+            "scope-claim-time-state",
+        }
+        use_time = retrieval_policy in {
+            "scope-claim-time",
+            "scope-claim-time-state",
+        }
         use_state = retrieval_policy == "scope-claim-time-state"
         frame = build_question_frame(question, frame_client)
         if not use_time or frame_client is None or time_role_selector == "none":
@@ -708,7 +713,9 @@ class STSGraphIndex:
         ) if routed_scope_ids else set()
         candidate_event_ids = reliable_constrained_event_ids or scope_routed_event_ids
         scoped_claim_ids = (
-            self._claim_ids_for_events(candidate_event_ids) if use_scope else set(self.claims)
+            self._claim_ids_for_events(candidate_event_ids)
+            if use_scope
+            else set(self.claims)
         )
         active_claim_bm25 = self.time_claim_bm25 if use_time else self.claim_bm25
         active_claim_dense = self.time_claim_dense if use_time else self.claim_dense
@@ -749,16 +756,14 @@ class STSGraphIndex:
         # Claim ranking is finalized before StateFacet access. State evidence is
         # supplementary: it must never add or rerank Claims.
         claim_hits = initial_claim_hits[:final_claim_k]
-        state_anchor_claim_ids = [
-            hit.doc_id for hit in claim_hits[: min(state_anchor_k, final_claim_k)]
-        ] if use_state else []
+        selected_claim_ids = [hit.doc_id for hit in claim_hits]
+        state_anchor_claim_ids = selected_claim_ids if use_state else []
         if use_state:
             discovered_facet_ids = self._state_facets_for_anchor_claims(
                 state_anchor_claim_ids
             )
         else:
             discovered_facet_ids = []
-        selected_claim_ids = [hit.doc_id for hit in claim_hits]
         selected_facet_ids = self._closed_state_facets(
             discovered_facet_ids,
             selected_claim_ids,
@@ -870,7 +875,7 @@ class STSGraphIndex:
                 "event_retrieval_mode": "source_event_evidence_only",
                 "claim_candidate_k": claim_candidate_k,
                 "scope_backoff_k": scope_backoff_k,
-                "state_anchor_k": state_anchor_k,
+                "state_anchor_policy": "all_final_claims",
                 "final_claim_k": final_claim_k,
                 "final_chapter_k": final_chapter_k,
                 "claim_retrieval_mode": (
