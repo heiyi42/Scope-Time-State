@@ -46,6 +46,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--embedding-model", default="text-embedding-3-small")
     parser.add_argument("--embedding-batch-size", type=int, default=24)
     parser.add_argument("--workers", type=int, default=4)
+    parser.add_argument("--scope-top-k", type=int, default=6)
+    parser.add_argument("--final-claim-k", type=int, default=16)
     parser.add_argument("--question-offset", type=int, default=0)
     parser.add_argument("--question-limit", type=int, default=686)
     parser.add_argument("--question-get", action="append", choices=("all", "latest", "chronological"), default=[])
@@ -70,11 +72,10 @@ def _sts_args(args: argparse.Namespace, policy: str) -> list[str]:
         "--workers", str(args.workers),
         "--question-offset", str(args.question_offset),
         "--question-limit", str(args.question_limit),
-        "--scope-top-k", "14",
-        "--scope-backoff-k", "8",
+        "--scope-top-k", str(args.scope_top_k),
+        "--scope-backoff-k", "0",
         "--claim-candidate-k", "80",
-        "--state-anchor-k", "16",
-        "--final-claim-k", "24",
+        "--final-claim-k", str(args.final_claim_k),
         "--final-chapter-k", "24",
         "--time-role-selector", "llm-top2",
     ]

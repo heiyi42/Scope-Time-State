@@ -33,7 +33,6 @@ if __package__ in {None, ""}:
         RESULT_DIR,
         SCOPE_BACKOFF_K,
         SCOPE_TOP_K,
-        STATE_ANCHOR_CLAIM_K,
     )
     from STS.graph_builder import (  # type: ignore
         EXTRACTION_SCHEMA_VERSION,
@@ -43,7 +42,7 @@ if __package__ in {None, ""}:
     )
     from STS.loader import load_chapters, load_qa  # type: ignore
     from STS.qa_runner import run_official_artem_evaluation, run_qa  # type: ignore
-    from STS.staged import EmbeddingConfig, STSGraphIndex  # type: ignore
+    from STS.staged import CLAIM_RETRIEVAL_POLICIES, EmbeddingConfig, STSGraphIndex  # type: ignore
 else:
     from .config import (
         ANSWER_MODEL,
@@ -61,12 +60,11 @@ else:
         RESULT_DIR,
         SCOPE_BACKOFF_K,
         SCOPE_TOP_K,
-        STATE_ANCHOR_CLAIM_K,
     )
     from .graph_builder import EXTRACTION_SCHEMA_VERSION, build_graph, extract_chapter_records, write_graph
     from .loader import load_chapters, load_qa
     from .qa_runner import run_official_artem_evaluation, run_qa
-    from .staged import EmbeddingConfig, STSGraphIndex
+    from .staged import CLAIM_RETRIEVAL_POLICIES, EmbeddingConfig, STSGraphIndex
 
 
 @dataclass(frozen=True)
@@ -208,7 +206,6 @@ def _retrieval_kwargs(args: argparse.Namespace) -> dict[str, Any]:
         "scope_top_k": args.scope_top_k,
         "claim_candidate_k": args.claim_candidate_k,
         "scope_backoff_k": args.scope_backoff_k,
-        "state_anchor_k": args.state_anchor_k,
         "final_claim_k": args.final_claim_k,
         "final_chapter_k": args.final_chapter_k,
         "time_role_selector": args.time_role_selector,
@@ -286,12 +283,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--scope-top-k", type=int, default=SCOPE_TOP_K)
     parser.add_argument("--claim-candidate-k", type=int, default=CLAIM_CANDIDATE_K)
     parser.add_argument("--scope-backoff-k", type=int, default=SCOPE_BACKOFF_K)
-    parser.add_argument("--state-anchor-k", type=int, default=STATE_ANCHOR_CLAIM_K)
     parser.add_argument("--final-claim-k", type=int, default=FINAL_CLAIM_K)
     parser.add_argument("--final-chapter-k", type=int, default=FINAL_CHAPTER_K)
     parser.add_argument(
         "--retrieval-policy",
-        choices=("claim", "scope-claim", "scope-claim-time", "scope-claim-time-state"),
+        choices=CLAIM_RETRIEVAL_POLICIES,
         default="scope-claim-time-state",
     )
     parser.add_argument(
