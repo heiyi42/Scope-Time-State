@@ -1,1 +1,0 @@
-"""Official MemoryBank LoCoMo worker."""

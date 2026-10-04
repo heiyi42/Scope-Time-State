@@ -1,2 +1,0 @@
-"""EPBench paragraph RAG baseline."""
-

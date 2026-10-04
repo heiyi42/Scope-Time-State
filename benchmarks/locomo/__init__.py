@@ -1,0 +1,1 @@
+"""LoCoMo adapter and commands."""
